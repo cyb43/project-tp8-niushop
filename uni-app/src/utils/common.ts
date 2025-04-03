@@ -628,20 +628,21 @@ export function setThemeColor (path: string) {
 	let currTheme = {};
     if (route != 'app') {
         try {
-			currTheme = theme_color_list[route];
-			if(currTheme && currTheme.theme){
-				configStore.themeColor = themeColorToHex(currTheme.theme)
-				uni.setStorageSync('current_theme_color', JSON.stringify(themeColorToHex(currTheme.theme)));
-			}else if( !currTheme && current_theme_color){
-				configStore.themeColor = ''
-			}else{
-				currTheme = theme_color_list.app || Object.values(theme_color_list)[0];
-				configStore.themeColor = themeColorToHex(currTheme.theme)
-				uni.setStorageSync('current_theme_color', JSON.stringify(themeColorToHex(currTheme.theme)));
-			}
+			currTheme = theme_color_list[route];             
+              if (currTheme && currTheme.theme) {
+                configStore.themeColor = themeColorToHex(currTheme.theme)
+                uni.setStorageSync("current_theme_color", JSON.stringify(themeColorToHex(currTheme.theme)))
+              } else if (!currTheme && current_theme_color) {
+                configStore.themeColor = ""
+              } else {
+                currTheme = theme_color_list.app || Object.values(theme_color_list)[0]
+                configStore.themeColor = themeColorToHex(currTheme.theme)
+                uni.setStorageSync("current_theme_color", JSON.stringify(themeColorToHex(currTheme.theme)))
+              }
         } catch (e) {
             // 设置插件应用的主色调发生错误，若不存在则使用最后有效的主色调
-			if(!current_theme_color && theme_color_list){
+
+			if(!current_theme_color && theme_color_list && theme_color_list.length>0){
 				currTheme = theme_color_list.app || Object.values(theme_color_list)[0];
 				configStore.themeColor = themeColorToHex(currTheme.theme)
 				uni.setStorageSync('current_theme_color', JSON.stringify(themeColorToHex(currTheme.theme)));
@@ -650,11 +651,11 @@ export function setThemeColor (path: string) {
 			}
         }
 
-    }else if(!current_theme_color && theme_color_list){
-		currTheme = theme_color_list.app || Object.values(theme_color_list)[0];
-		configStore.themeColor = themeColorToHex(currTheme.theme)
-		uni.setStorageSync('current_theme_color', JSON.stringify(themeColorToHex(currTheme.theme)));
-	}
+    }else if (!current_theme_color && theme_color_list && theme_color_list.length > 0) {
+      currTheme = theme_color_list.app || Object.values(theme_color_list)[0]
+      configStore.themeColor = themeColorToHex(currTheme.theme)
+      uni.setStorageSync("current_theme_color", JSON.stringify(themeColorToHex(currTheme.theme)))
+    }
 }
 
 export function themeColorToHex (param: any) {
