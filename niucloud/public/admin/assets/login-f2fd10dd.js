@@ -1,0 +1,1 @@
+const o="NIUCLOUD-ADMIN",n="登录中",e="管理端",a="登录",l="平台登录",s="请输入您的账号",t="请输入您的密码",i="管理系统后台框架",r={siteTitle:o,logging:n,platform:e,login:a,adminLogin:l,userPlaceholder:s,passwordPlaceholder:t,manageAdminFramework:i};export{l as adminLogin,r as default,n as logging,a as login,i as manageAdminFramework,t as passwordPlaceholder,e as platform,o as siteTitle,s as userPlaceholder};

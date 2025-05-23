@@ -1,1 +1,0 @@
-import{u as t}from"./poster-b98ad119.js";import{d as r,h as s,c as n,b as _}from"./index-ac08d87d.js";const a={class:"content-wrap"},c=r({__name:"edit-friendspay-message",setup(l,{expose:e}){return t(),e({}),(o,m)=>(s(),n("div",a,[_(o.$slots,"common")]))}}),d=Object.freeze(Object.defineProperty({__proto__:null,default:c},Symbol.toStringTag,{value:"Module"}));export{d as _};

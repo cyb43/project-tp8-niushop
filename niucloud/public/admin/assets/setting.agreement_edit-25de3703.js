@@ -1,0 +1,1 @@
+const t="协议标题",e="协议类型",n="请输入协议标题",o="请填写协议内容",c="协议内容字符数应在5～10000之间",l="内容",s={title:t,type:e,titlePlaceholder:n,contentPlaceholder:o,contentMaxTips:c,content:l};export{l as content,c as contentMaxTips,o as contentPlaceholder,s as default,t as title,n as titlePlaceholder,e as type};
