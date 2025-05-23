@@ -115,7 +115,7 @@ if (!defined('QRCODEDEFS')) {
 	/**
 	 * Encoding mode alphanumeric (0-9A-Z $%*+-./:) 45characters. 2 characters are encoded to 11bit length. In theory, 4296 characters or less can be stored in a QRcode.
 	 */
-	if (!defined('QR_MODE_AN'))
+	if (!defined('QR_MODE_AN')) {
 		define('QR_MODE_AN', 1);
 	}
 
