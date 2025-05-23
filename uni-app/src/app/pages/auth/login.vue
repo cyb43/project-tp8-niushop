@@ -182,7 +182,7 @@ onLoad(async(option: any) => {
     // 如果只开启了账号密码登录，那么就不需要跳转到登录中间页了
 
     // #ifdef MP-WEIXIN
-    if (configStore.login.is_username && !configStore.login.is_mobile && !configStore.login.is_auth_register) {
+    if (!configStore.login.is_auth_register) {
         isShowQuickLogin.value = false;
     } else {
         isShowQuickLogin.value = true;
@@ -192,18 +192,14 @@ onLoad(async(option: any) => {
     // #ifdef H5
     if (isWeixinBrowser()) {
         // 微信浏览器
-        if (configStore.login.is_username && !configStore.login.is_mobile && !configStore.login.is_auth_register) {
+        if (!configStore.login.is_auth_register) {
             isShowQuickLogin.value = false;
         } else {
             isShowQuickLogin.value = true;
         }
     } else {
         // 普通浏览器
-        if (configStore.login.is_username && !configStore.login.is_mobile) {
-            isShowQuickLogin.value = false;
-        } else {
-            isShowQuickLogin.value = true;
-        }
+        isShowQuickLogin.value = false;
     }
     // #endif
 })

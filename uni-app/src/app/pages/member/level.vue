@@ -52,13 +52,13 @@
                     <view class="mx-[86rpx]">
                         <scroll-view :scroll-x="true" scroll-with-animation :scroll-into-view="'id' + ( levelIndex  ? levelIndex - 1 : 0)">
                             <view class="flex flex-nowrap py-[10rpx]">
-                                <block v-for="(item,index) in list" :key="item.id">
+                                <template v-for="(item,index) in list" :key="item.id">
                                     <view :style="levelStyle" class=" flex-shrink-0 flex flex-col items-center justify-center"
                                           @click="changeLevel(index)" :id="'id' + index">
                                         <view class="w-[14rpx] h-[14rpx] level-class" :class="{'level-select': levelIndex == (index)}"></view>
                                         <view :style="maxWidth" class="text-[22rpx] text-[#aaa] mt-[16rpx] truncate" :class="{'!text-[#fff]': levelIndex == (index)}">{{ item.level_name }}</view>
                                     </view>
-                                </block>
+                                </template>
                             </view>
                         </scroll-view>
                     </view>

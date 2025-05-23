@@ -2,7 +2,7 @@
     <view class="w-screen h-screen bg-[var(--page-bg-color)] overflow-hidden" :style="themeColor()">
         <scroll-view scroll-y="true">
             <view class="sidebar-margin card-template top-mar account pb-[20rpx]">
-                <block v-if="formData.account_type == 'bank'">
+                <template v-if="formData.account_type == 'bank'">
                     <view class="text-center text-[32rpx] font-500 mt-[10rpx] text-[#333] leading-[42rpx]">{{ formData.account_id ? t('editBankCard') : t('addBankCard') }}</view>
                     <view class="text-center text-[24rpx] mt-[16rpx] text-[var(--text-color-light9)]">{{ formData.account_id ? t('editBankCardTips') : t('addBankCardTips') }}</view>
                     <view class="mt-[70rpx] px-[10rpx]">
@@ -24,9 +24,9 @@
                             </view>
                         </u-form>
                     </view>
-                </block>
+                </template>
 
-                <block v-if="formData.account_type == 'alipay'">
+                <template v-if="formData.account_type == 'alipay'">
                     <view class="text-center text-[32rpx] font-500 mt-[20rpx] text-[#333] leading-[42rpx]">{{ formData.account_id ? t('editAlipayAccount') : t('addAlipayAccount') }}</view>
                     <!-- <view class="text-center text-[28rpx] mt-[16rpx] text-[var(--text-color-light9)] leading-[36rpx]">{{ formData.account_id ? t('editAlipayAccountTips') : t('addAlipayAccountTips') }}</view> -->
 
@@ -55,9 +55,9 @@
                             </view>
                         </u-form>
                     </view>
-                </block>
+                </template>
 
-                <block v-if="formData.account_type == 'wechat_code'">
+                <template v-if="formData.account_type == 'wechat_code'">
                     <view class="text-center text-[32rpx] font-500 mt-[20rpx] text-[#333] leading-[42rpx]">{{ formData.account_id ? t('editWechatCodeAccount') : t('addWechatCodeAccount') }}</view>
                     <!-- <view class="text-center text-[28rpx] mt-[16rpx] text-[var(--text-color-light9)] leading-[36rpx]">{{ formData.account_id ? t('editWechatCodeAccountTips') : t('addWechatCodeAccountTips') }}</view> -->
 
@@ -86,7 +86,7 @@
                             </view>
                         </u-form>
                     </view>
-                </block>
+                </template>
             </view>
             <view class="common-tab-bar-placeholder"></view>
             <view class="common-tab-bar fixed left-[var(--sidebar-m)] right-[var(--sidebar-m)] bottom-[0]">

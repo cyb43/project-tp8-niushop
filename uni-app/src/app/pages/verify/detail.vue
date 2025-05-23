@@ -1,6 +1,6 @@
 <template>
     <view :style="themeColor()" class="bg-[var(--page-bg-color)] min-h-[100vh] overflow-hidden">
-        <block v-if="!loading">
+        <template v-if="!loading">
             <view class="pt-[20rpx] sidebar-margin">
                 <view class="flex flex-col card-template">
                     <view class="flex" :class="{'mb-[20rpx]': verifyInfo.value.list.length-1 != index}" v-for="(item,index) in verifyInfo.value.list" :key="index">
@@ -9,7 +9,7 @@
                         <view class="flex flex-col flex-1 ml-[20rpx] py-[4rpx]">
                             <view class="leading-[40rpx] truncate max-w-[490rpx] text-[28rpx]">{{ item.name }}</view>
                             <view class="mt-[14rpx] truncate text-[24rpx] text-[var(--text-color-light9)] leading-[28rpx] max-w-[490rpx] " v-if="item.sub_name">{{ item.sub_name }}</view>
-                            <view class="text-[var(--text-color-light6)] text-[26rpx] mt-[20rpx]">x1</view>
+                            <view class="text-[var(--text-color-light6)] text-[26rpx] mt-[20rpx]">x{{item.verify_num}}</view>
                         </view>
                     </view>
                 </view>
@@ -47,7 +47,7 @@
                 </view>
             </view>
 
-        </block>
+        </template>
         <loading-page :loading="loading"></loading-page>
     </view>
 </template>

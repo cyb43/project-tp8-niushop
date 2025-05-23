@@ -25,17 +25,17 @@
                     </view>
                 </view>
                 <view class="mt-[60rpx] flex justify-around" v-if="Object.keys(cashOutConfigObj).length && (systemStore.siteAddons.includes('recharge') || cashOutConfigObj.is_open == 1 || rechargeConfigObj.is_use == 1)">
-                    <block v-if="systemStore.siteAddons.includes('recharge')">
+                    <template v-if="systemStore.siteAddons.includes('recharge')">
                         <button v-if="rechargeConfigObj.is_use == 1"
                                 class="w-[250rpx] h-[70rpx] rounded-[40rpx] text-[26rpx] font-500 !bg-[#fff] !text-[var(--primary-color)] flex-center !m-0 border-[2rpx] border-[var(--primary-color)] border-solid box-border"
                                 hover-class="none" shape="circle"
                                 @click="redirect({url: '/addon/recharge/pages/recharge'})">充值</button>
-                    </block>
+                    </template>
                     <view v-if="cashOutConfigObj.is_open == 1"
                           :class="{'!w-[340rpx]': !systemStore.siteAddons.includes('recharge')}"
                           class="text-center w-[250rpx] h-[70rpx] rounded-[40rpx] text-[26rpx] !text-[#fff] flex-center font-500 !m-0"
                           style="background: linear-gradient( 94deg, #FB7939 0%, #FE120E 99%), #EF000C;"
-                          @click="applyCashOut">{{ t('cashOut') }}</view>
+                          @click="applyCashOut">提现</view>
                 </view>
             </view>
             <view class="mt-[30rpx] bg-[var(--page-bg-color)] tab-style-1">

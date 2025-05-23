@@ -46,7 +46,7 @@
                     </view>
                 </view>
                 <view v-show="item.flag">
-                    <block v-for="(subItem,subIndex) in item.month_data" :key="subItem.id">
+                    <template v-for="(subItem,subIndex) in item.month_data" :key="subItem.id">
                         <view class="flex items-center ">
                             <view class="w-[60rpx] h-[60rpx]">
                                 <image v-if="subItem.account_data > 0" :src="img('static/resource/images/member/point/detail/point_add.png')" class="w-[60rpx] h-[60rpx]"/>
@@ -60,7 +60,7 @@
                                 <view class="text-[36rpx] font-500 text-[#03B521] price-font" :class="{ '!text-primary' : subItem.account_data > 0 }">{{ subItem.account_data > 0 ? '+' + subItem.account_data : subItem.account_data }}</view>
                             </view>
                         </view>
-                    </block>
+                    </template>
                 </view>
             </view>
             <mescroll-empty :option="{tip : '暂无积分明细'}" v-if="!pointList.length && loading"></mescroll-empty>

@@ -3,12 +3,12 @@
         <scroll-view :scroll-y="true" class="w-screen h-screen bg-[var(--page-bg-color)]" v-if="!pageLoading && config.is_open == 1">
             <view class="sidebar-margin pt-[var(--top-m)]">
                 <view class="card-template">
-                    <view class="font-500 text-[30rpx] text-[#333] leading-[42rpx]">{{ t('cashOutMoneyTip') }}</view>
+                    <view class="font-500 text-[30rpx] text-[#333] leading-[42rpx]">最小提现金额为</view>
                     <view class="flex pt-[30rpx] pb-[8rpx] items-center border-0 border-b-[2rpx] border-solid border-[#F1F2F5]">
                         <text class="pt-[4rpx] text-[44rpx] text-[#333] iconfont iconrenminbiV6xx price-font "></text>
                         <input type="digit" class="h-[76rpx] leading-[76rpx] pl-[10rpx] flex-1 font-500 text-[54rpx] bg-[#fff]"
                                v-model="applyData.apply_money" maxlength="7"
-                               :placeholder="applyData.apply_money?'':(t('minWithdrawal') + t('currency') + moneyFormat(config.min))"
+                               :placeholder="applyData.apply_money?'':('最小提现金额为' + t('currency') + moneyFormat(config.min))"
                                placeholder-class="apply-price" :adjust-position="false" />
                         <text v-if="Number(serviceMoney)" class="text-[24rpx] text-[var(--text-color-light6)] mr-[20rpx]">手续费{{ serviceMoney }}
                         </text>
@@ -16,10 +16,10 @@
                     </view>
                     <view class="pt-[16rpx] flex items-center justify-between px-[4rpx]">
                         <view class="text-[24rpx] text-[var(--text-color-light6)] leading-[36rpx]">
-                            <text>{{ t('money') }}：{{ t('currency') }}{{ moneyFormat(cashOutMoney) }}</text>
-                            <text>，{{ t('commissionTo') }}{{ config.rate + '%' }}</text>
+                            <text>可提现余额：{{ t('currency') }}{{ moneyFormat(cashOutMoney) }}</text>
+                            <text>，手续费为{{ config.rate + '%' }}</text>
                         </view>
-                        <view class="text-[24rpx] text-primary leading-[36rpx]" @click="allMoney">{{ t('allTx') }}</view>
+                        <view class="text-[24rpx] text-primary leading-[36rpx]" @click="allMoney">全部提现</view>
                     </view>
                 </view>
 
@@ -34,8 +34,8 @@
                             <image class="h-[60rpx] w-[60rpx] align-middle" :src="img('static/resource/images/member/apply_withdrawal/wechat.png')" mode="widthFix" />
                         </view>
                         <view class="flex-1 px-[20rpx]">
-                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">{{ t('cashOutToWechat') }}</view>
-                            <view class="text-[var(--text-color-light9)] text-[24rpx] leading-[34rpx]">{{ t('cashOutToWechatTips') }}</view>
+                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">提现至微信零钱</view>
+                            <view class="text-[var(--text-color-light9)] text-[24rpx] leading-[34rpx]">提现至微信零钱</view>
                         </view>
                     </view>
 
@@ -47,19 +47,19 @@
                             <image class="h-[60rpx] w-[60rpx] align-middle" :src="img('static/resource/images/member/apply_withdrawal/wechat_code.png')" mode="widthFix" />
                         </view>
                         <view class="flex-1 px-[22rpx]" @click="transferWechatCode">
-                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">{{ t('cashOutToWechatCode') }}</view>
+                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">提现至微信</view>
                             <view class="text-[var(--text-color-light9)] text-[24rpx] leading-[34rpx]">
                                 <view v-if="wechatCodeInfo" class="truncate max-w-[440rpx]">
-                                    <text>{{ t('cashOutTo') }}{{ t('wechatCodeAccountNo') }}</text>
+                                    <text>提现到微信号</text>
                                     <text class="text-[#333]">{{ wechatCodeInfo.account_no }}</text>
                                 </view>
-                                <view v-else>{{ t('cashOutToWechatCodeTips') }}</view>
+                                <view v-else>请先添加微信号</view>
                             </view>
                         </view>
                         <view class="flex items-center">
                             <button v-if="!wechatCodeInfo && !wechatCodeLoading" hover-class="none"
                                     class="w-[110rpx] h-[54rpx] flex-center rounded-full p-[0] text-[var(--primary-color)] bg-transparent border-[2rpx] border-solid border-[var(--primary-color)] text-[22rpx]"
-                                    @click="redirect({ url: '/app/pages/member/account', param: { type: 'wechat_code', mode: 'select' } , mode: 'redirectTo'})">{{ t('toAdd') }}</button>
+                                    @click="redirect({ url: '/app/pages/member/account', param: { type: 'wechat_code', mode: 'select' } , mode: 'redirectTo'})">添加</button>
                             <text v-else class="nc-iconfont nc-icon-youV6xx text-[28rpx] text-[var(--text-color-light9)] p-[10rpx]"
                                   @click.stop="redirect({ url: '/app/pages/member/account', param: { type: 'wechat_code', mode: 'select' } , mode: 'redirectTo'})"></text>
                         </view>
@@ -73,19 +73,19 @@
                             <image class="h-[60rpx] w-[60rpx] align-middle" :src="img('static/resource/images/member/apply_withdrawal/alipay-icon.png')" mode="widthFix" />
                         </view>
                         <view class="flex-1 px-[22rpx]" @click="transferAlipay">
-                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">{{ t('cashOutToAlipay') }}</view>
+                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">提现至支付宝</view>
                             <view class="text-[var(--text-color-light9)] text-[24rpx] leading-[34rpx]">
                                 <view v-if="alipayAccountInfo" class="truncate max-w-[440rpx]">
-                                    <text>{{ t('cashOutTo') }}{{ t('alipayAccountNo') }}</text>
+                                    <text>提现到支付宝账号</text>
                                     <text class="text-[#333]">{{ alipayAccountInfo.account_no }}</text>
                                 </view>
-                                <view v-else>{{ t('cashOutToAlipayTips') }}</view>
+                                <view v-else>请先添加支付宝账号</view>
                             </view>
                         </view>
                         <view class="flex items-center">
                             <button v-if="!alipayAccountInfo && !alipayLoading" hover-class="none"
                                     class="w-[110rpx] h-[54rpx] flex-center rounded-full p-[0] text-[var(--primary-color)] bg-transparent border-[2rpx] border-solid border-[var(--primary-color)] text-[22rpx]"
-                                    @click="redirect({ url: '/app/pages/member/account', param: { type: 'alipay', mode: 'select' } , mode: 'redirectTo'})">{{ t('toAdd') }}</button>
+                                    @click="redirect({ url: '/app/pages/member/account', param: { type: 'alipay', mode: 'select' } , mode: 'redirectTo'})">添加</button>
                             <text v-else class="nc-iconfont nc-icon-youV6xx text-[28rpx] text-[var(--text-color-light9)] p-[10rpx]"
                                   @click.stop="redirect({ url: '/app/pages/member/account', param: { type: 'alipay', mode: 'select' } , mode: 'redirectTo'})"></text>
                         </view>
@@ -99,19 +99,19 @@
                             <image class="h-[42rpx] w-[60rpx] align-middle" :src="img('static/resource/images/member/apply_withdrawal/bank-icon.png')" mode="widthFix" />
                         </view>
                         <view class="flex-1 px-[20rpx]" @click="transferBank">
-                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">{{ t('cashOutToBank') }}</view>
+                            <view class="text-[28rpx] text-[#333] leading-[40rpx] mb-[6rpx]">提现至银行卡</view>
                             <view class="text-[var(--text-color-light9)] text-[24rpx] leading-[34rpx]">
                                 <view v-if="bankAccountInfo" class="truncate max-w-[440rpx]">
-                                    <text>{{ t('cashOutTo') }}{{ bankAccountInfo.bank_name }}{{ t('debitCard') }}</text>
+                                    <text>提现到{{ bankAccountInfo.bank_name }}储蓄卡</text>
                                     <text class="text-[#333]">{{ bankAccountInfo.account_no.substring(bankAccountInfo.account_no.length - 4) }}</text>
                                 </view>
-                                <view v-else>{{ t('cashOutToBankTips') }}</view>
+                                <view v-else>请先添加银行卡</view>
                             </view>
                         </view>
                         <view class="flex items-center">
                             <button hover-class="none" class="h-[54rpx] flex-center rounded-full p-[0] w-[110rpx] text-[var(--primary-color)] bg-transparent border-[2rpx] border-solid border-[var(--primary-color)] text-[22rpx]"
                                     v-if="!bankAccountInfo && !bankLoading"
-                                    @click="redirect({ url: '/app/pages/member/account', param: { type: 'bank', mode: 'select' }, mode: 'redirectTo' })">{{ t('toAdd') }}</button>
+                                    @click="redirect({ url: '/app/pages/member/account', param: { type: 'bank', mode: 'select' }, mode: 'redirectTo' })">添加</button>
                             <text v-else class="nc-iconfont nc-icon-youV6xx text-[28rpx] text-[var(--text-color-light9)] p-[10rpx]"
                                   @click.stop="redirect({ url: '/app/pages/member/account', param: { type: 'bank', mode: 'select' }, mode: 'redirectTo' })"></text>
                         </view>
@@ -120,9 +120,9 @@
 
                 <view class="tab-bar-placeholder"></view>
                 <view class="fixed bottom-[0] tab-bar left-0 right-0 px-[var(--sidebar-m)] bg-[var(--page-bg-color)]">
-                    <button class="h-[80rpx] !text-[#fff] leading-[80rpx] primary-btn-bg rounded-[50rpx] text-[26rpx]" :disabled="applyData.apply_money == '' || applyData.apply_money == 0" :loading="loading" @click="cashOut">{{ t('cashOutNow') }}</button>
+                    <button class="h-[80rpx] !text-[#fff] leading-[80rpx] primary-btn-bg rounded-[50rpx] text-[26rpx]" :disabled="applyData.apply_money == '' || applyData.apply_money == 0" :loading="loading" @click="cashOut">立即提现</button>
                     <view class="mt-[30rpx] text-center text-[26rpx] text-primary"
-                          @click.stop="redirect({ url: '/app/pages/member/cash_out'})">{{ t('cashOutList') }}</view>
+                          @click.stop="redirect({ url: '/app/pages/member/cash_out'})">提现记录</view>
                 </view>
 
             </view>
@@ -130,7 +130,7 @@
         <view class="h-[100vh] w-[100vw] bg-[var(--page-bg-color)] overflow-hidden" v-if="config.is_open == 0 && !pageLoading">
             <view class="empty-page">
                 <image class="img" :src="img('addon/shop/cart-empty.png')" model="aspectFit" />
-                <view class="desc">{{ t('isOpenApply') }}</view>
+                <view class="desc">提现设置未开启</view>
             </view>
         </view>
         <loading-page :loading="pageLoading"></loading-page>
@@ -200,7 +200,7 @@ onLoad(async(data) => {
 
     if (!['money', 'commission'].includes(applyData.account_type)) {
         uni.showToast({
-            title: t('abnormalOperation'),
+            title: '异常操作',
             icon: 'none',
             success() {
                 setTimeout(() => {
@@ -267,23 +267,23 @@ const clearMoney = () => {
 
 const verify = () => {
     if (!applyData.transfer_type) {
-        uni.showToast({ title: t('noAvailableCashOutType'), icon: 'none' })
+        uni.showToast({ title: '没有可用的提现方式', icon: 'none' })
         return false
     }
     if (uni.$u.test.isEmpty(applyData.apply_money)) {
-        uni.showToast({ title: t('applyMoneyPlaceholder'), icon: 'none' })
+        uni.showToast({ title: '请输入提现金额', icon: 'none' })
         return false
     }
     if (!uni.$u.test.amount(applyData.apply_money)) {
-        uni.showToast({ title: t('moneyformatError'), icon: 'none' })
+        uni.showToast({ title: '提现金额格式错误', icon: 'none' })
         return false
     }
     if (parseFloat(applyData.apply_money) > parseFloat(cashOutMoney.value)) {
-        uni.showToast({ title: t('applyMoneyExceed'), icon: 'none' })
+        uni.showToast({ title: '提现金额超出可提现金额', icon: 'none' })
         return false
     }
     if (parseFloat(applyData.apply_money) < parseFloat(config.min)) {
-        uni.showToast({ title: t('applyMoneyBelow'), icon: 'none' })
+        uni.showToast({ title: '提现金额小于最低提现金额', icon: 'none' })
         return false
     }
     return true;
@@ -391,7 +391,7 @@ const cashOut = () => {
 // 选中提现到支付宝
 const transferAlipay = () => {
     if (!alipayAccountInfo.value) {
-        uni.showToast({ title: t('cashOutToAlipayTips'), icon: 'none' })
+        uni.showToast({ title: '请先添加支付宝账号', icon: 'none' })
         return false
     }
     applyData.transfer_type = 'alipay'
@@ -399,7 +399,7 @@ const transferAlipay = () => {
 // 选中提现到银行卡
 const transferBank = () => {
     if (!bankAccountInfo.value) {
-        uni.showToast({ title: t('cashOutToBankTips'), icon: 'none' })
+        uni.showToast({ title: '请先添加银行卡', icon: 'none' })
         return false
     }
     applyData.transfer_type = 'bank'
@@ -417,7 +417,7 @@ const transferWeixin = () => {
 // 选中提现到微信收款码
 const transferWechatCode = () => {
     if (!wechatCodeInfo.value) {
-        uni.showToast({ title: t('cashOutToWechatCodeTips'), icon: 'none' })
+        uni.showToast({ title: '请先添加微信号', icon: 'none' })
         return false
     }
     applyData.transfer_type = 'wechat_code'

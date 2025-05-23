@@ -4,12 +4,12 @@
         <view class="diy-text relative">
             <view v-if="diyComponent.style == 'style-1'" class="px-[var(--pad-sidebar-m)]">
                 <view @click="diyStore.toRedirect(diyComponent.link)">
-                    <view class="leading-[1]" :style="{ fontSize: diyComponent.fontSize * 2 + 'rpx', color: diyComponent.textColor, fontWeight: (diyComponent.fontWeight == 'normal' ? 500 : diyComponent.fontWeight), textAlign : diyComponent.textAlign }">{{ diyComponent.text }}</view>
+                    <view class="leading-[1]" :style="textStyle1">{{ diyComponent.text }}</view>
                 </view>
             </view>
             <view v-if="diyComponent.style == 'style-2'" class=" px-[20rpx] flex items-center">
                 <view @click="diyStore.toRedirect(diyComponent.link)">
-                    <view class="max-w-[200rpx] truncate leading-[1]" :style="{ fontSize: diyComponent.fontSize * 2 + 'rpx', color: diyComponent.textColor, fontWeight: (diyComponent.fontWeight == 'normal' ? 500 : diyComponent.fontWeight) }">{{ diyComponent.text }}</view>
+                    <view class="max-w-[200rpx] truncate leading-[1]" :style="textStyle2">{{ diyComponent.text }}</view>
                 </view>
                 <text v-if="diyComponent.subTitle.text" :style="{background: diyComponent.subTitle.color}" class="mx-[10rpx] w-[2rpx] h-[24rpx] opacity-70"></text>
                 <text class="max-w-[300rpx] truncate" :style="{ color: diyComponent.subTitle.color, fontSize: diyComponent.subTitle.fontSize * 2 + 'rpx', }">{{ diyComponent.subTitle.text }}</text>
@@ -40,6 +40,25 @@ const diyComponent = computed(() => {
         return props.component;
     }
 })
+
+// 主文本样式
+const textStyle1 = computed(() => {
+    return {
+        fontSize: diyComponent.value.fontSize * 2 + 'rpx',
+        color: diyComponent.value.textColor,
+        fontWeight: diyComponent.value.fontWeight === 'normal' ? 500 : diyComponent.value.fontWeight,
+        textAlign: diyComponent.value.textAlign
+    };
+});
+
+// 主文本样式
+const textStyle2 = computed(() => {
+    return {
+        fontSize: diyComponent.value.fontSize * 2 + 'rpx',
+        color: diyComponent.value.textColor,
+        fontWeight: diyComponent.value.fontWeight === 'normal' ? 500 : diyComponent.value.fontWeight
+    };
+});
 
 const warpCss = computed(() => {
     var style = '';

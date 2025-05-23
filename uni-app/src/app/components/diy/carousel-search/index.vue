@@ -29,7 +29,9 @@
                 <view v-if="diyComponent.search.style == 'style-2'" class="diy-search-wrap style-2 relative z-10" @click="diyStore.toRedirect(diyComponent.search.link)">
                     <view class="flex items-center" :style="navbarInnerStyle">
                         <view class="img-wrap" v-if="diyComponent.search.logo"><image :src="img(diyComponent.search.logo)" mode="aspectFit" /></view>
-                        <view :style="searchSubTitleCss" class="text-[24rpx] h-[38rpx] flex items-center px-[12rpx] rounded-r-[20rpx] rounded-t-[20rpx] rounded-bl-[2rpx]" v-if="diyComponent.search.subTitle.text">{{ diyComponent.search.subTitle.text }}</view>
+                        <view :style="searchSubTitleCss" class="max-w-[360rpx] text-[24rpx] h-[38rpx] rounded-r-[20rpx] rounded-t-[20rpx] rounded-bl-[2rpx]" v-if="diyComponent.search.subTitle.text">
+                            <view class="truncate leading-[38rpx] h-[38rpx]  px-[12rpx]">{{ diyComponent.search.subTitle.text }}</view>
+                        </view>
                     </view>
                     <view class="flex items-center w-full mt-[16rpx]">
                         <view @click.stop="locationVal.reposition()" v-if="systemStore.diyAddressInfo" :style="{color: diyComponent.search.positionColor}" class="mr-[30rpx]">

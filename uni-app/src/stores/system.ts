@@ -16,6 +16,10 @@ interface System {
     shareCallback: any, // 分享回调
     defaultPositionAddress: any,
     diyAddressInfo: any  // 定位信息
+    currTabbar: {
+        path: string,
+        query: object
+    }
 }
 
 const useSystemStore = defineStore('system', {
@@ -38,7 +42,11 @@ const useSystemStore = defineStore('system', {
             },
             shareCallback: null,
             defaultPositionAddress: '定位中',
-            diyAddressInfo: null
+            diyAddressInfo: null,
+            currTabbar: {
+                path: '/addon/shop/pages/index',
+                query: {}
+            }
         }
     },
     actions: {

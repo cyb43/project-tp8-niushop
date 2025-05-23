@@ -49,7 +49,7 @@
                                         <text class="w-[14.28%] leading-[36rpx] text-center">周日</text>
                                     </view>
                                     <view class="flex flex-wrap items-center justify-start" v-if="!flag">
-                                        <block v-for="(item,index) in state.weekCount" :key="index">
+                                        <template v-for="(item,index) in state.weekCount" :key="index">
                                             <view class="w-[14.28%] flex flex-col justify-center items-center">
                                                 <view v-if="filteredDate(item)"
                                                       class="w-[74rpx] h-[92rpx] bg-[#f4f4f4] text-[var(--text-color-light6)] box-border py-[10rpx] rounded-[8rpx] flex flex-col  items-center"
@@ -69,10 +69,10 @@
                                                 </view>
                                                 <view class="w-[10rpx] h-[10rpx] rounded-[50%] bg-[var(--primary-color)]" v-if="isCurrentDate(item)"></view>
                                             </view>
-                                        </block>
+                                        </template>
                                     </view>
                                     <view class="flex flex-wrap items-center justify-start" v-else>
-                                        <block v-for="(item,index) in state.dataCount">
+                                        <template v-for="(item,index) in state.dataCount">
                                             <view class="w-[14.28%] flex flex-col justify-center items-center mb-[30rpx]">
                                                 <view v-if="filteredDate(item)"
                                                       class="w-[74rpx] h-[92rpx] bg-[#F6FAFF] text-[var(--text-color-light6)] box-border py-[10rpx] rounded-[8rpx] flex flex-col  items-center"
@@ -91,7 +91,7 @@
                                                 </view>
                                                 <view class="w-[10rpx] h-[10rpx] rounded-[50%] bg-[var(--primary-color)]" v-if="isCurrentDate(item)"></view>
                                             </view>
-                                        </block>
+                                        </template>
                                     </view>
                                     <view class="mt-[40rpx] flex justify-center" v-if="state.curMonth + 1 == (new Date().getMonth() + 1) && state.curYear == new Date().getFullYear() ">
                                         <button v-if="!info.is_sign"
@@ -137,7 +137,7 @@
                                 </view>
                                 <view class="flex-1 mx-[20rpx]">
                                     <view class="font-400 text-[28rpx] text-[#303133] leading-[38rpx] mb-[10rpx]">连续签到{{ item.continue_sign }}天</view>
-                                    <view class="flex flex-wrap" v-if="item.gift">
+                                    <view class="flex flex-wrap" v-if="item.gift && item.gift.total">
                                         <view class="flex">
                                             <image :src="img(item.gift.total.icon)" class="w-[30rpx] h-[30rpx] flex-shrink-0"/>
                                             <view class="text-[24rpx] ml-[8rpx] text-[#FF9000] leading-[34rpx] max-w-[330rpx]">{{ item.gift.total.text }}</view>
@@ -164,9 +164,9 @@
                 <view class="popup-common">
                     <view class="title">签到规则</view>
                     <scroll-view :scroll-y="true" class="px-[30rpx] box-border h-[360rpx] overflow-auto">
-                        <block v-for="(item) in info.rule_explain.split('\n')">
+                        <template v-for="(item) in info.rule_explain.split('\n')">
                             <view class="text-[28rpx] leading-[40rpx] mb-[20rpx]">{{ item }}</view>
-                        </block>
+                        </template>
                     </scroll-view>
                     <view class="btn-wrap">
                         <button class="primary-btn-bg btn" @click="signPopup = false">知道了</button>
@@ -186,14 +186,14 @@
                             <view class="text-[36rpx] text-[#EF000C] font-500 mb-[10rpx] text-center">{{ signAward.title }}</view>
                             <view class="text-[24rpx] text-[#333] leading-[34rpx] text-center mb-[60rpx]" v-if="signAward.info">{{ signAward.info }}</view>
                             <view class="px-[68rpx] mb-[100rpx]">
-                                <block v-for="(item,index) in signAward.awards">
+                                <template v-for="(item,index) in signAward.awards">
                                     <template v-if="item.content" v-for="(subItem,subIndex) in item.content">
                                         <view class="flex items-center mb-[30rpx]">
                                             <image :src="img(subItem.icon)" class="w-[42rpx] h-[42rpx]" />
                                             <view class="ml-[20rpx] text-[28rpx] text-[#303133] leading-[38rpx]">{{ subItem.text }}</view>
                                         </view>
                                     </template>
-                                </block>
+                                </template>
                             </view>
                             <view class="flex justify-center relative z-30">
                                 <view class="w-[370rpx] h-[80rpx] primary-btn-bg font-500 rounded-[100rpx] text-[#ffffff] text-center leading-[80rpx] text-[26rpx]" @click="awardShow = false">我知道了</view>
@@ -216,14 +216,14 @@
                             <view class="text-[36rpx] text-[#303133] font-500 mb-[10rpx] text-center relative z-20">{{ packInfo.title }}</view>
                             <view class="text-[24rpx] text-[#333] leading-[34rpx] text-center mb-[60rpx]">{{ packInfo.info }}</view>
                             <view class="px-[68rpx] mb-[100rpx]">
-                                <block v-for="(item,index) in packInfo.awards">
+                                <template v-for="(item,index) in packInfo.awards">
                                     <template v-if="item.content">
                                         <view class="flex items-center mb-[32rpx]" v-for="(subItem,subIndex)  in item.content" :key="subIndex">
                                             <image :src="img(subItem.icon)" class="w-[42rpx] h-[42rpx]" />
                                             <view class="ml-[20rpx] text-[28rpx] text-[#303133] leading-[38rpx]">{{ subItem.text }}</view>
                                         </view>
                                     </template>
-                                </block>
+                                </template>
                             </view>
                             <view class="flex justify-center  relative z-30">
                                 <view class="w-[370rpx] h-[80rpx] border-[2rpx] text-[var(--primary-color)] border-solid rounded-[40rpx] border-[var(--primary-color)] text-center flex-center text-[26rpx] box-border" @click="packShow = false">我知道了</view>

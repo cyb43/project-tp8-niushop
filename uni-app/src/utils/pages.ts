@@ -12,9 +12,11 @@ export function getNeedLoginPages() {
     // 获取分包中需要登录的页面
     if (pagesJson.subPackages) {
         pagesJson.subPackages.forEach(subPackages => {
-            subPackages.pages.forEach(item => {
-                if (item.needLogin) pages.push(`/${ subPackages.root }/${ item.path }`)
-            })
+            if(subPackages.pages) {
+                subPackages.pages.forEach(item => {
+                    if (item.needLogin) pages.push(`/${ subPackages.root }/${ item.path }`)
+                })
+            }
         })
     }
     return pages
@@ -37,9 +39,11 @@ export function getSubPackagesPages() {
     // 获取分包中需要登录的页面
     if (pagesJson.subPackages) {
         pagesJson.subPackages.forEach(subPackages => {
-            subPackages.pages.forEach(item => {
-                pages.push(`/${ subPackages.root }/${ item.path }`)
-            })
+            if(subPackages.pages) {
+                subPackages.pages.forEach(item => {
+                    pages.push(`/${ subPackages.root }/${ item.path }`)
+                })
+            }
         })
     }
     return pages
@@ -59,4 +63,30 @@ export function getTabbarPages() {
  */
 export function getFirstPage() {
     return '/' + pagesJson.pages[0].path
+}
+
+/**
+ * 获取自定义navbar的页面
+ */
+export function getCustomNavigationPages() {
+    const pages: any = {}
+    // 获取主包中的
+    pagesJson.pages.forEach(item => {
+        if (item.style && item.style.navigationStyle && item.style.navigationStyle == 'custom') {
+            pages[`/${ item.path }`] = item
+        }
+    })
+    // 获取分包中的
+    if (pagesJson.subPackages) {
+        pagesJson.subPackages.forEach(subPackages => {
+            if(subPackages.pages) {
+                subPackages.pages.forEach(item => {
+                    if (item.style && item.style.navigationStyle && item.style.navigationStyle == 'custom') {
+                        pages[`/${ subPackages.root }/${ item.path }`] = item
+                    }
+                })
+            }
+        })
+    }
+    return pages
 }

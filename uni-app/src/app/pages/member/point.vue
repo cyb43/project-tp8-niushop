@@ -80,7 +80,7 @@
 
             <view class="mt-[var(--top-m)] sidebar-margin card-template" v-if="pointList.length">
                 <view class="title">做任务领积分</view>
-                <block v-for="(item,index) in pointList">
+                <template v-for="(item,index) in pointList">
                     <view class="flex items-center justify-between mt-[30rpx]">
                         <view class="flex items-center flex-1">
                             <image class="h-[80rpx] w-[80rpx]" :src="img(item.icon||'')" mode="heightFix" />
@@ -92,7 +92,7 @@
                         <button v-if="item.button" class="h-[54rpx] !m-0 rounded-[40rpx] text-[24rpx] flex-center !text-[#fff] primary-btn-bg"
                                 shape="circle" @click="toLink(item.button.wap_redirect)">{{ item.button.text }}</button>
                     </view>
-                </block>
+                </template>
             </view>
         </template>
         <loading-page :loading="loading"></loading-page>

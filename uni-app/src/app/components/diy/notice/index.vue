@@ -44,9 +44,9 @@
                     <view class="w-[570rpx] px-[32rpx] popup-common center">
                         <view class="title">公告</view>
                         <scroll-view :scroll-y="true" class="px-[30rpx] box-border h-[260rpx]">
-                            <block v-for="(item) in noticeContent.split('\n')">
+                            <template v-for="(item) in noticeContent.split('\n')">
                                 <view class="text-[28rpx] leading-[40rpx] mb-[20rpx]">{{ item }}</view>
-                            </block>
+                            </template>
                         </scroll-view>
                         <view class="btn-wrap !pt-[40rpx]">
                             <button class="primary-btn-bg w-[480rpx] h-[70rpx] text-[26rpx] leading-[70rpx] rounded-[35rpx] !text-[#fff] font-500" @click="noticeShow = false">我知道了</button>

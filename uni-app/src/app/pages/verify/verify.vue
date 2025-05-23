@@ -1,6 +1,6 @@
 <template>
     <view :style="themeColor()" class="bg-[var(--page-bg-color)] min-h-[100vh] overflow-hidden">
-        <block v-if="!loading && verifyInfo && verifyInfo.value">
+        <template v-if="!loading && verifyInfo && verifyInfo.value">
             <view class="p-[30rpx] bg-[#fff]">
                 <view class="text-[var(--primary-color)] fixed top-[40rpx] right-[30rpx] flex items-center" @click="redirect({url:'/app/pages/verify/record'})">
                     <text class="nc-iconfont nc-icon-lishijiluV6xx !text-[28rpx] -mb-[2rpx]"></text>
@@ -23,11 +23,17 @@
                     <image class="w-[150rpx] h-[150rpx] rounded-[var(--goods-rounded-big)]" mode="aspectFill" v-if="item.cover" :src="img(item.cover)"/>
                     <image class="w-[150rpx] h-[150rpx] rounded-[var(--goods-rounded-big)]" mode="aspectFill" v-else :src="img('addon/tourism/tourism/member/hotel.png')"/>
                     <view class="flex flex-col flex-1 ml-[20rpx] py-[4rpx]">
-                        <view class="leading-[1]">
-                            <view class="leading-[40rpx] truncate max-w-[490rpx] text-[28rpx]">{{ item.name }}</view>
-                            <view class="mt-[14rpx] truncate text-[24rpx] text-[var(--text-color-light9)] leading-[28rpx] max-w-[490rpx]" v-if="item.sub_name">{{ item.sub_name }}</view>
-                        </view>
-                        <view class="text-[var(--text-color-light6)] text-[28rpx] mt-[20rpx]">x1</view>
+						<view class="leading-[1]">
+							<view class="leading-[40rpx] truncate max-w-[490rpx] text-[28rpx]">{{ item.name }}</view>
+							<view class="mt-[14rpx] truncate text-[24rpx] text-[var(--text-color-light9)] leading-[28rpx] max-w-[490rpx]" v-if="item.sub_name">{{ item.sub_name }}</view>
+						</view>
+						<view class="flex items-center mt-[20rpx]">
+							 <view class="text-[var(--text-color-light6)] text-[28rpx] ">x{{item.verify_num }}</view>
+							<view class="leading-[1] ml-3 text-[var(--price-text-color)] text-[28rpx]">
+								{{item.un_use_msg}}
+							</view>
+						</view>
+                       
                     </view>
                 </view>
             </view>
@@ -52,9 +58,10 @@
                     <text class="text-[28rpx] text-[#333]">{{ subItem.value }}</text>
                 </view>
             </view>
+            <view class="common-tab-bar w-[100%]"></view>
+            <view class="verify-tab-bar fixed flex-center !text-[26rpx] rounded-[50rpx] h-[80rpx] left-[20rpx] right-[20rpx] text-[#fff] font-500" :class="verifyInfo.is_can_use ? 'primary-btn-bg' : 'bg-[#ccc]'" @click="verifyFn">确定</view>
 
-            <view class="fixed bottom-[30rpx] primary-btn-bg text-[#fff] flex-center !text-[26rpx] rounded-[50rpx] h-[80rpx] left-[20rpx] right-[20rpx] font-500" @click="verifyFn">确定</view>
-        </block>
+        </template>
         <loading-page :loading="loading"></loading-page>
     </view>
 </template>
@@ -129,6 +136,7 @@ const getVerifierInfoFn = () => {
 }
 let isLoading = false;
 const verifyFn = () => {
+	if (!verifyInfo.value.is_can_use) return;
     if (isLoading) return false;
     isLoading = true;
 
@@ -148,4 +156,8 @@ const verifyFn = () => {
 </script>
 
 <style lang="scss" scoped>
+.verify-tab-bar{
+    bottom: calc(constant(safe-area-inset-bottom) + 30rpx);
+    bottom: calc(env(safe-area-inset-bottom) + 30rpx);
+}
 </style>

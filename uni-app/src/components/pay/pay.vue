@@ -14,13 +14,13 @@
                     <view class="text-right flex-1 pl-[30rpx] truncate">{{ payInfo.body }}</view>
                 </view>
                 <view class="mx-[var(--popup-sidebar-m)] px-[30rpx] bg-white rounded-[20rpx] bg-[var(--temp-bg)]">
-                    <block v-if="payInfo.pay_type_list.length">
+                    <template v-if="payInfo.pay_type_list.length">
                         <view class="pay-item py-[30rpx] flex items-center border-0 border-b border-solid border-[#eee]" v-for="(item, index) in payInfo.pay_type_list" :key="index" @click="type = item.key">
                             <u-image :src="img(item.icon)" width="50rpx" height="50rpx"></u-image>
                             <view class="flex-1 px-[20rpx] text-[28rpx] font-500">{{ item.name }}</view>
                             <u-icon name="checkbox-mark" color="var(--primary-color)" v-if="item.key == type"></u-icon>
                         </view>
-                    </block>
+                    </template>
                     <view class="py-[30rpx] text-center text-[24rpx] text-gray-subtitle" v-else>{{ t('pay.notHavePayType') }}</view>
                 </view>
             </scroll-view>

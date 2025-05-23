@@ -24,6 +24,8 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue';
 import { useDiy } from '@/hooks/useDiy'
+import { useShare } from '@/hooks/useShare'
+
 import { redirect } from '@/utils/common';
 import diyGroup from '@/addon/components/diy/group/index.vue'
 import useMemberStore from '@/stores/member'
@@ -31,6 +33,7 @@ import useMemberStore from '@/stores/member'
 // 会员信息
 const memberStore = useMemberStore()
 const userInfo = computed(() => memberStore.info)
+const { setShare } = useShare()
 
 const diy = useDiy({
     name: 'DIY_MEMBER_INDEX'
@@ -53,6 +56,8 @@ diy.onShow((data: any) => {
         // 跳转到设置的启动页
         redirect({ url: data.page, mode: 'reLaunch' })
     }
+    let share = data.share ? JSON.parse(data.share) : null;
+    setShare(share);
     diyGroupRef.value?.refresh();
     if (userInfo.value) {
         useMemberStore().getMemberInfo()

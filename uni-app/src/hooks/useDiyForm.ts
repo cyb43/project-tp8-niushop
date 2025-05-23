@@ -144,7 +144,7 @@ export function useDiyForm(params: any = {}) {
                     let diyFormStorage = uni.getStorageSync('diyFormStorage_' + diyStore.id)
                     if (diyFormStorage) {
                         var date = new Date();
-                        let currentTime: any = parseInt(date.getTime() / 1000); // 定位信息 5分钟内有效，过期后将重新获取定位信息
+                        let currentTime: any = parseInt(date.getTime() / 1000); // 存储信息 5分钟内有效，过期后将重新获取定位信息
                         if (diyFormStorage.validTime > currentTime) {
                             if (diyFormStorage.components) {
                                 diyFormStorage.components.forEach((item: any) => {

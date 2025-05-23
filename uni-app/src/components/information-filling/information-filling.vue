@@ -154,45 +154,47 @@ const getPhoneNumber = (e: any) => {
     }
 }
 
-const confirm = async() => {
-    formRef.value.validate().then(async() => {
-        if (loading.value) return
-        loading.value = true
+const confirm = async () => {
+    formRef.value.validate().then(async () => {
+        if (loading.value) return;
+        loading.value = true;
 
-        if (info.value) {
-            // 修改头像
-            await modifyMember({ field: 'headimg', value: formData.headimg }).then(() => {
-                memberStore.info.headimg = formData.headimg
-            }).catch(() => {
-                loading.value = false
-            })
-            if (!loading.value) return
+        try {
+            if (info.value) {
+                // 修改头像
+                await modifyMember({ field: 'headimg', value: formData.headimg });
+                memberStore.info.headimg = formData.headimg;
 
-            // 修改昵称
-            modifyMember({ field: 'nickname', value: formData.nickname }).then(() => {
-                memberStore.info.nickname = formData.nickname
-                loading.value = false
-                show.value = false
-            }).catch(() => {
-                loading.value = false
-            })
+                // 修改昵称
+                await modifyMember({ field: 'nickname', value: formData.nickname });
+                memberStore.info.nickname = formData.nickname;
 
-            // #ifdef MP-WEIXIN
-            const login = useLogin()
-            if (info.value && !info.value.weapp_openid) {
-                login.getAuthCode({ updateFlag: true }) // 更新openid
+                // 更新openid
+                if (info.value && !info.value.weapp_openid) {
+                    const login = useLogin();
+                    await login.getAuthCode({ updateFlag: true }); // 更新openid
+                }
+
+                // 关闭弹窗
+                show.value = false;
+
+            } else {
+                // todo 如果没有登录过，则注册
+                // #ifdef MP-WEIXIN
+                const login = useLogin();
+                await login.getAuthCode({ backFlag: true, ...formData }); // 注册
+				show.value = false; 
+                // #endif
             }
-            // #endif
-        } else {
-            // todo 如果没有登录过，则注册
-            // #ifdef MP-WEIXIN
-            const login = useLogin()
-            login.getAuthCode({ backFlag: true, ...formData }) // 注册
-            // #endif
+        } catch (error) {
+            // 处理任何错误
+            console.error("发生错误：", error);
+        } finally {
+            loading.value = false; // 加载结束时停止 loading
         }
-
     })
 }
+
 
 const checkAuth = (e, type) => {
     // #ifdef MP-WEIXIN

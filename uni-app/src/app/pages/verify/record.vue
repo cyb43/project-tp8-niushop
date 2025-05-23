@@ -12,7 +12,7 @@
         </view>
         <mescroll-body ref="mescrollRef" top="88rpx" @init="mescrollInit" :down="{ use: false }" @up="geVerifyRecordFn">
             <view class="sidebar-margin pt-[var(--top-m)]" v-if="list.length">
-                <block v-for="(item,index) in list" :key="item.id">
+                <template v-for="(item,index) in list" :key="item.id">
                     <view class="w-full flex flex-col mb-[var(--top-m)] card-template" @click="toLink(item)">
                         <view class="flex items-center mb-[30rpx] leading-[1] text-[26rpx]">
                             <view class="nc-iconfont nc-icon-hexiaotaiV6xx !text-[26rpx] pr-[10rpx]"></view>
@@ -20,7 +20,7 @@
                             <text class="ml-[10rpx] max-w-[494rpx]">{{ item.code }}</text>
                             <text class="text-[#303133] text-[26rpx] font-400 nc-iconfont nc-icon-fuzhiV6xx1 ml-[11rpx]" @click.stop="copy(item.code)"></text>
                         </view>
-                        <view class="flex flex-1" v-for="(dataItem,dataIndex) in item.value.list" :key="dataIndex">
+                        <view class="flex flex-1 mb-2" v-for="(dataItem,dataIndex) in item.value.list" :key="dataIndex">
                             <u--image width="130rpx" height="130rpx" :radius="'var(--goods-rounded-big)'" :src="img(dataItem.cover ? dataItem.cover : '')" mode="aspectFill">
                                 <template #error>
                                     <image class="w-[130rpx] h-[130rpx] rounded-[var(--goods-rounded-big)] overflow-hidden" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill"/>
@@ -29,7 +29,7 @@
                             <view class="flex flex-col flex-1 ml-[20rpx] py-[4rpx]">
                                 <view class="max-w-[490rpx] leading-[1.3] truncate text-[28rpx] text-[#303133]">{{ dataItem.name }}</view>
                                 <view class="mt-[14rpx] truncate text-[24rpx] text-[var(--text-color-light9)] max-w-[490rpx] " v-if="item.sub_name">{{ item.sub_name }}</view>
-                                <view class="text-[24rpx] mt-[10rpx] text-[var(--text-color-light9)]">x1</view>
+                                <view class="text-[24rpx] mt-[10rpx] text-[var(--text-color-light9)]">x{{dataItem.verify_num}}</view>
                             </view>
                         </view>
                         <view class="flex bg-[var(--temp-bg)] py-[20rpx] px-[20rpx] rounded-[12rpx] mt-[20rpx]">
@@ -43,7 +43,7 @@
                             </view>
                         </view>
                     </view>
-                </block>
+                </template>
             </view>
             <mescroll-empty v-if="!list.length && loading" :option="{tip : '暂无核销记录'}"></mescroll-empty>
         </mescroll-body>

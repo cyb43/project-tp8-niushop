@@ -1,15 +1,17 @@
 <template>
-    <view v-if="showPop">
-        <view class="privacy-mask">
-            <view class="privacy-wrap">
-                <view class="privacy-title">用户隐私保护提示</view>
-                <view class="privacy-desc">感谢您使用本小程序，在使用前您应当阅读并同意<text class="privacy-link" @tap="openPrivacyContract">{{ privacyContractName }}</text>， 当点击同意并继续时，即表示您已理解并同意该条款内容，该条款将对您产生法律约束力；如您不同意，将无法继续使用小程序相关功能。</view>
-                <view class="privacy-button-flex">
-                    <button class="privacy-button-btn bg-disagree" @tap="handleDisagree">不同意</button>
-                    <button id="agree-btn" class="privacy-button-btn bg-agree" open-type="agreePrivacyAuthorization" @agreeprivacyauthorization="handleAgree">同意并继续</button>
-                </view>
-            </view>
-        </view>
+    <view @touchmove.prevent.stop>
+		<u-popup :show="showPop" type="bottom" @close="disPopUp">
+			<view>
+				<view class="p-[30rpx]">
+					<view class="privacy-title">用户隐私保护提示</view>
+					<view class="privacy-desc">感谢您使用本小程序，在使用前您应当阅读并同意<text class="privacy-link" @tap="openPrivacyContract">{{ privacyContractName }}</text>， 当点击同意并继续时，即表示您已理解并同意该条款内容，该条款将对您产生法律约束力；如您不同意，将无法继续使用小程序相关功能。</view>
+					<view class="privacy-button-flex">
+						<button class="privacy-button-btn bg-disagree" @tap="handleDisagree">拒绝</button>
+						<button id="agree-btn" class="privacy-button-btn bg-agree" open-type="agreePrivacyAuthorization" @agreeprivacyauthorization="handleAgree">同意</button>
+					</view>
+				</view>
+			</view>
+		</u-popup>
     </view>
 </template>
 
@@ -183,18 +185,18 @@ defineExpose({
 }
 
 .privacy-title {
-    padding: 0rpx 30rpx 40rpx 30rpx;
+    padding: 10rpx 40rpx;
     font-weight: 700;
-    font-size: 36rpx;
-    text-align: center;
+    font-size: 30rpx;
+    // text-align: center;
 }
 
 .privacy-desc {
-    font-size: 30rpx;
+    font-size: 28rpx;
     color: #555;
-    line-height: 2;
+    line-height: 1.5;
     text-align: left;
-    padding: 0 40rpx;
+    padding: 15rpx 40rpx;
 }
 
 .privacy-link {
@@ -203,17 +205,17 @@ defineExpose({
 
 .privacy-button-flex {
     display: flex;
-    padding: 20rpx 40rpx;
+    padding: 20rpx 100rpx;
 }
 
 .privacy-button-btn {
     color: #FFF;
     font-size: 30rpx;
     font-weight: 500;
-    line-height: 100rpx;
+    line-height: 80rpx;
     text-align: center;
-    height: 100rpx;
-    border-radius: 20rpx;
+    height: 80rpx;
+    border-radius: 10rpx;
     border: none;
     background: #07c160;
     flex: 1;

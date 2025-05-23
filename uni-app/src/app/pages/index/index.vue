@@ -26,7 +26,10 @@
 import { ref, nextTick } from 'vue';
 import { useDiy } from '@/hooks/useDiy'
 import { redirect } from '@/utils/common';
+import { useShare } from '@/hooks/useShare'
+
 import diyGroup from '@/addon/components/diy/group/index.vue'
+const { setShare } = useShare()
 
 uni.hideTabBar() // 隐藏tabbar
 
@@ -51,6 +54,8 @@ diy.onShow((data: any) => {
         // 跳转到设置的启动页
         redirect({ url: data.page, mode: 'reLaunch' })
     }
+    let share = data.share ? JSON.parse(data.share) : null;
+    setShare(share);
     diyGroupRef.value?.refresh();
     // #ifdef MP
     nextTick(() => {
