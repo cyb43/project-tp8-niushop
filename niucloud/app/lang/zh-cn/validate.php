@@ -36,22 +36,6 @@ return [
         'real_name_require' => '实际姓名必须填写',
         'password_require' => '账号密码必须填写',
     ],
-    //站点
-    'validate_site' => [
-        'site_name_require' => '网站名称必须填写',
-        'site_name_max' => '网站名称最多不能超过20个字符',
-        'keywords_require' => '关键字必须填写',
-        'keywords_max' => '关键字最多不能超过30个字符',
-        'group_id_require' => '站点分组必须填写',
-        'group_id_number' => '站点分组必须是整数',
-        'expire_time_number' => '到期时间必须是时间戳',
-        'group_name_require' => '站点分组名称必须填写',
-        'group_name_max' => '站点分组名称不能超过20字符',
-        'app_require' => '套餐主应用必须选择',
-        'front_end_name_require' => '前台名称必须填写',
-        'front_end_name_max' => '前台名称最多不能超过20个字符',
-        'site_domain_cannot_repeated' => '站点域名不能重复'
-    ],
     //附件
     'validate_attachment' => [
         'name_require' => '附件组名称必须填写',

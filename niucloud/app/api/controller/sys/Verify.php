@@ -22,53 +22,60 @@ class Verify extends BaseApiController
      * 获取验证码
      * @return Response
      */
-    public function getVerifyCode(){
+    public function getVerifyCode()
+    {
         $data = $this->request->params([
-            ['data',  []],
-            ['type', '']
+            [ 'data', [] ],
+            [ 'type', '' ]
         ]);
-        return success(data:(new VerifyService())->getVerifyCode($data['type'], $data['data']));
+        return success(data: ( new VerifyService() )->getVerifyCode($data[ 'type' ], $data[ 'data' ]));
     }
 
     /**
      * 获取核销码信息
      * @return Response
      */
-    public function getInfoByCode(){
+    public function getInfoByCode()
+    {
         $data = $this->request->params([
-            ['code', ''],
+            [ 'code', '' ],
         ]);
-        return success(data:(new VerifyService())->getInfoByCode($data['code']));
+        return success(data: ( new VerifyService() )->getInfoByCode($data[ 'code' ]));
     }
+
     /**
      * 核销
      * @param $code
      * @return Response
      */
-    public function verify($code){
-        return success(data:(new VerifyService())->verify($code));
+    public function verify($code)
+    {
+        return success(data: ( new VerifyService() )->verify($code));
     }
+
     /**
      * 校验是否是核销员
      * @return Response
      */
-    public function checkVerifier(){
-        return success(data:(new VerifyService())->checkVerifier());
+    public function checkVerifier()
+    {
+        return success(data: ( new VerifyService() )->checkVerifier());
     }
 
     /**
      * 核销记录
      * @return void
      */
-    public function records(){
+    public function records()
+    {
         $data = $this->request->params([
-            ['relate_tag', 0],
-            ['type', ''],
-            ['code', ''],
-            ['keyword', ''],
-            ['create_time', []]
+            [ 'relate_tag', 0 ],
+            [ 'type', '' ],
+            [ 'code', '' ],
+            [ 'keyword', '' ],
+            [ 'create_time', [] ]
         ]);
-        return success(data:(new VerifyService())->getRecordsPageByVerifier($data));
+        return success(data: ( new VerifyService() )->getRecordsPageByVerifier($data));
     }
 
     /**
@@ -76,8 +83,9 @@ class Verify extends BaseApiController
      * @param $code
      * @return Response
      */
-    public function detail(string|int $code){
-        return success(data:(new VerifyService())->getRecordsDetailByVerifier($code));
+    public function detail(string|int $code)
+    {
+        return success(data: ( new VerifyService() )->getRecordsDetailByVerifier($code));
 
     }
 }

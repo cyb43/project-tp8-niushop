@@ -24,13 +24,13 @@ class Verify extends BaseAdminController
     public function lists()
     {
         $data = $this->request->params([
-            ['relate_tag', 0],
-            ['type', ''],
-            ['code', ''],
-            ['verifier_member_id', ''],
-            ['create_time', []]
+            [ 'relate_tag', 0 ],
+            [ 'type', '' ],
+            [ 'code', '' ],
+            [ 'verifier_member_id', '' ],
+            [ 'create_time', [] ]
         ]);
-        return success((new VerifyService())->getPage($data));
+        return success(( new VerifyService() )->getPage($data));
     }
 
     /**
@@ -40,6 +40,6 @@ class Verify extends BaseAdminController
      */
     public function detail(string $verify_code)
     {
-        return success((new VerifyService())->getDetail($verify_code));
+        return success(( new VerifyService() )->getDetail($verify_code));
     }
 }

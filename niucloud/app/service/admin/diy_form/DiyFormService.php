@@ -624,39 +624,6 @@ class DiyFormService extends BaseAdminService
     }
 
     /**
-     * 获取万能表单微信小程序二维码
-     * @param $form_id
-     * @return array
-     */
-    public function getQrcode($form_id)
-    {
-        if (empty($form_id)) {
-            throw new AdminException('缺少参考form_id');
-        }
-
-        $page = 'app/pages/index/diy_form';
-
-        $data = [
-            [
-                'key' => 'form_id',
-                'value' => $form_id
-            ],
-        ];
-        $dir = 'upload/diy_form_qrcode';
-
-        $path = '';
-        try {
-            $path = qrcode('', $page, $data, $dir, 'weapp');
-        } catch (\Exception $e) {
-            Log::write('万能表单微信小程序二维码生成error' . $e->getMessage() . $e->getFile() . $e->getLine());
-        }
-
-        return [
-            'path' => $path
-        ];
-    }
-
-    /**
      * 检测表单名称唯一性
      * @param array $data
      * @return bool

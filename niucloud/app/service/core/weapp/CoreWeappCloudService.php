@@ -14,6 +14,7 @@ namespace app\service\core\weapp;
 use app\dict\sys\CloudDict;
 use app\model\addon\Addon;
 use app\model\weapp\WeappVersion;
+use app\service\api\diy\DiyConfigService;
 use app\service\core\addon\CoreAddonDevelopDownloadService;
 use app\service\core\addon\WapTrait;
 use app\service\core\niucloud\CoreCloudBaseService;
@@ -44,15 +45,16 @@ class CoreWeappCloudService extends CoreCloudBaseService
      * 上传小程序
      * @param $addon
      */
-    public function uploadWeapp(array $data) {
+    public function uploadWeapp(array $data)
+    {
         if (!request()->isSsl()) throw new CommonException('CURR_SITE_IS_NOT_OPEN_SSL');
 
-        $config = (new CoreWeappConfigService())->getWeappConfig();
-        if (empty($config['app_id'])) throw new CommonException('WEAPP_APPID_EMPTY');
-        if (empty($config['upload_private_key'])) throw new CommonException('UPLOAD_KEY_EMPTY');
-        if (!file_exists($config['upload_private_key'])) throw new CommonException('UPLOAD_KEY_NOT_EXIST');
+        $config = ( new CoreWeappConfigService() )->getWeappConfig();
+        if (empty($config[ 'app_id' ])) throw new CommonException('WEAPP_APPID_EMPTY');
+        if (empty($config[ 'upload_private_key' ])) throw new CommonException('UPLOAD_KEY_EMPTY');
+        if (!file_exists($config[ 'upload_private_key' ])) throw new CommonException('UPLOAD_KEY_NOT_EXIST');
 
-        $compile_addon = (new Addon())->where([ ['compile', 'like', "%weapp%"] ])->field('key')->findOrEmpty();
+        $compile_addon = ( new Addon() )->where([ [ 'compile', 'like', "%weapp%" ] ])->field('key')->findOrEmpty();
         // 上传任务key
         $task_key = uniqid();
         // 此次上传任务临时目录
@@ -64,7 +66,8 @@ class CoreWeappCloudService extends CoreCloudBaseService
 
         // 如果不存在编译版小程序
         if ($compile_addon->isEmpty()) {
-            dir_copy($this->root_path . 'uni-app', $uni_dir, exclude_dirs:['node_modules', 'unpackage', 'dist']);
+            dir_copy($this->root_path . 'uni-app', $uni_dir, exclude_dirs: [ 'node_modules', 'unpackage', 'dist' ]);
+//            $this->handleTabbar($uni_dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR);
             // 替换env文件
             $this->weappEnvReplace($uni_dir . DIRECTORY_SEPARATOR . '.env.production');
         } else {
@@ -73,25 +76,25 @@ class CoreWeappCloudService extends CoreCloudBaseService
             dir_copy($compile_dir, $uni_dir);
             $this->weappCompileReplace($uni_dir);
         }
-        file_put_contents($package_dir . 'private.key', file_get_contents($config['upload_private_key']));
+        file_put_contents($package_dir . 'private.key', file_get_contents($config[ 'upload_private_key' ]));
 
         // 将临时目录下文件生成压缩包
         $zip_file = $temp_dir . DIRECTORY_SEPARATOR . 'weapp.zip';
-        (new CoreAddonDevelopDownloadService(''))->compressToZip($package_dir, $zip_file);
+        ( new CoreAddonDevelopDownloadService('') )->compressToZip($package_dir, $zip_file);
 
         $query = [
             'compile' => $compile_addon->isEmpty() ? 0 : 1,
             'authorize_code' => $this->auth_code,
-            'appid' => $config['app_id'],
-            'version' => $data['version'] ?? '',
-            'desc' => $data['desc'] ?? '',
+            'appid' => $config[ 'app_id' ],
+            'version' => $data[ 'version' ] ?? '',
+            'desc' => $data[ 'desc' ] ?? '',
             'do' => 1,
             'timestamp' => time()
         ];
-        $response = (new CloudService())->httpPost('cloud/weapp?' . http_build_query($query), [
+        $response = ( new CloudService() )->httpPost('cloud/weapp?' . http_build_query($query), [
             'multipart' => [
                 [
-                    'name'     => 'file',
+                    'name' => 'file',
                     'contents' => fopen($zip_file, 'r'),
                     'filename' => 'weapp.zip'
                 ]
@@ -101,9 +104,45 @@ class CoreWeappCloudService extends CoreCloudBaseService
         // 删除临时文件
         del_target_dir(runtime_path() . 'backup' . DIRECTORY_SEPARATOR . 'weapp', true);
 
-        if (isset($response['code']) && $response['code'] == 0) throw new CommonException($response['msg']);
+        if (isset($response[ 'code' ]) && $response[ 'code' ] == 0) throw new CommonException($response[ 'msg' ]);
 
-        return ['key' => $query['timestamp'] ];
+        return [ 'key' => $query[ 'timestamp' ] ];
+    }
+
+    /**
+     * 处理底部导航
+     * @param $compile_path
+     * @return void
+     */
+    public function handleTabbar($compile_path)
+    {
+        $bottomList = array_column(( new DiyConfigService() )->getBottomList(), null, 'key');
+        $tabbarList = [];
+        foreach ($bottomList as $app_item) {
+            array_push($tabbarList, ...$app_item[ 'value' ][ 'list' ]);
+        }
+
+        $tabbarList = array_map(function ($item) {
+            $link = array_filter(explode('/', $item[ 'link' ][ 'url' ]));
+            $item[ 'link' ] = $item[ 'link' ][ 'url' ];
+            $item[ 'component' ] = implode('-', $link);
+            $item[ 'name' ] = lcfirst(implode('', array_map(function ($str) {
+                return ucfirst($str);
+            }, $link)));
+            return $item;
+        }, $tabbarList);
+        $tabbarList = array_column($tabbarList, null, 'name');
+
+        if (isset($tabbarList[ 'appPagesIndexIndex' ])) unset($tabbarList[ 'appPagesIndexIndex' ]);
+        if (isset($tabbarList[ 'appPagesMemberIndex' ])) unset($tabbarList[ 'appPagesMemberIndex' ]);
+
+        // 处理vue文件
+        $tpl = str_replace('/', DIRECTORY_SEPARATOR, public_path() . 'static/tpl/tabbar.tpl');
+        $content = view($tpl, [ 'tabbarList' => $tabbarList ])->getContent();
+        file_put_contents(str_replace('/', DIRECTORY_SEPARATOR, $compile_path . 'app/pages/index/tabbar.vue'), $content);
+
+        // 处理tabbar.json
+        file_put_contents($compile_path . 'tabbar.json', json_encode(array_column($tabbarList, 'link'), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT));
     }
 
     /**
@@ -111,10 +150,11 @@ class CoreWeappCloudService extends CoreCloudBaseService
      * @param string $env_file
      * @return void
      */
-    private function weappEnvReplace(string $env_file) {
+    private function weappEnvReplace(string $env_file)
+    {
         $env = file_get_contents($env_file);
-        $env = str_replace("VITE_APP_BASE_URL=''", "VITE_APP_BASE_URL='" . (string)url('/api/', [], '', true) . "'", $env);
-        $env = str_replace("VITE_IMG_DOMAIN=''", "VITE_IMG_DOMAIN='" . (string)url('/', [], '', true) . "'", $env);
+        $env = str_replace("VITE_APP_BASE_URL=''", "VITE_APP_BASE_URL='" . (string) url('/api/', [], '', true) . "'", $env);
+        $env = str_replace("VITE_IMG_DOMAIN=''", "VITE_IMG_DOMAIN='" . (string) url('/', [], '', true) . "'", $env);
         file_put_contents($env_file, $env);
     }
 
@@ -123,17 +163,18 @@ class CoreWeappCloudService extends CoreCloudBaseService
      * @param string $vendor_file
      * @return void
      */
-    private function weappCompileReplace(string $path) {
+    private function weappCompileReplace(string $path)
+    {
         // 替换request.js
         $request_file = $path . DIRECTORY_SEPARATOR . 'utils' . DIRECTORY_SEPARATOR . 'request.js';
         $content = file_get_contents($request_file);
-        $content = str_replace('{{$baseUrl}}',  (string)url('/api/', [], '', true), $content);
+        $content = str_replace('{{$baseUrl}}', (string) url('/api/', [], '', true), $content);
         file_put_contents($request_file, $content);
 
         // 替换common.js
         $common_file = $path . DIRECTORY_SEPARATOR . 'utils' . DIRECTORY_SEPARATOR . 'common.js';
         $content = file_get_contents($common_file);
-        $content = str_replace('{{$imgUrl}}',  (string)url('/', [], '', true), $content);
+        $content = str_replace('{{$imgUrl}}', (string) url('/', [], '', true), $content);
         file_put_contents($common_file, $content);
     }
 
@@ -141,11 +182,12 @@ class CoreWeappCloudService extends CoreCloudBaseService
      * 获取微信小程序预览码
      * @return void
      */
-    public function getWeappPreviewImage() {
+    public function getWeappPreviewImage()
+    {
         $query = [
             'authorize_code' => $this->auth_code,
         ];
-        $preview_url = (new CloudService())->getUrl('cloud/get_weapp_preview?' . http_build_query($query));
+        $preview_url = ( new CloudService() )->getUrl('cloud/get_weapp_preview?' . http_build_query($query));
 
         try {
             $path = runtime_path() . uniqid() . '.jpg';
@@ -161,21 +203,22 @@ class CoreWeappCloudService extends CoreCloudBaseService
      * @param string $timestamp
      * @return void
      */
-    public function getWeappCompileLog(string $timestamp) {
+    public function getWeappCompileLog(string $timestamp)
+    {
         $query = [
             'authorize_code' => $this->auth_code,
             'timestamp' => $timestamp
         ];
-        $build_log = (new CloudService())->httpGet('cloud/get_weapp_logs?' . http_build_query($query));
+        $build_log = ( new CloudService() )->httpGet('cloud/get_weapp_logs?' . http_build_query($query));
 
-        if (isset($build_log['data']) && isset($build_log['data'][0]) && is_array($build_log['data'][0])) {
-            $last = end($build_log['data'][0]);
-            if ($last['code'] == 0) {
-                (new WeappVersion())->update(['status' => CloudDict::APPLET_UPLOAD_FAIL, 'fail_reason' => $last['msg'] ?? '', 'update_time' => time() ], ['task_key' => $timestamp]);
+        if (isset($build_log[ 'data' ]) && isset($build_log[ 'data' ][ 0 ]) && is_array($build_log[ 'data' ][ 0 ])) {
+            $last = end($build_log[ 'data' ][ 0 ]);
+            if ($last[ 'code' ] == 0) {
+                ( new WeappVersion() )->update([ 'status' => CloudDict::APPLET_UPLOAD_FAIL, 'fail_reason' => $last[ 'msg' ] ?? '', 'update_time' => time() ], [ 'task_key' => $timestamp ]);
                 return $build_log;
             }
-            if ($last['percent'] == 100) {
-                (new WeappVersion())->update(['status' => CloudDict::APPLET_UPLOAD_SUCCESS, 'update_time' => time() ], ['task_key' => $timestamp]);
+            if ($last[ 'percent' ] == 100) {
+                ( new WeappVersion() )->update([ 'status' => CloudDict::APPLET_UPLOAD_SUCCESS, 'update_time' => time() ], [ 'task_key' => $timestamp ]);
             }
         }
         return $build_log;

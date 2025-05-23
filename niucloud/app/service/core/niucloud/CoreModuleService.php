@@ -73,7 +73,6 @@ class CoreModuleService extends BaseNiucloudClient
 
     }
 
-
     /**
      * 操作token
      * @param $action
@@ -83,7 +82,7 @@ class CoreModuleService extends BaseNiucloudClient
      */
     public function getActionToken($action, $data)
     {
-        return $this->httpGet('member_app_action/'.$action, $data);
+        return $this->httpGet('member_app_action/' . $action, $data);
     }
 
     /**
@@ -92,7 +91,8 @@ class CoreModuleService extends BaseNiucloudClient
      * @return array|\core\util\niucloud\Response|object|ResponseInterface
      * @throws GuzzleException
      */
-    public function getUpgradeContent($data) {
+    public function getUpgradeContent($data)
+    {
         return $this->httpGet('member_app_upgrade/content', $data);
     }
 
@@ -104,7 +104,7 @@ class CoreModuleService extends BaseNiucloudClient
      */
     public function checkKey($key)
     {
-        return $this->httpGet('store/app_check/'.$key, ['product_key' => self::PRODUCT])['data'] ?? false;
+        return $this->httpGet('store/app_check/' . $key, [ 'product_key' => self::PRODUCT ])[ 'data' ] ?? false;
     }
 
     /**
@@ -112,8 +112,9 @@ class CoreModuleService extends BaseNiucloudClient
      * @return array|\core\util\niucloud\Response|object|ResponseInterface
      * @throws GuzzleException
      */
-    public function getFrameworkLastVersion() {
-        return $this->httpGet('store/framework/lastversion', ['product_key' => self::PRODUCT])['data'] ?? false;
+    public function getFrameworkLastVersion()
+    {
+        return $this->httpGet('store/framework/lastversion', [ 'product_key' => self::PRODUCT ])[ 'data' ] ?? false;
     }
 
     /**
@@ -121,24 +122,37 @@ class CoreModuleService extends BaseNiucloudClient
      * @return false|mixed
      * @throws GuzzleException
      */
-    public function getFrameworkVersionList() {
-        return $this->httpGet('store/framework/version', ['product_key' => self::PRODUCT])['data'] ?? false;
+    public function getFrameworkVersionList()
+    {
+        return $this->httpGet('store/framework/version', [ 'product_key' => self::PRODUCT ])[ 'data' ] ?? false;
     }
 
     /**
      * 申请体验
+     * @return array|false|mixed
      * @throws GuzzleException
      */
-    public function applyExperience() {
-        $data = $this->httpGet('apply/experience', ['product_key' => self::PRODUCT])['data'] ?? [];
+    public function applyExperience()
+    {
+        $data = $this->httpGet('apply/experience', [ 'product_key' => self::PRODUCT ])[ 'data' ] ?? [];
         if (!empty($data)) {
-            (new CoreConfigService())->setConfig(ConfigKeyDict::NIUCLOUD_CONFIG, [
-                'auth_code' => $data['auth_code'],
-                'auth_secret' => $data['auth_secret']
+            ( new CoreConfigService() )->setConfig(ConfigKeyDict::NIUCLOUD_CONFIG, [
+                'auth_code' => $data[ 'auth_code' ],
+                'auth_secret' => $data[ 'auth_secret' ]
             ]);
             return $data;
         } else {
             return false;
         }
+    }
+
+    /**
+     * 获取应用/插件的版本更新记录
+     * @return false|mixed
+     * @throws GuzzleException
+     */
+    public function getAppVersionList($app_key)
+    {
+        return $this->httpGet('store/app_version/list', [ 'product_key' => self::PRODUCT, 'app_key' => $app_key ])[ 'data' ] ?? false;
     }
 }

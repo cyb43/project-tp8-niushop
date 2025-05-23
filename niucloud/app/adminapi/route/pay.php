@@ -52,6 +52,7 @@ Route::group('pay', function () {
     //退款列表
     Route::get('refund', 'pay.PayRefund/pages');
     //退款详情
+    Route::get('refund/status', 'pay.PayRefund/getStatus');
     Route::get('refund/:refund_no', 'pay.PayRefund/detail');
     //退款方式
     Route::get('refund/type', 'pay.PayRefund/getRefundType');

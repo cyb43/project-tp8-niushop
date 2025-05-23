@@ -42,6 +42,9 @@ Route::group('niucloud', function () {
     // 获取框架版本更新记录
     Route::get('framework/version/list', 'niucloud.Module/getFrameworkVersionList');
 
+    // 获取应用/插件的版本更新记录
+    Route::get('app_version/list', 'niucloud.Module/getAppVersionList');
+
     // 云编译
     Route::post('build', 'niucloud.Cloud/build');
     // 云编译

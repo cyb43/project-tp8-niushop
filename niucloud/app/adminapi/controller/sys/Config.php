@@ -23,7 +23,7 @@ class Config extends BaseAdminController
      */
     public function getWebsite()
     {
-        return success((new ConfigService())->getWebSite());
+        return success(( new ConfigService() )->getWebSite());
     }
 
     /**
@@ -51,14 +51,14 @@ class Config extends BaseAdminController
             [ "front_end_icon", "" ],
             [ "icon", "" ]
         ]);
-        (new ConfigService())->setWebSite($data);
+        ( new ConfigService() )->setWebSite($data);
 
         $service_data = $this->request->params([
             [ "wechat_code", "" ],
             [ "enterprise_wechat", "" ],
             [ "tel", "" ],
         ]);
-        (new ConfigService())->setService($service_data);
+        ( new ConfigService() )->setService($service_data);
 
         return success();
     }
@@ -69,7 +69,7 @@ class Config extends BaseAdminController
      */
     public function getCopyright()
     {
-        return success((new ConfigService())->getCopyright());
+        return success(( new ConfigService() )->getCopyright());
     }
 
     /**设置版权信息
@@ -78,16 +78,16 @@ class Config extends BaseAdminController
     public function setCopyright()
     {
         $data = $this->request->params([
-            ['icp', ''],
-            ['gov_record', ''],
-            ['gov_url', ''],
-            ['market_supervision_url', ''],
-            ['logo', ''],
-            ['company_name', ''],
-            ['copyright_link', ''],
-            ['copyright_desc', ''],
+            [ 'icp', '' ],
+            [ 'gov_record', '' ],
+            [ 'gov_url', '' ],
+            [ 'market_supervision_url', '' ],
+            [ 'logo', '' ],
+            [ 'company_name', '' ],
+            [ 'copyright_link', '' ],
+            [ 'copyright_desc', '' ],
         ]);
-        (new ConfigService())->setCopyright($data);
+        ( new ConfigService() )->setCopyright($data);
         return success();
     }
 
@@ -97,7 +97,7 @@ class Config extends BaseAdminController
      */
     public function getSceneDomain()
     {
-        return success((new ConfigService())->getSceneDomain());
+        return success(( new ConfigService() )->getSceneDomain());
     }
 
     /**
@@ -106,7 +106,7 @@ class Config extends BaseAdminController
      */
     public function getServiceInfo()
     {
-        return success((new ConfigService())->getService());
+        return success(( new ConfigService() )->getService());
     }
 
     /**设置版权信息
@@ -115,11 +115,11 @@ class Config extends BaseAdminController
     public function setMap()
     {
         $data = $this->request->params([
-            ['key', ''],
+            [ 'key', '' ],
             [ 'is_open', 0 ], // 是否开启定位
             [ 'valid_time', 0 ] // 定位有效期/分钟，过期后将重新获取定位信息，0为不过期
         ]);
-        (new ConfigService())->setMap($data);
+        ( new ConfigService() )->setMap($data);
         return success();
     }
 
@@ -129,7 +129,7 @@ class Config extends BaseAdminController
      */
     public function getMap()
     {
-        return success((new ConfigService())->getMap());
+        return success(( new ConfigService() )->getMap());
     }
 
     /**
@@ -148,19 +148,21 @@ class Config extends BaseAdminController
      * 获取开发者key
      * @return Response
      */
-    public function getDeveloperToken() {
-        return success(data: (new ConfigService())->getDeveloperToken());
+    public function getDeveloperToken()
+    {
+        return success(data: ( new ConfigService() )->getDeveloperToken());
     }
 
     /**
      * 设置开发者key
      * @return Response
      */
-    public function setDeveloperToken() {
+    public function setDeveloperToken()
+    {
         $data = $this->request->params([
-            ['token', ''],
+            [ 'token', '' ],
         ]);
-        (new ConfigService())->setDeveloperToken($data);
+        ( new ConfigService() )->setDeveloperToken($data);
         return success();
     }
 
@@ -168,7 +170,9 @@ class Config extends BaseAdminController
      * 获取install.php配置
      * @return Response
      */
-    public function getInstallConfig() {
+    public function getInstallConfig()
+    {
         return success(config('install'));
     }
+
 }

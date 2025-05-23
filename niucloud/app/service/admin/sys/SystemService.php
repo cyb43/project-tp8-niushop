@@ -14,8 +14,10 @@ namespace app\service\admin\sys;
 use app\job\sys\CheckJob;
 use app\service\core\sys\CoreSysConfigService;
 use core\base\BaseAdminService;
+use core\exception\AdminException;
 use think\facade\Cache;
 use think\facade\Db;
+use think\facade\Log;
 use Throwable;
 
 /**
@@ -49,7 +51,7 @@ class SystemService extends BaseAdminService
      */
     public function getUrl()
     {
-        return (new CoreSysConfigService())->getSceneDomain();
+        return ( new CoreSysConfigService() )->getSceneDomain();
     }
 
     /**
@@ -61,7 +63,7 @@ class SystemService extends BaseAdminService
         $server = [];
         $server[] = [ "name" => get_lang('dict_setting.server_system'), "server" => PHP_OS ];
         $server[] = [ "name" => get_lang('dict_setting.server_setting'), "server" => PHP_SAPI ];
-        $server[] = [ "name" => get_lang('dict_setting.php_version'), "server" => PHP_VERSION];
+        $server[] = [ "name" => get_lang('dict_setting.php_version'), "server" => PHP_VERSION ];
 
         //环境权限
         $system_variables = [];
@@ -104,7 +106,7 @@ class SystemService extends BaseAdminService
         //获取环境版本
         $server_version = [];
         $row = (array) Db::query("select VERSION() as verson");
-        $server_version[] = [ "name" => get_lang('dict_setting.php_version'), "demand" => get_lang('dict_setting.php_ask'), "server" => PHP_VERSION];
+        $server_version[] = [ "name" => get_lang('dict_setting.php_version'), "demand" => get_lang('dict_setting.php_ask'), "server" => PHP_VERSION ];
         $server_version[] = [ "name" => get_lang('dict_setting.mysql_version'), "demand" => get_lang('dict_setting.mysql_ask'), "server" => $row[ 0 ][ 'verson' ] ];
 
         // 进程
@@ -144,7 +146,7 @@ class SystemService extends BaseAdminService
         $file = root_path('runtime') . $secret . '.job';
         try {
             CheckJob::dispatch([ 'file' => $file ]);
-        } catch ( Throwable $e) {
+        } catch (Throwable $e) {
             return false;
         }
 //        $timeout = 0;
@@ -178,5 +180,38 @@ class SystemService extends BaseAdminService
             }
         }
         return false;
+    }
+
+    /**
+     * 获取二维码
+     * @param $data
+     * @return array
+     */
+    public function getQrcode($data)
+    {
+        $page = $data[ 'page' ];//'app/pages/index/diy_form';
+        $qrcode_data = [];
+        foreach ($data[ 'params' ] as $item) {
+            $qrcode_data[] = [
+                'key' => $item[ 'column_name' ],
+                'value' => $item[ 'column_value' ]
+            ];
+        }
+        $dir = 'upload/' . $data[ 'folder' ] . '_qrcode';
+
+        try {
+            // h5
+            //$h5_path = qrcode('', $page, $data, $dir);
+
+            // 微信小程序
+            $weapp_path = qrcode('', $page, $qrcode_data, $dir, 'weapp');
+            return [
+                'h5_path' => '',
+                'weapp_path' => $weapp_path
+            ];
+        } catch (AdminException $e) {
+            Log::write('获取推广微信小程序二维码error' . $e->getMessage() . $e->getFile() . $e->getLine() . 'params:' . json_encode($data, 256));
+            throw new AdminException($e->getMessage() . $e->getFile() . $e->getLine() . 'params:' . json_encode($data, 256));
+        }
     }
 }

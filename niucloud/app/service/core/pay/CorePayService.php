@@ -169,9 +169,9 @@ class CorePayService extends BaseCoreService
             //todo  校验场景控制支付方式
             $pay_type_list = ( new CorePayChannelService() )->getAllowPayTypeByChannel($channel, $pay[ 'trade_type' ]);
             //找朋友帮忙付时不支持找朋友帮忙付
-            if(!empty($pay_type_list) && !empty($pay_type_list[PayDict::FRIENDSPAY]) && $scene == PaySceneDict::FRIENDSPAY){
-                $pay[ 'config' ] = $pay_type_list[PayDict::FRIENDSPAY]['config'];
-                unset($pay_type_list[PayDict::FRIENDSPAY]);
+            if (!empty($pay_type_list) && !empty($pay_type_list[ PayDict::FRIENDSPAY ]) && $scene == PaySceneDict::FRIENDSPAY) {
+                $pay[ 'config' ] = $pay_type_list[ PayDict::FRIENDSPAY ][ 'config' ];
+                unset($pay_type_list[ PayDict::FRIENDSPAY ]);
             }
             $pay[ 'pay_type_list' ] = array_values($pay_type_list);
         }
@@ -251,7 +251,7 @@ class CorePayService extends BaseCoreService
             event('OfflinePayAfter', [
                 'trade_type' => $trade_type,
                 'trade_id' => $trade_id,
-                'out_trade_no' => $out_trade_no,
+                'out_trade_no' => $out_trade_no
             ]);
         } else {
             //将支付设置为支付中
@@ -263,7 +263,7 @@ class CorePayService extends BaseCoreService
                 ]
             );
             if (env('queue.state', true)) {
-                PayReturnTo::dispatch([ 'out_trade_no' => $out_trade_no ], secs: 15);
+                PayReturnTo::dispatch([ 'out_trade_no' => $out_trade_no ], secs: 60);
             }
         }
         return $pay_result;
@@ -456,7 +456,7 @@ class CorePayService extends BaseCoreService
      */
     public function notify(string $channel, string $type, string $action)
     {
-        $callback = function($out_trade_no, $params) use ($type, $action) {
+        $callback = function ($out_trade_no, $params) use ($type, $action) {
             try {
                 switch ($action) {
                     case 'pay'://支付结果通知
@@ -476,7 +476,7 @@ class CorePayService extends BaseCoreService
             }
         };
 
-        Log::write('业务'.'_'.$channel.'_'.$type.'_'.$action);
+        Log::write('业务_' . $channel . '_' . $type . '_' . $action);
         return $this->pay_event->init($channel, $type)->notify($action, $callback);
     }
 

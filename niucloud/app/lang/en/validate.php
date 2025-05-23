@@ -36,19 +36,6 @@ return [
         'real_name_require' => 'real_name is require',
         'password_require' => 'password is require',
     ],
-    //站点
-    'validate_site' => [
-        'site_name_require' => 'site_name is require',
-        'site_name_max' => 'site_name is not exceed 120 points',
-        'keywords_require' => 'keywords is require',
-        'keywords_max' => 'site_name is not exceed 30 points',
-        'group_id_require' => 'group_id is require',
-        'group_id_number' => 'group_id must be a number',
-        'expire_time_number' => 'expire_time must be a number',
-        'group_name_require' => 'group_name is require',
-        'group_name_max' => 'group_name is not exceed 120 points',
-        'group_roles_require' => 'group_roles is require'
-    ],
     //附件
     'validate_attachment' => [
         'name_require' => 'name is require',

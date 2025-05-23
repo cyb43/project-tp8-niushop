@@ -37,9 +37,9 @@ class VerifierService extends BaseAdminService
      */
     public function getPage(array $where = [])
     {
-        $search_model = $this->model->where([ ['id', '>', 0] ])->with(['member' => function($query){
+        $search_model = $this->model->where([ [ 'id', '>', 0 ] ])->with([ 'member' => function ($query) {
             $query->field('member_id, nickname, mobile, headimg');
-        }])->field('*')->order('create_time desc');
+        } ])->field('*')->order('create_time desc');
         return $this->pageQuery($search_model, function ($item, $key) {
             $item = $this->makeUp($item);
         });
@@ -52,29 +52,37 @@ class VerifierService extends BaseAdminService
      */
     public function getList(array $where = [])
     {
-        return $this->model->where([['id', '>', 0]])->with(['member' => function ($query) {
+        return $this->model->where([ [ 'id', '>', 0 ] ])->with([ 'member' => function ($query) {
             $query->field('member_id, nickname, mobile, headimg');
-        }])->field('*')->order('create_time desc')->select()->toArray();
+        } ])->field('*')->order('create_time desc')->select()->toArray();
     }
 
     /**
      * 组合整理数据
      * @param $data
      */
-    public function makeUp($data){
+    public function makeUp($data)
+    {
         //核销类型
-        if(!empty($data['verify_type'])){
+        if (!empty($data[ 'verify_type' ])) {
             $type = VerifyDict::getType();
             $type_array = [];
-            foreach ($data['verify_type'] as $key => $value) {
+            foreach ($data[ 'verify_type' ] as $key => $value) {
                 if (array_key_exists($value, $type)) {
-                    $type_array[$key]['verify_type'] = $value;
-                    $type_array[$key]['verify_type_name'] = $type[$value]['name'];
+                    $type_array[ $key ][ 'verify_type' ] = $value;
+                    $type_array[ $key ][ 'verify_type_name' ] = $type[ $value ][ 'name' ];
                 }
             }
-            $data['verify_type_array'] = $type_array;
+            $data[ 'verify_type_array' ] = $type_array;
         }
         return $data;
+    }
+
+    public function getDetail($id)
+    {
+        return $this->model->with([ 'member' => function ($query) {
+            $query->field('member_id, nickname, mobile, headimg');
+        } ])->field('')->findOrEmpty($id)->toArray();
     }
 
     /**
@@ -84,15 +92,25 @@ class VerifierService extends BaseAdminService
      */
     public function add(array $data)
     {
-        $member = (new Member())->where([ ['member_id', '=', $data['member_id'] ] ])->findOrEmpty();
+        $member = ( new Member() )->where([ [ 'member_id', '=', $data[ 'member_id' ] ] ])->findOrEmpty();
         if ($member->isEmpty()) throw new CommonException('MEMBER_NOT_EXIST');
 
-        $model = $this->model->where([ ['member_id', '=', $data['member_id'] ] ])->findOrEmpty();
-        if (!$model->isEmpty()) return $model->id;
+        $model = $this->model->where([ [ 'member_id', '=', $data[ 'member_id' ] ] ])->findOrEmpty();
+        if (!$model->isEmpty()) throw new CommonException('VERIFIER_EXIST');
 
-        $data['create_time'] = time();
+        $data[ 'create_time' ] = time();
         $res = $this->model->create($data);
         return $res->id;
+    }
+
+    /**
+     * 编辑核销员
+     * @param array $data
+     * @return mixed
+     */
+    public function edit($id, $data)
+    {
+        $this->model->where([ [ 'id', '=', $id ] ])->update($data);
     }
 
     /**
@@ -102,7 +120,7 @@ class VerifierService extends BaseAdminService
      */
     public function del(int $id)
     {
-        $res = $this->model->where([['id', '=', $id] ])->delete();
+        $res = $this->model->where([ [ 'id', '=', $id ] ])->delete();
         return $res;
     }
 }

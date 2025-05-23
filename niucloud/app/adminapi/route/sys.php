@@ -23,6 +23,7 @@ Route::group('sys', function() {
     //系统信息
     Route::get('info', 'sys.System/info');
     Route::get('url', 'sys.System/url');
+    Route::get('qrcode', 'sys.System/getSpreadQrcode');
     /***************************************************** 用户组 ****************************************************/
     //用户组列表
     Route::get('role', 'sys.Role/lists');
@@ -56,7 +57,7 @@ Route::group('sys', function() {
     //授权用户菜单
     Route::get('authmenu', 'sys.Auth/authMenuList');
     // 获取菜单信息
-    Route::get('menu/:app_type/info/:menu_key', 'sys.Menu/info');
+    Route::get('menu/info/:menu_key', 'sys.Menu/info');
     // 初始化菜单
     Route::post('menu/refresh', 'sys.Menu/refreshMenu');
 
@@ -266,7 +267,6 @@ Route::group('sys', function() {
     Route::get('ueditor', 'sys.Ueditor/getConfig');
     // 百度编辑器文件上传
     Route::post('ueditor', 'sys.Ueditor/upload');
-
 
     /***************************************************** 小票打印管理 ****************************************************/
 

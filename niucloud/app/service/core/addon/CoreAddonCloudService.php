@@ -35,7 +35,10 @@ class CoreAddonCloudService extends CoreCloudBaseService
         $package_dir = $temp_dir . 'package' . DIRECTORY_SEPARATOR;
         dir_mkdir($package_dir);
 
-        $compile = (new CoreAddonService())->getAddonConfig($addon)['compile'] ?? [];
+
+        $addon_config = (new CoreAddonService())->getAddonConfig($addon);
+        $compile = $addon_config['compile'] ?? [];
+        $custom_port = $addon_config['port']?? [];
 
         $need_build = false;
         // 拷贝composer文件
@@ -57,6 +60,19 @@ class CoreAddonCloudService extends CoreCloudBaseService
         // 拷贝web端文件
         if (!in_array('web', $compile)) {
             dir_copy($this->root_path . 'web', $package_dir . 'web', exclude_dirs:['node_modules', '.output', '.nuxt']);
+            $need_build = true;
+        }
+
+        // 自定义端口
+        if (!empty($custom_port)) {
+            $addon_path = $this->addonPath($addon);
+            foreach ($custom_port as $port) {
+                if (is_dir($addon_path . $port[ 'name' ])) {
+                    dir_copy($addon_path . $port[ 'name' ], $package_dir . $port[ 'name' ]);
+                    $json_path = $package_dir . $port[ 'name' ] . DIRECTORY_SEPARATOR . 'info.json';
+                    file_put_contents($json_path, json_encode($port));
+                }
+            }
             $need_build = true;
         }
 
@@ -224,10 +240,6 @@ class CoreAddonCloudService extends CoreCloudBaseService
      */
     public function downloadAddon(string $addon, string $version) {
         $action_token = (new CoreModuleService())->getActionToken('download', ['data' => ['app_key' => $addon, 'version' => $version, 'product_key' => BaseNiucloudClient::PRODUCT ]]);
-        if (isset($action_token['code']) && $action_token['code'] != 1) {
-            if ($action_token['code'] == 401) $action_token = (new CoreModuleService())->getActionToken('download', ['data' => ['app_key' => $addon, 'version' => $version, 'product_key' => BaseNiucloudClient::PRODUCT]]);
-            if ($action_token['code'] != 1) throw new CommonException($action_token['msg']);
-        }
 
         $query = [
             'authorize_code' => $this->auth_code,
@@ -265,10 +277,6 @@ class CoreAddonCloudService extends CoreCloudBaseService
      */
     public function upgradeAddon(array $data = []) {
         $action_token = (new CoreModuleService())->getActionToken('upgrade', ['data' => $data ]);
-        if (isset($action_token['code']) && $action_token['code'] != 1) {
-            if ($action_token['code'] == 401) $action_token = (new CoreModuleService())->getActionToken('upgrade', ['data' => $data ]);
-            if ($action_token['code'] != 1) throw new CommonException($action_token['msg']);
-        }
 
         $query = [
             'authorize_code' => $this->auth_code,
@@ -286,7 +294,7 @@ class CoreAddonCloudService extends CoreCloudBaseService
      * @param string $token
      * @return void
      */
-    public function downloadUpgradeFile(string $token, string $dir = '', int $index = -1, $step = 0, $length = 0) {
+    public function downloadUpgradeFile(string $app_key, string $token, string $dir = '', int $index = -1, $step = 0, $length = 0) {
         $query = [
             'authorize_code' => $this->auth_code,
             'token' => $token
@@ -302,7 +310,7 @@ class CoreAddonCloudService extends CoreCloudBaseService
             $step = (int)ceil($length / $chunk_size);
 
             $index++;
-            return compact('token', 'dir', 'index', 'step', 'length');
+            return compact('app_key', 'token', 'dir', 'index', 'step', 'length');
         } else {
             $zip_file = $dir . 'upgrade.zip';
             $zip_resource = fopen($zip_file, 'a');
@@ -319,7 +327,7 @@ class CoreAddonCloudService extends CoreCloudBaseService
                 fclose($zip_resource);
 
                 $index++;
-                return compact('token', 'dir', 'index', 'step', 'length');
+                return compact('app_key', 'token', 'dir', 'index', 'step', 'length');
             } else {
                 $zip = new \ZipArchive();
                 if ($zip->open($zip_file) === true) {

@@ -22,7 +22,6 @@ use core\base\BaseApiService;
 class VerifyService extends BaseApiService
 {
 
-
     /**
      * 获取核销码(对应业务调用)
      * @param $type
@@ -49,7 +48,7 @@ class VerifyService extends BaseApiService
      */
     public function getInfoByCode($code)
     {
-        return ( new CoreVerifyService() )->getInfoByCode($code);
+        return ( new CoreVerifyService() )->getInfoByCode($this->member_id,$code);
     }
 
     /**

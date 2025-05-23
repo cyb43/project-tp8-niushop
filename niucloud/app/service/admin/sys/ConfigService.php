@@ -118,16 +118,12 @@ class ConfigService extends BaseAdminService
      */
     public function getService()
     {
-        $info = ( new CoreConfigService() )->getConfig('SERVICE_INFO');
-        if (empty($info)) {
-            $info = [];
-            $info[ 'value' ] = [
-                'wechat_code' => '',
-                'enterprise_wechat' => '',
-                'tel' => '',
-            ];
-        }
-        return $info[ 'value' ];
+        $info = ( new CoreConfigService() )->getConfig('SERVICE_INFO')[ 'value' ] ?? [];
+        return [
+            'wechat_code' => $info[ 'wechat_code' ] ?? '',
+            'enterprise_wechat' => $info[ 'enterprise_wechat' ] ?? '',
+            'tel' => $info[ 'tel' ] ?? ''
+        ];
     }
 
     /**
@@ -171,7 +167,7 @@ class ConfigService extends BaseAdminService
         if (empty($info)) {
             $info = [];
             $info[ 'value' ] = [
-                'key' => 'IZQBZ-3UHEU-WTCVD-2464U-I5N4V-ZFFU3',
+                'key' => '',
                 'is_open' => 1, // 是否开启定位
                 'valid_time' => 5 // 定位有效期/分钟，过期后将重新获取定位信息，0为不过期
             ];

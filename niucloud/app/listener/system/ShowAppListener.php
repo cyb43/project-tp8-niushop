@@ -37,13 +37,20 @@ class ShowAppListener
                     'key' => 'diy_form',
                     'url' => '/diy_form/list',
                 ],
-//                [
-//                    'title' => '万能a表单',
-//                    'desc' => '万能a表单',
-//                    'icon' => 'static/resource/images/diy_form/icon.png',
-//                    'key' => 'diy_faorm',
-//                    'url' => '/diy_faorm/list',
-//                ]
+                [
+                    'title' => '小票打印',
+                    'desc' => '支持打印机添加，便捷创建小票打印模板',
+                    'icon' => 'static/resource/images/tool/printer_icon.png',
+                    'key' => 'printer_management',
+                    'url' => '/printer/list',
+                ],
+                [
+                    'title' => '数据导出',
+                    'desc' => '展示导出文件，支持删除与下载',
+                    'icon' => 'static/resource/images/tool/export_icon.png',
+                    'key' => 'setting_export',
+                    'url' => '/setting/export',
+                ],
             ],
             // 营销
             'promotion' => [

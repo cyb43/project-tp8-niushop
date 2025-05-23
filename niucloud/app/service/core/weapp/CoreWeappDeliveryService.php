@@ -102,6 +102,9 @@ class CoreWeappDeliveryService extends BaseCoreService
 
             Log::write('发货信息录入接口，参数打印：' . json_encode($data));
 
+            //微信订单录入有时差 延时3秒执行发货通知
+            sleep(3);
+
             $api = CoreWeappService::appApiClient();
             $result = $api->postJson('wxa/sec/order/upload_shipping_info', $data)->toArray();
 
@@ -149,6 +152,9 @@ class CoreWeappDeliveryService extends BaseCoreService
 
             Log::write('确认收货提醒接口，参数打印：' . json_encode($data));
 
+            //微信订单录入有时差 延时3秒执行发货通知
+            sleep(3);
+
             $api = CoreWeappService::appApiClient();
 
             $result = $api->postJson('wxa/sec/order/notify_confirm_receive', $data)->toArray();
@@ -167,7 +173,7 @@ class CoreWeappDeliveryService extends BaseCoreService
      * 1、如设置为空路径或小程序中不存在的路径，将仍然跳转平台默认的确认收货页面，不会进入你的小程序。
      * 2、平台会在路径后面增加支付单的 transaction_id、merchant_id、merchant_trade_no 作为query参数，如果存在二级商户号则还会再增加 sub_merchant_id 参数,开发者可以在小程序中通过onLaunch等方式获取。
      * 3、如你需要在path中携带自定义的query参数，请注意与上面的参数进行区分
-     * @param int $type
+     * @param string $type
      * @return mixed
      * @throws InvalidArgumentException
      */

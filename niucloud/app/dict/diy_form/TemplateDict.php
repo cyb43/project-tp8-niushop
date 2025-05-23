@@ -381,7 +381,7 @@ class TemplateDict
                                     "unique" => false,
                                     "autofill" => false,
                                     "privacyProtection" => false,
-                                    'cache' => false,
+                                    'cache' => true,
                                     "default" => [
                                         "date" => "",
                                         "timestamp" => 0
@@ -576,7 +576,7 @@ class TemplateDict
                                     "unique" => false,
                                     "autofill" => false,
                                     "privacyProtection" => false,
-                                    'cache' => false,
+                                    'cache' => true,
                                     "default" => [
                                         "start" => [
                                             "date" => "",

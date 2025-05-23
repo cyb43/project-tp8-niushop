@@ -220,7 +220,7 @@ class AreaService extends BaseApiService
                     'formatted_addresses' => $address_data[ 'formatted_addresses' ]
                 ];
             } else {
-                throw new ApiException($res[ 'message' ]);
+                throw new ApiException('请检查地图配置：'.$res[ 'message' ]);
             }
 
         } else {

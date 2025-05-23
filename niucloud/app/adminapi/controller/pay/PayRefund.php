@@ -18,6 +18,13 @@ use core\base\BaseAdminController;
 class PayRefund extends BaseAdminController
 {
     /**
+     * @return \think\Response
+     */
+    public function getStatus()
+    {
+        return success(RefundDict::getStatus());
+    }
+    /**
      * 退款列表
      * @return \think\Response
      */

@@ -33,11 +33,12 @@ class VerifyService extends BaseAdminService
      * @return array
      * @throws \think\db\exception\DbException
      */
-    public function getPage(array $where  = []) {
-        $search_model = $this->model->where([['id', '>', 0]])->withSearch(['code', 'type', 'create_time', 'verifier_member_id'], $where)
-            ->with(['member' => function($query){
+    public function getPage(array $where = [])
+    {
+        $search_model = $this->model->where([ [ 'id', '>', 0 ] ])->withSearch([ 'code', 'type', 'create_time', 'verifier_member_id' ], $where)
+            ->with([ 'member' => function($query) {
                 $query->field('member_id, nickname, mobile, headimg');
-            }])->field('*')->order('create_time desc')->append(['type_name']);
+            } ])->field('*')->order('create_time desc')->append([ 'type_name' ]);
         $list = $this->pageQuery($search_model);
         return $list;
     }
@@ -47,15 +48,16 @@ class VerifyService extends BaseAdminService
      * @param string $verify_code
      * @return array
      */
-    public function getDetail(string $verify_code) {
+    public function getDetail(string $verify_code)
+    {
         $info = $this->model->where([
-            ['code', '=', $verify_code]
+            [ 'code', '=', $verify_code ]
         ])->field('*')
-          ->with(['member' => function($query){
-            $query->field('member_id, nickname, mobile, headimg');
-        }])->append(['type_name'])->findOrEmpty()->toArray();
+            ->with([ 'member' => function($query) {
+                $query->field('member_id, nickname, mobile, headimg');
+            } ])->append([ 'type_name' ])->findOrEmpty()->toArray();
 
-        $info['verify_info'] = event('VerifyInfo',$info);
+        $info[ 'verify_info' ] = event('VerifyInfo', $info);
         return $info;
 
     }

@@ -37,14 +37,15 @@ class NiucloudService extends BaseAdminService
      * @param $data
      * @return \app\model\sys\SysConfig|bool|\think\Model
      */
-    public function setAuthorize($data){
+    public function setAuthorize($data)
+    {
 
         $data = [
-            'auth_code' => $data['auth_code'],
-            'auth_secret' => $data['auth_secret']
+            'auth_code' => $data[ 'auth_code' ],
+            'auth_secret' => $data[ 'auth_secret' ]
         ];
-        $service = (new CoreAuthService($data['auth_code'], $data['auth_secret']));
-        $auth_info = $service->getAuthInfo()['data'] ?? [];
+        $service = ( new CoreAuthService($data[ 'auth_code' ], $data[ 'auth_secret' ]) );
+        $auth_info = $service->getAuthInfo()[ 'data' ] ?? [];
         if (empty($auth_info)) throw new CommonException('AUTH_NOT_EXISTS');
         $service->clearAccessToken();
         return $this->core_config_service->setConfig(ConfigKeyDict::NIUCLOUD_CONFIG, $data);
@@ -54,34 +55,45 @@ class NiucloudService extends BaseAdminService
      * 获取授权信息
      * @return mixed|string[]
      */
-    public function getAuthorize(){
+    public function getAuthorize()
+    {
         $info = $this->core_config_service->getConfig(ConfigKeyDict::NIUCLOUD_CONFIG);
-        if(empty($info))
-        {
+        if (empty($info)) {
             $info = [];
-            $info['value'] = [
+            $info[ 'value' ] = [
                 'auth_code' => '',
                 'auth_secret' => ''
             ];
         }
-        return $info['value'];
+        return $info[ 'value' ];
     }
 
     /**
      * 获取框架最新版本
      */
-    public function getFrameworkLastVersion() {
-        return (new CoreModuleService())->getFrameworkLastVersion();
+    public function getFrameworkLastVersion()
+    {
+        return ( new CoreModuleService() )->getFrameworkLastVersion();
     }
 
     /**
      * 获取框架版本更新记录
      */
-    public function getFrameworkVersionList() {
-        return (new CoreModuleService())->getFrameworkVersionList();
+    public function getFrameworkVersionList()
+    {
+        return ( new CoreModuleService() )->getFrameworkVersionList();
     }
 
-    public function applyExperience() {
-        return (new CoreModuleService())->applyExperience();
+    public function applyExperience()
+    {
+        return ( new CoreModuleService() )->applyExperience();
+    }
+
+    /**
+     * 获取应用/插件的版本更新记录
+     */
+    public function getAppVersionList($app_key)
+    {
+        return ( new CoreModuleService() )->getAppVersionList($app_key);
     }
 }

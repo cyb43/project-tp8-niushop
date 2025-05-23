@@ -35,21 +35,21 @@ class CoreVerifyService extends BaseCoreService
     {
         if (!array_key_exists($type, VerifyDict::getType())) throw new CommonException('VERIFY_TYPE_ERROR');//核销类型错误
         //遇到错误直接抛出即可
-        $result = array_filter(event('VerifyCreate', ['type' => $type, 'member_id' => $member_id, 'data' => $param]))[ 0 ] ?? [];
+        $result = array_filter(event('VerifyCreate', [ 'type' => $type, 'member_id' => $member_id, 'data' => $param ]))[ 0 ] ?? [];
         $data = [];
-        if(empty($result)){
+        if (empty($result)) {
             $count = 1;
-        }else{
-            $count = $result['count'] ?? 1;
-            $data = $result['data'] ?? [];
-            $body = $result['body'] ?? '';
-            $relate_tag = $result['relate_tag'] ?? 0;
-            $expire_time = $result['expire_time'] ?? null;
+        } else {
+            $count = $result[ 'count' ] ?? 1;
+            $data = $result[ 'data' ] ?? [];
+            $body = $result[ 'body' ] ?? '';
+            $relate_tag = $result[ 'relate_tag' ] ?? 0;
+            $expire_time = $result[ 'expire_time' ] ?? null;
         }
         $strData = json_encode($param);
         $value = [
             'type' => $type,
-            'type_name' => VerifyDict::getType()[$type]['name'] ?? '',
+            'type_name' => VerifyDict::getType()[ $type ][ 'name' ] ?? '',
             'data' => $param,
             'value' => $data,
             'body' => $body ?? '',
@@ -72,10 +72,23 @@ class CoreVerifyService extends BaseCoreService
      * @param string $verify_code
      * @return array
      */
-    public function getInfoByCode(string $verify_code)
+    public function getInfoByCode(string $member_id, $verify_code)
     {
         //获取核销码数据
         $value = $this->getCodeData($verify_code);
+        $data = event('VerifyCheck', $value);
+        if (!empty($data)) {
+            $value = end($data);
+        }
+
+        // 检测核销员身份，是否有核销权限
+        $verifier = ( new Verifier() )->where([ [ 'member_id', '=', $member_id ] ])->field('id,verify_type')->findOrEmpty()->toArray();
+        if (!empty($verifier)) {
+            if (!in_array($value[ 'type' ], $verifier[ 'verify_type' ])) {
+                throw new CommonException('VERIFIER_NOT_AUTH');
+            }
+        }
+
         return $value;
     }
 
@@ -89,16 +102,16 @@ class CoreVerifyService extends BaseCoreService
         $value = $this->getCodeData($verify_code);
         //检测核销员身份
         $verifierModel = new Verifier();
-        $verifier = $verifierModel->where([['member_id', '=', $verify_member_id]])->findOrEmpty()->toArray();
+        $verifier = $verifierModel->where([ [ 'member_id', '=', $verify_member_id ] ])->findOrEmpty()->toArray();
         if (empty($verifier)) throw new CommonException('VERIFIER_NOT_EXIST');
 
         $verify_data = [
             'code' => $verify_code,
-            'data' => $value['data'],
-            'value' => $value['value'],
-            'type' => $value['type'],
-            'body' => $value['body'],
-            'relate_tag' => $value['relate_tag'],
+            'data' => $value[ 'data' ],
+            'value' => $value[ 'value' ],
+            'type' => $value[ 'type' ],
+            'body' => $value[ 'body' ],
+            'relate_tag' => $value[ 'relate_tag' ],
             'create_time' => time(),
             'verifier_member_id' => $verify_member_id,
         ];
@@ -108,7 +121,6 @@ class CoreVerifyService extends BaseCoreService
         $model->create($verify_data);
         //是核销码失效
         $this->clearCode($verify_code);
-
 
         return true;
     }

@@ -26,7 +26,7 @@ class CashOutConfig extends Validate
         'rate' => 'between:0,100',      //提现手续费比率
         'is_auto_verify' => 'in:0,1',  //是否自动审核
         'is_auto_transfer' => 'in:0,1',  //是否自动转账
-        'transfer_type' => 'require',
+        'transfer_type' => 'requireIf:is_open,1',
     ];
 
     protected $message = [

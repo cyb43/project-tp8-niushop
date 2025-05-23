@@ -45,6 +45,13 @@ class CoreRefundService extends BaseCoreService
         //通过交易流水号获取支付单据
         $pay = (new CorePayService())->findPayInfoByOutTradeNo($out_trade_no);
         if($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');//单据不存在
+
+        //查询当前支付已存在的退狂单据,所有的退款总额不能超过支付单据的支付金额
+        $total_refund_money = $this->model->where([['out_trade_no', '=', $out_trade_no], ['status', '<>', RefundDict::FAIL]])->sum('money');
+
+        $comparison = bccomp(bcadd($total_refund_money, $money), $pay['money']);//浮点数直接进行比较会出现精度问题
+        if ($comparison > 0) throw new PayException('退款金额不能超过支付总额');//退款金额不能超过支付总额
+
         //校验当前数据是否存在
         //存在就修改,不存在就创建
         $refund_no = create_no();

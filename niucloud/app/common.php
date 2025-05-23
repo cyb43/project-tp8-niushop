@@ -554,7 +554,7 @@ function dir_copy(string $src = '', string $dst = '', &$files = [], $exclude_dir
             if (is_dir($src . '/' . $file)) {
                 // 排除目录
                 if (count($exclude_dirs) && in_array($file, $exclude_dirs)) continue;
-                dir_copy($src . '/' . $file, $dst . '/' . $file, $files);
+                dir_copy($src . '/' . $file, $dst . '/' . $file, $files, $exclude_dirs, $exclude_files);
             } else {
                 // 排除文件
                 if (count($exclude_files) && in_array($file, $exclude_files)) continue;
@@ -1033,10 +1033,13 @@ function get_last_time($time = null)
 
 /**
  * 检查目录及其子目录的权限
- * @param string $dir 要检查的目录路径
- * @return void
+ * @param $dir 要检查的目录路径
+ * @param $data
+ * @param $exclude_dir 排除排除无需检测的的文件夹
+ * @return array|array[]|mixed
  */
-function checkDirPermissions($dir, $data = []) {
+function checkDirPermissions($dir, $data = [], $exclude_dir = [])
+{
     if (!is_dir($dir)) {
         throw new \RuntimeException(sprintf('指定的路径 "%s" 不是一个有效的目录', $dir));
     }
@@ -1050,33 +1053,83 @@ function checkDirPermissions($dir, $data = []) {
 
     try {
         if (!is_readable($dir)) {
-            $data['unreadable'][] = $dir;
+            $data[ 'unreadable' ][] = $dir;
         }
         if (!is_writable($dir)) {
-            $data['not_writable'][] = $dir;
+            $data[ 'not_writable' ][] = $dir;
         }
         if (is_readable($dir)) {
             $dh = opendir($dir);
-            while (($file = readdir($dh)) !== false) {
+            while (( $file = readdir($dh) ) !== false) {
                 if ($file === '.' || $file === '..') {
                     continue;
                 }
                 $fullPath = $dir . DIRECTORY_SEPARATOR . $file;
+
+                // 忽略指定目录
+                $is_exclude = false;
+                foreach ($exclude_dir as $k => $item) {
+                    if (strpos($fullPath, $item)) {
+                        $is_exclude = true;
+                        break;
+                    }
+                }
+
+                if ($is_exclude) continue;
+
                 // 判断是否为目录，如果是则递归调用
                 if (is_dir($fullPath)) {
-                    $data = checkDirPermissions($fullPath, $data); // 递归调用自身来检查子目录
+                    $data = checkDirPermissions($fullPath, $data, $exclude_dir); // 递归调用自身来检查子目录
                 } else {
                     // 如果是文件，则检查其读写权限
-                    if (!is_readable($fullPath)) $data['unreadable'][] = $fullPath;
-                    if (!is_writable($fullPath)) $data['not_writable'][] = $fullPath;
+                    if (!is_readable($fullPath)) $data[ 'unreadable' ][] = $fullPath;
+                    if (!is_writable($fullPath)) $data[ 'not_writable' ][] = $fullPath;
                 }
             }
             closedir($dh);
         }
         return $data;
     } catch (Exception $e) {
-        $data['unreadable'][] = $dir;
-        $data['not_writable'][] = $dir;
+        $data[ 'unreadable' ][] = $dir;
+        $data[ 'not_writable' ][] = $dir;
         return $data;
     }
+}
+
+/**
+ * 下载网络图片
+ * @param $img_url 图片URL
+ * @param $file_name 本地保存位置
+ * @return bool
+ */
+function downloadImage($img_url, $file_name)
+{
+
+    // 初始化 cURL 会话
+    $ch = curl_init($img_url);
+
+    // 打开本地文件以写入模式
+    $fp = fopen($file_name, 'wb');
+
+    // 设置 cURL 选项
+    curl_setopt($ch, CURLOPT_FILE, $fp);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+
+    // 跳过 SSL 验证
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
+    // 执行 cURL 会话
+    curl_exec($ch);
+
+    // 检查是否有错误发生
+    if (curl_errno($ch)) {
+//        echo 'Curl error: ' . curl_error($ch);
+        return false;
+    }
+
+    // 关闭 cURL 会话和文件句柄
+    curl_close($ch);
+    fclose($fp);
+    return true;
 }

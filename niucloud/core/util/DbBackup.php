@@ -1,532 +1,216 @@
 <?php
-
 namespace core\util;
 
+use think\facade\Cache;
 use think\facade\Db;
 
 class DbBackup
 {
-    /**
-     * 文件指针
-     * @var resource
-     */
-    private $fp;
-    /**
-     * 备份文件信息 part - 卷号，name - 文件名
-     * @var array
-     */
-    private $file;
-    /**
-     * 当前打开文件大小
-     * @var integer
-     */
-    private $size = 0;
+    private $key;
+    private $backupPath;
+    private $maxFileSize;
+    private $currentFileIndex = 1;
+    private $currentFile;
+    private $currentFileSize = 0;
+    private $tableOffset = [];
+    private $tables = [];
+    private $excludeTables = [];
+    private $totalTables;
+    private $processedTables = 0;
+    private $restoreIndex = 0;
 
-    /**
-     * 数据库配置
-     * @var integer
-     */
-    private $dbconfig = array();
-    /**
-     * 备份配置
-     * @var integer
-     */
-    private $config = array(
-        // 数据库备份路径
-        'path'     => './backup/',
-        // 数据库备份卷大小
-        'part'     => 20971520,
-        // 数据库备份文件是否启用压缩 0不压缩 1 压缩
-        'compress' => 0,
-        // 数据库备份文件压缩级别 1普通 4 一般  9最高
-        'level'    => 9,
-    );
+    private $startime = 0;
 
-    /**
-     * 数据库备份构造方法
-     * @param  array  $file  备份或还原的文件信息
-     * @param  array  $config  备份配置信息
-     */
-    public function __construct($config = [])
+    private $maxExecuteTime = 10;
+
+    public function __construct($backupPath, $maxFileSize = 1024 * 1024, $excludeTables = [], $key = '')
     {
-        $this->config = is_array($config) && !empty($config) ? array_merge($this->config, $config) : $this->config;
-        //初始化文件名
-        $this->setFile();
-        //初始化数据库连接参数
-        $this->setDbConn();
-        //检查文件是否可写
-        if (!$this->checkPath($this->config['path'])) {
-            throw new \Exception("The current directory is not writable");
+        $this->key = $key;
+        $cache = $this->getCache();
+        $this->backupPath = $backupPath;
+        $this->maxFileSize = $maxFileSize;
+        $this->excludeTables = $excludeTables;
+        if (!is_dir($this->backupPath)) {
+            mkdir($this->backupPath, 0777, true);
         }
+        $this->currentFileIndex = $cache['currentFileIndex'] ?? 0;
+        $this->currentFile = $this->backupPath . '/backup_' . $this->currentFileIndex . '.sql';
+        $this->tables = $cache['tables'] ?? [];
+        $this->totalTables = count($this->getAllTables());
+        $this->processedTables = $cache['processedTables'] ?? 0;
+        $this->tableOffset = $cache['tableOffset'] ?? [];
+        $this->currentFileSize = $cache['currentFileSize'] ?? 0;
+        $this->restoreIndex = $cache['restoreIndex'] ?? 0;
+        $this->startime = time();
     }
 
-    /**
-     * 设置脚本运行超时时间
-     * 0表示不限制，支持连贯操作
-     */
-    public function setTimeout($time = null)
-    {
-        if (!is_null($time)) {
-            set_time_limit($time) || ini_set("max_execution_time", $time);
-        }
+    private function getCache() {
+        $cache = Cache::get('db_backup_' . $this->key, []);
+        return $cache;
+    }
+
+    private function setCache() {
+        $cache = [
+            'currentFileIndex' => $this->currentFileIndex,
+            'processedTables' => $this->processedTables,
+            'tableOffset' => $this->tableOffset,
+            'currentFileSize' => $this->currentFileSize,
+            'restoreIndex' => $this->restoreIndex,
+            'tables' => $this->tables
+        ];
+        Cache::set('db_backup_' . $this->key, $cache, 3600);
+    }
+
+    public function setExcludeTables($tables) {
+        $this->tables = [];
+        $this->excludeTables = $tables;
+        $this->totalTables = count($this->getAllTables());
         return $this;
     }
 
-    /**
-     * 设置数据库连接必备参数
-     * @param  array  $dbconfig  数据库连接配置信息
-     * @return object
-     */
-    public function setDbConn($dbconfig = [])
+    public function backupDatabaseSegment($limit = 1000)
     {
-        if (empty($dbconfig)) {
-            $this->dbconfig = config('database.connections.'.config('database.default'));
-        } else {
-            $this->dbconfig = $dbconfig;
-        }
-        return $this;
-    }
-
-    /**
-     * 设置备份文件名
-     *
-     * @param  Array  $file  文件名字
-     * @return object
-     */
-    public function setFile($file = null)
-    {
-        if (is_null($file)) {
-            $this->file = ['name' => date('Ymd-His'), 'part' => 1];
-        } else {
-            if (!array_key_exists("name", $file) && !array_key_exists("part", $file)) {
-                $this->file = $file['1'];
-            } else {
-                $this->file = $file;
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * 数据库表列表
-     *
-     * @param  null  $table
-     * @param  int  $type
-     * @return array
-     */
-    public function dataList($table = null, $type = 1)
-    {
-        if (is_null($table)) {
-            $list = Db::query("SHOW TABLE STATUS");
-        } else {
-            if ($type) {
-                $list = Db::query("SHOW FULL COLUMNS FROM {$table}");
-            } else {
-                $list = Db::query("show columns from {$table}");
-            }
-        }
-
-        return array_map('array_change_key_case', $list);
-    }
-
-    /**
-     * 数据库备份文件列表
-     *
-     * @return array
-     */
-    public function fileList()
-    {
-        if (!is_dir($this->config['path'])) {
-            mkdir($this->config['path'], 0755, true);
-        }
-        $path = realpath($this->config['path']);
-        $flag = \FilesystemIterator::KEY_AS_FILENAME;
-        $glob = new \FilesystemIterator($path, $flag);
-        $list = array();
-        foreach ($glob as $name => $file) {
-            if (preg_match('/^\\d{8,8}-\\d{6,6}-\\d+\\.sql(?:\\.gz)?$/', $name)) {
-                $name1 = $name;
-                $name  = sscanf($name, '%4s%2s%2s-%2s%2s%2s-%d');
-                $date  = "{$name[0]}-{$name[1]}-{$name[2]}";
-                $time  = "{$name[3]}:{$name[4]}:{$name[5]}";
-                $part  = $name[6];
-                if (isset($list["{$date} {$time}"])) {
-                    $info         = $list["{$date} {$time}"];
-                    $info['part'] = max($info['part'], $part);
-                    $info['size'] = $info['size'] + $file->getSize();
-                } else {
-                    $info['part'] = $part;
-                    $info['size'] = $file->getSize();
+        $tables = array_slice($this->getAllTables(), $this->processedTables);
+        if (!empty($tables)) {
+            foreach ($tables as $table) {
+                if (!isset($this->tableOffset[$table])) {
+                    $this->tableOffset[$table] = 0;
+                    $this->backupTableStructure($table);
                 }
-                $extension               = strtoupper(pathinfo($file->getFilename(), PATHINFO_EXTENSION));
-                $info['name']            = $name1;
-                $info['compress']        = $extension === 'SQL' ? '-' : $extension;
-                $info['time']            = strtotime("{$date} {$time}");
-                $list["{$date} {$time}"] = $info;
+
+                while (true) {
+                    $data = Db::table($table)->limit($this->tableOffset[$table], $limit)->select()->toArray();
+                    if (empty($data)) {
+                        break;
+                    }
+                    $this->backupTableData($table, $data);
+                    $this->tableOffset[$table] += $limit;
+
+                    if (time() - $this->startime > $this->maxExecuteTime) {
+                        $this->setCache();
+                        return $this->processedTables;
+                    }
+                }
+
+                if (time() - $this->startime > $this->maxExecuteTime) {
+                    $this->setCache();
+                    return $this->processedTables;
+                }
+
+                $this->processedTables++;
             }
         }
-        return $list;
-    }
-
-    /**
-     * 获取文件名称
-     *
-     * @param  string  $type
-     * @param  int  $time
-     * @return array|false|mixed|string
-     * @throws \Exception
-     */
-    public function getFile($type = '', $time = 0)
-    {
-        //
-        if (!is_numeric($time)) {
-            throw new \Exception("{$time} Illegal data type");
-        }
-        switch ($type) {
-            case 'time':
-                $name = date('Ymd-His', $time).'-*.sql*';
-                $path = realpath($this->config['path']).DIRECTORY_SEPARATOR.$name;
-                return glob($path);
-                break;
-            case 'timeverif':
-                $name  = date('Ymd-His', $time).'-*.sql*';
-                $path  = realpath($this->config['path']).DIRECTORY_SEPARATOR.$name;
-                $files = glob($path);
-                $list  = array();
-                foreach ($files as $name) {
-                    $basename        = basename($name);
-                    $match           = sscanf($basename, '%4s%2s%2s-%2s%2s%2s-%d');
-                    $gz              = preg_match('/^\\d{8,8}-\\d{6,6}-\\d+\\.sql.gz$/', $basename);
-                    $list[$match[6]] = array($match[6], $name, $gz);
-                }
-                $last = end($list);
-                if (count($list) === $last[0]) {
-                    return $list;
-                } else {
-                    throw new \Exception("File {$files['0']} may be damaged, please check again");
-                }
-                break;
-            case 'pathname':
-                return "{$this->config['path']}{$this->file['name']}-{$this->file['part']}.sql";
-                break;
-            case 'filename':
-                return "{$this->file['name']}-{$this->file['part']}.sql";
-                break;
-            case 'filepath':
-                return $this->config['path'];
-                break;
-            default:
-                $arr = array(
-                    'pathname' => "{$this->config['path']}{$this->file['name']}-{$this->file['part']}.sql",
-                    'filename' => "{$this->file['name']}-{$this->file['part']}.sql",
-                    'filepath' => $this->config['path'], 'file' => $this->file
-                );
-                return $arr;
-        }
-    }
-
-    /**
-     * 删除备份文件
-     *
-     * @param $time
-     * @return mixed
-     * @throws \Exception
-     */
-    public function delFile($time)
-    {
-        if ($time) {
-            $file = $this->getFile('time', $time);
-            array_map("unlink", $file);
-            $file = $this->getFile('time', $time);
-            if (count($file)) {
-                throw new \Exception("File ".implode('##', $file)." deleted failed");
-            } else {
-                return $time;
-            }
-        } else {
-            throw new \Exception("{$time} Time parameter is incorrect");
-        }
-    }
-
-    /**
-     * 下载备份
-     *
-     * @param  string  $time
-     * @param  integer  $part
-     * @return array|mixed|string
-     */
-    public function downloadFile($time, $part = 0)
-    {
-        $file     = $this->getFile('time', $time);
-        $fileName = $file[$part];
-        if (file_exists($fileName)) {
-            ob_end_clean();
-            header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
-            header('Content-Description: File Transfer');
-            header('Content-Type: application/octet-stream');
-            header('Content-Length: '.filesize($fileName));
-            header('Content-Disposition: attachment; filename='.basename($fileName));
-            readfile($fileName);
-        } else {
-            throw new \Exception("{$time} File is abnormal");
-        }
-    }
-
-    public function setSqlMode() {
-        Db::query("SET sql_mode = '';");
         return true;
     }
 
-    /**
-     * 导入表
-     *
-     * @param $start
-     * @param $time
-     * @return array|false|int
-     * @throws Exception
-     */
-    public function import($start, $time)
+    public function getBackupProgress() {
+        return round($this->processedTables / $this->totalTables * 100);
+    }
+
+    private function backupTableStructure($table)
     {
-        //还原数据
-        $this->file = $this->getFile('time', $time);
-        if ($this->config['compress']) {
-            $gz   = gzopen($this->file[0], 'r');
-            $size = 0;
-        } else {
-            $size = filesize($this->file[0]);
-            $gz   = fopen($this->file[0], 'r');
+        $dropTableQuery = "DROP TABLE IF EXISTS `$table`;\n";
+        $dropLength = strlen($dropTableQuery);
+        if ($this->currentFileSize + $dropLength > $this->maxFileSize) {
+            $this->startNewFile();
         }
-        $sql = '';
-        if ($start) {
-            $this->config['compress'] ? gzseek($gz, $start) : fseek($gz, $start);
+        $fp = fopen($this->currentFile, 'a');
+        fwrite($fp, $dropTableQuery);
+        $this->currentFileSize += $dropLength;
+
+        $createTableQuery = $this->getTableCreateQuery($table);
+        $query = $createTableQuery . ";\n";
+        $queryLength = strlen($query);
+        if ($this->currentFileSize + $queryLength > $this->maxFileSize) {
+            $this->startNewFile();
+            $fp = fopen($this->currentFile, 'a');
         }
-        for ($i = 0; $i < 1000; $i++) {
-            $sql .= $this->config['compress'] ? gzgets($gz) : fgets($gz);
-            if (preg_match('/.*;$/', trim($sql))) {
-                if (false !== Db::query($sql)) {
-                    $start += strlen($sql);
+        fwrite($fp, $query);
+        fclose($fp);
+        $this->currentFileSize += $queryLength;
+    }
+
+    private function backupTableData($table, $data)
+    {
+        $columns = implode(', ', array_map(function ($column){
+            return "`{$column}`";
+        }, array_keys($data[0])));
+        $valueSets = [];
+        foreach ($data as $row) {
+            $values = [];
+            foreach ($row as $value) {
+                if (is_int($value)) {
+                    $values[] = (string)$value; // 整数类型直接转换为字符串
+                } elseif (is_float($value)) {
+                    $values[] = (string)$value; // 浮点数类型直接转换为字符串
+                } elseif (is_bool($value)) {
+                    $values[] = $value ? '1' : '0'; // 布尔类型转换为 1 或 0
+                } elseif (is_null($value)) {
+                    $values[] = 'NULL'; // 空值使用 NULL
                 } else {
-                    return false;
+                    $values[] = Db::getPdo()->quote($value); // 其他类型使用 quote 方法处理
                 }
-                $sql = '';
-            } elseif ($this->config['compress'] ? gzeof($gz) : feof($gz)) {
-                return 0;
             }
+            $valueSets[] = '(' . implode(', ', $values) . ')';
         }
-        return array($start, $size);
+        $insertQuery = "INSERT INTO `$table` ($columns) VALUES\n" . implode(",\n", $valueSets) . ";\n";
+        $queryLength = strlen($insertQuery);
+        if ($this->currentFileSize + $queryLength > $this->maxFileSize) {
+            $this->startNewFile();
+        }
+        $fp = fopen($this->currentFile, 'a');
+        fwrite($fp, $insertQuery);
+        fclose($fp);
+        $this->currentFileSize += $queryLength;
     }
 
-    /**
-     * 写入初始数据
-     *
-     * @return boolean true - 写入成功，false - 写入失败
-     */
-    public function backupInit()
+    private function getAllTables()
     {
-        $sql = "-- -----------------------------\n";
-        $sql .= "-- Think MySQL Data Transfer \n";
-        $sql .= "-- \n";
-        $sql .= "-- Host     : ".$this->dbconfig['hostname']."\n";
-        $sql .= "-- Port     : ".$this->dbconfig['hostport']."\n";
-        $sql .= "-- Database : ".$this->dbconfig['database']."\n";
-        $sql .= "-- \n";
-        $sql .= "-- Part : #{$this->file['part']}\n";
-        $sql .= "-- Date : ".date("Y-m-d H:i:s")."\n";
-        $sql .= "-- -----------------------------\n\n";
-        $sql .= "SET FOREIGN_KEY_CHECKS = 0;\n\n";
-        return $this->write($sql);
+        if (!empty($this->tables)) return $this->tables;
+
+        $tables = Db::query('SHOW TABLES');
+        $this->tables = [];
+        foreach ($tables as $table) {
+            $table_name = current($table);
+            if (in_array($table_name, $this->excludeTables)) {
+                continue;
+            }
+            $this->tables[] = $table_name;
+        }
+        return $this->tables;
     }
 
-    /**
-     * 查询单条
-     * @param $sql
-     * @return array|mixed
-     */
-    public function selectOne($sql) {
-        $result = Db::query($sql);
-        return $result[0] ?? [];
-    }
-
-    /**
-     * 备份表结构
-     *
-     * @param  string  $table  表名
-     * @param  integer  $start  起始行数
-     * @return boolean        false - 备份失败
-     */
-    public function backup($table, $start = 0)
+    private function getTableCreateQuery($tableName)
     {
-        // 备份表结构
-        if (0 == $start) {
-            $result = $this->selectOne("SHOW CREATE TABLE `{$table}`");
-            $sql = "\n";
-            $sql .= "-- -----------------------------\n";
-            $sql .= "-- Table structure for `{$table}`\n";
-            $sql .= "-- -----------------------------\n";
-            $sql .= "DROP TABLE IF EXISTS `{$table}`;\n";
-            $sql .= trim($result['Create Table']).";\n\n";
-            if (false === $this->write($sql)) {
-                return false;
-            }
-        }
-        //数据总数
-        $result = $this->selectOne("SELECT COUNT(*) AS count FROM `{$table}`");
-        $count  = $result['count'];
-        //备份表数据
-        if ($count) {
-            //写入数据注释
-            if (0 == $start) {
-                $sql = "-- -----------------------------\n";
-                $sql .= "-- Records of `{$table}`\n";
-                $sql .= "-- -----------------------------\n";
-                $this->write($sql);
-            }
-            //备份数据记录
-            $result = Db::query("SELECT * FROM `{$table}` LIMIT {$start}, 1000");
-            $sql = "INSERT INTO `{$table}` VALUES\n";
-            foreach ($result as $index => $row) {
-                $row = array_map(function ($item){
-                    return is_string($item) ? addslashes($item) : $item;
-                }, $row);
-                $sql .= "('".str_replace(array("\r", "\n"), array('\\r', '\\n'),
-                        implode("', '", $row))."')";
-                $sql .= $index < (count($result) - 1) ? ",\n" : ";\n";
-            }
-
-            if (false === $this->write($sql)) {
-                return false;
-            }
-            //还有更多数据
-            if ($count > $start + 1000) {
-                return $this->backup($table, $start + 1000);
-            }
-        }
-        //备份下一表
-        return true;
+        $result = Db::query("SHOW CREATE TABLE $tableName");
+        return $result[0]['Create Table'];
     }
 
-    /**
-     * 优化表
-     *
-     * @param  String  $tables  表名
-     * @return String $tables
-     */
-    public function optimize($tables = null)
+    private function startNewFile()
     {
-        if ($tables) {
-            if (is_array($tables)) {
-                $tables = implode('`,`', $tables);
-                $list   = db ::select("OPTIMIZE TABLE `{$tables}`");
-            } else {
-                $list = Db::query("OPTIMIZE TABLE `{$tables}`");
-            }
-            if ($list) {
-                return $tables;
-            } else {
-                throw new \Exception("data sheet'{$tables}'Repair mistakes please try again!");
-            }
-        } else {
-            throw new \Exception("Please specify the table to be repaired!");
-        }
+        $this->currentFileIndex++;
+        $this->currentFile = $this->backupPath . '/backup_' . $this->currentFileIndex . '.sql';
+        $this->currentFileSize = 0;
     }
 
-    /**
-     * 修复表
-     *
-     * @param  String  $tables  表名
-     * @return String $tables
-     */
-    public function repair($tables = null)
+    public function restoreDatabase()
     {
-        if ($tables) {
-            if (is_array($tables)) {
-                $tables = implode('`,`', $tables);
-                $list   = Db::query("REPAIR TABLE `{$tables}`");
-            } else {
-                $list = Db::query("REPAIR TABLE `{$tables}`");
+        $backupFiles = glob($this->backupPath . '/backup_*.sql');
+        natsort($backupFiles);
+        $backupFiles = array_values($backupFiles);
+
+        if ($this->restoreIndex >= count($backupFiles)) return true;
+        $backupFile = $backupFiles[$this->restoreIndex];
+
+        $sql = file_get_contents($backupFile);
+        $queries = explode(";\n", $sql);
+        foreach ($queries as $query) {
+            if (trim($query) !== '') {
+                Db::execute($query);
             }
-            if ($list) {
-
-                return $list;
-            } else {
-                throw new \Exception("data sheet'{$tables}'Repair mistakes please try again!");
-            }
-        } else {
-            throw new \Exception("Please specify the table to be repaired!");
         }
+        $this->restoreIndex++;
+        $this->setCache();
+        return $this->restoreIndex;
     }
-
-    /**
-     * 写入SQL语句
-     *
-     * @param  string  $sql  要写入的SQL语句
-     * @return boolean     true - 写入成功，false - 写入失败！
-     */
-    private function write($sql)
-    {
-        $size = strlen($sql);
-        //由于压缩原因，无法计算出压缩后的长度，这里假设压缩率为50%，
-        //一般情况压缩率都会高于50%；
-        $size = $this->config['compress'] ? $size / 2 : $size;
-        $this->open($size);
-        return $this->config['compress'] ? @gzwrite($this->fp, $sql) : @fwrite($this->fp, $sql);
-    }
-
-    /**
-     * 打开一个卷，用于写入数据
-     *
-     * @param  integer  $size  写入数据的大小
-     */
-    private function open($size)
-    {
-        if ($this->fp) {
-            $this->size += $size;
-            if ($this->size > $this->config['part']) {
-                $this->config['compress'] ? @gzclose($this->fp) : @fclose($this->fp);
-                $this->fp = null;
-                $this->file['part']++;
-                session('backup_file', $this->file);
-                $this->backupInit();
-            }
-        } else {
-            $backuppath = $this->config['path'];
-            $filename   = "{$backuppath}{$this->file['name']}-{$this->file['part']}.sql";
-            if ($this->config['compress']) {
-                $filename = "{$filename}.gz";
-                $this->fp = @gzopen($filename, "a{$this->config['level']}");
-            } else {
-                $this->fp = @fopen($filename, 'a');
-            }
-            $this->size = filesize($filename) + $size;
-        }
-    }
-
-    /**
-     * 检查目录是否可写
-     *
-     * @param  string  $path  目录
-     * @return boolean
-     */
-    protected function checkPath($path)
-    {
-        if (is_dir($path)) {
-            return true;
-        }
-        if (mkdir($path, 0755, true)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * 析构方法，用于关闭文件资源
-     */
-    public function __destruct()
-    {
-        if ($this->fp) {
-            $this->config['compress'] ? @gzclose($this->fp) : @fclose($this->fp);
-        }
-    }
-
 }

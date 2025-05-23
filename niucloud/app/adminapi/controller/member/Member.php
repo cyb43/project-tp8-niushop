@@ -152,6 +152,7 @@ class Member extends BaseAdminController
     {
         $data = $this->request->params([
             ['keyword', ''],
+            ['member_ids', []],
         ]);
         return success((new MemberService())->getList($data));
     }

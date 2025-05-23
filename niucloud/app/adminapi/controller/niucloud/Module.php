@@ -20,7 +20,7 @@ class Module extends BaseAdminController
 {
     public function authorize()
     {
-        return success((new CoreAuthService())->getAuthInfo());
+        return success(( new CoreAuthService() )->getAuthInfo());
     }
 
     /**
@@ -29,11 +29,11 @@ class Module extends BaseAdminController
     public function setAuthorize()
     {
         $data = $this->request->params([
-            ['auth_code', ''],
-            ['auth_secret', '']
+            [ 'auth_code', '' ],
+            [ 'auth_secret', '' ]
         ]);
         $this->validate($data, 'app\validate\niucloud\Module.set');
-        return success("SUCCESS",  (new NiucloudService())->setAuthorize($data));
+        return success("SUCCESS", ( new NiucloudService() )->setAuthorize($data));
     }
 
     /**
@@ -41,7 +41,7 @@ class Module extends BaseAdminController
      */
     public function getAuthorize()
     {
-        return success((new NiucloudService())->getAuthorize());
+        return success(( new NiucloudService() )->getAuthorize());
     }
 
     /**
@@ -49,8 +49,9 @@ class Module extends BaseAdminController
      * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFrameworkLastVersion() {
-        return success(data:(new NiucloudService())->getFrameworkLastVersion());
+    public function getFrameworkLastVersion()
+    {
+        return success(data: ( new NiucloudService() )->getFrameworkLastVersion());
     }
 
     /**
@@ -58,15 +59,29 @@ class Module extends BaseAdminController
      * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function getFrameworkVersionList() {
-        return success(data:(new NiucloudService())->getFrameworkVersionList());
+    public function getFrameworkVersionList()
+    {
+        return success(data: ( new NiucloudService() )->getFrameworkVersionList());
     }
 
     /**
      * 申请体验
      * @return Response
      */
-    public function applyExperience() {
-        return success((new NiucloudService())->applyExperience());
+    public function applyExperience()
+    {
+        return success(( new NiucloudService() )->applyExperience());
+    }
+
+    /**
+     * 获取应用/插件的版本更新记录
+     * @return Response
+     */
+    public function getAppVersionList()
+    {
+        $data = $this->request->params([
+            [ 'app_key', '' ],
+        ]);
+        return success(data: ( new NiucloudService() )->getAppVersionList($data[ 'app_key' ]));
     }
 }

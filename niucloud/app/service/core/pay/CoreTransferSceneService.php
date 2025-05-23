@@ -71,78 +71,11 @@ class CoreTransferSceneService extends BaseCoreService
 
         $config = $this->getWechatTransferSceneConfig();
         //查询业务和场景的对应关系表
-//        $trade_scene_event_array = [
-//            'shop_fenxiao' => [
-//                'name' => '分销',
-//                'scene' => TransferDict::XJYX,
-//                'perception' => '',
-//                'infos' => [
-//                    '活动名称' => '分销佣金',
-//                    '奖励说明' => '分销佣金奖励'
-//                ]
-//            ]
-//        ];
         $trade_scene_event_array = event('GetWechatTransferTradeScene', []);
-
-//        [
-//            'xjyx' =>  [
-//                'name' => '现金营销',
-//                'scene_id' => 1001,
-//                'user_recv_perception' => [//收款感知
-//                    '活动奖励',
-//                    '现金奖励',
-//                ],
-//                'transfer_scene_report_infos' => [//报备背景信息
-//                    '活动名称',
-//                    '奖励说明'
-//                ],
-//                'trade_scene_data' => [
-//                    'shop_fenxiao' => [
-//                        'name' => '分销',
-//                        'scene' => TransferDict::XJYX,
-//                        'infos' => [
-//                            '活动名称' => '分销佣金',
-//                            '奖励说明' => '分销佣金奖励'
-//                        ],
-//                        'perception' => '活动奖励'
-//                    ]
-//                ]
-//            ],
-//            'qypf' =>  [
-//                'name' => '企业赔付',
-//                'scene_id' => 1002,
-//                'user_recv_perception' => [
-//                    '退款',
-//                    '商家赔付',
-//                ],
-//                'transfer_scene_report_infos' => [
-//                    '赔付原因',
-//                ]
-//            ],
-//            'yjbc' =>  [
-//                'name' => '佣金报酬',
-//                'scene_id' => 1005,
-//                'user_recv_perception' => [
-//                    '劳务报酬',
-//                    '报销款',
-//                    '企业补贴',
-//                    '开工利是'
-//                ],
-//                'transfer_scene_report_infos' => [
-//                    '岗位类型',
-//                    '报酬说明'
-//                ]
-//            ],
-//
-//        ];
         $trade_scene_column = ( new TransferScene() )->where([ [ 'id', '=', 0 ] ])->column('*', 'type');
         $trade_scene_list = [];
         foreach ($trade_scene_event_array as $trade_scene_item) {
             foreach ($trade_scene_item as $trade_scene_key => $trade_scene_item_item) {
-//                $trade_scene_select_data = $trade_scene_item_item;
-//                foreach($trade_scene_column as $trade_scene_column_item){
-//                    if($trade_scene_column_item['type'] == )
-//                }
                 $trade_scene_select_data = $trade_scene_column[ $trade_scene_key ] ?? $trade_scene_item_item;
                 $trade_scene_select_data = array_merge($trade_scene_item_item, $trade_scene_select_data);
                 if (!isset($trade_scene_list[ $trade_scene_item_item[ 'scene' ] ])) $trade_scene_list[ $trade_scene_item_item[ 'scene' ] ] = [];
@@ -153,14 +86,8 @@ class CoreTransferSceneService extends BaseCoreService
 
         foreach ($list as $key => &$v) {
             $v[ 'scene_id' ] = $config[ $key ] ?? '';
-//            $item_transfer_scene_report_infos = $v['transfer_scene_report_infos'] ?? [];
             $trade_scene_data = $trade_scene_list[ $key ] ?? [];
             $v[ 'trade_scene_data' ] = $trade_scene_data;
-//            foreach($item_transfer_scene_report_infos as $item_k => $item_v){
-//
-//            }
-
-            // $trade_scene_list = $trade_scene_list[$key] ?? [];
         }
         //然后根据支持的业务来完善业务场景备注
 

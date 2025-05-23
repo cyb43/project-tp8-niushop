@@ -370,16 +370,4 @@ class DiyForm extends BaseAdminController
         return success(( new DiyFormRecordsService() )->getFieldStatList($data));
     }
 
-    /**
-     * 获取万能表单微信小程序二维码
-     * @return Response
-     */
-    public function getQrcode()
-    {
-        $data = $this->request->params([
-            [ "form_id", '' ],
-        ]);
-        return success(( new DiyFormService() )->getQrcode($data[ 'form_id' ]));
-    }
-
 }

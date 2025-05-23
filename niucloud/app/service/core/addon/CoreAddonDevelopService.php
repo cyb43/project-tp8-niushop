@@ -366,6 +366,7 @@ class CoreAddonDevelopService extends CoreAddonBaseService
             if (empty($image)) return true;
             if (check_file_is_remote($image)) {
                 try {
+                    downloadImage($image,$file); // 将云存储的图片下载到本地
                     (new CoreFetchService())->setRootPath($dir)->setRename($name)->image($image, 0, FileDict::LOCAL);
                 } catch ( UploadFileException $e ) {
                     return true;

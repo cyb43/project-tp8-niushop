@@ -29,7 +29,7 @@ class Config extends BaseAdminController
      */
     public function getBottomList()
     {
-        return success((new DiyConfigService())->getBottomList());
+        return success(( new DiyConfigService() )->getBottomList());
     }
 
     /**
@@ -41,7 +41,7 @@ class Config extends BaseAdminController
         $params = $this->request->params([
             [ 'key', 'app' ],
         ]);
-        return success((new DiyConfigService())->getBottomConfig($params[ 'key' ]));
+        return success(( new DiyConfigService() )->getBottomConfig($params[ 'key' ]));
     }
 
     /**
@@ -54,7 +54,7 @@ class Config extends BaseAdminController
             [ 'value', [] ],
             [ 'key', 'app' ]
         ]);
-        (new DiyConfigService())->setBottomConfig($data[ 'value' ], $data[ 'key' ]);
+        ( new DiyConfigService() )->setBottomConfig($data[ 'value' ], $data[ 'key' ]);
         return success();
     }
 

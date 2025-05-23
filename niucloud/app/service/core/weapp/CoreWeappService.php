@@ -86,7 +86,7 @@ class CoreWeappService extends BaseCoreService
         ]);
         if ($response->isFailed()) {
             // 出错了，处理异常
-            throw new CommonException('WECHAT_MINI_PROGRAM_CODE_GENERATION_FAILED');
+            throw new CommonException('微信小程序码生成失败：errcode:' . $response[ 'errcode' ] . 'errmsg:' . $response[ 'errmsg' ]);
         }
         $response->saveAs($filepath);
         return $filepath;

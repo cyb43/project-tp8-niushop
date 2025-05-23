@@ -91,4 +91,19 @@ class System extends BaseAdminController
     {
         return success(['app_debug' => env('app_debug', false)]);
     }
+
+    /**
+     * 获取推广二维码
+     * @return Response
+     */
+    public function getSpreadQrcode()
+    {
+        $params = $this->request->params([
+            ['form_id', ''],
+            ['folder',''],
+            ['page',''],
+            ['params',[]]
+        ]);
+        return success((new SystemService())->getQrcode($params));
+    }
 }

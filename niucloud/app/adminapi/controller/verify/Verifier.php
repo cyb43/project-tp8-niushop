@@ -24,7 +24,7 @@ class Verifier extends BaseAdminController
      */
     public function lists()
     {
-        return success(data:(new VerifierService())->getPage());
+        return success(data: ( new VerifierService() )->getPage());
     }
 
     /**
@@ -33,7 +33,17 @@ class Verifier extends BaseAdminController
      */
     public function select()
     {
-        return success(data:(new VerifierService())->getList());
+        return success(data: ( new VerifierService() )->getList());
+    }
+
+    /**
+     * 获取核销员信息
+     * @param int $order_id
+     * @return Response
+     */
+    public function detail($id)
+    {
+        return success(data: ( new VerifierService() )->getDetail($id));
     }
 
     /**
@@ -44,10 +54,24 @@ class Verifier extends BaseAdminController
     public function add()
     {
         $data = $this->request->params([
-            ['member_id', 0],
-            ['verify_type', ''],
+            [ 'member_id', 0 ],
+            [ 'verify_type', '' ],
         ]);
-        return success(data:(new VerifierService())->add($data));
+        return success(data: ( new VerifierService() )->add($data));
+    }
+
+    /**
+     * 添加核销员
+     * @param int $order_id
+     * @return Response
+     */
+    public function edit($id)
+    {
+        $data = $this->request->params([
+            [ 'verify_type', '' ],
+        ]);
+        ( new VerifierService() )->edit($id,$data);
+        return success('EDIT_SUCCESS');
     }
 
     /**
@@ -55,7 +79,7 @@ class Verifier extends BaseAdminController
      */
     public function del(int $id)
     {
-        return success('DELETE_SUCCESS', (new VerifierService())->del($id));
+        return success('DELETE_SUCCESS', ( new VerifierService() )->del($id));
     }
 
     /**

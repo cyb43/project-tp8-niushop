@@ -37,6 +37,7 @@ return [
     'SERVER_CROSS_REQUEST_FAIL' => '服务器跨域请求异常',
     'ADDON_INSTALL_NOT_EXIST' => '未找到插件安装任务',
     'ADDON_INSTALL_EXECUTED' => '插件安装任务已执行',
+    'ADDON_INSTALLING' => '插件安装中',
     'INSTALL_CHECK_NOT_PASS' => '安装校验未通过',
     'ADDON_SQL_FAIL' => '插件sql执行失败',
     'ADDON_DIR_FAIL' => '插件文件操作失败',
@@ -56,6 +57,10 @@ return [
     'ADDON_ZIP_ERROR' => '插件压缩失败',
     'PHP_SCRIPT_RUNNING_OUT_OF_MEMORY' => 'PHP脚本运行内存不足, 具体操作方法<a style="text-decoration: underline;" href="https://www.kancloud.cn/niushop/niushop_v6/3248604" target="blank">点击查看相关手册</a>',
     'BEFORE_UPGRADING_NEED_UPGRADE_FRAMEWORK' => '升级插件前需要先升级框架',
+    'UPGRADE_RECORD_NOT_EXIST' => '升级记录不存在',
+    'UPGRADE_BACKUP_CODE_NOT_FOUND' => '未找到备份的源码文件',
+    'UPGRADE_BACKUP_SQL_NOT_FOUND' => '未找到备份的数据库文件',
+    'NOT_EXIST_UPGRADE_CONTENT' => '没有获取到可以升级的内容',
     //登录注册重置账号....
 
     'LOGIN_SUCCESS' => '登录成功',
@@ -289,6 +294,8 @@ return [
     'VERIFY_TYPE_ERROR' => '核销类型错误',
     'VERIFY_CODE_EXPIRED' => '当前核销码已核销或已失效',
     'VERIFIER_NOT_EXIST' => '核销员不存在',
+    'VERIFIER_EXIST'=>'核销员已存在',
+    'VERIFIER_NOT_AUTH' => '该核销员没有权限',
 
     //签到相关
     'SIGN_NOT_USE' => '签到未开启',
@@ -311,8 +318,6 @@ return [
     'EXPORT_NO_DATA' => '暂无可导出数据',
     'DIRECTORY' => '目录',
     'WAS_NOT_CREATED' => '创建失败',
-
-    /********************************************************* 微信开放平台 **************************************/
 
     'PRINTER_NOT_EXIST' => '打印机不存在'
 ];

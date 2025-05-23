@@ -493,7 +493,6 @@ class Wechatpay extends BasePay
             '_action' => 'refund',
             'transaction_id' => $out_trade_no,
             'out_refund_no' => $refund_no,
-            ''
         ];
         $result = Pay::wechat()->query($order);
         if (empty($result))

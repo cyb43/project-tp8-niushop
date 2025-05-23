@@ -35,6 +35,6 @@ class WeappVersion extends BaseModel
     protected $name = 'weapp_version';
 
     public function getStatusNameAttr($value, $data) {
-        if (isset($data['status'])) return CloudDict::getAppletUploadSatus($data['status']);
+        if (isset($data['status'])) return CloudDict::getAppletUploadStatus($data['status']);
     }
 }

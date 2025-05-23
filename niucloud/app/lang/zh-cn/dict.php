@@ -376,7 +376,6 @@ return [
         'oct' => '10月',
         'nov' => '11月',
         'dec' => '12月',
-
     ],
     'dict_site_layout' => [
         'default' => '默认'
@@ -387,7 +386,8 @@ return [
         'upload_fail' => '上传失败',
         'auditing' => '审核中',
         'audit_success' => '审核通过',
-        'audit_fail' => '审核失败'
+        'audit_fail' => '审核失败',
+        'published' => '已发布'
     ],
     'dict_wechat_media' => [
         'type_image' => '图片',
@@ -414,5 +414,16 @@ return [
     // 打印机品牌
     'dict_printer' => [
         'yilianyun' => '易联云打印机'
+    ],
+    'dict_upgrade' => [
+        'ready' => '升级中',
+        'complete' => '完成',
+        'fail' => '失败',
+        'cancel' => '已取消'
+    ],
+    'dict_backup' => [
+        'ready' => '准备执行',
+        'complete' => '完成',
+        'fail' => '失败'
     ]
 ];

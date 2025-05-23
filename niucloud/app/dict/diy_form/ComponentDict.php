@@ -414,56 +414,57 @@ class ComponentDict
                             return $data;
                         }
                     ],
-                    // 'FormWechatName' => [
-                    //     'title' => '微信名',
-                    //     'icon' => 'iconfont iconbiaotipc',
-                    //     'path' => 'edit-form-wechat-name', // 编辑组件属性名称
-                    //     'uses' => 1, // 最大添加数量
-                    //     'sort' => 10007,
-                    //     // 组件属性
-                    //     'template' => [
-                    //         "textColor" => "#303133", // 文字颜色
-                    //         'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
-                    //         'pageEndBgColor' => '', // 底部背景颜色（结束）
-                    //         'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
-                    //         'componentBgUrl' => '', // 组件背景图片
-                    //         'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
-                    //         "componentStartBgColor" => '', // 组件背景颜色（开始）
-                    //         "componentEndBgColor" => '', // 组件背景颜色（结束）
-                    //         "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
-                    //         "topRounded" => 0, // 组件上圆角
-                    //         "bottomRounded" => 0, // 组件下圆角
-                    //         "elementBgColor" => '', // 元素背景颜色
-                    //         "topElementRounded" => 0,// 元素上圆角
-                    //         "bottomElementRounded" => 0, // 元素下圆角
-                    //         "margin" => [
-                    //             "top" => 10, // 上边距
-                    //             "bottom" => 10, // 下边距
-                    //             "both" => 10 // 左右边距
-                    //         ],
-                    //     ],
-                    //     'value' => [
-                    //         // 表单的公共属性
-                    //         'field' => [
-                    //             'name' => '微信名', // 字段名称
-                    //             // 字段说明，支持修改颜色、大小
-                    //             'remark' => [
-                    //                 'text' => '',
-                    //                 'color' => '#999999',
-                    //                 "fontSize" => 14,
-                    //             ],
-                    //             'required' => false, // 是否必填 true：是，false：否
-                    //             'unique' => false, // 内容不可重复提交 true：是，false：否
-                    //             'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
-                    //             'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
-//                    'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
-                    //             'default' => '', // 默认值 存储数据类型不同，各组件自行处理
-                    //             'value' => '', // 字段值 存储数据类型不同，各组件自行处理
-                    //         ],
-                    //         "fontSize" => 14,
-                    //         "fontWeight" => "normal",
-                    //     ]
-                    // ],
+//                    'FormWechatName' => [
+//                        'title' => '微信名',
+//                        'icon' => 'iconfont iconbiaotipc',
+//                        'path' => 'edit-form-wechat-name', // 编辑组件属性名称
+//                        'uses' => 1, // 最大添加数量
+//                        'sort' => 10007,
+//                        // 组件属性
+//                        'template' => [
+//                            "textColor" => "#303133", // 文字颜色
+//                            'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
+//                            'pageEndBgColor' => '', // 底部背景颜色（结束）
+//                            'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+//                            'componentBgUrl' => '', // 组件背景图片
+//                            'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+//                            "componentStartBgColor" => '', // 组件背景颜色（开始）
+//                            "componentEndBgColor" => '', // 组件背景颜色（结束）
+//                            "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+//                            "topRounded" => 0, // 组件上圆角
+//                            "bottomRounded" => 0, // 组件下圆角
+//                            "elementBgColor" => '', // 元素背景颜色
+//                            "topElementRounded" => 0,// 元素上圆角
+//                            "bottomElementRounded" => 0, // 元素下圆角
+//                            "margin" => [
+//                                "top" => 10, // 上边距
+//                                "bottom" => 10, // 下边距
+//                                "both" => 10 // 左右边距
+//                            ],
+//                        ],
+//                        'value' => [
+//                            // 表单的公共属性
+//                            'field' => [
+//                                'name' => '微信名', // 字段名称
+//                                // 字段说明，支持修改颜色、大小
+//                                'remark' => [
+//                                    'text' => '',
+//                                    'color' => '#999999',
+//                                    "fontSize" => 14,
+//                                ],
+//                                'required' => false, // 是否必填 true：是，false：否
+//                                'unique' => false, // 内容不可重复提交 true：是，false：否
+//                                'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
+//                                'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
+//                                'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
+//                                'default' => '', // 默认值 存储数据类型不同，各组件自行处理
+//                                'value' => '', // 字段值 存储数据类型不同，各组件自行处理
+//                            ],
+//                            'placeholder' => '请输入', // 提示语
+//                            "fontSize" => 14,
+//                            "fontWeight" => "normal",
+//                        ]
+//                    ],
                     'FormMobile' => [
                         'title' => '手机号',
                         'icon' => 'iconfont icona-shoujipc30',
@@ -617,74 +618,84 @@ class ComponentDict
                             "fontWeight" => "normal",
                         ]
                     ],
-                    // 'FormTable' => [
-                    //     'title' => '表格',
-                    //     'icon' => 'iconfont iconbiaotipc',
-                    //     'path' => 'edit-form-table', // 编辑组件属性名称
-                    //     'uses' => 0, // 最大添加数量
-                    //     'sort' => 10011,
-                    //     // 组件属性
-                    //     'template' => [
-                    //         "textColor" => "#303133", // 文字颜色
-                    //         'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
-                    //         'pageEndBgColor' => '', // 底部背景颜色（结束）
-                    //         'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
-                    //         'componentBgUrl' => '', // 组件背景图片
-                    //         'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
-                    //         "componentStartBgColor" => '', // 组件背景颜色（开始）
-                    //         "componentEndBgColor" => '', // 组件背景颜色（结束）
-                    //         "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
-                    //         "topRounded" => 0, // 组件上圆角
-                    //         "bottomRounded" => 0, // 组件下圆角
-                    //         "elementBgColor" => '', // 元素背景颜色
-                    //         "topElementRounded" => 0,// 元素上圆角
-                    //         "bottomElementRounded" => 0, // 元素下圆角
-                    //         "margin" => [
-                    //             "top" => 10, // 上边距
-                    //             "bottom" => 10, // 下边距
-                    //             "both" => 10 // 左右边距
-                    //         ],
-                    //     ],
-                    //     'value' => [
-                    //         // 表单的公共属性
-                    //         'field' => [
-                    //             'name' => '表格', // 字段名称
-                    //             // 字段说明，支持修改颜色、大小
-                    //             'remark' => [
-                    //                 'text' => '',
-                    //                 'color' => '#999999',
-                    //                 "fontSize" => 14,
-                    //             ],
-                    //             'required' => false, // 是否必填 true：是，false：否
-                    //             'unique' => false, // 内容不可重复提交 true：是，false：否
-                    //             'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
-                    //             'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
-//                    'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
-                    //             'detailComponent' => '/src/app/views/diy_form/components/detail-form-table.vue', // 用于详情展示
-                    //             'default' => '', // 默认值 存储数据类型不同，各组件自行处理
-                    //             'value' => '', // 字段值 存储数据类型不同，各组件自行处理
-                    //         ],
-                    //         "fontSize" => 14,
-                    //         "fontWeight" => "normal",
-                    //         // 列设置
-                    //         'columnList' => [
-                    //             [
-                    //                 'id' => '', // 唯一值，用于排序
-                    //                 'type' => 'text', // 类型，text：文本，number：数字，radio：单选项，checkbox：多选项，todo，不同类型，结构也不一样，这个组件要在前端处理
-                    //                 'name' => '', // 字段名称
-                    //                 'value' => '选项1' // 字段值
-                    //             ],
-                    //         ],
-                    //         'autoIncrementControl' => false, // 是否开启自增（展示按钮），添加多个
-                    //         // 填写限制（开启自增才展示）
-                    //         'writeLimit' => [
-                    //             'default' => 2, // 默认展示 N 项
-                    //             'min' => 0, // 最少填写 N 项
-                    //             'max' => 0 // 最多填写 N 项
-                    //         ],
-                    //         'btnText' => '新增一组'
-                    //     ]
-                    // ],
+//                    'FormTable' => [
+//                        'title' => '表格',
+//                        'icon' => 'iconfont iconbiaotipc',
+//                        'path' => 'edit-form-table', // 编辑组件属性名称
+//                        'uses' => 0, // 最大添加数量
+//                        'sort' => 10011,
+//                        // 组件属性
+//                        'template' => [
+//                            "textColor" => "#303133", // 文字颜色
+//                            'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
+//                            'pageEndBgColor' => '', // 底部背景颜色（结束）
+//                            'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+//                            'componentBgUrl' => '', // 组件背景图片
+//                            'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+//                            "componentStartBgColor" => '', // 组件背景颜色（开始）
+//                            "componentEndBgColor" => '', // 组件背景颜色（结束）
+//                            "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+//                            "topRounded" => 0, // 组件上圆角
+//                            "bottomRounded" => 0, // 组件下圆角
+//                            "elementBgColor" => '', // 元素背景颜色
+//                            "topElementRounded" => 0,// 元素上圆角
+//                            "bottomElementRounded" => 0, // 元素下圆角
+//                            "margin" => [
+//                                "top" => 10, // 上边距
+//                                "bottom" => 10, // 下边距
+//                                "both" => 10 // 左右边距
+//                            ],
+//                        ],
+//                        'value' => [
+//                            // 表单的公共属性
+//                            'field' => [
+//                                'name' => '表格', // 字段名称
+//                                // 字段说明，支持修改颜色、大小
+//                                'remark' => [
+//                                    'text' => '',
+//                                    'color' => '#999999',
+//                                    "fontSize" => 14,
+//                                ],
+//                                'required' => false, // 是否必填 true：是，false：否
+//                                'unique' => false, // 内容不可重复提交 true：是，false：否
+//                                'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
+//                                'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
+//                                'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
+//                                'detailComponent' => '/src/app/views/diy_form/components/detail-form-table.vue', // 用于详情展示
+//                                'default' => '', // 默认值 存储数据类型不同，各组件自行处理
+//                                'value' => '', // 字段值 存储数据类型不同，各组件自行处理
+//                            ],
+//                            "fontSize" => 14,
+//                            "fontWeight" => "normal",
+//                            // 列设置
+//                            'columnList' => [
+//                                [
+//                                    'id' => '', // 唯一值，用于排序
+//                                    'type' => 'text', // 类型，text：文本，number：数字，radio：单选项，checkbox：多选项，todo，不同类型，结构也不一样，这个组件要在前端处理
+//                                    'name' => '', // 字段名称
+//                                    'value' => '选项1' // 字段值
+//                                ],
+//                            ],
+//                            'autoIncrementControl' => false, // 是否开启自增（展示按钮），添加多个
+//                            // 填写限制（开启自增才展示）
+//                            'writeLimit' => [
+//                                'default' => 2, // 默认展示 N 项
+//                                'min' => 0, // 最少填写 N 项
+//                                'max' => 0 // 最多填写 N 项
+//                            ],
+//                            'btnText' => '新增一组'
+//                        ],
+//                        // 渲染值
+//                        'render' => function($data) {
+//                            // todo 处理业务数据
+//                            return '';
+//                        },
+//                        // 转换类型
+//                        'convert' => function($data) {
+//                            // todo 处理业务数据
+//                            return $data;
+//                        }
+//                    ],
                     'FormDate' => [
                         'title' => '日期',
                         'icon' => 'iconfont icona-riqipc30',
@@ -997,109 +1008,109 @@ class ComponentDict
                             return $data;
                         }
                     ],
-                    // 'FormLocation' => [
-                    //     'title' => '定位',
-                    //     'icon' => 'iconfont iconbiaotipc',
-                    //     'path' => 'edit-form-location', // 编辑组件属性名称
-                    //     'uses' => 1, // 最大添加数量
-                    //     'sort' => 10016,
-                    //     // 组件属性
-                    //     'template' => [
-                    //         "textColor" => "#303133", // 文字颜色
-                    //         'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
-                    //         'pageEndBgColor' => '', // 底部背景颜色（结束）
-                    //         'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
-                    //         'componentBgUrl' => '', // 组件背景图片
-                    //         'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
-                    //         "componentStartBgColor" => '', // 组件背景颜色（开始）
-                    //         "componentEndBgColor" => '', // 组件背景颜色（结束）
-                    //         "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
-                    //         "topRounded" => 0, // 组件上圆角
-                    //         "bottomRounded" => 0, // 组件下圆角
-                    //         "elementBgColor" => '', // 元素背景颜色
-                    //         "topElementRounded" => 0,// 元素上圆角
-                    //         "bottomElementRounded" => 0, // 元素下圆角
-                    //         "margin" => [
-                    //             "top" => 10, // 上边距
-                    //             "bottom" => 10, // 下边距
-                    //             "both" => 10 // 左右边距
-                    //         ],
-                    //     ],
-                    //     'value' => [
-                    //         // 表单的公共属性
-                    //         'field' => [
-                    //             'name' => '定位', // 字段名称
-                    //             // 字段说明，支持修改颜色、大小
-                    //             'remark' => [
-                    //                 'text' => '',
-                    //                 'color' => '#999999',
-                    //                 "fontSize" => 14,
-                    //             ],
-                    //             'required' => false, // 是否必填 true：是，false：否
-                    //             'unique' => false, // 内容不可重复提交 true：是，false：否
-                    //             'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
-                    //             'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
-//                    'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
-                    //             'default' => '', // 默认值 存储数据类型不同，各组件自行处理
-                    //             'value' => '', // 字段值 存储数据类型不同，各组件自行处理
-                    //         ],
-                    //         'placeholder' => '请输入', // 提示语
-                    //         "fontSize" => 14,
-                    //         "fontWeight" => "normal",
-                    //         'mode' => 'authorized_wechat_location', // 获取方式，authorized_wechat_location：授权微信定位，open_choose_location：手动选择定位
-                    //     ]
-                    // ],
-                    // 'FormAddress' => [
-                    //     'title' => '地址',
-                    //     'icon' => 'iconfont iconbiaotipc',
-                    //     'path' => 'edit-form-address', // 编辑组件属性名称
-                    //     'uses' => 0, // 最大添加数量
-                    //     'sort' => 10017,
-                    //     // 组件属性
-                    //     'template' => [
-                    //         "textColor" => "#303133", // 文字颜色
-                    //         'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
-                    //         'pageEndBgColor' => '', // 底部背景颜色（结束）
-                    //         'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
-                    //         'componentBgUrl' => '', // 组件背景图片
-                    //         'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
-                    //         "componentStartBgColor" => '', // 组件背景颜色（开始）
-                    //         "componentEndBgColor" => '', // 组件背景颜色（结束）
-                    //         "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
-                    //         "topRounded" => 0, // 组件上圆角
-                    //         "bottomRounded" => 0, // 组件下圆角
-                    //         "elementBgColor" => '', // 元素背景颜色
-                    //         "topElementRounded" => 0,// 元素上圆角
-                    //         "bottomElementRounded" => 0, // 元素下圆角
-                    //         "margin" => [
-                    //             "top" => 10, // 上边距
-                    //             "bottom" => 10, // 下边距
-                    //             "both" => 10 // 左右边距
-                    //         ],
-                    //     ],
-                    //     'value' => [
-                    //         // 表单的公共属性
-                    //         'field' => [
-                    //             'name' => '地址', // 字段名称
-                    //             // 字段说明，支持修改颜色、大小
-                    //             'remark' => [
-                    //                 'text' => '',
-                    //                 'color' => '#999999',
-                    //                 "fontSize" => 14,
-                    //             ],
-                    //             'required' => false, // 是否必填 true：是，false：否
-                    //             'unique' => false, // 内容不可重复提交 true：是，false：否
-                    //             'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
-                    //             'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
-                    //             'default' => '', // 默认值 存储数据类型不同，各组件自行处理 todo 设置默认省/市/区/街道
-                    //             'value' => '', // 字段值 存储数据类型不同，各组件自行处理
-                    //         ],
-                    //         'placeholder' => '请输入', // 提示语
-                    //         "fontSize" => 14,
-                    //         "fontWeight" => "normal",
-                    //         'addressFormat' => 'province/city/district/address', // 地址格式
-                    //     ]
-                    // ],
+//                    'FormLocation' => [
+//                        'title' => '定位',
+//                        'icon' => 'iconfont iconbiaotipc',
+//                        'path' => 'edit-form-location', // 编辑组件属性名称
+//                        'uses' => 1, // 最大添加数量
+//                        'sort' => 10016,
+//                        // 组件属性
+//                        'template' => [
+//                            "textColor" => "#303133", // 文字颜色
+//                            'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
+//                            'pageEndBgColor' => '', // 底部背景颜色（结束）
+//                            'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+//                            'componentBgUrl' => '', // 组件背景图片
+//                            'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+//                            "componentStartBgColor" => '', // 组件背景颜色（开始）
+//                            "componentEndBgColor" => '', // 组件背景颜色（结束）
+//                            "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+//                            "topRounded" => 0, // 组件上圆角
+//                            "bottomRounded" => 0, // 组件下圆角
+//                            "elementBgColor" => '', // 元素背景颜色
+//                            "topElementRounded" => 0,// 元素上圆角
+//                            "bottomElementRounded" => 0, // 元素下圆角
+//                            "margin" => [
+//                                "top" => 10, // 上边距
+//                                "bottom" => 10, // 下边距
+//                                "both" => 10 // 左右边距
+//                            ],
+//                        ],
+//                        'value' => [
+//                            // 表单的公共属性
+//                            'field' => [
+//                                'name' => '定位', // 字段名称
+//                                // 字段说明，支持修改颜色、大小
+//                                'remark' => [
+//                                    'text' => '',
+//                                    'color' => '#999999',
+//                                    "fontSize" => 14,
+//                                ],
+//                                'required' => false, // 是否必填 true：是，false：否
+//                                'unique' => false, // 内容不可重复提交 true：是，false：否
+//                                'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
+//                                'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
+//                                'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
+//                                'default' => '', // 默认值 存储数据类型不同，各组件自行处理
+//                                'value' => '', // 字段值 存储数据类型不同，各组件自行处理
+//                            ],
+//                            'placeholder' => '请输入', // 提示语
+//                            "fontSize" => 14,
+//                            "fontWeight" => "normal",
+//                            'mode' => 'authorized_wechat_location', // 获取方式，authorized_wechat_location：授权微信定位，open_choose_location：手动选择定位
+//                        ]
+//                    ],
+//                    'FormAddress' => [
+//                        'title' => '地址',
+//                        'icon' => 'iconfont iconbiaotipc',
+//                        'path' => 'edit-form-address', // 编辑组件属性名称
+//                        'uses' => 0, // 最大添加数量
+//                        'sort' => 10017,
+//                        // 组件属性
+//                        'template' => [
+//                            "textColor" => "#303133", // 文字颜色
+//                            'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
+//                            'pageEndBgColor' => '', // 底部背景颜色（结束）
+//                            'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+//                            'componentBgUrl' => '', // 组件背景图片
+//                            'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+//                            "componentStartBgColor" => '', // 组件背景颜色（开始）
+//                            "componentEndBgColor" => '', // 组件背景颜色（结束）
+//                            "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+//                            "topRounded" => 0, // 组件上圆角
+//                            "bottomRounded" => 0, // 组件下圆角
+//                            "elementBgColor" => '', // 元素背景颜色
+//                            "topElementRounded" => 0,// 元素上圆角
+//                            "bottomElementRounded" => 0, // 元素下圆角
+//                            "margin" => [
+//                                "top" => 10, // 上边距
+//                                "bottom" => 10, // 下边距
+//                                "both" => 10 // 左右边距
+//                            ],
+//                        ],
+//                        'value' => [
+//                            // 表单的公共属性
+//                            'field' => [
+//                                'name' => '地址', // 字段名称
+//                                // 字段说明，支持修改颜色、大小
+//                                'remark' => [
+//                                    'text' => '',
+//                                    'color' => '#999999',
+//                                    "fontSize" => 14,
+//                                ],
+//                                'required' => false, // 是否必填 true：是，false：否
+//                                'unique' => false, // 内容不可重复提交 true：是，false：否
+//                                'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
+//                                'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
+//                                'default' => '', // 默认值 存储数据类型不同，各组件自行处理 todo 设置默认省/市/区/街道
+//                                'value' => '', // 字段值 存储数据类型不同，各组件自行处理
+//                            ],
+//                            'placeholder' => '请输入', // 提示语
+//                            "fontSize" => 14,
+//                            "fontWeight" => "normal",
+//                            'addressFormat' => 'province/city/district/address', // 地址格式
+//                        ]
+//                    ],
                     'FormImage' => [
                         'title' => '图片',
                         'icon' => 'iconfont icona-tupianpc30',
@@ -1181,115 +1192,115 @@ class ComponentDict
                             return $data;
                         }
                     ],
-                    // 'FormVideo' => [
-                    //     'title' => '视频',
-                    //     'icon' => 'iconfont iconbiaotipc',
-                    //     'path' => 'edit-form-video', // 编辑组件属性名称
-                    //     'uses' => 0, // 最大添加数量
-                    //     'sort' => 10019,
-                    //     // 组件属性
-                    //     'template' => [
-                    //         "textColor" => "#303133", // 文字颜色
-                    //         'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
-                    //         'pageEndBgColor' => '', // 底部背景颜色（结束）
-                    //         'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
-                    //         'componentBgUrl' => '', // 组件背景图片
-                    //         'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
-                    //         "componentStartBgColor" => '', // 组件背景颜色（开始）
-                    //         "componentEndBgColor" => '', // 组件背景颜色（结束）
-                    //         "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
-                    //         "topRounded" => 0, // 组件上圆角
-                    //         "bottomRounded" => 0, // 组件下圆角
-                    //         "elementBgColor" => '', // 元素背景颜色
-                    //         "topElementRounded" => 0,// 元素上圆角
-                    //         "bottomElementRounded" => 0, // 元素下圆角
-                    //         "margin" => [
-                    //             "top" => 10, // 上边距
-                    //             "bottom" => 10, // 下边距
-                    //             "both" => 10 // 左右边距
-                    //         ],
-                    //     ],
-                    //     'value' => [
-                    //         // 表单的公共属性
-                    //         'field' => [
-                    //             'name' => '视频', // 字段名称
-                    //             // 字段说明，支持修改颜色、大小
-                    //             'remark' => [
-                    //                 'text' => '',
-                    //                 'color' => '#999999',
-                    //                 "fontSize" => 14,
-                    //             ],
-                    //             'required' => false, // 是否必填 true：是，false：否
-                    //             'unique' => false, // 内容不可重复提交 true：是，false：否
-                    //             'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
-                    //             'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
-//                    'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
-                    //             'detailComponent' => '/src/app/views/diy_form/components/detail-form-video.vue', // 用于详情展示
-                    //             'default' => '', // 默认值 存储数据类型不同，各组件自行处理
-                    //             'value' => '', // 字段值 存储数据类型不同，各组件自行处理
-                    //         ],
-                    //         "fontSize" => 14,
-                    //         "fontWeight" => "normal",
-                    //         /**
-                    //          * 上传方式
-                    //          * shoot_and_album：拍摄和相册
-                    //          * shoot_only：只允许拍摄
-                    //          */
-                    //         'uploadMode' => 'shoot_and_album', // 上传方式
-                    //     ]
-                    // ],
-                    // 'FormFile' => [
-                    //     'title' => '文件',
-                    //     'icon' => 'iconfont iconbiaotipc',
-                    //     'path' => 'edit-form-file', // 编辑组件属性名称
-                    //     'uses' => 0, // 最大添加数量
-                    //     'sort' => 10020,
-                    //     // 组件属性
-                    //     'template' => [
-                    //         "textColor" => "#303133", // 文字颜色
-                    //         'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
-                    //         'pageEndBgColor' => '', // 底部背景颜色（结束）
-                    //         'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
-                    //         'componentBgUrl' => '', // 组件背景图片
-                    //         'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
-                    //         "componentStartBgColor" => '', // 组件背景颜色（开始）
-                    //         "componentEndBgColor" => '', // 组件背景颜色（结束）
-                    //         "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
-                    //         "topRounded" => 0, // 组件上圆角
-                    //         "bottomRounded" => 0, // 组件下圆角
-                    //         "elementBgColor" => '', // 元素背景颜色
-                    //         "topElementRounded" => 0,// 元素上圆角
-                    //         "bottomElementRounded" => 0, // 元素下圆角
-                    //         "margin" => [
-                    //             "top" => 10, // 上边距
-                    //             "bottom" => 10, // 下边距
-                    //             "both" => 10 // 左右边距
-                    //         ],
-                    //     ],
-                    //     'value' => [
-                    //         // 表单的公共属性
-                    //         'field' => [
-                    //             'name' => '文件', // 字段名称
-                    //             // 字段说明，支持修改颜色、大小
-                    //             'remark' => [
-                    //                 'text' => '',
-                    //                 'color' => '#999999',
-                    //                 "fontSize" => 14,
-                    //             ],
-                    //             'required' => false, // 是否必填 true：是，false：否
-                    //             'unique' => false, // 内容不可重复提交 true：是，false：否
-                    //             'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
-                    //             'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
-//                    'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
-                    //             'detailComponent' => '/src/app/views/diy_form/components/detail-form-file.vue', // 用于详情展示
-                    //             'default' => '', // 默认值 存储数据类型不同，各组件自行处理
-                    //             'value' => '', // 字段值 存储数据类型不同，各组件自行处理
-                    //         ],
-                    //         "fontSize" => 14,
-                    //         "fontWeight" => "normal",
-                    //         'limitUploadSize' => 30720,  // 限制上传大小，30MB
-                    //     ]
-                    // ],
+//                    'FormVideo' => [
+//                        'title' => '视频',
+//                        'icon' => 'iconfont iconbiaotipc',
+//                        'path' => 'edit-form-video', // 编辑组件属性名称
+//                        'uses' => 0, // 最大添加数量
+//                        'sort' => 10019,
+//                        // 组件属性
+//                        'template' => [
+//                            "textColor" => "#303133", // 文字颜色
+//                            'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
+//                            'pageEndBgColor' => '', // 底部背景颜色（结束）
+//                            'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+//                            'componentBgUrl' => '', // 组件背景图片
+//                            'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+//                            "componentStartBgColor" => '', // 组件背景颜色（开始）
+//                            "componentEndBgColor" => '', // 组件背景颜色（结束）
+//                            "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+//                            "topRounded" => 0, // 组件上圆角
+//                            "bottomRounded" => 0, // 组件下圆角
+//                            "elementBgColor" => '', // 元素背景颜色
+//                            "topElementRounded" => 0,// 元素上圆角
+//                            "bottomElementRounded" => 0, // 元素下圆角
+//                            "margin" => [
+//                                "top" => 10, // 上边距
+//                                "bottom" => 10, // 下边距
+//                                "both" => 10 // 左右边距
+//                            ],
+//                        ],
+//                        'value' => [
+//                            // 表单的公共属性
+//                            'field' => [
+//                                'name' => '视频', // 字段名称
+//                                // 字段说明，支持修改颜色、大小
+//                                'remark' => [
+//                                    'text' => '',
+//                                    'color' => '#999999',
+//                                    "fontSize" => 14,
+//                                ],
+//                                'required' => false, // 是否必填 true：是，false：否
+//                                'unique' => false, // 内容不可重复提交 true：是，false：否
+//                                'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
+//                                'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
+//                                'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
+//                                'detailComponent' => '/src/app/views/diy_form/components/detail-form-video.vue', // 用于详情展示
+//                                'default' => '', // 默认值 存储数据类型不同，各组件自行处理
+//                                'value' => '', // 字段值 存储数据类型不同，各组件自行处理
+//                            ],
+//                            "fontSize" => 14,
+//                            "fontWeight" => "normal",
+//                            /**
+//                             * 上传方式
+//                             * shoot_and_album：拍摄和相册
+//                             * shoot_only：只允许拍摄
+//                             */
+//                            'uploadMode' => 'shoot_and_album', // 上传方式
+//                        ]
+//                    ],
+//                    'FormFile' => [
+//                        'title' => '文件',
+//                        'icon' => 'iconfont iconbiaotipc',
+//                        'path' => 'edit-form-file', // 编辑组件属性名称
+//                        'uses' => 0, // 最大添加数量
+//                        'sort' => 10020,
+//                        // 组件属性
+//                        'template' => [
+//                            "textColor" => "#303133", // 文字颜色
+//                            'pageStartBgColor' => '#FFFFFF', // 底部背景颜色（开始）
+//                            'pageEndBgColor' => '', // 底部背景颜色（结束）
+//                            'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+//                            'componentBgUrl' => '', // 组件背景图片
+//                            'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+//                            "componentStartBgColor" => '', // 组件背景颜色（开始）
+//                            "componentEndBgColor" => '', // 组件背景颜色（结束）
+//                            "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+//                            "topRounded" => 0, // 组件上圆角
+//                            "bottomRounded" => 0, // 组件下圆角
+//                            "elementBgColor" => '', // 元素背景颜色
+//                            "topElementRounded" => 0,// 元素上圆角
+//                            "bottomElementRounded" => 0, // 元素下圆角
+//                            "margin" => [
+//                                "top" => 10, // 上边距
+//                                "bottom" => 10, // 下边距
+//                                "both" => 10 // 左右边距
+//                            ],
+//                        ],
+//                        'value' => [
+//                            // 表单的公共属性
+//                            'field' => [
+//                                'name' => '文件', // 字段名称
+//                                // 字段说明，支持修改颜色、大小
+//                                'remark' => [
+//                                    'text' => '',
+//                                    'color' => '#999999',
+//                                    "fontSize" => 14,
+//                                ],
+//                                'required' => false, // 是否必填 true：是，false：否
+//                                'unique' => false, // 内容不可重复提交 true：是，false：否
+//                                'autofill' => false, // 自动填充上次填写的内容 true：开启，false：关闭
+//                                'privacyProtection' => false, // 隐私保护 true：开启，false：关闭，隐藏逻辑各组件自行处理
+//                                'cache' => true, // 开启本地数据缓存 true：开启，false：关闭
+//                                'detailComponent' => '/src/app/views/diy_form/components/detail-form-file.vue', // 用于详情展示
+//                                'default' => '', // 默认值 存储数据类型不同，各组件自行处理
+//                                'value' => '', // 字段值 存储数据类型不同，各组件自行处理
+//                            ],
+//                            "fontSize" => 14,
+//                            "fontWeight" => "normal",
+//                            'limitUploadSize' => 30720,  // 限制上传大小，30MB
+//                        ]
+//                    ],
                 ],
             ],
         ];

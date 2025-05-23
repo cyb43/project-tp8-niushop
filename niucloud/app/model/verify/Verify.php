@@ -18,8 +18,6 @@ use think\db\Query;
 
 /**
  * 核销记录模型
- * Class Poster
- * @package app\model\verify
  */
 class Verify extends BaseModel
 {
@@ -37,12 +35,13 @@ class Verify extends BaseModel
     protected $name = 'verify';
 
     // 设置json类型字段
-    protected $json = [ 'data' , 'value'];
+    protected $json = [ 'data', 'value' ];
 
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
 
-    public function member() {
+    public function member()
+    {
         return $this->hasOne(Member::class, 'member_id', 'verifier_member_id');
     }
 
@@ -85,6 +84,7 @@ class Verify extends BaseModel
             $query->where('relate_tag', '=', $value);
         }
     }
+
     /**
      * 核销员
      * @param $query
@@ -120,14 +120,14 @@ class Verify extends BaseModel
      */
     public function searchCreateTimeAttr(Query $query, $value, $data)
     {
-        $start_time = empty($value[0]) ? 0 : strtotime($value[0]);
-        $end_time = empty($value[1]) ? 0 : strtotime($value[1]);
+        $start_time = empty($value[ 0 ]) ? 0 : strtotime($value[ 0 ]);
+        $end_time = empty($value[ 1 ]) ? 0 : strtotime($value[ 1 ]);
         if ($start_time > 0 && $end_time > 0) {
             $query->whereBetweenTime('create_time', $start_time, $end_time);
         } else if ($start_time > 0 && $end_time == 0) {
-            $query->where([['create_time', '>=', $start_time]]);
+            $query->where([ [ 'create_time', '>=', $start_time ] ]);
         } else if ($start_time == 0 && $end_time > 0) {
-            $query->where([['create_time', '<=', $end_time]]);
+            $query->where([ [ 'create_time', '<=', $end_time ] ]);
         }
     }
 
@@ -136,10 +136,11 @@ class Verify extends BaseModel
      * @param $value
      * @return void
      */
-    public function getTypeNameAttr($value, $data) {
-        if (empty($data['type']))
+    public function getTypeNameAttr($value, $data)
+    {
+        if (empty($data[ 'type' ]))
             return '';
-        return VerifyDict::getType()[$data['type']]['name'] ?? '';
+        return VerifyDict::getType()[ $data[ 'type' ] ][ 'name' ] ?? '';
     }
 
 }

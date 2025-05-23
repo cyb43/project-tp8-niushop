@@ -40,52 +40,52 @@ class CoreDiyService extends BaseCoreService
      */
     public function initDefaultDiyTheme()
     {
-        $addon_list = (new CoreAddonService())->getInstallAddonList();
-        $apps=[];
-        foreach ($addon_list as $k=>$v){
-            if($v['type']=='app'){
-                $apps[]=$v;
+        $addon_list = ( new CoreAddonService() )->getInstallAddonList();
+        $apps = [];
+        foreach ($addon_list as $k => $v) {
+            if ($v[ 'type' ] == 'app') {
+                $apps[] = $v;
             }
         }
-        $system_theme = array_values(array_filter(event('ThemeColor', [ 'key' => 'app'])))[0] ?? [];
-        foreach ($system_theme['theme_color'] as $k => $v) {
+        $system_theme = array_values(array_filter(event('ThemeColor', [ 'key' => 'app' ])))[ 0 ] ?? [];
+        foreach ($system_theme[ 'theme_color' ] as $k => $v) {
             $data[] = [
                 'type' => 'app',
                 'addon' => 'app',
-                'title' => $v['title'],
-                'theme' => $v['theme'],
-                'default_theme' => $v['theme'],
+                'title' => $v[ 'title' ],
+                'theme' => $v[ 'theme' ],
+                'default_theme' => $v[ 'theme' ],
                 'theme_type' => 'default',
                 'is_selected' => $k == 0 ? 1 : 0,
                 'create_time' => time(),
             ];
         }
-        foreach ($apps as $value){
-            $addon_theme = array_values(array_filter(event('ThemeColor', [ 'key' => $value['key'] ])))[0] ?? [];
+        foreach ($apps as $value) {
+            $addon_theme = array_values(array_filter(event('ThemeColor', [ 'key' => $value[ 'key' ] ])))[ 0 ] ?? [];
             if (empty($addon_theme)) continue;
 
-            foreach ($addon_theme['theme_color'] as $k => $v){
+            foreach ($addon_theme[ 'theme_color' ] as $k => $v) {
                 $data[] = [
                     'type' => 'app',
-                    'addon' => $value['key'],
-                    'title' => $v['title'],
-                    'theme' => $v['theme'],
-                    'default_theme' => $v['theme'],
+                    'addon' => $value[ 'key' ],
+                    'title' => $v[ 'title' ],
+                    'theme' => $v[ 'theme' ],
+                    'default_theme' => $v[ 'theme' ],
                     'theme_type' => 'default',
                     'is_selected' => $k == 0 ? 1 : 0,
                     'create_time' => time(),
                 ];
             }
-            $addon_data = (new addon())->field('key')->where([['support_app', '=', $value['key']]])->select()->toArray();
-            if (!empty($addon_data)){
-                foreach ($addon_data as $v){
-                    foreach ($addon_theme['theme_color'] as $theme_k => $theme_v){
+            $addon_data = ( new addon() )->field('key')->where([ [ 'support_app', '=', $value[ 'key' ] ] ])->select()->toArray();
+            if (!empty($addon_data)) {
+                foreach ($addon_data as $v) {
+                    foreach ($addon_theme[ 'theme_color' ] as $theme_k => $theme_v) {
                         $data[] = [
                             'type' => 'addon',
-                            'addon' => $v['key'],
-                            'title' => $theme_v['title'],
-                            'theme' => $theme_v['theme'],
-                            'default_theme' => $theme_v['theme'],
+                            'addon' => $v[ 'key' ],
+                            'title' => $theme_v[ 'title' ],
+                            'theme' => $theme_v[ 'theme' ],
+                            'default_theme' => $theme_v[ 'theme' ],
                             'theme_type' => 'default',
                             'is_selected' => $theme_k == 0 ? 1 : 0,
                             'create_time' => time(),
@@ -98,7 +98,7 @@ class CoreDiyService extends BaseCoreService
         foreach ($data as $k => &$v) {
             $theme_count = $diy_theme_model->where([
                 [ 'title', "=", $v[ 'title' ] ],
-                [ 'addon', "=", $v['addon'] ]
+                [ 'addon', "=", $v[ 'addon' ] ]
             ])->count();
             // 如果已有该主题风格颜色则不再添加
             if ($theme_count > 0) {

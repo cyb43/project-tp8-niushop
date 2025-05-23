@@ -28,6 +28,8 @@ Route::group('verify', function () {
     /*****************************************************  核销员相关接口 ****************************************************/
     // 添加核销员
     Route::post('verifier', 'verify.Verifier/add');
+    Route::post('verifier/:id', 'verify.Verifier/edit');
+    Route::get('verifier/:id', 'verify.Verifier/detail');
     // 获取核销员列表
     Route::get('verifier', 'verify.Verifier/lists');
     // 获取核销员列表
