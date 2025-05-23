@@ -85,10 +85,6 @@ import { getNoticeList } from '@/app/api/notice'
 import Sms from '@/app/views/setting/components/notice-sms.vue'
 import Wechat from '@/app/views/setting/components/notice-wechat.vue'
 import Weapp from '@/app/views/setting/components/notice-weapp.vue'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-const pageName = route.meta.title
 
 const smsDialog : Record<string, any> | null = ref(null)
 const wechatDialog : Record<string, any> | null = ref(null)
@@ -153,9 +149,17 @@ loadNoticeList()
 
 const setNotice = (data : any, type : string) => {
     data.type = type
-    eval('data.status=data.is_' + type)
-    eval(type + 'Dialog.value.setFormData(data)')
-    eval(type + 'Dialog.value.showDialog = true;')
+    data.status = data['is_' + type]
+    if (type === 'sms') {
+        smsDialog.value.setFormData(data)
+        smsDialog.value.showDialog = true
+    } else if (type === 'wechat') {
+        wechatDialog.value.setFormData(data)
+        wechatDialog.value.showDialog = true
+    } else if (type === 'weapp') {
+        weappDialog.value.setFormData(data)
+        weappDialog.value.showDialog = true
+    }
 }
 </script>
 

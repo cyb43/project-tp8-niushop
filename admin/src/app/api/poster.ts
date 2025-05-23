@@ -6,7 +6,7 @@ import request from '@/utils/request'
  * @returns
  */
 export function getPosterPageList(params: Record<string, any>) {
-    return request.get(`sys/poster`, {params})
+    return request.get(`sys/poster`, { params })
 }
 
 /**
@@ -15,7 +15,7 @@ export function getPosterPageList(params: Record<string, any>) {
  * @returns
  */
 export function getPosterList(params: Record<string, any>) {
-    return request.get(`sys/poster/list`, {params})
+    return request.get(`sys/poster/list`, { params })
 }
 
 /**
@@ -24,7 +24,7 @@ export function getPosterList(params: Record<string, any>) {
  * @returns
  */
 export function getPosterInfo(id: number) {
-    return request.get(`sys/poster/${id}`);
+    return request.get(`sys/poster/${ id }`);
 }
 
 /**
@@ -33,7 +33,7 @@ export function getPosterInfo(id: number) {
  * @returns
  */
 export function addPoster(params: Record<string, any>) {
-    return request.post('sys/poster', params, {showErrorMessage: true, showSuccessMessage: true})
+    return request.post('sys/poster', params, { showErrorMessage: true, showSuccessMessage: true })
 }
 
 /**
@@ -42,7 +42,7 @@ export function addPoster(params: Record<string, any>) {
  * @returns
  */
 export function editPoster(params: Record<string, any>) {
-    return request.put(`sys/poster/${params.id}`, params, {
+    return request.put(`sys/poster/${ params.id }`, params, {
         showErrorMessage: true,
         showSuccessMessage: true
     })
@@ -54,7 +54,7 @@ export function editPoster(params: Record<string, any>) {
  * @returns
  */
 export function deletePoster(id: number) {
-    return request.delete(`sys/poster/${id}`, {showErrorMessage: true, showSuccessMessage: true})
+    return request.delete(`sys/poster/${ id }`, { showErrorMessage: true, showSuccessMessage: true })
 }
 
 /**
@@ -62,7 +62,7 @@ export function deletePoster(id: number) {
  * @param params
  */
 export function modifyPosterStatus(params: Record<string, any>) {
-    return request.put(`sys/poster/status`, params, {showSuccessMessage: true})
+    return request.put(`sys/poster/status`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -70,7 +70,7 @@ export function modifyPosterStatus(params: Record<string, any>) {
  * @param params
  */
 export function modifyPosterDefault(params: Record<string, any>) {
-    return request.put(`sys/poster/default`, params, {showSuccessMessage: true})
+    return request.put(`sys/poster/default`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -79,7 +79,7 @@ export function modifyPosterDefault(params: Record<string, any>) {
  * @returns
  */
 export function getPosterType(params: Record<string, any>) {
-    return request.get(`sys/poster/type`, {params})
+    return request.get(`sys/poster/type`, { params })
 }
 
 /**
@@ -88,21 +88,21 @@ export function getPosterType(params: Record<string, any>) {
  * @returns
  */
 export function getPosterTemplate(params: Record<string, any>) {
-    return request.get(`sys/poster/template`, {params})
+    return request.get(`sys/poster/template`, { params })
 }
 
 /**
  * 获取自定义海报初始化数据
  */
 export function initPoster(params: Record<string, any>) {
-    return request.get(`sys/poster/init`, {params})
+    return request.get(`sys/poster/init`, { params })
 }
 
 /**
  * 获取自定义海报预览
  */
 export function getPreviewPoster(params: Record<string, any>) {
-    return request.get(`sys/poster/preview`, {params})
+    return request.get(`sys/poster/preview`, { params })
 }
 
 /**
@@ -111,5 +111,5 @@ export function getPreviewPoster(params: Record<string, any>) {
  * @returns
  */
 export function getPosterGenerate(params: Record<string, any>) {
-    return request.get(`sys/poster/generate`, {params, showErrorMessage: false})
+    return request.get(`sys/poster/generate`, { params, showErrorMessage: false })
 }

@@ -11,7 +11,7 @@ export function getAuthInfo() {
  * 设置 授权配置
  */
 export function setAuthInfo(params: Record<string, any>) {
-    return request.post('niucloud/authinfo', params, {showSuccessMessage: true})
+    return request.post('niucloud/authinfo', params, { showSuccessMessage: true })
 }
 
 /**
@@ -43,7 +43,7 @@ export function getModuleVersion() {
  * @returns
  */
 export function downloadVersion(params: Record<string, any>) {
-    return request.post(`addon/download/${params.addon}`, params, { showSuccessMessage: true })
+    return request.post(`addon/download/${ params.addon }`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -60,4 +60,12 @@ export function getFrameworkNewVersion() {
  */
 export function getFrameworkVersionList() {
     return request.get(`niucloud/framework/version/list`)
+}
+
+/**
+ * 获取应用/插件的版本更新记录
+ * @param params
+ */
+export function getAppVersionList(params: Record<string, any>) {
+    return request.get(`niucloud/app_version/list`, { params })
 }

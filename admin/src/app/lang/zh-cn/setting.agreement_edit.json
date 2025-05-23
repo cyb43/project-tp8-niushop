@@ -3,6 +3,6 @@
       "type": "协议类型",
       "titlePlaceholder": "请输入协议标题",
       "contentPlaceholder": "请填写协议内容",
-      "contentMaxTips": "协议内容字符数应在5～100000之间",
+      "contentMaxTips": "协议内容字符数应在5～10000之间",
       "content": "内容"
 }

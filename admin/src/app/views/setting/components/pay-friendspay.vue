@@ -154,7 +154,6 @@ const cancel = () => {
 }
 
 const setFormData = async (data: any = null) => {
-    console.log(data)
     initData.value = cloneDeep(data)
     loading.value = true
     Object.assign(formData, initialFormData)

@@ -90,7 +90,7 @@
 
         <!-- 连签奖励 -->
         <el-dialog v-model="continueSignDialog" :title="t('continueSignTitle')" width="1200px" :destroy-on-close="true" v-if="formData.is_use">
-            <sign-continue ref="continueRef" v-model="continue_award" />
+            <sign-continue ref="continueRef" v-model="continue_award" :sign_period="formData.sign_period" />
             <template #footer>
                 <span class="dialog-footer">
                     <el-button @click="continueSignDialog = false">{{ t('cancel') }}</el-button>
@@ -141,7 +141,21 @@ const regExp: any = {
 // 表单验证规则
 const formRules = reactive<FormRules>({
     day_award: [
-        { required: true, message: t('daySignAwardPlaceholder'), trigger: 'change' }
+        { 
+            required: true,
+            trigger: 'change',
+            validator: (rule: any, value: any, callback: any) => {
+                let isVerify = false
+                daySignAwardText.value.forEach(item => {
+                    item.is_use && (isVerify = true)
+                })
+                if (!isVerify) {
+                    callback(t('daySignAwardPlaceholder'))
+                } else {
+                    callback()
+                }
+            }
+        }
     ],
     sign_period:[{
         required: true,

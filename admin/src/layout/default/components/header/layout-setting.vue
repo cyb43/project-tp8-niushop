@@ -38,7 +38,7 @@
 import { ref, computed } from 'vue'
 import useSystemStore from '@/stores/modules/system'
 import { useDark, useToggle } from '@vueuse/core'
-import { setThemeColor, img } from '@/utils/common'
+import { setThemeColor } from '@/utils/common'
 import { t } from '@/lang'
 import Storage from '@/utils/storage'
 

@@ -25,11 +25,9 @@ import { t } from '@/lang'
 import type { FormInstance } from 'element-plus'
 import { deepClone } from '@/utils/common'
 import { getUserInfo, setUserInfo } from '@/app/api/personal'
-import { useRouter } from 'vue-router'
 import useUserStore from '@/stores/modules/user'
 
 const userStore = useUserStore()
-const router = useRouter()
 // 提交信息
 const saveInfo: any = reactive({})
 const formRef = ref<FormInstance>()

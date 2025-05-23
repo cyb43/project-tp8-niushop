@@ -6,7 +6,7 @@ import request from '@/utils/request'
  * @returns
  */
 export function getAddonDevelop(params: Record<string, any>) {
-    return request.get(`addon_develop`, {params});
+    return request.get(`addon_develop`, { params });
 }
 
 /**
@@ -22,7 +22,7 @@ export function getAddontype() {
  * @returns
  */
 export function getAddonDevelopInfo(key: any) {
-    return request.get(`addon_develop/${key}`)
+    return request.get(`addon_develop/${ key }`)
 }
 
 /**
@@ -30,7 +30,7 @@ export function getAddonDevelopInfo(key: any) {
  * @returns
  */
 export function getAddonDevelopCheck(key: any) {
-    return request.get(`addon_develop/check/${key}`)
+    return request.get(`addon_develop/check/${ key }`)
 }
 
 /**
@@ -48,7 +48,7 @@ export function getAddonKeyBlackList() {
  * @returns
  */
 export function addAddonDevelop(key: any, params: Record<string, any>) {
-    return request.post(`addon_develop/${key}`, params)
+    return request.post(`addon_develop/${ key }`, params)
 }
 
 /**
@@ -58,7 +58,7 @@ export function addAddonDevelop(key: any, params: Record<string, any>) {
  * @returns
  */
 export function editAddonDevelop(key: any, params: Record<string, any>) {
-    return request.put(`addon_develop/${key}`, params)
+    return request.put(`addon_develop/${ key }`, params)
 }
 
 /**
@@ -67,7 +67,7 @@ export function editAddonDevelop(key: any, params: Record<string, any>) {
  * @returns
  */
 export function deleteAddonDevelop(key: any) {
-    return request.delete(`addon_develop/${key}`, {showSuccessMessage: true})
+    return request.delete(`addon_develop/${ key }`, { showSuccessMessage: true })
 }
 
 /**
@@ -75,7 +75,7 @@ export function deleteAddonDevelop(key: any) {
  * @returns
  */
 export function addonDevelopBuild(key: any) {
-    return request.post(`addon_develop/build/${key}`)
+    return request.post(`addon_develop/build/${ key }`)
 }
 
 /**
@@ -83,8 +83,9 @@ export function addonDevelopBuild(key: any) {
  * @returns
  */
 export function addonDevelopDownload(key: any) {
-    return request.post(`addon_develop/download/${key}`, {})
+    return request.post(`addon_develop/download/${ key }`, {})
 }
+
 /***************************************************** 代码生成 ****************************************************/
 
 /**
@@ -93,7 +94,7 @@ export function addonDevelopDownload(key: any) {
  * @returns
  */
 export function getGenerateTableList(params: Record<string, any>) {
-    return request.get(`generator/generator`, {params})
+    return request.get(`generator/generator`, { params })
 }
 
 /**
@@ -102,7 +103,7 @@ export function getGenerateTableList(params: Record<string, any>) {
  * @returns
  */
 export function getGenerateTableInfo(id: number) {
-    return request.get(`generator/generator/${id}`);
+    return request.get(`generator/generator/${ id }`);
 }
 
 /**
@@ -111,7 +112,7 @@ export function getGenerateTableInfo(id: number) {
  * @returns
  */
 export function addGenerateTable(params: Record<string, any>) {
-    return request.post('generator/generator', params, {showSuccessMessage: true})
+    return request.post('generator/generator', params, { showSuccessMessage: true })
 }
 
 /**
@@ -119,7 +120,7 @@ export function addGenerateTable(params: Record<string, any>) {
  * @param params
  */
 export function editGenerateTable(params: Record<string, any>) {
-    return request.put(`generator/generator/${params.id}`, params, {showSuccessMessage: true})
+    return request.put(`generator/generator/${ params.id }`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -128,7 +129,7 @@ export function editGenerateTable(params: Record<string, any>) {
  * @returns
  */
 export function deleteGenerateTable(id: number) {
-    return request.delete(`generator/generator/${id}`, {showSuccessMessage: true})
+    return request.delete(`generator/generator/${ id }`, { showSuccessMessage: true })
 }
 
 /**
@@ -146,7 +147,7 @@ export function generateCreate(params: Record<string, any>) {
  * @returns
  */
 export function generatePreview(id: number) {
-    return request.get(`generator/preview/${id}`)
+    return request.get(`generator/preview/${ id }`)
 }
 
 /**
@@ -167,26 +168,26 @@ export function getSystem() {
  * 获取全部模型
  */
 export function getGeneratorAllModel(params: any) {
-    return request.get(`generator/all_model`, {params})
+    return request.get(`generator/all_model`, { params })
 }
 
 /**
  * 获取 表字段
  */
 export function getGeneratorTableColumn(params: any) {
-    return request.get(`generator/table_column`, {params})
+    return request.get(`generator/table_column`, { params })
 }
 
 /**
  * 同步校验
  */
 export function generatorCheckFile(params: Record<string, any>) {
-    return request.get(`generator/check_file`, {params})
+    return request.get(`generator/check_file`, { params })
 }
 
 /**
  * 根据模型获取表字段
  */
 export function getGeneratorModelTableColumn(params: any) {
-    return request.get(`generator/model_table_column`, {params})
+    return request.get(`generator/model_table_column`, { params })
 }

@@ -142,7 +142,7 @@ html.dark {
         --el-table-header-text-color: var(--el-text-color-secondary) !important;
         --el-table-header-bg-color: var(--el-bg-color) !important;
     }
-    
+
     // 编辑器
     .edui-default {
 
@@ -290,5 +290,32 @@ html.dark {
 
     .right{
         font-size: 24px;
+    }
+}
+
+.t-window {
+    line-height: normal!important;
+    padding-top: 10px!important;
+    --t-main-background-color: #1d1f3a;
+    --t-main-font-color: #ececee;
+
+    .t-cmd-key {
+        font-weight: normal;
+        color: var(--t-main-font-color);
+    }
+
+    .t-log-box {
+        margin-block-start: 3px;
+        margin-block-end: 3px;
+        &:first-child {
+            display: none;
+        }
+    }
+    .t-content-normal .error {
+        display: none;
+
+        & + span {
+            color: red;
+        }
     }
 }

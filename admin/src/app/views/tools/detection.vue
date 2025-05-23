@@ -75,10 +75,6 @@
 import { ref } from 'vue'
 import { t } from '@/lang'
 import { getSystem } from '@/app/api/tools'
-import { useRoute } from 'vue-router'
-
-const route = useRoute()
-const pageName = route.meta.title
 
 const systemService = ref({})
 const loading = ref(true);

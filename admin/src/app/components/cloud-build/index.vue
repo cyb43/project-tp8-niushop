@@ -84,7 +84,6 @@ const active = ref('build')
 const cloudBuildCheck = ref<null | AnyObject>(null)
 const loading = ref(false)
 const terminalRef = ref(null)
-const emits = defineEmits(['complete'])
 
 let cloudBuildLog = []
 /**
@@ -127,7 +126,7 @@ const getCloudBuildLogFn = () => {
 
             data[0].forEach(item => {
                 if (!cloudBuildLog.includes(item.action)) {
-                    terminalRef.value.pushMessage({ content: `正在执行：${item.action}` })
+                    terminalRef.value.pushMessage({ content: `${item.action}` })
                     cloudBuildLog.push(item.action)
 
                     if (item.code == 0) {

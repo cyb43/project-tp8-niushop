@@ -102,7 +102,6 @@ const router = useRouter()
 const pageName = route.meta.title
 
 const activeName = ref('/channel/aliapp')
-const active = ref(2)
 const qrCode = ref<string>('')
 onMounted(async () => {
     const res = await getAliappConfig()

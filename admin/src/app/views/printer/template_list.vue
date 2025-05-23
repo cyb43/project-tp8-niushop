@@ -68,6 +68,7 @@ import { t } from '@/lang'
 import { getPrinterTemplatePageList, deletePrinterTemplate,getPrinterType } from '@/app/api/printer'
 import { ElMessageBox,FormInstance } from 'element-plus'
 import { useRoute,useRouter } from 'vue-router'
+import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
 
 const route = useRoute()
 const router = useRouter()
@@ -113,11 +114,12 @@ const loadPrinterTemplateList = (page: number = 1) => {
         printerTemplateTable.loading = false
         printerTemplateTable.data = res.data.data
         printerTemplateTable.total = res.data.total
+        setTablePageStorage(printerTemplateTable.page, printerTemplateTable.limit, printerTemplateTable.searchParam);
     }).catch(() => {
         printerTemplateTable.loading = false
     })
 }
-loadPrinterTemplateList()
+loadPrinterTemplateList(getTablePageStorage(printerTemplateTable.searchParam).page)
 
 /**
  * 添加小票打印模板

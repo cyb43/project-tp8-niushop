@@ -174,7 +174,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import { t } from '@/lang'
 import { getGenerateTableList, deleteGenerateTable, generateCreate, generatePreview, generatorCheckFile, getAddonDevelop } from '@/app/api/tools'
-import { img } from '@/utils/common'
+import { img,setTablePageStorage,getTablePageStorage } from '@/utils/common'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import AddTable from '@/app/views/tools/code/components/add-table.vue'
 import type { FormInstance } from 'element-plus'
@@ -211,7 +211,7 @@ onMounted(() => {
         activeName.value = window.codeActiveName + ''
         window.codeActiveName = null
     }
-    loadGenerateTableList()
+    loadGenerateTableList(getTablePageStorage(codeTableData.searchParam).page)
 })
 /**
  * 获取代码生成列表
@@ -228,6 +228,7 @@ const loadGenerateTableList = (page: number = 1) => {
         codeTableData.loading = false
         codeTableData.data = res.data.data
         codeTableData.total = res.data.total
+        setTablePageStorage(codeTableData.page, codeTableData.limit, codeTableData.searchParam);
     }).catch(() => {
         codeTableData.loading = false
     })

@@ -125,7 +125,6 @@ const submitForm = (formEl: FormInstance | undefined) => {
         }
     })
 }
-// 修改密码 --- end
 </script>
 
 <style lang="scss" scoped>

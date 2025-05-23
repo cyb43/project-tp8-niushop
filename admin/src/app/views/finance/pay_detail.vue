@@ -56,14 +56,13 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { t } from '@/lang'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { getPayDetail, payAuditPass, payAuditRefuse } from '@/app/api/sys'
 import { img } from '@/utils/common'
 import { ElMessageBox } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 
 const route = useRoute()
-const router = useRouter()
 const pageName = route.meta.title
 const id: number = parseInt((route.query.id || 0))
 const loading = ref(true)
@@ -81,13 +80,13 @@ setFormData()
 
 const passEvent = () => {
     ElMessageBox.confirm(
-            t('passTips'),
-            t('warning'),
-            {
-                confirmButtonText: t('confirm'),
-                cancelButtonText: t('cancel'),
-                type: 'warning'
-            }
+        t('passTips'),
+        t('warning'),
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
     ).then(({ value }) => {
         payAuditPass(formData.value.out_trade_no).then(() => {
             setFormData()

@@ -17,15 +17,10 @@
         <template v-else>
             <el-menu-item :index="String(routes.name)" @click="router.push({ name: routes.name })" v-if="meta.addon && meta.parent_route && meta.parent_route.addon == ''">
                 <template #title>
-                    <el-tooltip placement="right" effect="light">
-                        <template #content>
-                            该功能仅限{{ addons[meta.addon].title }}使用
-                        </template>
-                        <div class="w-[16px] h-[16px] relative flex items-center" v-if="props.level == 1">
-                            <icon v-if="meta.icon" :name="meta.icon" class="absolute !w-auto" />
-                        </div>
-                        <span class="ml-[10px]">{{ meta.title }}</span>
-                    </el-tooltip>
+                    <div class="w-[16px] h-[16px] relative flex items-center" v-if="props.level == 1">
+                        <icon v-if="meta.icon" :name="meta.icon" class="absolute !w-auto" />
+                    </div>
+                    <span class="ml-[10px]">{{ meta.title }}</span>
                 </template>
             </el-menu-item>
             <el-menu-item :index="String(routes.name)" @click="router.push({ name: routes.name })" v-else>
@@ -45,14 +40,12 @@
 <script lang="ts" setup>
 import { useRouter, useRoute } from 'vue-router'
 import { ref, computed, watch } from 'vue'
-import { img } from '@/utils/common'
 import menuItem from './menu-item.vue'
 import useSystemStore from '@/stores/modules/system'
 import useUserStore from '@/stores/modules/user'
 
 const router = useRouter()
 const route = useRoute()
-const userStore = useUserStore()
 const routers = useUserStore().routers
 const props = defineProps({
     routes: {

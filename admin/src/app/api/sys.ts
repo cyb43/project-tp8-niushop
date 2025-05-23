@@ -727,3 +727,11 @@ export function deleteExport(id: number) {
 export function getInstallConfig() {
     return request.get('sys/install/config')
 }
+
+/**
+ * 获取二维码
+ * @returns
+ */
+export function getQrcode(params: Record<string, any>) {
+    return request.get(`sys/qrcode`, { params, showErrorMessage: false })
+}

@@ -10,7 +10,14 @@
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                 <el-form :inline="true" :model="payRefundTable.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('refundNo')" prop="refund_no">
-                        <el-input v-model.trim="payRefundTable.searchParam.refund_no" :placeholder="t('refundNoPlaceholder')" />
+                        <el-input v-model.trim="payRefundTable.searchParam.refund_no"
+                            :placeholder="t('refundNoPlaceholder')" />
+                    </el-form-item>
+                    <el-form-item :label="t('status')" prop="status">
+                        <el-select v-model="payRefundTable.searchParam.status" clearable class="input-width">
+                            <el-option :label="t('selectPlaceholder')" value="" />
+                            <el-option :label="item" :value="key" v-for="(item, key) in refundStatusList" :key="key" />
+                        </el-select>
                     </el-form-item>
                     <el-form-item :label="t('createTime')" prop="create_time">
                         <el-date-picker v-model="payRefundTable.searchParam.create_time" type="datetimerange"
@@ -36,9 +43,9 @@
                     <el-table-column prop="status_name" :label="t('status')" min-width="120" />
                     <el-table-column prop="create_time" :label="t('createTime')" min-width="160" />
                     <el-table-column :label="t('operation')" fixed="right" align="right" min-width="120">
-                       <template #default="{ row }">
-                           <el-button type="primary" link @click="infoEvent(row)">{{ t('info') }}</el-button>
-                       </template>
+                        <template #default="{ row }">
+                            <el-button type="primary" link @click="infoEvent(row)">{{ t('info') }}</el-button>
+                        </template>
                     </el-table-column>
                 </el-table>
 
@@ -49,22 +56,25 @@
                 </div>
             </div>
         </el-card>
-        <refund-detail ref="refundDetailDialog"></refund-detail>
+        <refund-detail @loadPayRefundList="handleMessage" ref="refundDetailDialog"></refund-detail>
     </div>
 </template>
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getPayRefundPages } from '@/app/api/pay'
-import { useRouter, useRoute } from 'vue-router'
+import { getPayRefundPages ,getRefundStatus} from '@/app/api/pay'
+import { useRoute } from 'vue-router'
 import type { FormInstance } from 'element-plus'
 import refundDetail from '@/app/views/finance/components/refund-detail.vue'
 
 const route = useRoute()
-const router = useRouter()
 const pageName = route.meta.title
-
+const refundStatusList = ref([])
+const checkStatusList = async () => {
+    refundStatusList.value = await (await getRefundStatus()).data
+}
+checkStatusList()
 const payRefundTable = reactive({
     page: 1,
     limit: 10,
@@ -73,6 +83,7 @@ const payRefundTable = reactive({
     data: [],
     searchParam: {
         refund_no: '',
+        status: '',
         create_time: []
     }
 })
@@ -99,6 +110,9 @@ const loadPayRefundList = (page: number = 1) => {
     })
 }
 loadPayRefundList()
+const handleMessage = () => {
+    loadPayRefundList()
+}
 const refundDetailDialog: Record<string, any> | null = ref(null)
 const infoEvent = (res:any) => {
     let data = {no: res.refund_no};

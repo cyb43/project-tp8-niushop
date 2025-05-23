@@ -24,11 +24,7 @@
         </div>
         <div class="py-[20px] px-[30px] h-[350px]">
             <div v-if="formData.msgtype == 'text'">
-                <el-input
-                    v-model.trim="formData.text.content" :rows="5" type="textarea" placeholder="" maxlength="600" :show-word-limit="true"
-                    resize="none"
-                    input-style="box-shadow: none;height:300px"
-                />
+                <el-input v-model.trim="formData.text.content" :rows="5" type="textarea" placeholder="" maxlength="600" :show-word-limit="true" resize="none" input-style="box-shadow: none;height:300px" />
             </div>
             <div v-if="formData.msgtype == 'image'" class="flex w-full h-full justify-center items-center image-media">
                 <div class="w-full h-full" v-if="formData.image.url">

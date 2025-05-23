@@ -260,7 +260,7 @@ const useDiyStore = defineStore('diy', {
                     // 指定位置添加组件
                     this.value.splice(this.value.length, 0, component);
                     this.currentIndex = this.value.length - 1;
-                }else{
+                } else {
 
                     this.currentIndex = 0;
                     // 指定位置添加组件
@@ -270,7 +270,7 @@ const useDiyStore = defineStore('diy', {
             } else if (this.currentIndex === -99) {
                 let index = this.currentIndex;
                 for (let i = this.value.length - 1; i >= 0; i--) {
-                    if (this.value[i].position) {
+                    if (this.value[i].position == 'bottom_fixed') {
                         index = i; // 在定位组件之前添加
                         break;
                     }

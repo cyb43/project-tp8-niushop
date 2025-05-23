@@ -1,21 +1,21 @@
 <template>
-	<!-- 属性内容 -->
-	<div class="content-wrap">
-		<div class="edit-attr-item-wrap">
-			<el-form label-width="80px" class="px-[10px]">
-				<el-form-item :label="t('image')">
-					<upload-image v-model="posterStore.editComponent.value" :limit="1"/>
-				</el-form-item>
-			</el-form>
-		</div>
+    <!-- 属性内容 -->
+    <div class="content-wrap">
+        <div class="edit-attr-item-wrap">
+            <el-form label-width="80px" class="px-[10px]">
+                <el-form-item :label="t('image')">
+                    <upload-image v-model="posterStore.editComponent.value" :limit="1" />
+                </el-form-item>
+            </el-form>
+        </div>
 
-		<!-- 组件公共属性 -->
-		<slot name="common"></slot>
-	</div>
+        <!-- 组件公共属性 -->
+        <slot name="common"></slot>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { ref,watch } from 'vue'
+import { ref, watch } from 'vue'
 import { t } from '@/lang'
 import { img } from '@/utils/common'
 import usePosterStore from '@/stores/modules/poster'
@@ -39,7 +39,7 @@ watch(
         // 设置图片宽高
         const image = new Image()
         image.src = img(posterStore.editComponent.value)
-        image.onload = async () => {
+        image.onload = async() => {
             posterStore.editComponent.imgWidth = image.width
             posterStore.editComponent.imgHeight = image.height
         }

@@ -127,7 +127,12 @@ export function isUrl(str: string): boolean {
  * @returns
  */
 export function img(path: string): string {
-    return isUrl(path) ? path : `${ import.meta.env.VITE_IMG_DOMAIN || location.origin }/${ path }`
+    let imgDomain = import.meta.env.VITE_IMG_DOMAIN || location.origin
+
+    if (typeof path == 'string' && path.startsWith('/')) path = path.replace(/^\//, '')
+    if (typeof imgDomain == 'string' && imgDomain.endsWith('/')) imgDomain = imgDomain.slice(0, -1)
+
+    return isUrl(path) ? path : `${imgDomain}/${path}`
 }
 
 /**

@@ -2,7 +2,7 @@
     <el-dialog v-model="dialogThemeVisible" title="编辑色调" width="850px" align-center destroy-on-close="true">
         <el-form :model="openData" label-width="150px" :rules="formRules">
             <el-form-item label="色调名称" prop="title">
-                <el-input v-model="openData.title" placeholder="请输入色调名称" maxlength="15" class="!w-[250px]" :disabled="openData.id != ''" />
+                <el-input v-model="openData.title" placeholder="请输入色调名称" maxlength="15" class="!w-[250px]" :disabled="openData.id != ''" @keydown.enter.native.prevent />
             </el-form-item>
         </el-form>
 

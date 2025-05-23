@@ -1,15 +1,15 @@
 <template>
-	<!-- 属性内容 -->
-	<div class="content-wrap">
+    <!-- 属性内容 -->
+    <div class="content-wrap">
 
-		<div class="edit-attr-item-wrap">
-			<div class="mb-[10px] text-sm text-primary">{{ t('needLoginTips') }}</div>
-		</div>
+        <div class="edit-attr-item-wrap">
+            <div class="mb-[10px] text-sm text-primary">{{ t('needLoginTips') }}</div>
+        </div>
 
-		<!-- 组件公共属性 -->
-		<slot name="common"></slot>
+        <!-- 组件公共属性 -->
+        <slot name="common"></slot>
 
-	</div>
+    </div>
 </template>
 
 <script lang="ts" setup>

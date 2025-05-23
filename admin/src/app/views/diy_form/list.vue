@@ -50,7 +50,7 @@
                 </el-table-column>
                 <el-table-column prop="update_time" :label="t('updateTime')" min-width="120" />
 
-                <el-table-column :label="t('operation')" fixed="right" align="right" min-width="100">
+                <el-table-column :label="t('operation')" fixed="right" align="right" min-width="130">
                     <template #default="{ row }">
                         <div class="flex items-center justify-end">
                             <el-button type="primary" v-if="row.status == 1 && row.type=='DIY_FORM'" link @click="spreadEvent(row)">{{ t('promotion') }}</el-button>
@@ -156,7 +156,7 @@
         </el-dialog>
 
         <!-- 推广弹出框 -->
-        <form-spread-popup ref="formSpreadPopupRef" />
+        <spread-popup ref="spreadPopupRef" />
 
         <!-- 表单提交成功页弹出框 -->
         <form-submit-popup ref="formSubmitPopupRef" @complete="loadDiyFormList" />
@@ -181,9 +181,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
 import { img } from '@/utils/common'
 import recordsDetail from '@/app/views/diy_form/records.vue'
-import formSpreadPopup from '@/app/views/diy_form/components/form-spread-popup.vue'
 import formSubmitPopup from '@/app/views/diy_form/components/form-submit-popup.vue'
 import formWritePopup from '@/app/views/diy_form/components/form-write-popup.vue'
+import spreadPopup from '@/components/spread-popup/index.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -506,11 +506,18 @@ const shareEvent = async (formEl: FormInstance | undefined) => {
 }
 
 // 表单推广
-const formSpreadPopupRef: any = ref(null)
+const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    formSpreadPopupRef.value.show(data)
+    const pagePath = "/app/pages/index/diy_form"
+    const columnName = "form_id"
+    const columnValue = data.form_id
+    const title = "表单推广"
+    const folder = "diy_form"
+
+    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
 }
+
 
 // 表单提交成功页弹出框
 const formSubmitPopupRef: any = ref(null)

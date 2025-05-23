@@ -205,7 +205,6 @@ const getAddonDevelopCheckFn = (key: any) => {
             // autofocus: false,
             confirmButtonText: t('confirm'),
             callback: (action: any) => {
-                console.log(action)
             }
         })
     })

@@ -1,11 +1,11 @@
 <template>
-	<div class="pointer-events-none max-w-[720px]" :style="componentStyle">
-		<img src="@/app/assets/images/default_headimg_square.jpg" class="w-full h-full" />
-	</div>
+    <div class="pointer-events-none max-w-[720px]" :style="componentStyle">
+        <img src="@/app/assets/images/default_headimg_square.jpg" class="w-full h-full" />
+    </div>
 </template>
 
 <script lang="ts" setup>
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 import { img } from '@/utils/common'
 
 const prop = defineProps({
@@ -15,14 +15,14 @@ const prop = defineProps({
     }
 })
 
-const data = computed(()=> {
+const data = computed(() => {
     return prop.value;
 })
 
-const componentStyle = computed(()=> {
+const componentStyle = computed(() => {
     var style = '';
-    style += `width: ${prop.value.width}px;`;
-    if(prop.value.shape == 'circle'){
+    style += `width: ${ prop.value.width }px;`;
+    if (prop.value.shape == 'circle') {
         style += `border-radius: 50%; overflow: hidden;`;
     }
     return style;

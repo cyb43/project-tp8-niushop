@@ -9,7 +9,7 @@
                 </div>
             </el-form-item>
 
-			<el-form-item :label="t('memberId')" >
+            <el-form-item :label="t('memberId')" >
                 <div class="input-width"> {{ formData.member.member_no }} </div>
             </el-form-item>
 

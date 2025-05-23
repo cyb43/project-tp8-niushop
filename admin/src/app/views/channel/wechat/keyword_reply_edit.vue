@@ -83,7 +83,7 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getKeywordsReplyInfo, editKeywordsReply, addKeywordsReply } from '@/app/api/wechat'
-import { ElMessage, FormInstance, FormRules } from 'element-plus'
+import { FormInstance, FormRules } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import ReplyForm from '@/app/views/channel/wechat/components/reply-form.vue'

@@ -72,8 +72,7 @@
         </div>
     </el-card>
 
-    <el-image-viewer :url-list="previewImageList" v-if="imageViewerShow" @close="imageViewerShow = false" :initial-index="0"
-        :zoom-rate="1" />
+    <el-image-viewer :url-list="previewImageList" v-if="imageViewerShow" @close="imageViewerShow = false" :initial-index="0" :zoom-rate="1" />
 </template>
 
 <script lang="ts" setup>
@@ -136,13 +135,13 @@ loadPayList()
 
 const passEvent = (row: AnyObject) => {
     ElMessageBox.confirm(
-            t('passTips'),
-            t('warning'),
-            {
-                confirmButtonText: t('confirm'),
-                cancelButtonText: t('cancel'),
-                type: 'warning'
-            }
+        t('passTips'),
+        t('warning'),
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
     ).then(({ value }) => {
         payAuditPass(row.out_trade_no).then(() => {
             loadPayList()

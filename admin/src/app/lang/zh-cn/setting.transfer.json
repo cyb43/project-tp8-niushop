@@ -27,6 +27,8 @@
     "appPublicCertPathTips": "上传appCertPublicKey文件",
     "alipayPublicCertPathTips": "上传alipayCertPublicKey文件",
     "alipayRootCertPathTips": "上传alipayRootCert文件",
-    "operationTip": "温馨提示：打款设置用于会员提现转账，发放红包等场景"
-
+    "operationTip": "温馨提示：打款设置用于会员提现转账，发放红包等场景",
+    "transferTips":"注意：应微信方规定,在2025年1月15日前开通商家转账到零钱服务的商户号可正常使用转账功能,之后开通的不支持使用转账到零钱服务",
+    "wechatpayPublicCert": "微信支付公钥",
+    "wechatpayPublicCertId": "微信支付公钥ID"
 }

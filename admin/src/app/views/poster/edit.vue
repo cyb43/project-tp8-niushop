@@ -82,8 +82,7 @@
                                      :style="previewIframeStyle(item)"
                                      :class="{ 'selected' : posterStore.currentIndex == index }"
                                      @mousedown="posterStore.mouseDown($event,item.id,index)"
-                                     @click.stop="posterStore.changeCurrentIndex(index,item)"
-                                >
+                                     @click.stop="posterStore.changeCurrentIndex(index,item)">
                                     <component :is="modules['preview-' + item.path]" :value="item"/>
                                     <span class="box1" @mousedown.stop="posterStore.resizeMouseDown($event,item, index)"></span>
                                     <span class="box2" @mousedown.stop="posterStore.resizeMouseDown($event,item, index)"></span>
@@ -299,7 +298,6 @@ const previewIframeStyle = (data: any)=>{
         default:
             style.left = data.x + 'px'
     }
-    // console.log(data.x,data.y)
     return style
 }
 

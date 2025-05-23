@@ -13,7 +13,7 @@
                     </div>
                 </el-header>
                 <el-scrollbar class="h-[calc( 100vh - 64px )]">
-                    <el-menu :default-active="oneMenuActive" :router="true" class="aside-menu" unique-opened="true" :collapse="systemStore.menuIsCollapse">
+                    <el-menu :default-active="oneMenuActive" :router="true" class="aside-menu" :unique-opened="true" :collapse="systemStore.menuIsCollapse">
                         <template v-for="(item, index) in oneMenuData" :key="index">
                             <el-menu-item :index="item.original_name" @click="router.push({ name: item.name })" v-if="item.meta.show">
                                 <div v-if="item.meta.icon" class="w-[16px] h-[16px] relative flex justify-center">
@@ -33,8 +33,11 @@
                 </el-scrollbar>
             </div>
             <el-scrollbar v-if="twoMenuData.length" class="two-menu w-[140px]">
-                <div class="w-[140px] h-[64px] flex items-center justify-center text-[16px] border-0 border-b-[1px] border-solid border-[#eee]">{{ route.matched[1].meta.title }}</div>
-                <el-menu :default-active="route.name" :router="true" class="aside-menu" :collapse="systemStore.menuIsCollapse">
+                <div class="w-[140px] h-[64px] flex items-center justify-center text-[16px] border-b-[1px] border-solid border-[var(--el-border-color-lighter)]">
+                    {{ route.matched[1].meta.title }}
+                </div>
+
+                <el-menu class="aside-menu" :default-active="route.name" :default-openeds="menuOption" :router="true" :collapse="systemStore.menuIsCollapse">
                     <menu-item v-for="(route, index) in twoMenuData" :routes="route" :key="index" />
                 </el-menu>
                 <div class="h-[48px]"></div>
@@ -51,6 +54,7 @@ import useUserStore from '@/stores/modules/user'
 import menuItem from './menu-item.vue'
 import { img, isUrl } from '@/utils/common'
 import { findFirstValidRoute } from '@/router/routers'
+import { cloneDeep } from 'lodash-es'
 
 const systemStore = useSystemStore()
 const userStore = useUserStore()
@@ -66,10 +70,12 @@ const addonRouters: Record<string, any> = {}
 routers.forEach(item => {
     item.original_name = item.name
     if (item.meta.addon == '') {
-        if (item.children && item.children.length) {
-            item.name = findFirstValidRoute(item.children)
+        if (item.meta.attr == '') {
+            if (item.children && item.children.length) {
+                item.name = findFirstValidRoute(item.children)
+            }
+            oneMenuData.value.push(item)
         }
-        oneMenuData.value.push(item)
     } else if (item.meta.addon != '' && systemStore?.apps.length == 1 && systemStore?.apps[0].key == item.meta.addon) {
         if (item.children) {
             item.children.forEach((citem: Record<string, any>) => {
@@ -91,18 +97,10 @@ routers.forEach(item => {
 if (systemStore?.apps.length > 1) {
     const routers:Record<string, any>[] = []
     systemStore?.apps.forEach((item: Record<string, any>) => {
-        routers.push({
-            path: addonRouters[item.key] ? addonRouters[item.key].path : '',
-            meta: {
-                icon: addonRouters[item.key]?.meta.icon || 'element-Setting',
-                addon: item.key,
-                title: item.title,
-                app: item.app,
-                show: true
-            },
-            original_name: item.key,
-            name: addonIndexRoute[item.key]
-        })
+        if (addonRouters[item.key]) {
+            addonRouters[item.key].name = addonIndexRoute[item.key]
+            routers.push(addonRouters[item.key])
+        }
     })
     oneMenuData.value.unshift(...routers)
 }
@@ -110,24 +108,41 @@ if (systemStore?.apps.length > 1) {
 const oneMenuActive = ref(route.matched[1].name)
 
 watch(route, () => {
-    // 多应用
-    if (systemStore?.apps.length > 1) {
-        twoMenuData.value = route.matched[1].children
-        oneMenuActive.value = route.matched[1].name
+    if (route.meta.attr != '') {
+        oneMenuActive.value = route.matched[2].name
+        twoMenuData.value = route.matched[1].children ?? []
     } else {
-        // 单应用
-        const oneMenu = route.matched[1]
-        if (oneMenu.meta.addon == '') {
+        // 多应用
+        if (systemStore?.apps.length > 1) {
+            twoMenuData.value = route.matched[1].children
             oneMenuActive.value = route.matched[1].name
-            twoMenuData.value = route.matched[1].children ?? []
         } else {
-            if (oneMenu.meta.addon == systemStore?.apps[0].key) {
-                oneMenuActive.value = route.matched[2].name
-                twoMenuData.value = route.matched[2].children ?? []
-            } else {
+            // 单应用
+            const oneMenu = route.matched[1]
+            if (oneMenu.meta.addon == '') {
                 oneMenuActive.value = route.matched[1].name
                 twoMenuData.value = route.matched[1].children ?? []
+            } else {
+                if (oneMenu.meta.addon == systemStore?.apps[0].key) {
+                    oneMenuActive.value = route.matched[2].name
+                    twoMenuData.value = route.matched[2].children ?? []
+                } else {
+                    oneMenuActive.value = route.matched[1].name
+                    twoMenuData.value = route.matched[1].children ?? []
+                }
             }
+        }
+    }
+}, { immediate: true })
+
+// 让二级菜单默认展开
+const menuOption = ref([])
+watch(twoMenuData.value, () => {
+    menuOption.value = [];
+    if(twoMenuData.value && Object.values(twoMenuData.value).length){
+        let data = cloneDeep(twoMenuData.value);
+        for(let key in data){
+            menuOption.value.push(data[key].name);
         }
     }
 }, { immediate: true })

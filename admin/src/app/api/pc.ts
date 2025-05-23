@@ -14,5 +14,5 @@ export function getPcConfig() {
  * @returns
  */
 export function setPcConfig(params: Record<string, any>) {
-    return request.put('channel/pc/config', params, {showSuccessMessage: true})
+    return request.put('channel/pc/config', params, { showSuccessMessage: true })
 }

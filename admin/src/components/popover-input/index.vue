@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import {computed, ref, watch} from 'vue'
+import { computed, ref } from 'vue'
 import { t } from '@/lang'
 import { ElMessage } from 'element-plus'
 

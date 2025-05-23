@@ -106,7 +106,7 @@
                     </el-table-column>
                     <!-- <el-table-column fixed prop="create_time" :label="t('填表时间')" min-width="120" /> -->
                     <el-table-column fixed prop="create_time" :label="t('fillInFormTotal')" min-width="500">
-                        <template #default="{ row }" @click="">
+                        <template #default="{ row }">
                             {{ row.write_count }}
                         </template>
                      </el-table-column>
@@ -155,9 +155,11 @@
                 <div class="flex mb-[10px]"  v-for="(item, index) in formDetail"  :key="index">
                     <div class="flex justify-end w-[100px]">{{ item.label }}：</div>
                     <div class="flex ml-[20px]">
-                        <div v-if="Array.isArray(item.text)" class="mr-[10px]" v-for="(textItem, i) in item.text" :key="i">
-                            {{ textItem }}
-                        </div>
+                        <template v-if="Array.isArray(item.text)">
+                            <div class="mr-[10px]" v-for="(textItem, i) in item.text" :key="i">
+                                {{ textItem }}
+                            </div>
+                        </template>
                         <div v-else>{{ item.text }}</div>
                     </div>
                 </div>
@@ -180,11 +182,10 @@
 import { reactive, ref, defineAsyncComponent } from 'vue'
 import { t } from '@/lang'
 import { getDiyFormFieldsList, getDiyFormFieldStat, getFormRecords,getFormRecordsInfo,deleteFormRecords,getFormRecordsMember} from '@/app/api/diy_form'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
 import { ElMessageBox, FormInstance } from 'element-plus'
 
-const route = useRoute()
 const router = useRouter()
 const showDialog = ref(false)
 const activeName = ref('detail_data')
@@ -197,7 +198,7 @@ const handleClose = (done: () => void) => {
     showDialog.value = false;
 }
 
-const formData =  reactive({
+const formData = reactive({
     page: 1,
     limit: 6,
     total: 0,
@@ -213,22 +214,22 @@ const formData =  reactive({
 const formFieldsList = ref([])
 
 // 获取万能表单字段列表
-const getDiyFormFieldsListFn = (form_id:any)=>{
+const getDiyFormFieldsListFn = (form_id: any) => {
     getDiyFormFieldsList({
         form_id,
         order: 'field_id',
         sort: 'asc'
-    }).then((res:any)=>{
+    }).then((res: any) => {
         formFieldsList.value = res.data;
     })
 }
 
 // 获取字段统计列表
 const formFieldsStat = ref([])
-const getDiyFormFieldStatFn = (form_id:any)=>{
+const getDiyFormFieldStatFn = (form_id: any) => {
     getDiyFormFieldStat({
         form_id
-    }).then((res:any)=>{
+    }).then((res: any) => {
         formFieldsStat.value = res.data;
     })
 }
@@ -257,7 +258,6 @@ const deleteEvent = (row: any) => {
             form_id: row.form_id
         }).then(() => {
             initData();
-        }).catch(() => {
         })
     })
 }
@@ -273,18 +273,18 @@ const resetFormMember = (formEl: FormInstance | undefined) => {
     getFormRecordsMemberFn()
 }
 
-const loadFormRecordsListFn= (page: number = 1)=>{
+const loadFormRecordsListFn= (page: number = 1)=> {
     formData.loading = true
     formData.page = page
     getFormRecords({
         page: formData.page,
         limit: formData.limit,
         ...formData.searchParam
-    }).then((res:any)=>{
+    }).then((res: any) => {
         formData.loading = false
         formData.data = res.data.data
-        formData.data.forEach((item:any)=>{
-            for (let key:any in item.recordsFieldList){
+        formData.data.forEach((item: any) => {
+            for (let key: any in item.recordsFieldList) {
                 if (modules[item.recordsFieldList[key].detailComponent]) {
                     item.recordsFieldList[key].detailComponent && (item.recordsFieldList[key].detailComponent = defineAsyncComponent(modules[item.recordsFieldList[key].detailComponent]))
                 }
@@ -295,7 +295,7 @@ const loadFormRecordsListFn= (page: number = 1)=>{
         formData.loading = false
     })
 }
-const formMemberList =  reactive({
+const formMemberList = reactive({
     page: 1,
     limit: 10,
     total: 0,
@@ -303,7 +303,7 @@ const formMemberList =  reactive({
     data: [],
     searchParam: {
         keyword: '',
-        form_id: 0,
+        form_id: 0
     }
 })
 
@@ -320,12 +320,12 @@ const getFormRecordsMemberFn = (page: number = 1) => {
         formMemberList.loading = false;
     }).catch((error) => {
         formMemberList.loading = false;
-    });
+    })
 }
 
 //查看会员详情
-const detailEvent = (member_id:number)=> {
-    let routeData = router.resolve(`/member/detail?id=${member_id}`)
+const detailEvent = (member_id:number) => {
+    let routeData = router.resolve(`/member/detail?id=${ member_id }`)
     window.open(routeData.href, ' blank');
 }
 
@@ -338,7 +338,7 @@ const setFormData = async (row: any = null) => {
     initData();
 }
 
-const initData = () =>{
+const initData = () => {
     getFormRecordsMemberFn();
     getDiyFormFieldStatFn(formId.value);
     loadFormRecordsListFn()
@@ -387,5 +387,4 @@ defineExpose({
         margin-right: 10px;
     }
 }
-
 </style>

@@ -7,7 +7,7 @@ import request from '@/utils/request'
  * @returns
  */
 export function getNoticeList(params: any) {
-    return request.get('notice/notice', {params})
+    return request.get('notice/notice', { params })
 }
 
 /**
@@ -16,7 +16,7 @@ export function getNoticeList(params: any) {
  * @returns
  */
 export function getNoticeLog(params: any) {
-    return request.get(`notice/log`, {params})
+    return request.get(`notice/log`, { params })
 }
 
 /**
@@ -25,7 +25,7 @@ export function getNoticeLog(params: any) {
  * @returns
  */
 export function getNoticeInfo(key: string) {
-    return request.get(`notice/notice/${key}`)
+    return request.get(`notice/notice/${ key }`)
 }
 
 /**
@@ -34,7 +34,7 @@ export function getNoticeInfo(key: string) {
  * @returns
  */
 export function editNoticeStatus(params: Record<string, any>) {
-    return request.post(`notice/notice/editstatus`, params, {showSuccessMessage: true})
+    return request.post(`notice/notice/editstatus`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -43,7 +43,7 @@ export function editNoticeStatus(params: Record<string, any>) {
  * @returns
  */
 export function editNotice(params: Record<string, any>) {
-    return request.post(`notice/notice/edit`, params, {showSuccessMessage: true})
+    return request.post(`notice/notice/edit`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -60,7 +60,7 @@ export function getSmsList() {
  * @returns
  */
 export function getSmsInfo(sms_type: string) {
-    return request.get(`notice/notice/sms/${sms_type}`,)
+    return request.get(`notice/notice/sms/${ sms_type }`,)
 }
 
 /**
@@ -68,7 +68,7 @@ export function getSmsInfo(sms_type: string) {
  * @param params
  */
 export function editSms(params: Record<string, any>) {
-    return request.put(`notice/notice/sms/${params.sms_type}`, params, {showSuccessMessage: true})
+    return request.put(`notice/notice/sms/${ params.sms_type }`, params, { showSuccessMessage: true })
 }
 
 /**

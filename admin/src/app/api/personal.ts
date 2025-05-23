@@ -13,6 +13,6 @@ export function getUserInfo() {
  * @returns
  */
 export function setUserInfo(params: Record<string, any>) {
-    return request.put(`auth/edit`, params, {showSuccessMessage: true});
+    return request.put(`auth/edit`, params, { showSuccessMessage: true });
 }
 

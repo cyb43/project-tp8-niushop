@@ -110,60 +110,6 @@ const setFormData = async (row: any = null) => {
     loading.value = false
 }
 
-// 验证手机号格式
-const mobileVerify = (rule: any, value: any, callback: any) => {
-    if (value && !/^1[3-9]\d{9}$/.test(value)) {
-        callback(new Error(t('generateMobile')))
-    } else {
-        callback()
-    }
-}
-
-// 验证身份证号
-const idCardVerify = (rule: any, value: any, callback: any) => {
-    if (value && !/^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/.test(value)) {
-        callback(new Error(t('generateIdCard')))
-    } else {
-        callback()
-    }
-}
-
-// 验证邮箱号
-const emailVerify = (rule: any, value: any, callback: any) => {
-    if (value && !/\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/.test(value)) {
-        callback(new Error(t('generateEmail')))
-    } else {
-        callback()
-    }
-}
-
-// 验证至少输入1个字符
-const minInputVerify = (rule: any, value: any, callback: any) => {
-    if (value && !/^\d{0,}$/.test(value)) {
-        callback(new Error(t('generateMin')))
-    } else {
-        callback()
-    }
-}
-
-// 验证最多输入150个字符
-const maxInputVerify = (rule: any, value: any, callback: any) => {
-    if (value && !/^\d{0,150}$/.test(value)) {
-        callback(new Error(t('generateMax')))
-    } else {
-        callback()
-    }
-}
-
-// 验证请输入整数
-const numberVerify = (rule: any, value: any, callback: any) => {
-    if (!Number.isInteger(value)) {
-        callback(new Error(t('generateNumber')))
-    } else {
-        callback()
-    }
-}
-
 defineExpose({
     showDialog,
     setFormData

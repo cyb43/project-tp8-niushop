@@ -142,7 +142,6 @@ const save = async (formEl: FormInstance | undefined) => {
 
             setWebsite(formData).then(() => {
                 loading.value = false
-                appType.value == 'admin' ? useSystemStore().getWebsiteInfo() : useUserStore().getSiteInfo()
             }).catch(() => {
                 loading.value = false
             })

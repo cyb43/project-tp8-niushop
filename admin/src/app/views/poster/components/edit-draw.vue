@@ -1,11 +1,11 @@
 <template>
-	<!-- 属性内容 -->
-	<div class="content-wrap">
+    <!-- 属性内容 -->
+    <div class="content-wrap">
 
-		<!-- 组件公共属性 -->
-		 <slot name="common"></slot>
+        <!-- 组件公共属性 -->
+        <slot name="common"></slot>
 
-	</div>
+    </div>
 </template>
 
 <script lang="ts" setup>

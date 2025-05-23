@@ -59,10 +59,6 @@ const appList = ref<Record<string, any>[]>([])
 
 const loading = ref(true)
 const getAppList = async () => {
-    // const res = await getSiteAddons()
-    // appList.value = res.data
-    // loading.value = false
-
     const res = await getShowApp()
     appList.value = res.data
     loading.value = false
@@ -70,7 +66,6 @@ const getAppList = async () => {
 getAppList()
 
 const toLink = (item: any) => {
-    console.log('tol', item)
     if (item.url) {
         router.push(item.url)
     } else {

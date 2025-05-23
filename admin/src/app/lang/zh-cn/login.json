@@ -3,7 +3,6 @@
     "logging": "登录中",
     "platform": "管理端",
     "login" : "登录",
-    "siteLogin": "站点登录",
     "adminLogin": "平台登录",
     "userPlaceholder": "请输入您的账号",
     "passwordPlaceholder": "请输入您的密码",

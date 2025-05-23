@@ -1,9 +1,9 @@
 <template>
-	<div class="overflow-hidden" :style="componentStyle"></div>
+    <div class="overflow-hidden" :style="componentStyle"></div>
 </template>
 
 <script lang="ts" setup>
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const prop = defineProps({
     value: {
@@ -12,17 +12,17 @@ const prop = defineProps({
     }
 })
 
-const data = computed(()=> {
+const data = computed(() => {
     return prop.value;
 })
 
-const componentStyle = computed(()=> {
+const componentStyle = computed(() => {
     var style = '';
-    style += `background-color: ${prop.value.bgColor};`;
-    style += `width: ${prop.value.width}px;height: ${prop.value.height}px;`;
+    style += `background-color: ${ prop.value.bgColor };`;
+    style += `width: ${ prop.value.width }px;height: ${ prop.value.height }px;`;
     let box: any = document.getElementById(prop.value.id)
     if (box) {
-        style += `width:${box.offsetWidth}px;height:${box.offsetHeight}px;`;
+        style += `width:${ box.offsetWidth }px;height:${ box.offsetHeight }px;`;
     }
     return style;
 })

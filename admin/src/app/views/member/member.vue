@@ -135,7 +135,7 @@ import { t } from '@/lang'
 import { img } from '@/utils/common'
 import { getRegisterChannelType, getMemberList, getMemberLabelAll, editMemberStatus, deleteMember, getMemberLevelAll } from '@/app/api/member'
 import { ElMessageBox, FormInstance } from 'element-plus'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 import AddMember from '@/app/views/member/components/add-member.vue'
 import detailMember from '@/app/views/member/components/detail-member.vue'
 import EditMember from '@/app/views/member/components/edit-member.vue'
@@ -205,7 +205,6 @@ const loadMemberList = (page: number = 1) => {
 }
 loadMemberList()
 
-const router = useRouter()
 const addMemberDialog: Record<string, any> | null = ref(null)
 const editMemberDialog: Record<string, any> | null = ref(null)
 const detailMemberDialog: Record<string, any> | null = ref(null)

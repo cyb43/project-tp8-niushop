@@ -4,9 +4,7 @@
 
             <div class="flex justify-between items-center mb-[5px]">
                 <span class="text-lg">{{pageName}}</span>
-                <el-button type="primary" @click="addEvent">
-                    {{ t('addPrinter') }}
-                </el-button>
+                <el-button type="primary" @click="addEvent">{{ t('addPrinter') }}</el-button>
             </div>
 
             <el-tabs class="demo-tabs" model-value="/printer/list" @tab-change="handleClick">
@@ -41,8 +39,8 @@
 
                     <el-table-column prop="status" :label="t('status')" min-width="80" :show-overflow-tooltip="true" >
                         <template #default="{ row }">
-	                        <el-tag type="success" v-if="row.status == 1" @click="modifyPrinterStatusEvent(row.printer_id, 0)" class="cursor-pointer">{{ t('statusOn') }}</el-tag>
-	                        <el-tag type="info" v-else @click="modifyPrinterStatusEvent(row.printer_id, 1)" class="cursor-pointer">{{ t('statusOff') }}</el-tag>
+                            <el-tag type="success" v-if="row.status == 1" @click="modifyPrinterStatusEvent(row.printer_id, 0)" class="cursor-pointer">{{ t('statusOn') }}</el-tag>
+                            <el-tag type="info" v-else @click="modifyPrinterStatusEvent(row.printer_id, 1)" class="cursor-pointer">{{ t('statusOff') }}</el-tag>
                         </template>
                     </el-table-column>
 
@@ -73,6 +71,7 @@ import { t } from '@/lang'
 import { getPrinterPageList, modifyPrinterStatus, deletePrinter,refreshPrinterToken,testPrint } from '@/app/api/printer'
 import { ElMessageBox,FormInstance } from 'element-plus'
 import { useRoute,useRouter } from 'vue-router'
+import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
 
 const route = useRoute()
 const router = useRouter()
@@ -89,8 +88,8 @@ const printerTable = reactive({
     total: 0,
     loading: true,
     data: [],
-    searchParam:{
-      printer_name:''
+    searchParam: {
+        printer_name: ''
     }
 })
 
@@ -106,17 +105,18 @@ const loadPrinterList = (page: number = 1) => {
     getPrinterPageList({
         page: printerTable.page,
         limit: printerTable.limit,
-         ...printerTable.searchParam
+        ...printerTable.searchParam
     }).then(res => {
         printerTable.loading = false
         printerTable.data = res.data.data
         printerTable.total = res.data.total
+        setTablePageStorage(printerTable.page, printerTable.limit, printerTable.searchParam);
     }).catch(() => {
         printerTable.loading = false
     })
 }
 
-loadPrinterList()
+loadPrinterList(getTablePageStorage(printerTable.searchParam).page)
 
 const isRepeat = ref(false)
 

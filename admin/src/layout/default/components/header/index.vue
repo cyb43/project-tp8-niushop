@@ -25,9 +25,9 @@
                     <!-- 预览 只有站点时展示-->
                     <i class="iconfont iconicon_huojian1 cursor-pointer px-[8px]" :title="t('visitWap')" @click="toPreview"></i>
                     <!-- 切换语言 -->
-                    <div class="navbar-item flex items-center h-full cursor-pointer">
-                        <switch-lang />
-                    </div>
+<!--                    <div class="navbar-item flex items-center h-full cursor-pointer">-->
+<!--                        <switch-lang />-->
+<!--                    </div>-->
                     <!-- 切换全屏 -->
                     <!-- <div class="navbar-item flex items-center h-full cursor-pointer" @click="toggleFullscreen">
                         <icon name="iconfont icontuichuquanping" v-if="isFullscreen" />

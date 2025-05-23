@@ -52,13 +52,11 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed,defineEmits  } from 'vue'
 import { t } from '@/lang'
 import { getPayRefundInfo, getRefundType, getRefundTransfer } from '@/app/api/pay'
-import { FormInstance, ElMessage } from 'element-plus'
+import { FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
-import { img, filterNumber } from '@/utils/common'
-import useAppStore from '@/stores/modules/app'
 
 const route = useRoute()
 const router = useRouter()
@@ -70,7 +68,6 @@ let refundNo = '';
 
 const refundList = ref([])
 const formData: Record<string, any> = ref(null)
-
 
 const handleClose = (done: () => void) => {
     showDialog.value = false;
@@ -109,6 +106,7 @@ const transferEvent = (data:any) => {
     transferDialog.value = true
     transferFormData.refund_no = data.refund_no
     transferFormData.refund_money = data.money
+    transferFormData.voucher = ''
 }
 
 const initialFormData = {
@@ -127,6 +125,7 @@ const formRules = computed(() => {
         ]
     }
 })
+const emit = defineEmits(['loadPayRefundList'])
 
 const confirm = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return
@@ -140,6 +139,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
                 transferDialog.value = false
                 refundList.value = []
                 getRefundListInfo(refundNo)
+                emit('loadPayRefundList')
             }).catch(() => {
                 transferDialog.value = false
                 loading.value = false

@@ -1,8 +1,8 @@
 <template>
-	<el-icon v-if="type=='element'" :style="style" :class="['icon el-icon',props.class]">
-		<component :is="name"/>
-	</el-icon>
-	<i v-else :class="[type,name,props.class]" :style="style"></i>
+    <el-icon v-if="type=='element'" :style="style" :class="['icon el-icon',props.class]">
+        <component :is="name" />
+    </el-icon>
+    <i v-else :class="[type,name,props.class]" :style="style"></i>
 </template>
 <script lang="ts" setup>
 import { watch, ref, reactive } from 'vue'

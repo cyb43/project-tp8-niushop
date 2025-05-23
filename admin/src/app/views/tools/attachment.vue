@@ -1,18 +1,18 @@
 <template>
-	<div class="main-container attachment-container">
-		<el-card class="box-card !border-none full-container" shadow="never">
+    <div class="main-container attachment-container">
+        <el-card class="box-card !border-none full-container" shadow="never">
 
-			<div class="flex justify-between items-center mb-[20px]">
+            <div class="flex justify-between items-center mb-[20px]">
                 <span class="text-page-title">{{ pageName }}</span>
             </div>
 
-			<el-tabs v-model="type">
-				<el-tab-pane :label="t(tab)" v-for="(tab, index) in attachmentType" :name="tab" :key="index">
-					<attachment scene="attachment" :type="tab" />
-				</el-tab-pane>
-			</el-tabs>
-		</el-card>
-	</div>
+            <el-tabs v-model="type">
+                <el-tab-pane :label="t(tab)" v-for="(tab, index) in attachmentType" :name="tab" :key="index">
+                    <attachment scene="attachment" :type="tab" />
+                </el-tab-pane>
+            </el-tabs>
+        </el-card>
+    </div>
 </template>
 
 <script lang="ts" setup>
@@ -29,47 +29,47 @@ const type = ref(attachmentType[0])
 </script>
 
 <style lang="scss">
-	.attachment-container {
-        overflow: hidden;
-        min-height: calc(100vh - 94px);
-        background-color: var(--el-bg-color-overlay);
+.attachment-container {
+    overflow: hidden;
+    min-height: calc(100vh - 94px);
+    background-color: var(--el-bg-color-overlay);
 
-        .full-container {
-            height: calc(100vh - 100px);
+    .full-container {
+        height: calc(100vh - 100px);
+    }
+
+    .el-card__body {
+        height: 100%;
+    }
+
+    .el-tabs {
+        display: flex;
+        flex-direction: column;
+        height: calc(100% - 40px);
+    }
+
+    .el-tabs__content {
+        flex: 1;
+
+        .el-tab-pane {
+            height: 100%;
+        }
+    }
+
+    .el-tabs__nav-wrap::after {
+        height: 1px;
+    }
+
+    .main-wrap {
+        border: none;
+
+        .group-wrap {
+            padding: 0 15px 0 0;
         }
 
-		.el-card__body {
-			height: 100%;
-		}
-
-		.el-tabs {
-			display: flex;
-            flex-direction: column;
-            height: calc(100% - 40px);
-		}
-
-		.el-tabs__content {
-			flex: 1;
-
-			.el-tab-pane {
-				height: 100%;
-			}
-		}
-
-		.el-tabs__nav-wrap::after {
-			height: 1px;
-		}
-
-		.main-wrap {
-			border: none;
-
-			.group-wrap {
-				padding: 0 15px 0 0;
-			}
-
-			.attachment-list-wrap {
-				padding: 0 0 0 15px;
-			}
-		}
-	}
+        .attachment-list-wrap {
+            padding: 0 0 0 15px;
+        }
+    }
+}
 </style>

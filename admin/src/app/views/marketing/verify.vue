@@ -64,7 +64,7 @@
                         @size-change="loadRecordList()" @current-change="loadRecordList" />
                 </div>
             </div>
-            
+
             <verify-detail ref="verifyDetailDialog" />
         </el-card>
     </div>
@@ -73,14 +73,12 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { FormInstance } from 'element-plus'
 import { getVerifyRecord, getVerifyTypeList, getVerifierSelect } from '@/app/api/verify'
 import verifyDetail from '@/app/views/marketing/components/verify-detail.vue'
-import { img } from '@/utils/common'
 
 const route = useRoute()
-const router = useRouter()
 const pageName = route.meta.title
 
 const recordTable = reactive({

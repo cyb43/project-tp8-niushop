@@ -12,9 +12,7 @@
                     <span class="flex justify-center items-center block w-[40px] h-[40px] border-[1px] border-primary rounded-[999px] text-primary">1</span>
                 </div>
                 <div>
-                    <p class="flex items-center text-[14px]">{{ t('writingTipsOne1') }}--<el-button link type="primary"
-                            @click="linkEvent">{{ t('writingTipsOne2') }}</el-button>, {{ t('writingTipsOne3') }}<span
-                            class="text-primary">URL / Token / EncondingAESKey</span>{{ t('writingTipsOne4') }}</p>
+                    <p class="flex items-center text-[14px]">{{ t('writingTipsOne1') }}--<el-button link type="primary" @click="linkEvent">{{ t('writingTipsOne2') }}</el-button>, {{ t('writingTipsOne3') }}<span class="text-primary">URL / Token / EncondingAESKey</span>{{ t('writingTipsOne4') }}</p>
                     <div class="w-[100%] mt-[10px]">
                         <img class="w-[100%]" src="@/app/assets/images/setting/wechat_1.png" />
                     </div>

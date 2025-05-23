@@ -4,7 +4,7 @@
             <el-input class="input-width" v-model.trim="formData.continue_sign" @keyup="filterNumber($event)" :maxlength="3" clearable />
             <span class="ml-[10px]">{{ t('day') }}</span>
         </el-form-item>
-        <el-form-item :label="t('continueSign')" >
+        <el-form-item :label="t('continueSignAward')">
             <div class="flex-1">
                 <div v-for="(item,index) in gifts" :key="index" class="mb-[15px]">
                     <component :is="item.component" v-model="formData[item.key]" ref="giftRefs" v-if="item.component" />
@@ -38,6 +38,10 @@ const props = defineProps({
         default: () => {
             return {}
         }
+    },
+    sign_period: {
+        type: Number,
+        default: 0
     }
 })
 const emits = defineEmits(['update:modelValue'])
@@ -94,6 +98,8 @@ const formRules = reactive<FormRules>({
                     callback(t('continueSignFormatError'))
                 } else if (value < 2 || value > 365) {
                     callback(t('continueSignBerweenDays'))
+                } else if (Number(value) > Number(props.sign_period)) { 
+                    callback(t('continueSignMustLessThanSignPeriod')) // 添加这个校验
                 } else{
                     callback();
                 }
@@ -126,13 +132,16 @@ const formRules = reactive<FormRules>({
 
 const verify = async () => {
     let verify = true
+    await formRef.value?.validate((valid) => {
+        verify = valid
+    })
+
+    if (!verify) return verify
+
     for (let i = 0; i < giftRefs.value.length; i++) {
         const item = giftRefs.value[i]
         !await item.verify() && (verify = false)
     }
-    await formRef.value?.validate((valid) => {
-        verify = valid
-    })
     return verify
 }
 

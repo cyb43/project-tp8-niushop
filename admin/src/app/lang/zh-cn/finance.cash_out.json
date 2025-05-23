@@ -50,7 +50,7 @@
 	"cashOutInfo":"收款方信息",
 	"transferCode":"收款码",
 	"realname":"真实姓名",
-	"account":"账号",
+	"account":"收款账号",
 	"bankRealname":"持卡人姓名",
 	"remark":"备注",
 	"remarkPlaceholder":"请输入备注",

@@ -83,8 +83,7 @@
                 <el-form-item :label="t('businessDomain')">
                     <el-input :model-value="wechatStatic.business_domain" placeholder="Please input" class="input-width" :readonly="true">
                         <template #append>
-                            <div class="cursor-pointer" @click="copyEvent(wechatStatic.business_domain)">{{ t('copy') }}
-                            </div>
+                            <div class="cursor-pointer" @click="copyEvent(wechatStatic.business_domain)">{{ t('copy') }}</div>
                         </template>
                     </el-input>
                 </el-form-item>
@@ -92,8 +91,7 @@
                 <el-form-item :label="t('jsSecureDomain')">
                     <el-input :model-value="wechatStatic.js_secure_domain" placeholder="Please input" class="input-width" :readonly="true">
                         <template #append>
-                            <div class="cursor-pointer" @click="copyEvent(wechatStatic.business_domain)">{{ t('copy') }}
-                            </div>
+                            <div class="cursor-pointer" @click="copyEvent(wechatStatic.business_domain)">{{ t('copy') }}</div>
                         </template>
                     </el-input>
                 </el-form-item>
@@ -101,8 +99,7 @@
                 <el-form-item :label="t('webAuthDomain')">
                     <el-input :model-value="wechatStatic.web_auth_domain" placeholder="Please input" class="input-width" :readonly="true">
                         <template #append>
-                            <div class="cursor-pointer" @click="copyEvent(wechatStatic.business_domain)">{{ t('copy') }}
-                            </div>
+                            <div class="cursor-pointer" @click="copyEvent(wechatStatic.business_domain)">{{ t('copy') }}</div>
                         </template>
                     </el-input>
                 </el-form-item>

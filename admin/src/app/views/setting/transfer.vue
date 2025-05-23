@@ -40,6 +40,17 @@
                     </div>
                     <div class="form-tip">{{ t('mchPublicCertPathTips') }}</div>
                 </el-form-item>
+                <el-form-item :label="t('wechatpayPublicCert')" prop="wechatpay_config.wechat_public_cert_path">
+                    <div class="input-width">
+                        <upload-file v-model="formData.wechatpay_config.wechat_public_cert_path" api="sys/document/wechat" />
+                    </div>
+                </el-form-item>
+
+                <el-form-item :label="t('wechatpayPublicCertId')" prop="wechatpay_config.wechat_public_cert_id">
+                    <div class="input-width">
+                        <el-input v-model.trim="formData.wechatpay_config.wechat_public_cert_id" placeholder="" class="input-width" show-word-limit clearable />
+                    </div>
+                </el-form-item>
             </el-card>
 
             <!-- <el-card class="box-card mt-[15px] !border-none" shadow="never">
@@ -98,7 +109,9 @@ const initialFormData = {
         mch_id: '',
         mch_secret_key: '',
         mch_secret_cert: '',
-        mch_public_cert_path: ''
+        mch_public_cert_path: '',
+        wechat_public_cert_path: '',
+        wechat_public_cert_id: ''
     },
     alipay_config: {
         app_secret_cert: '',

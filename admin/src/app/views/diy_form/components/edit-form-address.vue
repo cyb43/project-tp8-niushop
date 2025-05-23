@@ -34,7 +34,7 @@
                         </el-tooltip>
                     </div>
                 </template>
-                <el-switch v-model="diyStore.editComponent.field.privacyProtection" />
+                <el-switch v-model="diyStore.editComponent.field.privacyProtection" :disabled ="diyStore.editComponent.addressFormat != 'province/city/district/address'" />
                 <div class="text-sm text-gray-400">{{ t('提交后自动隐藏地址，仅管理员可查看') }}</div>
             </el-form-item>
         </el-form>
@@ -55,7 +55,7 @@
 
 <script lang="ts" setup>
 import { t } from '@/lang'
-import { ref } from 'vue'
+import { ref,watch } from 'vue'
 import useDiyStore from '@/stores/modules/diy'
 
 const diyStore = useDiyStore()
@@ -66,6 +66,15 @@ diyStore.editComponent.verify = (index: number) => {
     const res = { code: true, message: '' }
     return res
 }
+watch(
+  () => diyStore.editComponent.addressFormat,
+  (newVal) => {
+    if (newVal !== 'province/city/district/address') {
+      diyStore.editComponent.field.privacyProtection = false
+    }
+  },
+  { immediate: true }
+)
 
 defineExpose({})
 

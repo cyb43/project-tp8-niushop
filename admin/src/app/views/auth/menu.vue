@@ -1,5 +1,5 @@
 <template>
-    <!--站点菜单-->
+    <!--平台菜单-->
     <div class="main-container">
         <el-card class="box-card !border-none" shadow="never">
 

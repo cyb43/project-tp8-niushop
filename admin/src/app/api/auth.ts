@@ -1,12 +1,11 @@
 import request from '@/utils/request'
 
-
 /**
  * 登录
  * @param params
  */
 export function login(params: Record<string, any>) {
-    return request.get(`login`, {params})
+    return request.get(`login`, { params })
 }
 
 /**
@@ -21,15 +20,7 @@ export function logout() {
  * @returns
  */
 export function getAuthMenus(params: Record<string, any>) {
-    return request.get('auth/authmenu', {params})
-}
-
-/**
- * 获取登录用户权限
- * @returns
- */
-export function getSiteInfo() {
-    return request.get('auth/site')
+    return request.get('auth/authmenu', { params })
 }
 
 /**

@@ -40,7 +40,7 @@
                             </span>
                         </div>
                     </el-col>
-                     
+
                     <template v-for="(item,index) in verifyContentData.fixed">
                         <el-col :span="8">
                             <div class="flex items-center mt-[15px]" v-if="item.title">
@@ -150,7 +150,6 @@ const getVerifyDetailFn = async () => {
 }
 
 const setFormData = async (row: any = null) => {
-    console.log("setFormData",row);
     code = row.code;
     getVerifyDetailFn();
 }

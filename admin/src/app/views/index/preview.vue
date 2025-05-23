@@ -36,7 +36,7 @@
                     <div class="px-[20px] pb-[10px] font-bold mt-[40px]">{{ t('weapp') }}</div>
                     <el-form label-width="40px" class="px-[20px]">
                         <el-form-item label=" " v-if="weappConfig.qr_code">
-                            <el-image class="w-[100px] h-[100px]" :src="img(weappConfig.qr_code)" />
+                            <el-image class="w-[150px] h-[150px]" :src="img(weappConfig.qr_code)" />
                         </el-form-item>
                         <el-form-item label=" " v-else>
                             <span class="text-gray-400">{{ t('weappNotSet') }}</span>

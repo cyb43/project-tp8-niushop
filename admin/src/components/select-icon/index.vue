@@ -1,44 +1,44 @@
 <template>
-	<div class="flex flex-wrap">
-		<template v-if="limit == 1">
-			<div class="rounded cursor-pointer overflow-hidden relative border border-dashed border-color icon-wrap mr-[10px]" :style="style">
-				<div class="w-full h-full relative" v-if="icons.data.length">
-					<div class="w-full h-full flex items-center justify-center">
-						<icon :name="icons.data[0]" size="40px"></icon>
-					</div>
-					<div class="absolute z-[1] flex items-center justify-center w-full h-full inset-0 bg-black bg-opacity-60 operation">
-						<icon name="element Delete" color="#fff" size="18px" @click="removeIcon"/>
-					</div>
-				</div>
-				<upload-attachment :limit="limit" type="icon" @confirm="confirmSelect" v-else>
-					<div class="w-full h-full flex items-center justify-center flex-col">
-						<icon name="element Plus" size="20px" color="var(--el-text-color-secondary)"/>
-						<div class="leading-none text-xs mt-[10px] text-secondary">{{ iconText || t('upload.selecticon') }}</div>
-					</div>
-				</upload-attachment>
-			</div>
-		</template>
-		<template v-else>
-			<div class="rounded cursor-pointer overflow-hidden relative border border-dashed border-color icon-wrap mr-[10px]" :style="style" v-for="(item, index) in icons.data" :key="index">
-				<div class="w-full h-full relative">
-					<div class="w-full h-full flex items-center justify-center">
-						<icon :name="item" size="40px"></icon>
-					</div>
-					<div class="absolute z-[1] flex items-center justify-center w-full h-full inset-0 bg-black bg-opacity-60 operation">
-						<icon name="element Delete" color="#fff" size="18px" @click="removeIcon(index)"/>
-					</div>
-				</div>
-			</div>
-			<div class="rounded cursor-pointer overflow-hidden relative border border-dashed border-color" :style="style" v-if="icons.data.length < limit">
-				<upload-attachment :limit="limit" @confirm="confirmSelect">
-					<div class="w-full h-full flex items-center justify-center flex-col">
-						<icon name="element Plus" size="20px" color="var(--el-text-color-secondary)"/>
-						<div class="leading-none text-xs mt-[10px] text-secondary">{{ iconText || t('upload.selecticon') }}</div>
-					</div>
-				</upload-attachment>
-			</div>
-		</template>
-	</div>
+    <div class="flex flex-wrap">
+        <template v-if="limit == 1">
+            <div class="rounded cursor-pointer overflow-hidden relative border border-dashed border-color icon-wrap mr-[10px]" :style="style">
+                <div class="w-full h-full relative" v-if="icons.data.length">
+                    <div class="w-full h-full flex items-center justify-center">
+                        <icon :name="icons.data[0]" size="40px"></icon>
+                    </div>
+                    <div class="absolute z-[1] flex items-center justify-center w-full h-full inset-0 bg-black bg-opacity-60 operation">
+                        <icon name="element Delete" color="#fff" size="18px" @click="removeIcon" />
+                    </div>
+                </div>
+                <upload-attachment :limit="limit" type="icon" @confirm="confirmSelect" v-else>
+                    <div class="w-full h-full flex items-center justify-center flex-col">
+                        <icon name="element Plus" size="20px" color="var(--el-text-color-secondary)" />
+                        <div class="leading-none text-xs mt-[10px] text-secondary">{{ iconText || t('upload.selecticon') }}</div>
+                    </div>
+                </upload-attachment>
+            </div>
+        </template>
+        <template v-else>
+            <div class="rounded cursor-pointer overflow-hidden relative border border-dashed border-color icon-wrap mr-[10px]" :style="style" v-for="(item, index) in icons.data" :key="index">
+                <div class="w-full h-full relative">
+                    <div class="w-full h-full flex items-center justify-center">
+                        <icon :name="item" size="40px"></icon>
+                    </div>
+                    <div class="absolute z-[1] flex items-center justify-center w-full h-full inset-0 bg-black bg-opacity-60 operation">
+                        <icon name="element Delete" color="#fff" size="18px" @click="removeIcon(index)" />
+                    </div>
+                </div>
+            </div>
+            <div class="rounded cursor-pointer overflow-hidden relative border border-dashed border-color" :style="style" v-if="icons.data.length < limit">
+                <upload-attachment :limit="limit" @confirm="confirmSelect">
+                    <div class="w-full h-full flex items-center justify-center flex-col">
+                        <icon name="element Plus" size="20px" color="var(--el-text-color-secondary)" />
+                        <div class="leading-none text-xs mt-[10px] text-secondary">{{ iconText || t('upload.selecticon') }}</div>
+                    </div>
+                </upload-attachment>
+            </div>
+        </template>
+    </div>
 
 </template>
 
@@ -71,10 +71,10 @@ const prop = defineProps({
 const emit = defineEmits(['update:modelValue', 'change'])
 
 const value = computed({
-    get () {
+    get() {
         return prop.modelValue
     },
-    set (value) {
+    set(value) {
         emit('update:modelValue', value)
     }
 })
@@ -131,15 +131,15 @@ const removeIcon = (index: number = 0) => {
 </script>
 
 <style lang="scss" scoped>
-	.icon-wrap {
-		.operation {
-			display: none;
-		}
+.icon-wrap {
+    .operation {
+        display: none;
+    }
 
-		&:hover {
-			.operation {
-				display: flex;
-			}
-		}
-	}
+    &:hover {
+        .operation {
+            display: flex;
+        }
+    }
+}
 </style>

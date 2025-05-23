@@ -134,7 +134,6 @@ const setConfigInfo = (data:any) => {
             element.config = data.config
         }
     })
-    console.log(payConfigData.value)
 }
 
 // 初始化配置信息
@@ -155,10 +154,6 @@ const enablePaymentMode = async (data: any) => {
             return false
         }
     }
-}
-
-interface SortableEvt extends SortableEvent {
-    originalEvent?: DragEvent
 }
 
 // 拖动

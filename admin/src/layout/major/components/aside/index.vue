@@ -1,5 +1,5 @@
 <template>
-    <el-aside :class="['h-screen layout-aside w-auto', { 'bright': !dark }]">
+    <el-aside :class="['h-screen layout-aside w-auto h-screen', { 'bright': !dark }]">
         <side class="hidden-xs-only" />
     </el-aside>
 
@@ -13,14 +13,15 @@
 <script lang="ts" setup>
 import { watch, computed } from 'vue'
 import { useRoute } from 'vue-router'
-import side from './side.vue'
 import useSystemStore from '@/stores/modules/system'
+import side from './side.vue'
+
+const route = useRoute()
 const systemStore = useSystemStore()
 const dark = computed(() => {
     return systemStore.dark
 })
 
-const route = useRoute()
 watch(route, () => {
     systemStore.$patch(state => {
         state.menuDrawer = false
@@ -34,10 +35,8 @@ watch(route, () => {
     border-right: 1px solid var(--el-border-color-lighter);
 
     &.bright {
-        // background-color: #F5F7F9;
 
         li {
-            // background-color: #F5F7F9;
 
             &.is-active:not(.is-opened) {
                 position: relative;

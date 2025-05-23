@@ -29,6 +29,7 @@
 	"continueSign": "连签天数",
 	"continueSignFormatError": "连签天数格式错误",
 	"continueSignBerweenDays": "连签天数为2-365天",
+    "continueSignMustLessThanSignPeriod": "连签天数不能大于签到周期",
 	"receiveLimit": "领取限制",
 	"noLimit": "不限制",
 	"everyOneLimit": "每人限领",

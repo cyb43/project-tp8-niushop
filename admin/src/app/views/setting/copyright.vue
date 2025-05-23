@@ -81,11 +81,7 @@ setFormData()
 const formRef = ref<FormInstance>()
 
 // 表单验证规则
-const formRules = reactive<FormRules>({
-    site_name: [
-        { required: true, message: t('siteNamePlaceholder'), trigger: 'blur' }
-    ]
-})
+const formRules = reactive<FormRules>({})
 
 /**
  * 保存

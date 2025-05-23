@@ -27,9 +27,9 @@
                     <!-- 预览 只有站点时展示-->
 <!--                    <i class="iconfont iconlingdang-xianxing cursor-pointer px-[8px]" :title="t('newInfo')" v-if="appType == 'admin'"></i>-->
                     <!-- 切换语言 -->
-                    <div class="navbar-item flex items-center h-full cursor-pointer">
-                        <switch-lang />
-                    </div>
+<!--                    <div class="navbar-item flex items-center h-full cursor-pointer">-->
+<!--                        <switch-lang />-->
+<!--                    </div>-->
                     <!-- 切换全屏 -->
                     <!-- <div class="navbar-item flex items-center h-full cursor-pointer" @click="toggleFullscreen">
                         <icon name="iconfont-icontuichuquanping" v-if="isFullscreen" />
