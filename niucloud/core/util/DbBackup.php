@@ -213,4 +213,9 @@ class DbBackup
         $this->setCache();
         return $this->restoreIndex;
     }
+
+    public function getRestoreProgress() {
+        $backupFiles = glob($this->backupPath . '/backup_*.sql');
+        return round($this->restoreIndex / count($backupFiles) * 100);
+    }
 }

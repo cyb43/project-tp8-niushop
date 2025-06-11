@@ -26,6 +26,7 @@ class Account extends BaseAdminController
     {
         $data = $this->request->params([
             ['type', ''],
+            ['trade_no', ''],
             ['create_time', []],
         ]);
         return success((new AccountLogService())->getPage($data));

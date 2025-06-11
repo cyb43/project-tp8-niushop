@@ -20,19 +20,24 @@ class Notice extends BaseDict
      */
     public function load(array $data)
     {
+        $with_addon = ($data['with_addon'] ?? 0) == 1;
         $template_files = [];
-        $system_path = $this->getDictPath() . "notice" . DIRECTORY_SEPARATOR . $data[ 'type' ] . ".php";
+        $system_path = $this->getDictPath() . "notice" . DIRECTORY_SEPARATOR . $data['type'] . ".php";
         if (is_file($system_path)) {
-            $template_files[] = $system_path;
+            $template_files['app'] = $system_path;
         }
         $addons = $this->getLocalAddons();
         foreach ($addons as $v) {
-            $template_path = $this->getAddonDictPath($v) . "notice" . DIRECTORY_SEPARATOR . $data[ 'type' ] . ".php";
+            $template_path = $this->getAddonDictPath($v) . "notice" . DIRECTORY_SEPARATOR . $data['type'] . ".php";
             if (is_file($template_path)) {
-                $template_files[] = $template_path;
+                $template_files[$v] = $template_path;
             }
         }
-        $template_files_data = $this->loadFiles($template_files);
+        if ($with_addon) {
+            $template_files_data = $this->loadFilesWithAddon($template_files);
+        } else {
+            $template_files_data = $this->loadFiles($template_files);
+        }
 
         $template_data_array = [];
         foreach ($template_files_data as $file_data) {

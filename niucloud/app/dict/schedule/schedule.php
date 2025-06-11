@@ -48,5 +48,17 @@ return [
         ],
         'class' => 'app\job\upgrade\AutoClearUpgradeRecords',
         'function' => ''
+    ],[
+        'key' => 'auto_clear_user_log',
+        'name' => '定时清理用户操作日志',
+        'desc' => '',
+        'time' => [
+            'type' => 'day',
+            'day' => 1,
+            'hour' => 1,
+            'min' => 1
+        ],
+        'class' => 'app\job\sys\ClearUserLog',
+        'function' => ''
     ],
 ];

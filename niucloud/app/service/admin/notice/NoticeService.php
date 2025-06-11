@@ -13,11 +13,13 @@ namespace app\service\admin\notice;
 
 use app\dict\notice\NoticeDict;
 use app\dict\notice\NoticeTypeDict;
+use app\dict\sys\ConfigKeyDict;
+use app\dict\sys\SmsDict;
 use app\model\sys\SysNotice;
 use app\service\core\notice\CoreNoticeService;
+use app\service\core\sys\CoreConfigService;
 use core\base\BaseAdminService;
 use core\exception\AdminException;
-use think\Response;
 
 /**
  * 消息管理服务层
@@ -56,7 +58,8 @@ class NoticeService extends BaseAdminService
      * @param $value
      * @return bool
      */
-    public function modify(string $key, string $field_type, $value){
+    public function modify(string $key, string $field_type, $value)
+    {
         $data = array(
             $field_type => $value
         );
@@ -71,9 +74,9 @@ class NoticeService extends BaseAdminService
      */
     public function editMessageStatus(string $key, string $type, int $status)
     {
-        if(!array_key_exists($type, NoticeTypeDict::getType())) throw new AdminException('NOTICE_TYPE_NOT_EXIST');
-        if(!array_key_exists($key, NoticeDict::getNotice())) return fail('NOTICE_TYPE_NOT_EXIST');
-        return (new CoreNoticeService())->edit($key, ['is_'.$type => $status]);
+        if (!array_key_exists($type, NoticeTypeDict::getType())) throw new AdminException('NOTICE_TYPE_NOT_EXIST');
+        if (!array_key_exists($key, NoticeDict::getNotice())) return fail('NOTICE_TYPE_NOT_EXIST');
+        return (new CoreNoticeService())->edit($key, ['is_' . $type => $status]);
     }
 
     /**
@@ -84,11 +87,10 @@ class NoticeService extends BaseAdminService
      */
     public function edit(string $key, string $type, array $data)
     {
-        if(!array_key_exists($type, NoticeTypeDict::getType())) throw new AdminException('NOTICE_TYPE_NOT_EXIST');
-        if(!array_key_exists($key, NoticeDict::getNotice())) return fail('NOTICE_TYPE_NOT_EXIST');
-        $save_data = ['is_'.$type => $data['status']];
-        switch ($type)
-        {
+        if (!array_key_exists($type, NoticeTypeDict::getType())) throw new AdminException('NOTICE_TYPE_NOT_EXIST');
+        if (!array_key_exists($key, NoticeDict::getNotice())) return fail('NOTICE_TYPE_NOT_EXIST');
+        $save_data = ['is_' . $type => $data['status']];
+        switch ($type) {
             case NoticeTypeDict::SMS:
                 $save_data['sms_id'] = $data['sms_id'] ?? '';
                 break;
@@ -99,9 +101,10 @@ class NoticeService extends BaseAdminService
             case NoticeTypeDict::WEAPP:
                 break;
         }
+        if ($type == NoticeTypeDict::SMS && $data['status'] == 1) {
+            (new NiuSmsService())->checkTemplateAudit($data['key'], $data['sms_id']);
+        }
         return (new CoreNoticeService())->edit($key, $save_data);
     }
-
-
 
 }

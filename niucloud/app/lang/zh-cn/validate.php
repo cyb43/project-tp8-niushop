@@ -50,6 +50,7 @@ return [
         'username_max' => '用户名不能超过30个字符',
         'mobile_require' => '手机号必须填写',
         'mobile_mobile' => '手机号格式错误',
+        'mobile_unique' => '手机号已存在',
         'sex_bot_exist' => '不存在的性别',
         'label_name_require' => '会员标签必须填写',
         'birthday_format' => '生日日期格式有误',

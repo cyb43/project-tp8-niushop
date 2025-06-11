@@ -44,7 +44,7 @@ class AccountLog extends BaseModel
      */
     public function getTypeNameAttr($value, $data)
     {
-        return AccountLogDict::getType()[$data['type']] ?? '';
+        return AccountLogDict::getType()[ $data[ 'type' ] ] ?? '';
     }
 
     /**
@@ -55,10 +55,10 @@ class AccountLog extends BaseModel
      */
     public function getPayInfoAttr($value, $data)
     {
-        return match ($data['type']) {
-            'pay' => (new Pay())->where([['out_trade_no', '=', $data['trade_no']]])->append(['type_name'])->findOrEmpty()->toArray(),
-            'refund' => (new Refund())->where([['refund_no', '=', $data['trade_no']]])->append(['type_name'])->findOrEmpty()->toArray(),
-            'transfer' => (new Transfer())->where([['transfer_no', '=', $data['trade_no']]])->append(['transfer_type_name'])->findOrEmpty()->toArray(),
+        return match ( $data[ 'type' ] ) {
+            'pay' => ( new Pay() )->where([ [ 'out_trade_no', '=', $data[ 'trade_no' ] ] ])->append([ 'type_name' ])->findOrEmpty()->toArray(),
+            'refund' => ( new Refund() )->where([ [ 'refund_no', '=', $data[ 'trade_no' ] ] ])->append([ 'type_name' ])->findOrEmpty()->toArray(),
+            'transfer' => ( new Transfer() )->where([ [ 'transfer_no', '=', $data[ 'trade_no' ] ] ])->append([ 'transfer_type_name' ])->findOrEmpty()->toArray(),
             default => [],
         };
     }
@@ -78,6 +78,20 @@ class AccountLog extends BaseModel
     }
 
     /**
+     * 状态字段转化
+     * @param $query
+     * @param $value
+     * @param $data
+     * @return void
+     */
+    public function searchTradeNoAttr($query, $value, $data)
+    {
+        if ($value != '') {
+            $query->where('trade_no', 'like', "%$value%");
+        }
+    }
+
+    /**
      * 金额转化
      * @param $value
      * @param $data
@@ -85,10 +99,10 @@ class AccountLog extends BaseModel
      */
     public function getMoneyAttr($value, $data)
     {
-        if (str_contains($data['money'], "-")) {
-            return $data['money'];
+        if (str_contains($data[ 'money' ], "-")) {
+            return $data[ 'money' ];
         } else {
-            return "+" . $data['money'];
+            return "+" . $data[ 'money' ];
         }
     }
 
@@ -100,14 +114,14 @@ class AccountLog extends BaseModel
      */
     public function searchCreateTimeAttr(Query $query, $value, $data)
     {
-        $start_time = empty($value[0]) ? 0 : strtotime($value[0]);
-        $end_time = empty($value[1]) ? 0 : strtotime($value[1]);
+        $start_time = empty($value[ 0 ]) ? 0 : strtotime($value[ 0 ]);
+        $end_time = empty($value[ 1 ]) ? 0 : strtotime($value[ 1 ]);
         if ($start_time > 0 && $end_time > 0) {
             $query->whereBetweenTime('create_time', $start_time, $end_time);
         } else if ($start_time > 0 && $end_time == 0) {
-            $query->where([['create_time', '>=', $start_time]]);
+            $query->where([ [ 'create_time', '>=', $start_time ] ]);
         } else if ($start_time == 0 && $end_time > 0) {
-            $query->where([['create_time', '<=', $end_time]]);
+            $query->where([ [ 'create_time', '<=', $end_time ] ]);
         }
     }
 

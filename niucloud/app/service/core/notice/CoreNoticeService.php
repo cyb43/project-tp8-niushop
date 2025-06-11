@@ -111,7 +111,9 @@ class CoreNoticeService extends BaseCoreService
                             'weapp_template_id' => '',
                             'sms_id' => '',
                             'wechat_first' => '',
-                            'wechat_remark' => ''
+                            'wechat_remark' => '',
+                            'audit_status'=>'wait',
+                            'sign'=>'',
                         ]);
                     }
                     $item['notice'][] = $notice_item;
@@ -132,7 +134,7 @@ class CoreNoticeService extends BaseCoreService
     public function getInfo(string $key)
     {
         if (!array_key_exists($key, NoticeDict::getNotice())) throw new NoticeException('NOTICE_TYPE_NOT_EXIST');
-        $info = $this->model->where([ [ 'id', '>', 0 ], [ 'key', '=', $key ] ])->findOrEmpty()->toArray();
+        $info = $this->model->where([ [ 'key', '=', $key ] ])->findOrEmpty()->toArray();
         if (!empty($info)) {
             $notice = array_merge(NoticeDict::getNotice($key), $info);
         } else {
@@ -172,7 +174,7 @@ class CoreNoticeService extends BaseCoreService
             $wechat = $notice_template[ 'wechat' ] ?? [];
             $this->model->create(array_merge([
                 'key' => $key,
-                'sms_content' => $notice_template['sms'][ 'content' ] ?? '',
+                'sms_content' => $notice_template[ 'sms']['content' ] ?? '',
                 'wechat_first' => $data[ 'wechat_first' ] ?? ( $wechat[ 'first' ] ?? '' ),
                 'wechat_remark' => $data[ 'wechat_remark' ] ?? ( $wechat[ 'remark' ] ?? '' ),
             ], $data));

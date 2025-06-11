@@ -50,6 +50,7 @@ class Member extends BaseApiController
             [ 'field', $field ],
         ]);
         $data[ $field ] = $data[ 'value' ];
+        $data['member_id'] =  $this->request->memberId();
         $this->validate($data, 'app\validate\member\Member.modify');
         ( new MemberService() )->modify($field, $data[ 'value' ]);
         return success('MODIFY_SUCCESS');

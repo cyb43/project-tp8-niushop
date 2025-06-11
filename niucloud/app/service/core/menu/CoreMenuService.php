@@ -57,9 +57,9 @@ class CoreMenuService extends BaseCoreService
      */
     public function deleteByAddon(string $addon, bool $is_all = true)
     {
-        $where = [['addon', '=', $addon]];
-        if(!$is_all){
-            $where[] = ['source', '=', MenuDict::SYSTEM];
+        $where = [ [ 'addon', '=', $addon ] ];
+        if (!$is_all) {
+            $where[] = [ 'source', '=', MenuDict::SYSTEM ];
         }
         Db::name("sys_menu")->where($where)->delete();
         return true;
@@ -71,9 +71,9 @@ class CoreMenuService extends BaseCoreService
     public function refreshAllAddonMenu()
     {
 
-        $addons = (new Addon())->field("key")->select()->toArray();
+        $addons = ( new Addon() )->field("key")->select()->toArray();
         foreach ($addons as $k => $v) {
-            $this->refreshAddonMenu($v["key"]);
+            $this->refreshAddonMenu($v[ "key" ]);
         }
         return true;
     }
@@ -87,16 +87,18 @@ class CoreMenuService extends BaseCoreService
     {
         $addon_loader = new DictLoader("Menu");
 
-        $addon_admin_tree = $addon_loader->load(["addon" => $addon, "app_type" => "admin"]);
+        $addon_admin_tree = $addon_loader->load([ "addon" => $addon, "app_type" => "admin" ]);
 
-        if (isset($addon_admin_tree['delete'])) unset($addon_admin_tree['delete']);
+        if (isset($addon_admin_tree[ 'delete' ])) unset($addon_admin_tree[ 'delete' ]);
+
         $menu_list = [];
+
         if (!empty($addon_admin_tree)) {
             $menu_list = array_merge($menu_list, $this->loadMenu($addon_admin_tree, "admin", $addon));
         }
+
         $this->deleteByAddon($addon, false);
-        if(!empty($menu_list))
-        {
+        if (!empty($menu_list)) {
             $this->install($menu_list);
         }
 
@@ -129,28 +131,28 @@ class CoreMenuService extends BaseCoreService
         if (is_array($tree)) {
             foreach ($tree as $key => $value) {
                 $item = [
-                    'menu_name' => $value['menu_name'],
-                    'menu_short_name' => $value['menu_short_name'] ?? '',
-                    'menu_key' => $value['menu_key'],
+                    'menu_name' => $value[ 'menu_name' ],
+                    'menu_short_name' => $value[ 'menu_short_name' ] ?? '',
+                    'menu_key' => $value[ 'menu_key' ],
                     'app_type' => $app_type,
                     'addon' => $addon,
-                    'parent_key' => $value['parent_key'] ?? $parent_key,
-                    'menu_type' => $value['menu_type'],
-                    'icon' => $value['icon'] ?? '',
-                    'api_url' => $value['api_url'] ?? '',
-                    'router_path' => $value['router_path'] ?? '',
-                    'view_path' => $value['view_path'] ?? '',
-                    'methods' => $value['methods'] ?? '',
-                    'sort' => $value['sort'] ?? '',
+                    'parent_key' => $value[ 'parent_key' ] ?? $parent_key,
+                    'menu_type' => $value[ 'menu_type' ],
+                    'icon' => $value[ 'icon' ] ?? '',
+                    'api_url' => $value[ 'api_url' ] ?? '',
+                    'router_path' => $value[ 'router_path' ] ?? '',
+                    'view_path' => $value[ 'view_path' ] ?? '',
+                    'methods' => $value[ 'methods' ] ?? '',
+                    'sort' => $value[ 'sort' ] ?? '',
                     'status' => 1,
-                    'is_show' => $value['is_show'] ?? 1
+                    'is_show' => $value[ 'is_show' ] ?? 1
                 ];
                 $refer = $value;
-                if (isset($refer['children'])) {
-                    unset($refer['children']);
+                if (isset($refer[ 'children' ])) {
+                    unset($refer[ 'children' ]);
                     $menu_list[] = $item;
-                    $p_key = $refer['menu_key'];
-                    $this->menuTreeToList($value['children'], $p_key, $app_type, $addon, $menu_list);
+                    $p_key = $refer[ 'menu_key' ];
+                    $this->menuTreeToList($value[ 'children' ], $p_key, $app_type, $addon, $menu_list);
                 } else {
                     $menu_list[] = $item;
                 }
@@ -180,12 +182,13 @@ class CoreMenuService extends BaseCoreService
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getRoutePathByMenuKey($menu_key, $paths = []) {
-        $menu = $this->model->where([ ['menu_key', '=', $menu_key], ['app_type', '=', 'admin'] ])->field('parent_key,router_path')->find();
+    public function getRoutePathByMenuKey($menu_key, $paths = [])
+    {
+        $menu = $this->model->where([ [ 'menu_key', '=', $menu_key ] ])->field('parent_key,router_path')->find();
         if (empty($menu)) return '';
-        array_unshift($paths, $menu['router_path']);
-        if (!empty($menu['parent_key'])) {
-            return $this->getRoutePathByMenuKey($menu['parent_key'], $paths);
+        array_unshift($paths, $menu[ 'router_path' ]);
+        if (!empty($menu[ 'parent_key' ])) {
+            return $this->getRoutePathByMenuKey($menu[ 'parent_key' ], $paths);
         } else {
             return implode('/', $paths);
         }

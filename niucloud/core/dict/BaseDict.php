@@ -155,6 +155,42 @@ abstract class BaseDict extends Storage
     }
 
     /**
+     * 加载文件数据
+     * @param $files
+     * @return array
+     */
+    protected function loadFilesWithAddon($files)
+    {
+        $default_sort = 100000;
+        $files_data = [];
+        if (!empty($files)) {
+            foreach ($files as $addon => $file) {
+                $config = include $file;
+
+                if (!empty($config)) {
+                    $temp[$addon] = $config;
+                    $config = $temp;
+                    if (isset($config['file_sort'])) {
+                        $sort = $config['file_sort'];
+                        unset($config['file_sort']);
+                        $sort = $sort * 10;
+                        while (array_key_exists($sort, $files_data)) {
+                            $sort++;
+                        }
+                        $files_data[$sort] = $config;
+                    } else {
+                        $files_data[$default_sort] = $config;
+                        $default_sort++;
+                    }
+                }
+            }
+        }
+        ksort($files_data);
+        return $files_data;
+    }
+
+
+    /**
      * 加载
      * @return mixed
      */

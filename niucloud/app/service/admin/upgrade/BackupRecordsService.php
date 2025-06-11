@@ -370,7 +370,7 @@ class BackupRecordsService extends BaseAdminService
 
                 if ($restore_result === true) {
                     $res[ 'data' ] = [
-                        'content' => '恢复数据库备份',
+                        'content' => '数据库恢复完成',
                         'task' => 'restoreData'
                     ];
                 } else {
@@ -378,6 +378,10 @@ class BackupRecordsService extends BaseAdminService
                         'content' => '',
                         'task' => 'restoreSql'
                     ];
+                    $restore_progress = $db->getRestoreProgress();
+                    if ($restore_progress % 5 == 0) {
+                        $res[ 'data' ][ 'content' ] = $restore_progress == 0 ? '数据库开始恢复' : '数据库恢复中已恢复' . $restore_progress . '%';
+                    }
                 }
 
                 $temp = Cache::get($this->cache_restore_key);
@@ -393,6 +397,7 @@ class BackupRecordsService extends BaseAdminService
                 $temp = Cache::get($this->cache_restore_key);
                 $temp[ 'data' ][] = $res[ 'data' ];
                 Cache::set($this->cache_restore_key, $temp);
+
                 // todo 恢复数据
 
             } elseif ($data[ 'task' ] == 'restoreComplete') {

@@ -37,9 +37,8 @@ class AccountLogService extends BaseAdminService
      */
     public function getPage(array $where = [])
     {
-
         $field = 'id, type, money, trade_no, create_time';
-        $search_model = $this->model->withSearch([ 'create_time', 'type' ], $where)->field($field)->append([ 'type_name', 'money', 'pay_info' ])->order('create_time desc');
+        $search_model = $this->model->withSearch([ 'create_time', 'type', 'trade_no' ], $where)->field($field)->append([ 'type_name', 'money', 'pay_info' ])->order('create_time desc');
         return $this->pageQuery($search_model);
     }
 

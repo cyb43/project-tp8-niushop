@@ -27,7 +27,7 @@ class Member extends Validate
 
     protected $rule = [
         'nickname' => 'requireWithout:field|max:30|requireIf:field,nickname',
-        'mobile' => 'mobile',
+        'mobile' => 'mobile|unique:member',
         'sex' => 'checkSex',
         'birthday' => 'date',
         'username' => 'require|checkUsername',
@@ -39,8 +39,8 @@ class Member extends Validate
         'nickname.requireWithout' => 'validate_member.nickname_require',
         'nickname.requireIf' => 'validate_member.nickname_require',
         'nickname.max' => 'validate_member.nickname_max',
-        'mobile.require' => 'validate_member.mobile_require',
         'mobile.mobile' => 'validate_member.mobile_mobile',
+        'mobile.unique' => 'validate_member.mobile_unique',
         'birthday' => 'validate_member.birthday_format',
         'username.require' => 'validate_member.username_require',
         'username.unique' => 'validate_member.username_is_exist',
@@ -52,8 +52,8 @@ class Member extends Validate
 
     protected $scene = [
         'add' => ['birthday', 'mobile', 'password'],
-        'edit' => ['sex', 'birthday'],
-        'modify' => ['sex', 'birthday'],
+        'edit' => ['sex', 'birthday','mobile'],
+        'modify' => ['sex', 'birthday','mobile'],
         'account_register' => ['username', 'password', 'mobile'],
         'reset_password' => ['password', 'mobile'],
         'set_status' => ['status']

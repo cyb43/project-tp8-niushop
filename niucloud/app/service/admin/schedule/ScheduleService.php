@@ -12,8 +12,10 @@
 namespace app\service\admin\schedule;
 
 
+use app\dict\schedule\ScheduleDict;
 use app\service\core\schedule\CoreScheduleService;
 use core\base\BaseAdminService;
+use core\exception\AdminException;
 
 
 /**
@@ -67,7 +69,11 @@ class ScheduleService extends BaseAdminService
      */
     public function add(array $data)
     {
-        $res = (new CoreScheduleService())->add($data);
+        if (!empty($data['time'])) {
+            $this->checkTimeCycle($data['time']);
+        }
+
+        (new CoreScheduleService())->add($data);
         return true;
 
     }
@@ -80,8 +86,40 @@ class ScheduleService extends BaseAdminService
      */
     public function edit(int $id, array $data)
     {
+        if (!empty($data['time'])) {
+            $this->checkTimeCycle($data['time']);
+        }
         (new CoreScheduleService())->edit($id, $data);
         return true;
+    }
+
+    /**
+     * 校验任务时间配置
+     * @param array $time
+     * @throws AdminException
+     */
+    protected function checkTimeCycle(array $time)
+    {
+        $type = $time['type'] ?? null;
+
+        // 配置要求字段
+        $rules = [
+            ScheduleDict::MIN   => ['min'],
+            ScheduleDict::HOUR  => ['hour', 'min'],
+            ScheduleDict::DAY   => ['day', 'hour', 'min'],
+            ScheduleDict::WEEK  => ['hour', 'min'],
+            ScheduleDict::MONTH => ['day', 'hour', 'min'],
+        ];
+
+        if (!isset($rules[$type])) {
+            throw new AdminException('TASK_CYCLE_ERROR');
+        }
+
+        foreach ($rules[$type] as $field) {
+            if (empty($time[$field])) {
+                throw new AdminException('TASK_CYCLE_ERROR');
+            }
+        }
     }
 
     /**

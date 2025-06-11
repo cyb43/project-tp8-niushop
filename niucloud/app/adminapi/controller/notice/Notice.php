@@ -111,5 +111,4 @@ class Notice extends BaseAdminController
         (new NoticeService())->edit($data['key'], $data['type'], $data);
         return success();
     }
-
 }

@@ -45,7 +45,7 @@ class ExceptionHandle extends Handle
     {
         // 使用内置的方式记录异常日志
 //        parent::report($exception);
-        if (!$this->isIgnoreReport($e)) {
+        if (!$this->isIgnoreReport($e) && env('app_debug', false)) {
             $data = [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),

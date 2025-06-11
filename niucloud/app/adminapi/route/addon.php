@@ -19,6 +19,7 @@ use think\facade\Route;
  */
 Route::group(function () {
     //获取本地插件
+    Route::get('addon/init', 'addon.Addon/init');
     Route::get('addon/local', 'addon.Addon/getLocalAddonList');
     //获取插件列表
     Route::get('addon', 'addon.Addon/lists');
@@ -53,6 +54,10 @@ Route::group(function () {
     // 取消安装任务
     Route::put('addon/install/cancel/:addon', 'addon.Addon/cancleInstall');
 
+    //首页展示应用标签列表
+    Route::get('app/label/index', 'addon.Addon/getIndexAddonLabelList');
+    //首页展示应用列表
+    Route::get('app/index', 'addon.Addon/getIndexAddonList');
     /******************************************************************开发插件 *******************************************************/
     //开发插件列表
     Route::get('addon_develop', 'addon.AddonDevelop/lists');

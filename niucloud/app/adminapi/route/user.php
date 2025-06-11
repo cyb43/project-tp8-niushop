@@ -33,12 +33,15 @@ Route::group('user', function () {
     Route::put(':uid', 'user.User/edit');
     //修改用户属性
     Route::put(':uid/:field', 'user.User/modify');
+    //删除用户
+    Route::delete(':uid', 'user.User/del');
 
     /***************************************************** 操作日志 **************************************************/
     //操作日志列表
     Route::get('userlog', 'user.UserLog/lists');
     //操作日志详情
     Route::get('userlog/:id', 'user.UserLog/info');
+    Route::delete('userlog/destroy', 'user.UserLog/destroy');
 
 })->middleware([
     AdminCheckToken::class,

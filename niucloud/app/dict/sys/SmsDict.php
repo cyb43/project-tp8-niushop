@@ -20,6 +20,7 @@ class SmsDict
 {
     //阿里云短信
     public const ALISMS = 'aliyun';
+    public const NIUSMS = 'niuyun';
     //腾讯云短信
     public const TENCENTSMS = 'tencent';
     public const SENDING = 'sending';
@@ -39,6 +40,15 @@ class SmsDict
     public static function getType()
     {
         $system = [
+            self::NIUSMS => [
+                'name' => '牛云短信',
+                //配置参数
+                'params' => [],
+                'encrypt_params' => [],
+                'show_type'=>'view',
+                'view' => '/src/app/views/setting/sms_niu.vue',
+                'component' => '',
+            ],
             self::ALISMS => [
                 'name' => '阿里云短信',
                 //配置参数
@@ -48,6 +58,7 @@ class SmsDict
                     'secret_key' => 'SECRET_KEY'
                 ],
                 'encrypt_params' => ['secret_key'],
+                'show_type'=>'component',
                 'component' => '/src/app/views/setting/components/sms-ali.vue',
             ],
             self::TENCENTSMS => [
@@ -60,6 +71,7 @@ class SmsDict
                     'secret_key' => 'SECRET_KEY'
                 ],
                 'encrypt_params' => ['secret_key'],
+                'show_type'=>'component',
                 'component' => '/src/app/views/setting/components/sms-tencent.vue',
             ],
         ];

@@ -47,6 +47,8 @@ class CoreMemberService extends BaseCoreService
     {
         $field_name = match ($field) {
             'nickname' => 'nickname',
+            'mobile' => 'mobile',
+            'id_card' => 'id_card',
             'headimg' => 'headimg',
             'member_label' => 'member_label',
             'member_level' => 'member_level',

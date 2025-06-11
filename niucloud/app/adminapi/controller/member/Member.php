@@ -66,6 +66,8 @@ class Member extends BaseAdminController
             ['member_label', []],
             ['sex', 0],
             ['birthday', ''],
+            ['remark', ''],
+            ['id_card', ''],
         ]);
         $this->validate($data, 'app\validate\member\Member.add');
         $res = (new MemberService())->add($data);
@@ -85,6 +87,7 @@ class Member extends BaseAdminController
             ['field', $field],
         ]);
         $data[$field] = $data['value'];
+        $data['member_id'] = $member_id;
         $this->validate($data, 'app\validate\member\Member.modify');
         (new MemberService())->modify($member_id, $field, $data['value']);
         return success('MODIFY_SUCCESS');

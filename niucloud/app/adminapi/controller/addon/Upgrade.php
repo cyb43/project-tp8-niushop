@@ -26,7 +26,8 @@ class Upgrade extends BaseAdminController
     public function upgrade($addon = '')
     {
         $data = $this->request->params([
-           ['is_need_backup', true]
+            ['is_need_backup', true],
+            ['is_need_cloudbuild', true],
         ]);
         return success(data: ( new UpgradeService() )->upgrade($addon, $data));
     }

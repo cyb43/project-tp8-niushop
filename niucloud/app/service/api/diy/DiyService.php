@@ -16,7 +16,6 @@ use app\dict\diy\TemplateDict;
 use app\model\diy\Diy;
 use app\model\diy\DiyTheme;
 use app\service\core\addon\CoreAddonService;
-use app\service\core\diy\CoreDiyService;
 use core\base\BaseApiService;
 
 /**

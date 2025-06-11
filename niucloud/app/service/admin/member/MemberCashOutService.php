@@ -37,7 +37,7 @@ class MemberCashOutService extends BaseAdminService
     public function getPage(array $where = [])
     {
 
-        $field = 'id,cash_out_no,member_cash_out.member_id,account_type,transfer_type,transfer_realname,transfer_mobile,transfer_bank,transfer_account,transfer_fail_reason,transfer_status,transfer_time,apply_money,rate,service_money,member_cash_out.money,audit_time,member_cash_out.status,remark,member_cash_out.create_time,refuse_reason,transfer_no, transfer_payment_code';
+        $field = 'id,cash_out_no,member_cash_out.member_id,account_type,transfer_type,transfer_realname,transfer_mobile,transfer_bank,transfer_account,transfer_fail_reason,transfer_status,transfer_time,apply_money,rate,service_money,member_cash_out.money,audit_time,member_cash_out.status,member_cash_out.remark,member_cash_out.create_time,refuse_reason,transfer_no, transfer_payment_code';
         $member_where = [];
         if(!empty($where['keywords']))
         {

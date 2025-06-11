@@ -20,6 +20,11 @@ use think\Response;
 
 class Addon extends BaseAdminController
 {
+
+    public function init()
+    {
+        return success((new CoreAddonService())->getInitList());
+    }
     /**
      * 获取已下载插架
      */
@@ -158,17 +163,15 @@ class Addon extends BaseAdminController
     public function getInstallList(){
         return success(data:(new AddonService())->getInstallList());
     }
+
     /**
      * 查询已安装有效应用
      */
     public function getAddonList()
     {
-        return success((new CoreAddonService())->getAddonMemuList());
+        return success((new CoreAddonService())->getInstallAddonList());
     }
 
-    public function getAddonByKey($key){
-        return success((new AddonService())->getInfoByKey($key));
-    }
     /**
      * 插件类型
      * @return Response
@@ -190,4 +193,25 @@ class Addon extends BaseAdminController
     {
         return success(data:(new AddonService())->getShowAppTools());
     }
+
+    /**
+     * 获取首页应用标签
+     */
+    public function getIndexAddonLabelList()
+    {
+        return success((new CoreAddonService())->getIndexAddonLabelList());
+    }
+
+    /**
+     * 获取首页应用
+     * @return Response
+     */
+    public function getIndexAddonList()
+    {
+        $data = $this->request->params([
+            ['label_id', ''],
+        ]);
+        return success((new CoreAddonService())->getIndexAddonList($data['label_id']));
+    }
+
 }

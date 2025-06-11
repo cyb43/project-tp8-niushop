@@ -12,10 +12,12 @@
 namespace app\service\admin\notice;
 
 use app\dict\common\CommonDict;
+use app\dict\sys\ConfigKeyDict;
 use app\dict\sys\SmsDict;
 use app\service\core\sys\CoreConfigService;
 use core\base\BaseAdminService;
 use core\exception\AdminException;
+use think\Response;
 
 /**
  * 短信配置服务层
@@ -33,8 +35,8 @@ class SmsService extends BaseAdminService
     public function getList()
     {
         $sms_type_list = SmsDict::getType();
-        $info = (new CoreConfigService())->getConfig('SMS');
-        if(empty($info))
+        $info = (new CoreConfigService())->getConfig(ConfigKeyDict::SMS);
+        if(empty($info) || !isset($info['value']['default']))
         {
             $config_type = ['default' => ''];//初始化
         }else
@@ -73,8 +75,8 @@ class SmsService extends BaseAdminService
     {
         $sms_type_list = SmsDict::getType();
         if(!array_key_exists($sms_type, $sms_type_list)) throw new AdminException('SMS_TYPE_NOT_EXIST');
-        $info = (new CoreConfigService())->getConfig('SMS');
-        if(empty($info))
+        $info = (new CoreConfigService())->getConfig(ConfigKeyDict::SMS);
+        if(empty($info) || !isset($info['value']['default']))
         {
             $config_type = ['default' => ''];//初始化
         }else
@@ -110,8 +112,8 @@ class SmsService extends BaseAdminService
     {
         $sms_type_list = SmsDict::getType();
         if(!array_key_exists($sms_type, $sms_type_list)) throw new AdminException('SMS_TYPE_NOT_EXIST');
-        $info = (new CoreConfigService())->getConfig('SMS');
-        if(empty($info))
+        $info = (new CoreConfigService())->getConfig(ConfigKeyDict::SMS);
+        if(empty($info) || !isset($info['value']['default']))
         {
             $config['default'] = '';
 
@@ -132,7 +134,7 @@ class SmsService extends BaseAdminService
             $config[$sms_type][$k_param] = $value;
         }
 
-        return (new CoreConfigService())->setConfig('SMS', $config);
+        return (new CoreConfigService())->setConfig(ConfigKeyDict::SMS, $config);
     }
 
 

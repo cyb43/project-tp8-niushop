@@ -32,6 +32,7 @@ use think\Model;
 class UserService extends BaseAdminService
 {
     public static $cache_tag_name = 'user_cache';
+
     public function __construct()
     {
         parent::__construct();
@@ -46,16 +47,16 @@ class UserService extends BaseAdminService
     {
         $field = 'uid,username,head_img,real_name,last_ip,last_time,login_count,status, role_ids, is_admin';
         $search = [
-            'username' => $where['username'],
-            'realname' => $where['realname'],
-            'create_time' => $where['create_time']
+            'username' => $where[ 'username' ],
+            'realname' => $where[ 'realname' ],
+            'create_time' => $where[ 'create_time' ]
         ];
-        if (!empty($where['role'])) {
-            $search['role_ids'] = $where['role'];
+        if (!empty($where[ 'role' ])) {
+            $search[ 'role_ids' ] = $where[ 'role' ];
         }
-        $search_model = (new SysUser())->withSearch(['username', 'realname', 'create_time', 'role_ids'], $search)->field($field)->order('uid desc')->append(['status_name']);
+        $search_model = ( new SysUser() )->withSearch([ 'username', 'realname', 'create_time', 'role_ids' ], $search)->field($field)->order('uid desc')->append([ 'status_name' ]);
         return $this->pageQuery($search_model, function ($item, $key) {
-            $role_ids = $item['role_ids'] ?? [];
+            $role_ids = $item[ 'role_ids' ] ?? [];
             $item->role_data = $this->getRoleByUserRoleIds($role_ids);
         });
     }
@@ -66,20 +67,21 @@ class UserService extends BaseAdminService
      * @param int $uid
      * @return array
      */
-    public function getInfo(int $uid){
+    public function getInfo(int $uid)
+    {
         $where = array(
-            ['uid', '=', $uid],
+            [ 'uid', '=', $uid ],
         );
         $field = 'uid, username, head_img, real_name, last_ip, last_time, create_time, login_count, status, delete_time, update_time, role_ids, is_admin';
-        $user = (new SysUser())->where($where)->field($field)->findOrEmpty();
+        $user = ( new SysUser() )->where($where)->field($field)->findOrEmpty();
         if ($user->isEmpty())
             return [];
 
         if (!empty($user?->userrole)) {
-            $user->userrole->appendData(['role_array' => $this->getRoleByUserRoleIds($user->role_ids ?? [])]);
+            $user->userrole->appendData([ 'role_array' => $this->getRoleByUserRoleIds($user->role_ids ?? []) ]);
         }
 
-        return $user->append(['status_name'])->toArray();
+        return $user->append([ 'status_name' ])->toArray();
     }
 
     /**
@@ -88,18 +90,19 @@ class UserService extends BaseAdminService
      * @return bool
      * @throws Exception
      */
-    public function add(array $data){
+    public function add(array $data)
+    {
         $user_data = [
-            'username' => $data['username'],
-            'head_img' => $data['head_img'],
-            'status' => $data['status'],
-            'real_name' => $data['real_name'],
-            'password' => create_password($data['password']),
+            'username' => $data[ 'username' ],
+            'head_img' => $data[ 'head_img' ],
+            'status' => $data[ 'status' ],
+            'real_name' => $data[ 'real_name' ],
+            'password' => create_password($data[ 'password' ]),
 
-            'is_admin' => $data['is_admin'],
-            'role_ids' => $data['role_ids'],
+            'is_admin' => $data[ 'is_admin' ],
+            'role_ids' => $data[ 'role_ids' ],
         ];
-        $user = (new SysUser())->create($user_data);
+        $user = ( new SysUser() )->create($user_data);
         return $user?->uid;
     }
 
@@ -110,17 +113,18 @@ class UserService extends BaseAdminService
      */
     public function addUser($data)
     {
-        $role_ids = $data['role_ids'] ?? [];
-        $is_admin = $data['is_admin'] ?? 0;
+        $role_ids = $data[ 'role_ids' ] ?? [];
+        $is_admin = $data[ 'is_admin' ] ?? 0;
 
-        $data['is_admin'] = $is_admin;
-        if(!$is_admin){
-            $data['role_ids'] = $role_ids;
+        $data[ 'is_admin' ] = $is_admin;
+        if (!$is_admin) {
+            $data[ 'role_ids' ] = $role_ids;
         }
         //添加用户
         $uid = $this->add($data);
         return $uid;
     }
+
     /**
      * 更新对应站点用户
      * @param $uid
@@ -129,11 +133,11 @@ class UserService extends BaseAdminService
      */
     public function editUser($uid, $data)
     {
-        $role_ids = $data['role_ids'] ?? [];
-        $is_admin = $data['is_admin'] ?? 0;
-        $data['is_admin'] = $is_admin;
-        if(!$is_admin){
-            $data['role_ids'] = $role_ids;
+        $role_ids = $data[ 'role_ids' ] ?? [];
+        $is_admin = $data[ 'is_admin' ] ?? 0;
+        $data[ 'is_admin' ] = $is_admin;
+        if (!$is_admin) {
+            $data[ 'role_ids' ] = $role_ids;
         }
         $this->edit($uid, $data);
         return true;
@@ -149,12 +153,12 @@ class UserService extends BaseAdminService
      */
     public function modify(int $uid, string $field, $data)
     {
-        $field_name = match ($field) {
+        $field_name = match ( $field ) {
             'password' => 'password',
             'real_name' => 'real_name',
             'head_img' => 'head_img',
         };
-        return $this->edit($uid, [$field_name => $data]);
+        return $this->edit($uid, [ $field_name => $data ]);
     }
 
     /**
@@ -162,8 +166,9 @@ class UserService extends BaseAdminService
      * @param int $uid
      * @return bool|true
      */
-    public function lock(int $uid){
-        return $this->edit($uid, ['status' => UserDict::OFF]);
+    public function lock(int $uid)
+    {
+        return $this->edit($uid, [ 'status' => UserDict::OFF ]);
     }
 
     /**
@@ -171,8 +176,9 @@ class UserService extends BaseAdminService
      * @param int $uid
      * @return bool|true
      */
-    public function unlock(int $uid){
-        return $this->edit($uid, ['status' => UserDict::ON]);
+    public function unlock(int $uid)
+    {
+        return $this->edit($uid, [ 'status' => UserDict::ON ]);
     }
 
     /**
@@ -183,12 +189,10 @@ class UserService extends BaseAdminService
      */
     public function checkUsername($username)
     {
-        $count = (new SysUser())->where([['username', '=', $username]])->count();
-        if($count > 0)
-        {
+        $count = ( new SysUser() )->where([ [ 'username', '=', $username ] ])->count();
+        if ($count > 0) {
             return true;
-        }
-        else return false;
+        } else return false;
     }
 
     /**
@@ -196,9 +200,10 @@ class UserService extends BaseAdminService
      * @param int $uid
      * @return SysUser|array|mixed|Model
      */
-    public function find(int $uid){
+    public function find(int $uid)
+    {
 
-        $user = (new SysUser())->findOrEmpty($uid);
+        $user = ( new SysUser() )->findOrEmpty($uid);
         if ($user->isEmpty())
             throw new AdminException('USER_NOT_EXIST');
         return $user;
@@ -210,44 +215,45 @@ class UserService extends BaseAdminService
      * @param array $data
      * @return true
      */
-    public function edit(int $uid, array $data){
+    public function edit(int $uid, array $data)
+    {
         $user = $this->find($uid);
         $user_data = [
         ];
         $is_off_status = false;
-        if(isset($data['status'])){
-            $user_data['status'] = $data['status'];
-            if($data['status'] == UserDict::OFF)
+        if (isset($data[ 'status' ])) {
+            $user_data[ 'status' ] = $data[ 'status' ];
+            if ($data[ 'status' ] == UserDict::OFF)
                 $is_off_status = true;
         }
-        if(isset($data['head_img'])){
-            $user_data['head_img'] = $data['head_img'];
+        if (isset($data[ 'head_img' ])) {
+            $user_data[ 'head_img' ] = $data[ 'head_img' ];
         }
-        if(isset($data['real_name'])){
-            $user_data['real_name'] = $data['real_name'];
+        if (isset($data[ 'real_name' ])) {
+            $user_data[ 'real_name' ] = $data[ 'real_name' ];
         }
 
-        $password = $data['password'] ?? '';
+        $password = $data[ 'password' ] ?? '';
         $is_change_password = false;
-        if(!empty($password) && !check_password($password, $user->password)){
-            $user_data['password'] = create_password($password);
+        if (!empty($password) && !check_password($password, $user->password)) {
+            $user_data[ 'password' ] = create_password($password);
             $is_change_password = true;
         }
 
-        if(isset($data['role_ids'])){
-            $user_data['role_ids'] = $data['role_ids'];
+        if (isset($data[ 'role_ids' ])) {
+            $user_data[ 'role_ids' ] = $data[ 'role_ids' ];
         }
 
-        if(empty($user_data))
+        if (empty($user_data))
             return true;
         //更新用户信息
         $user->save($user_data);
         //更新权限  禁用用户  修改密码 都会清理token
-        if($is_off_status || $is_change_password){
+        if ($is_off_status || $is_change_password) {
             LoginService::clearToken($uid);
         }
         //清除用户缓存
-        $cache_name = 'user_role_'.$uid;
+        $cache_name = 'user_role_' . $uid;
         Cache::delete($cache_name);
         return true;
     }
@@ -257,13 +263,18 @@ class UserService extends BaseAdminService
      * @param int $uid
      * @return true
      */
-    public function del(int $uid){
+    public function del(int $uid)
+    {
         $where = [
-            ['uid', '=', $uid]
+            [ 'uid', '=', $uid ]
         ];
-        (new SysUser())->where($where)->delete();
+        $user = ( new SysUser() )->where($where)->findOrEmpty();
+        if ($user->isEmpty()) throw new AdminException('USER_NOT_EXIST');
+        if ($user->is_admin) throw new AdminException("SUPER_ADMIN_NOT_ALLOW_DEL");
+        $user->delete();
+        LoginService::clearToken($uid);
+        Cache::delete('user_role_' . $uid);
         return true;
-
     }
 
     /**
@@ -271,8 +282,9 @@ class UserService extends BaseAdminService
      * @param string $username
      * @return SysUser|array|mixed|Model
      */
-    public function getUserInfoByUsername(string $username){
-        return (new SysUser())->where([['username', '=',$username]])->findOrEmpty();
+    public function getUserInfoByUsername(string $username)
+    {
+        return ( new SysUser() )->where([ [ 'username', '=', $username ] ])->findOrEmpty();
     }
 
     /**
@@ -283,7 +295,7 @@ class UserService extends BaseAdminService
     public function getUserAll(array $where)
     {
         $field = 'uid, username, head_img';
-        return (new SysUser())->withSearch(['username', 'realname', 'create_time'], $where)
+        return ( new SysUser() )->withSearch([ 'username', 'realname', 'create_time' ], $where)
             ->field($field)
             ->order('uid desc')
             ->select()
@@ -295,39 +307,42 @@ class UserService extends BaseAdminService
      * @param int $uid
      * @return mixed|string
      */
-    public function getUserCache(int $uid){
-        $cache_name = 'user_role_'.$uid;
+    public function getUserCache(int $uid)
+    {
+        $cache_name = 'user_role_' . $uid;
         return cache_remember(
             $cache_name,
-            function() use($uid) {
+            function () use ($uid) {
                 $where = array(
-                    ['uid', '=', $uid],
+                    [ 'uid', '=', $uid ],
                 );
                 $field = 'uid, username, head_img, real_name, last_ip, last_time, create_time, login_count, status, delete_time, update_time, role_ids, is_admin';
-                $user = (new SysUser())->where($where)->field($field)->append(['status_name'])->findOrEmpty();
+                $user = ( new SysUser() )->where($where)->field($field)->append([ 'status_name' ])->findOrEmpty();
                 return $user->toArray();
             },
-            [self::$cache_tag_name, RoleService::$cache_tag_name]
+            [ self::$cache_tag_name, RoleService::$cache_tag_name ]
         );
 
     }
+
     /**
      * 通过角色id组获取角色
      * @param array $role_ids
      * @return mixed
      */
-    public function getRoleByUserRoleIds(array $role_ids){
+    public function getRoleByUserRoleIds(array $role_ids)
+    {
         sort($role_ids);
-        $cache_name = 'role_by_ids_'.md5(implode(',', $role_ids));
+        $cache_name = 'role_by_ids_' . md5(implode(',', $role_ids));
         return cache_remember(
             $cache_name,
-            function() use($role_ids) {
+            function () use ($role_ids) {
                 $where = array(
-                    ['role_id', 'in', $role_ids],
+                    [ 'role_id', 'in', $role_ids ],
                 );
                 return SysRole::where($where)->column('role_name');
             },
-            [RoleService::$cache_tag_name]
+            [ RoleService::$cache_tag_name ]
         );
     }
 }

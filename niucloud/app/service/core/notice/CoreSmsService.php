@@ -11,6 +11,7 @@
 
 namespace app\service\core\notice;
 
+use app\dict\sys\ConfigKeyDict;
 use app\dict\sys\SmsDict;
 use app\service\core\sys\CoreConfigService;
 use core\base\BaseCoreService;
@@ -29,7 +30,7 @@ class CoreSmsService extends BaseCoreService
         parent::__construct();
     }
 
-    public function send($mobile, $params, $key, $template_id, $content)
+    public function send($mobile, $params, $key, $template_id, $content,$url_params=[])
     {
         //查询配置
         $config = $this->getDefaultSmsConfig();
@@ -46,9 +47,9 @@ class CoreSmsService extends BaseCoreService
             'params' => $params,
             'status' => SmsDict::SENDING
         ]);
-
         $sms_driver  = new SmsLoader($sms_type, $config);
         $params = $this->makeUp($params, $content, $sms_type);
+        $params['url_params'] = $url_params;
         $result = $sms_driver->send($mobile, $template_id, $params);
 
         if (!$result) {
@@ -90,7 +91,7 @@ class CoreSmsService extends BaseCoreService
      */
     public function getDefaultSmsConfig()
     {
-        $info = (new CoreConfigService())->getConfig('SMS')['value'] ?? [];
+        $info = (new CoreConfigService())->getConfig(ConfigKeyDict::SMS)['value'] ?? [];
         if (empty($info))
             throw new NoticeException('NOTICE_SMS_NOT_OPEN');
 

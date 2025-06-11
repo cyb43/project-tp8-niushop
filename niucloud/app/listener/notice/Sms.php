@@ -22,6 +22,7 @@ class Sms
         if ($template[ 'is_sms' ]) {
             $sms_id = $template[ 'sms_id' ];//发送模板id
             $content = $template[ 'sms' ][ 'content' ];
+            $url_params = $template[ 'sms' ][ 'url_params' ] ?? [];
             $member_id = $to[ 'member_id' ] ?? 0;
             $uid = $to[ 'uid' ] ?? 0;
             if (!$mobile) {
@@ -48,7 +49,8 @@ class Sms
                     'content' => $content,
                     'result' => ''
                 );
-                $core_sms_service->send($mobile, $vars, $key, $sms_id, $content);
+
+                $core_sms_service->send($mobile, $vars, $key, $sms_id, $content, $url_params);
                 ( new CoreNoticeLogService() )->add($log_data);
             } catch (NoticeException $e) {
                 $log_data[ 'result' ] = $e->getMessage();

@@ -182,7 +182,7 @@ class Workerman extends Command
             $addon_path = $addon_dir . $v[ 'key' ] . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'job';
             if (is_dir($addon_path)) {
                 search_dir($addon_path, $addon_data, root_path());
-                $class_list = array_merge($class_list, $addon_data);
+                $class_list = array_merge($class_list, array_filter($addon_data));
             }
         }
 

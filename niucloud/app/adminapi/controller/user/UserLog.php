@@ -47,5 +47,15 @@ class UserLog extends BaseAdminController
         return success((new UserLogService())->getInfo($id));
     }
 
+    /**
+     * 清空日志
+     * @return Response
+     */
+    public function destroy()
+    {
+        (new UserLogService())->destroy();
+        return success("SUCCESS");
+    }
+
 
 }

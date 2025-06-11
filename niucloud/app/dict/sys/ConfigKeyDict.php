@@ -37,4 +37,6 @@ class ConfigKeyDict
     public const WECHAT_AUTHORIZATION_INFO = 'wechat_authorization_info';
 
     public const WECHAT_TRANSFER_SCENE_CONFIG = 'WECHAT_TRANSFER_SCENE_CONFIG';//微信转账场景配置
+
+    public const SMS = 'SMS';//短信配置
 }

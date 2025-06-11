@@ -190,6 +190,9 @@ class GenerateService extends BaseAdminService
             $table_name = preg_replace("/^{$tablePrefix}/", '', $table_info['Name'], 1);
             $fields = Db::name($table_name)->getFields();
 
+            $generate_table = (new GenerateTable())->where([ [ 'table_name', '=', $table_name] ])->findOrEmpty();
+            if (!$generate_table->isEmpty()) return $generate_table['id'];
+
             $add_table_data = [
                 'table_name' => $table_name,
                 'table_content' => $table_info['Comment'],

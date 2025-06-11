@@ -35,7 +35,7 @@ class CashOutConfig extends Validate
         'rate.between' => 'validate_member.cash_out_rate_between',
         'is_auto_verify.in' => 'validate_member.cash_out_is_auto_verify_in',
         'is_auto_transfer.in' => 'validate_member.cash_out_is_auto_transfer_in',
-        'transfer_type.require' => 'validate_member_cash_out_config.transfer_type_require',
+        'transfer_type.requireIf' => 'validate_member_cash_out_config.transfer_type_require',
     ];
 
     protected $scene = [

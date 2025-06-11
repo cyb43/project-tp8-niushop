@@ -132,7 +132,6 @@ class CoreDiyFormRecordsService extends BaseCoreService
 
             $data[ 'create_time' ] = time();
             //  todo $data[ 'value' ] 考虑过滤存储数据，靠后完善，修改表单可能会用到
-            $res = $this->model->create($data);
 
             $diy_form_records_fields_model = new DiyFormRecordsFields();
 
@@ -191,7 +190,7 @@ class CoreDiyFormRecordsService extends BaseCoreService
                     $diy_form_records_fields[] = [
                         'form_id' => $data[ 'form_id' ], // 所属万能表单id
 //                    'form_field_id'=>'', // todo 暂无，靠后完善
-                        'record_id' => $res->record_id, // 关联表单填写记录id
+//                        'record_id' => $res->record_id, // 关联表单填写记录id
                         'member_id' => $data[ 'member_id' ], // 填写会员id
                         'field_key' => $component[ 'id' ], // 字段唯一标识
                         'field_type' => $component[ 'componentName' ], // 字段类型
@@ -208,8 +207,11 @@ class CoreDiyFormRecordsService extends BaseCoreService
                 }
 
             }
-
             if (!empty($diy_form_records_fields)) {
+                $res = $this->model->create($data);
+                foreach ($diy_form_records_fields as &$item){
+                    $item['record_id'] = $res->record_id;
+                }
                 $diy_form_records_fields_model->insertAll($diy_form_records_fields);
 
                 $diy_form = new DiyForm();
@@ -224,7 +226,7 @@ class CoreDiyFormRecordsService extends BaseCoreService
             }
 
             Db::commit();
-            return $res->record_id;
+            return $res->record_id ?? 0;
         } catch (\Exception $e) {
             Db::rollback();
             throw new CommonException($e->getMessage());

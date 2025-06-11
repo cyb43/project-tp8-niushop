@@ -32,6 +32,13 @@ class CoreAddonService extends CoreAddonBaseService
         $this->model = new Addon();
     }
 
+    public function getInitList()
+    {
+        return [
+            'type_list' => AddonDict::getType()
+        ];
+    }
+
     /**
      * 获取已下载的插件
      * @return array

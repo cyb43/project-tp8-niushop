@@ -27,6 +27,7 @@ use Throwable;
 class CoreRefundService extends BaseCoreService
 {
     protected $pay_event;
+
     public function __construct()
     {
         parent::__construct();
@@ -41,16 +42,17 @@ class CoreRefundService extends BaseCoreService
      * @param string $reason
      * @return string|null
      */
-    public function create(string $out_trade_no, float $money, string $reason = '', $trade_type = '', $trade_id = ''){
+    public function create(string $out_trade_no, float $money, string $reason = '', $trade_type = '', $trade_id = '')
+    {
         //通过交易流水号获取支付单据
-        $pay = (new CorePayService())->findPayInfoByOutTradeNo($out_trade_no);
-        if($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');//单据不存在
+        $pay = ( new CorePayService() )->findPayInfoByOutTradeNo($out_trade_no);
+        if ($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');//单据不存在
 
-        //查询当前支付已存在的退狂单据,所有的退款总额不能超过支付单据的支付金额
-        $total_refund_money = $this->model->where([['out_trade_no', '=', $out_trade_no], ['status', '<>', RefundDict::FAIL]])->sum('money');
+        // 查询当前支付已存在的退款单据,所有的退款总额不能超过支付单据的支付金额
+        $total_refund_money = $this->model->where([ [ 'out_trade_no', '=', $out_trade_no ], [ 'status', '<>', RefundDict::FAIL ] ])->sum('money');
 
-        $comparison = bccomp(bcadd($total_refund_money, $money), $pay['money']);//浮点数直接进行比较会出现精度问题
-        if ($comparison > 0) throw new PayException('退款金额不能超过支付总额');//退款金额不能超过支付总额
+        $comparison = bccomp(bcadd($total_refund_money, $money), $pay[ 'money' ]); // 浮点数直接进行比较会出现精度问题
+        if ($comparison > 0) throw new PayException('退款金额不能超过支付总额'); // 退款金额不能超过支付总额
 
         //校验当前数据是否存在
         //存在就修改,不存在就创建
@@ -76,26 +78,27 @@ class CoreRefundService extends BaseCoreService
      * @param string $voucher
      * @return true
      */
-    public function refund(string $refund_no, $voucher = '', $refund_type = RefundDict::BACK, $main_type = '', $main_id = 0){
+    public function refund(string $refund_no, $voucher = '', $refund_type = RefundDict::BACK, $main_type = '', $main_id = 0)
+    {
         $refund = $this->findByRefundNo($refund_no);
-        if($refund->isEmpty()) throw new PayException('REFUND_NOT_EXIST');
+        if ($refund->isEmpty()) throw new PayException('REFUND_NOT_EXIST');
         $out_trade_no = $refund->out_trade_no;
         $money = $refund->money;
-        $pay = (new CorePayService())->findPayInfoByOutTradeNo($out_trade_no);
-        if($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');//单据不存在
-        try{
+        $pay = ( new CorePayService() )->findPayInfoByOutTradeNo($out_trade_no);
+        if ($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');//单据不存在
+        try {
             //存入退款方式
-            $refund->save(['refund_type' => $refund_type]);
-            if($refund_type == RefundDict::BACK){
+            $refund->save([ 'refund_type' => $refund_type ]);
+            if ($refund_type == RefundDict::BACK) {
                 //判断成功的话,可以直接调用退款成功
-                $pay_result = $this->pay_event->init($refund->channel, $refund->type)->refund($out_trade_no, $money, $pay['money'], $refund_no, $voucher);
+                $pay_result = $this->pay_event->init($refund->channel, $refund->type)->refund($out_trade_no, $money, $pay[ 'money' ], $refund_no, $voucher);
                 $this->refundNotify($out_trade_no, $refund->type, $pay_result);
-            }else if($refund_type == RefundDict::OFFLINE){
-                $pay_result = $this->pay_event->init($refund->channel, PayDict::OFFLINEPAY)->refund($out_trade_no, $money, $pay['money'], $refund_no, $voucher);
+            } else if ($refund_type == RefundDict::OFFLINE) {
+                $pay_result = $this->pay_event->init($refund->channel, PayDict::OFFLINEPAY)->refund($out_trade_no, $money, $pay[ 'money' ], $refund_no, $voucher);
                 $this->refundNotify($out_trade_no, $refund->type, $pay_result, $main_type, $main_id);
             }
 
-        }catch ( Throwable $e) {
+        } catch (Throwable $e) {
             throw new PayException($e->getMessage());
         }
         return true;
@@ -106,9 +109,10 @@ class CoreRefundService extends BaseCoreService
      * @param string $refund_no
      * @return void
      */
-    public function findByRefundNo(string $refund_no){
+    public function findByRefundNo(string $refund_no)
+    {
         return $this->model->where([
-            ['refund_no', '=', $refund_no],
+            [ 'refund_no', '=', $refund_no ],
         ])->findOrEmpty();
     }
 
@@ -122,25 +126,26 @@ class CoreRefundService extends BaseCoreService
      * @param $main_id
      * @return true
      */
-    public function refundNotify($out_trade_no, string $type, array $params = [], $main_type = '', $main_id = 0){
-        $refund_no = $params['refund_no'];
+    public function refundNotify($out_trade_no, string $type, array $params = [], $main_type = '', $main_id = 0)
+    {
+        $refund_no = $params[ 'refund_no' ];
 
         $refund = $this->findByRefundNo($refund_no);
 
-        if($refund->isEmpty()) throw new PayException('REFUND_NOT_EXIST');
-        if(!in_array($refund['status'], [RefundDict::WAIT, RefundDict::DEALING]))  throw new PayException('REFUND_IS_CHANGE');//只有待退款和退款中的退款单据可以
+        if ($refund->isEmpty()) throw new PayException('REFUND_NOT_EXIST');
+        if (!in_array($refund[ 'status' ], [ RefundDict::WAIT, RefundDict::DEALING ])) throw new PayException('REFUND_IS_CHANGE');//只有待退款和退款中的退款单据可以
 
-        $status = $params['status'];//第三方支付的状态,根据状态进行下一步业务
+        $status = $params[ 'status' ];//第三方支付的状态,根据状态进行下一步业务
         // 启动事务
         Db::startTrans();
         try {
-            switch($status){
+            switch ($status) {
                 case RefundDict::SUCCESS://退款成功
                     $this->refundSuccess([
                         'out_trade_no' => $out_trade_no,
                         'refund_no' => $refund_no,
-                        'trade_type' => $refund['trade_type'],
-                        'trade_id' => $refund['trade_id'],
+                        'trade_type' => $refund[ 'trade_type' ],
+                        'trade_id' => $refund[ 'trade_id' ],
                         'main_type' => $main_type,
                         'main_id' => $main_id
                     ]);
@@ -156,14 +161,14 @@ class CoreRefundService extends BaseCoreService
                     $this->refundFail([
                         'out_trade_no' => $out_trade_no,
                         'refund_no' => $refund_no,
-                        'fail_reason' => $params['fail_reason'] ?? ''
+                        'fail_reason' => $params[ 'fail_reason' ] ?? ''
                     ]);
                     break;
             }
             // 提交事务
             Db::commit();
             return true;
-        } catch ( Throwable $e) {
+        } catch (Throwable $e) {
             // 回滚事务
             Db::rollback();
             throw new PayException($e->getMessage());
@@ -175,21 +180,24 @@ class CoreRefundService extends BaseCoreService
      * @param $data
      * @return true
      */
-    public function check($data){
-        $out_trade_no = $data['out_trade_no'];
-        $refund_no = $data['refund_no'];
+    public function check($data)
+    {
+        $out_trade_no = $data[ 'out_trade_no' ];
+        $refund_no = $data[ 'refund_no' ];
         $refund = $this->findByRefundNo($refund_no);
-        if($refund->isEmpty()) throw new PayException('REFUND_NOT_EXIST');
-        if(!in_array($refund['status'], [RefundDict::WAIT, RefundDict::DEALING]))  throw new PayException('REFUND_IS_CHANGE');//只有待退款和退款中的退款单据可以
+        if ($refund->isEmpty()) throw new PayException('REFUND_NOT_EXIST');
+        if (!in_array($refund[ 'status' ], [ RefundDict::WAIT, RefundDict::DEALING ])) throw new PayException('REFUND_IS_CHANGE');//只有待退款和退款中的退款单据可以
         //查询第三方退款单据
         $refund_info = $this->pay_event->init($refund->channel, $refund->type)->getRefund($out_trade_no, $refund_no);
         //这儿的refund_info 已经统一整理成公共的数据格式
-        $status = $refund_info['status'];
-        switch($status){
+        $status = $refund_info[ 'status' ];
+        switch ($status) {
             case RefundDict::SUCCESS://退款成功
                 $this->refundSuccess([
                     'out_trade_no' => $out_trade_no,
                     'refund_no' => $refund_no,
+                    'trade_type' => $refund[ 'trade_type' ],
+                    'trade_id' => $refund[ 'trade_id' ],
                 ]);
                 break;
             case RefundDict::DEALING://退款处理中
@@ -202,7 +210,7 @@ class CoreRefundService extends BaseCoreService
                 $this->refundFail([
                     'out_trade_no' => $out_trade_no,
                     'refund_no' => $refund_no,
-                    'fail_reason' => $refund_info['fail_reason']
+                    'fail_reason' => $refund_info[ 'fail_reason' ]
                 ]);
                 break;
         }
@@ -214,18 +222,19 @@ class CoreRefundService extends BaseCoreService
      * @param array $data
      * @return bool
      */
-    public function refundSuccess(array $data){
+    public function refundSuccess(array $data)
+    {
 
-        $out_trade_no = $data['out_trade_no'];
-        $refund_no = $data['refund_no'];
+        $out_trade_no = $data[ 'out_trade_no' ];
+        $refund_no = $data[ 'refund_no' ];
         $this->model->where([
-            ['refund_no', '=', $refund_no]
+            [ 'refund_no', '=', $refund_no ]
         ])->update([
             'status' => RefundDict::SUCCESS
         ]);
-        $pay = (new CorePayService())->findPayInfoByOutTradeNo($out_trade_no);
-        $result = event('RefundSuccess', ['refund_no' => $refund_no, 'trade_type' => $pay->trade_type, 'trade_id' => $data['trade_id']]);
-        if(!check_event_result($result)){
+        $pay = ( new CorePayService() )->findPayInfoByOutTradeNo($out_trade_no);
+        $result = event('RefundSuccess', [ 'refund_no' => $refund_no, 'trade_type' => $pay->trade_type, 'trade_id' => $data[ 'trade_id' ] ]);
+        if (!check_event_result($result)) {
             return false;
         }
         return true;
@@ -236,13 +245,14 @@ class CoreRefundService extends BaseCoreService
      * @param array $data
      * @return true
      */
-    public function refundFail(array $data){
-        $refund_no = $data['refund_no'];
+    public function refundFail(array $data)
+    {
+        $refund_no = $data[ 'refund_no' ];
         $this->model->where([
-            ['refund_no', '=', $refund_no]
+            [ 'refund_no', '=', $refund_no ]
         ])->update([
             'status' => RefundDict::FAIL,
-            'fail_reason' => $data['fail_reason']
+            'fail_reason' => $data[ 'fail_reason' ]
         ]);
         return true;
     }
@@ -252,11 +262,12 @@ class CoreRefundService extends BaseCoreService
      * @param array $data
      * @return true
      */
-    public function refundDealing(array $data){
-        $out_trade_no = $data['out_trade_no'];
-        $refund_no = $data['refund_no'];
+    public function refundDealing(array $data)
+    {
+        $out_trade_no = $data[ 'out_trade_no' ];
+        $refund_no = $data[ 'refund_no' ];
         $this->model->where([
-            ['refund_no', '=', $refund_no]
+            [ 'refund_no', '=', $refund_no ]
         ])->update([
             'status' => RefundDict::DEALING
         ]);

@@ -34,12 +34,18 @@ class NoticeService extends BaseCoreService
      * @param $key
      * @param $data
      * @return false|mixed
+     * @throws \Exception
      */
     public static function send($key, $data){
 
-        $template = (new CoreNoticeService())->getInfo($key);
-        if(empty($template)) return false;
+        try {
+            $template = (new CoreNoticeService())->getInfo($key);
+            if(empty($template)) return false;
 
-        return Notice::dispatch(['key' => $key, 'data' => $data, 'template' => $template], is_async:$template['async']);
+            return Notice::dispatch(['key' => $key, 'data' => $data, 'template' => $template], is_async:$template['async']);
+
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
     }
 }

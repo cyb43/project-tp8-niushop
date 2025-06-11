@@ -76,6 +76,27 @@ return [
         'var_balance' => '会员余额',
         'var_point' => '会员积分',
     ],
+    'dict_sms_api'=>[
+        'template_status_again_report'=>'需重新报备',
+        'template_status_need_edit'=>'需修改报备参数',
+        'template_status_not_report'=>'未报备',
+        'template_status_wait'=>'待审核',
+        'template_status_pass'=>'审核通过',
+        'template_status_refuse'=>'审核不通过',
+
+        //验证码-1 行业通知-2 营销推广-3
+        'template_type_verify_code'=>'验证码',
+        'template_type_industry_notice'=>'行业通知',
+        'template_type_sem'=>'营销推广',
+
+        'sign_audit_status_wait'=>'待审核',
+        'sign_audit_status_pass'=>'审核通过',
+        'sign_audit_status_refuse'=>'审核不通过',
+
+        'balance_add'=>'充值',
+        'balance_reduce'=>'扣减'
+    ],
+
     //上传附件相关
     'dict_file' => [
         //上传附件类型
@@ -376,6 +397,7 @@ return [
         'oct' => '10月',
         'nov' => '11月',
         'dec' => '12月',
+
     ],
     'dict_site_layout' => [
         'default' => '默认'
@@ -387,7 +409,8 @@ return [
         'auditing' => '审核中',
         'audit_success' => '审核通过',
         'audit_fail' => '审核失败',
-        'published' => '已发布'
+        'published' => '已发布',
+        'undo' => '已撤回'
     ],
     'dict_wechat_media' => [
         'type_image' => '图片',
@@ -425,5 +448,13 @@ return [
         'ready' => '准备执行',
         'complete' => '完成',
         'fail' => '失败'
+    ],
+    'common_active_short'=>[
+        'impulse_buy'=>'顺',
+        'gift_card'=>'礼',
+        'discount'=>'折',
+        'exchange'=>'积',
+        'manjiansong'=>'满减',
+        'newcomer_discount'=>'新',
     ]
 ];

@@ -66,4 +66,9 @@ class UserLogService extends BaseAdminService
         $res = $this->model->create($data);
         return $res->id;
     }
+
+    public function destroy()
+    {
+        (new SysUserLog())->whereRaw("1=1")->delete();
+    }
 }

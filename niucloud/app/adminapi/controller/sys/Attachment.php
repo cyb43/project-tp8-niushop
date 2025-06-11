@@ -136,29 +136,4 @@ class Attachment extends BaseAdminController
         return success();
     }
 
-    /**
-     * 获取图标库分类列表
-     */
-    public function getIconCategoryList()
-    {
-        $data = $this->request->params([
-            ['name', ''],
-        ]);
-        return success((new AttachmentService())->getIconCategoryList($data));
-    }
-
-    /**
-     * 获取图标库列表
-     */
-    public function getIconList()
-    {
-        $data = $this->request->params([
-            ['page', 0],
-            ['limit', 0],
-            ['cate_id', 0],
-            ['real_name', ''],
-        ]);
-        return success((new AttachmentService())->getIconList($data));
-    }
-
 }

@@ -9,13 +9,17 @@
 // | Author: Niucloud Team
 // +----------------------------------------------------------------------
 
-namespace app\service\admin\upgrade;
+namespace app\job\sys;
 
-/**
- * todo 废弃，后续删除
- * 框架及插件升级恢复备份
- * @package app\service\core\upgrade
- */
-class RestoreService extends UpgradeService
+use app\model\sys\SysUserLog;
+use core\base\BaseJob;
+
+
+class ClearUserLog extends BaseJob
 {
+    public function doJob()
+    {
+        (new SysUserLog())->where('create_time','<',time()-7*24*60*60)->delete();
+        return true;
+    }
 }

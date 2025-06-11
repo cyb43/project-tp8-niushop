@@ -39,6 +39,7 @@ class StorageDict
         $system = [
             self::LOCAL => [
                 'name' => '本地存储',
+                'site_name' => '默认存储',
                 //配置参数
                 'params' => [
                 ],
