@@ -28,18 +28,26 @@
                     <button class="bg-[#FFB4B1] !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500" hover-class="none" v-else-if="friendsInfo.status == -1">{{ t('close') }}</button>
                     <button class="botton-color !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500" hover-class="none" v-else :loading="operateLoading" @click="save">{{ friendsInfo.config.pay_button_name ?  friendsInfo.config.pay_button_name : t('payGenerously') }}</button>
                 </view>
-                <view class="mt-[20rpx] flex items-baseline justify-center text-[var(--text-color-light9)]" @click="redirect({url: '/app/pages/index/index'})">
-                    <text class="text-[24rpx] mr-[6rpx]">返回首页</text>
-                </view>
+				<view class="px-[10px] flex justify-between items-center text-[var(--text-color-light9)] mt-[20rpx] ">
+					<view class="flex items-baseline justify-between text-[var(--text-color-light9)]" @click="redirect({url: '/app/pages/index/index'})">
+					    <text class="text-[24rpx] mr-[6rpx]">返回首页</text>
+					</view>
+					<view class="flex-shrink-0" @click="handleMessage" v-if="friendsInfo.config.pay_explain_switch">
+					    <text class="mr-[8rpx] text-[24rpx]">{{ friendsInfo.config.pay_explain_title }}</text>
+					    <text class="nc-iconfont nc-icon-jichuxinxiV6xx text-[26rpx] "></text>
+					</view>
+				</view>
+              
+				
             </view>
             <view class="card-template sidebar-margin mb-[var(--top-m)]" v-if="friendsInfo.config.pay_info_switch">
                 <template v-if="JSON.stringify(friendsInfo.trade_info) !== '[]' && friendsInfo.trade_info.item_list.length">
                     <view class="flex justify-between items-center  mb-[30rpx]">
                         <view class="text-[30rpx] text-[#333] font-500">{{ t('helpPayInfo') }}</view>
-                        <view class="flex-shrink-0" @click="handleMessage" v-if="friendsInfo.config.pay_explain_switch">
+                       <!-- <view class="flex-shrink-0" @click="handleMessage" v-if="friendsInfo.config.pay_explain_switch">
                             <text class="mr-[8rpx] text-[24rpx]">{{ friendsInfo.config.pay_explain_title }}</text>
                             <text class="nc-iconfont nc-icon-jichuxinxiV6xx text-[26rpx]"></text>
-                        </view>
+                        </view> -->
                     </view>
                     <view class="border-0 border-solid border-b-[1rpx] border-[#f6f6f6] mb-[20rpx]">
                         <view v-for="(item, index) in friendsInfo.trade_info.item_list" class="flex justify-between" :class="{' mb-[34rpx]': (index + 1) != friendsInfo.trade_info.length }">

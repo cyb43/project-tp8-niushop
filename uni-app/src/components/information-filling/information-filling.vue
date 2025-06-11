@@ -148,6 +148,10 @@ const getPhoneNumber = (e: any) => {
         let msg = '用户未授权隐私权限';
         uni.showToast({ title: msg, icon: 'none' })
     }
+	if (e.detail.errno == 112) {
+	    let msg = `隐私协议中未声明，获取手机号失败`;
+	    uni.showToast({ title: msg, icon: 'none' })
+	}
     if (e.detail.errMsg == "getPhoneNumber:fail user deny") {
         let msg = '用户拒绝获取手机号码';
         uni.showToast({ title: msg, icon: 'none' })

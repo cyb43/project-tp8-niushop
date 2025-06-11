@@ -4,7 +4,7 @@ import { sendSms } from '@/app/api/system'
 
 export function useSendSms(smsRef: any) {
     const tips = ref(t('getSmsCode'))
-    const seconds = 90
+    const seconds = 60
     const changeText = 'X' + t('smsCodeChangeText')
 
     const canGetCode = computed(() => {

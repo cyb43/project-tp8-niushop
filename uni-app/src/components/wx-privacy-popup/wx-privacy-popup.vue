@@ -1,7 +1,7 @@
 <template>
     <view @touchmove.prevent.stop>
 		<u-popup :show="showPop" type="bottom" @close="disPopUp">
-			<view>
+			<view class="privacy-popup-wrap">
 				<view class="p-[30rpx]">
 					<view class="privacy-title">用户隐私保护提示</view>
 					<view class="privacy-desc">感谢您使用本小程序，在使用前您应当阅读并同意<text class="privacy-link" @tap="openPrivacyContract">{{ privacyContractName }}</text>， 当点击同意并继续时，即表示您已理解并同意该条款内容，该条款将对您产生法律约束力；如您不同意，将无法继续使用小程序相关功能。</view>
@@ -235,4 +235,10 @@ defineExpose({
 .bg-agree {
     margin-right: 0rpx;
 }
+.privacy-popup-wrap {
+	padding-bottom: constant(safe-area-inset-bottom);
+	/*兼容 IOS<11.2*/ 
+	padding-bottom: env(safe-area-inset-bottom);
+}
+
 </style>

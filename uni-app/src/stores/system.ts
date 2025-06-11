@@ -44,7 +44,7 @@ const useSystemStore = defineStore('system', {
             defaultPositionAddress: '定位中',
             diyAddressInfo: null,
             currTabbar: {
-                path: '/addon/shop/pages/index',
+                path: '',
                 query: {}
             }
         }

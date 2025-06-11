@@ -8,21 +8,13 @@ const t = (message: string) => {
     route = getCurrentInstance()?.appContext.config.globalProperties.$route.path || ('/' + useSystemStore().currRoute)
     // #endif
     // #ifdef MP
-    let _route = getCurrentInstance()?.root.ctx.$scope.__route__;
-    if(_route == 'app/pages/index/tabbar'){
-        route = useSystemStore().currRoute
-    }else{
-        route = '/' + getCurrentInstance()?.root.ctx.$scope.__route__
+    route = '/' + (getCurrentInstance()?.root.ctx.$scope.__route__ || useSystemStore().currRoute)
+    if (route == '/app/pages/index/tabbar' && useSystemStore().currTabbar && useSystemStore().currTabbar.path) {
+        route = useSystemStore().currTabbar.path
     }
     // #endif
-    // console.log('vgetCurrentInstance()?.root.ctx.$scope.__route__',getCurrentInstance()?.root.ctx.$scope.__route__,useSystemStore().currRoute)
-    // console.log('route',route)
     const file = language.getFileKey(route)
-    // console.log('file',file)
     const key = `${ file.fileKey }.${ message }`
-    // console.log('key',key)
-    // console.log('i18n.global.t(key)',i18n.global.t(key))
-    // console.log('i18n.global.t(message)',i18n.global.t(message))
     if (i18n.global.t(message) != message) return i18n.global.t(message)
     return i18n.global.t(key) != key ? i18n.global.t(key) : ''
 }

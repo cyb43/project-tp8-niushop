@@ -54,7 +54,7 @@
                 </button>
             </view>
         </view>
-        <area-select ref="areaRef" @complete="areaSelectComplete" :area-id="formData.district_id" />
+        <area-select ref="areaRef" @complete="areaSelectComplete" :area-id="formData.district_id || formData.city_id" />
         <!-- #ifdef MP-WEIXIN -->
         <!-- 小程序隐私协议 -->
         <wx-privacy-popup ref="wxPrivacyPopupRef"></wx-privacy-popup>
@@ -181,14 +181,14 @@ const selectArea = () => {
 }
 
 const areaSelectComplete = (event: any) => {
-    if (isSelectAddress.value && (formData.value.province_id == event.province.id || formData.value.city_id != event.city.id || formData.value.district_id != event.district.id)) {
+    if (isSelectAddress.value && (formData.value.province_id == event.province?.id || formData.value.city_id != event.city?.id || formData.value.district_id != event.district?.id)) {
         formData.value.lat = '';
         formData.value.lng = '';
     }
-    formData.value.province_id = event.province.id || 0
-    formData.value.city_id = event.city.id || 0
-    formData.value.district_id = event.district.id || 0
-    formData.value.area = `${ event.province.name || '' }${ event.city.name || '' }${ event.district.name || '' }`
+    formData.value.province_id = event.province?.id || 0
+    formData.value.city_id = event.city?.id || 0
+    formData.value.district_id = event.district?.id || 0
+    formData.value.area = `${ event.province?.name || '' }${ event.city?.name || '' }${ event.district?.name || '' }`
     isSelectAddress.value = false;
 }
 

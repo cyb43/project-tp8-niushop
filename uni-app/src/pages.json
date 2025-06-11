@@ -17,6 +17,12 @@
             }
         },
         {
+            "path": "app/pages/index/tabbar",
+            "style": {
+                "navigationStyle": "custom"
+            }
+        },
+        {
             "path": "app/pages/auth/index",
             "style": {
                 // #ifndef H5
@@ -373,6 +379,9 @@
             },
             {
                 "pagePath": "app/pages/index/nosite"
+            },
+            {
+                "pagePath": "app/pages/index/tabbar"
             }
         ]
     },

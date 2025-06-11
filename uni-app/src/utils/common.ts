@@ -646,7 +646,7 @@ export function setThemeColor (path: string) {
 			}
         } catch (e) {
             // 设置插件应用的主色调发生错误，若不存在则使用最后有效的主色调
-			if(!current_theme_color && theme_color_list  && theme_color_list.length>0){
+			if(!current_theme_color && theme_color_list  && Object.keys(theme_color_list).length > 0){
 				currTheme = theme_color_list.app || Object.values(theme_color_list)[0];
 				configStore.themeColor = themeColorToHex(currTheme.theme)
 				uni.setStorageSync('current_theme_color', JSON.stringify(themeColorToHex(currTheme.theme)));
@@ -655,7 +655,7 @@ export function setThemeColor (path: string) {
 			}
         }
 
-    }else if (!current_theme_color && theme_color_list && theme_color_list.length>0) {
+    }else if (!current_theme_color && theme_color_list && Object.keys(theme_color_list).length > 0) {
       currTheme = theme_color_list.app || Object.values(theme_color_list)[0]
       configStore.themeColor = themeColorToHex(currTheme.theme)
       uni.setStorageSync("current_theme_color", JSON.stringify(themeColorToHex(currTheme.theme)))

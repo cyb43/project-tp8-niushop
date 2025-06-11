@@ -44,7 +44,6 @@ class Language {
                 this.setI18nLanguage(locale, file)
                 return nextTick()
             }
-            this.loadLocale.push(`${fileKey}.${locale}`)
 
             // 引入语言包文件
             const messages = await import(route == 'app' ? `../${route}/locale/${locale}/${file}.json` : `../addon/${route}/locale/${locale}/${file}.json`)
@@ -55,6 +54,8 @@ class Language {
 
             this.i18n.global.mergeLocaleMessage(locale, data)
             this.setI18nLanguage(locale, file)
+
+            this.loadLocale.push(`${fileKey}.${locale}`)
 
             return nextTick()
         } catch (e) {

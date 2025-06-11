@@ -118,6 +118,11 @@ watch(() => selected.city, (nval) => {
                     selected.district = null
                 }
             }
+			if (!data.length) {
+			    emits('complete', selected)
+			    show.value = false
+			}
+
         }).catch()
     } else {
         areaList.district = []

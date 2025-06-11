@@ -110,10 +110,16 @@
                 </view>
             </view>
         </view>
-        <view class="empty-page" v-if="!loading && (!list || !list.length)">
-            <image class="img" :src="img('static/resource/images/empty.png')" mode="aspectFill" />
-            <text class="desc">暂无会员等级</text>
-        </view>
+		<view class="" v-if="!loading && (!list || !list.length)">
+			<!-- #ifdef MP -->
+			<top-tabbar :data="topTabbarDataEmpty" />
+			<!-- #endif -->
+			 <view class="empty-page" >
+				<image class="img" :src="img('static/resource/images/empty.png')" mode="aspectFill" />
+				<text class="desc">暂无会员等级</text>
+			</view>
+		</view>
+       
     </view>
 </template>
 
@@ -136,6 +142,16 @@ const levelIndex = ref(0); //当前等级的索引
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let topTabbarData = topTabarObj.setTopTabbarParam({ title: '会员等级' })
+let topTabbarDataEmpty =ref({
+	title: '会员等级',
+	topStatusBar: {
+	    style: 'style-1',
+	    bgColor: '#fff',
+	    rollBgColor: '#333',
+	    textColor: '#333',
+	    rollTextColor: '#333'
+	}
+})
 /********* 自定义头部 - end ***********/
 
 onShow(() => {

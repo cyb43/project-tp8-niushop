@@ -244,7 +244,9 @@ const navbarPlaceholderHeight = () => {
         const query = uni.createSelectorQuery().in(instance);
         query.select('.ns-navbar-wrap .u-navbar .content-wrap').boundingClientRect(data => {
             placeholderHeight.value = data ? data.height : 0;
-            diyStore.topTabarHeight = placeholderHeight.value;
+            diyStore.$patch((state) => {
+                state.topTabarHeight = placeholderHeight.value
+            })
         }).exec();
     })
 }

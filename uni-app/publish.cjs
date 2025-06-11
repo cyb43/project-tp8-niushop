@@ -71,18 +71,23 @@ const solve = () => {
 }
 
 const handleWeappAddonComponents = (mode) => {
-    const src = `./dist/${mode}/mp-weixin/addon/components/diy/group/index.json`
+    const files = [
+        `./dist/${mode}/mp-weixin/addon/components/diy/group/index.json`,
+        `./dist/${mode}/mp-weixin/app/pages/index/tabbar.json`
+    ]
 
-    try {
-        const data = JSON.parse(fs.readFileSync(src, 'utf8'));
-        data.componentPlaceholder = {};
+    files.forEach(src => {
+        try {
+            const data = JSON.parse(fs.readFileSync(src, 'utf8'));
+            data.componentPlaceholder = {};
 
-        Object.keys(data.usingComponents).map(key => {
-            data.componentPlaceholder[key] = "view";
-        })
-        fs.writeFileSync(src, JSON.stringify(data))
-    } catch (err) {
-    }
+            Object.keys(data.usingComponents).map(key => {
+                data.componentPlaceholder[key] = "view";
+            })
+            fs.writeFileSync(src, JSON.stringify(data))
+        } catch (err) {
+        }
+    })
 }
 
 const handleWeappLanguage = (mode) => {
@@ -113,6 +118,20 @@ const listenWeappRunDev = () => {
             serverReady = true;
             handleWeappAddonComponents('dev')
             handleWeappLanguage('dev')
+        }
+    });
+
+    // 监听 stderr 输出，用于捕获错误信息
+    devProcess.stderr.on('data', (data) => {
+        console.error(data.toString());
+    });
+
+    // 监听子进程退出事件
+    devProcess.on('close', (code) => {
+        if (code !== 0) { // 如果退出码不是0，则认为发生了错误
+            console.error(`Child process exited with code ${code}`);
+        } else {
+            console.log('Child process exited successfully.');
         }
     });
 }

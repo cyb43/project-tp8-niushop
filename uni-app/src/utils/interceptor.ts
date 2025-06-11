@@ -3,6 +3,8 @@ import { checkNeedLogin } from '@/utils/auth'
 import { getToken, currRoute, setThemeColor } from '@/utils/common'
 import { memberLog } from '@/app/api/auth'
 import { useShare } from '@/hooks/useShare'
+import tabbarJson from '@/tabbar.json'
+import useSystemStore from '@/stores/system'
 
 /**
  * 页面跳转拦截器
@@ -28,6 +30,10 @@ export const redirectInterceptor = (route: { path: string, query: object }) => {
         params: JSON.stringify(route.query),
         pre_route: getCurrentPages()[0]?.route
     })
+
+    // #ifdef MP
+    toTabbar(route)
+    // #endif
 }
 
 /**
@@ -59,6 +65,10 @@ export const launchInterceptor = () => {
 
     // 添加会员访问日志
     if (getToken()) memberLog({ route: launch.path, params: JSON.stringify(launch.query || {}), pre_route: '' })
+
+    // #ifdef MP
+    toTabbar(launch)
+    // #endif
 }
 
 
@@ -82,5 +92,19 @@ const loadShare = () => {
     ]
     if (currRoute()) {
         if (!shareWhiteList.includes(currRoute() || '')) setShare()
+    }
+}
+
+/**
+ * 跳转到tabbar
+ */
+const toTabbar = (route: { path: string, query: object }) => {
+    if (tabbarJson.includes(route.path)) {
+        useSystemStore().$patch((state) => {
+            state.currTabbar = route
+        })
+        uni.switchTab({
+            url: '/app/pages/index/tabbar'
+        })
     }
 }
