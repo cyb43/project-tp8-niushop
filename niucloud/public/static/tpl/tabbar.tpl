@@ -42,6 +42,7 @@
     import en from '@/locale/en.json'
     import {onPageScroll} from "@dcloudio/uni-app";
     import TopTabbar from "@/components/top-tabbar/top-tabbar.vue";
+    import { language } from '@/locale'
 
     {foreach $tabbarList as $item}
 import {$item.name} from "@{$item.link}"
@@ -117,6 +118,10 @@ import {$item.name} from "@{$item.link}"
             if (!loadRecord.value.includes(systemStore.currTabbar.path)) loadRecord.value.push(systemStore.currTabbar.path)
 
             if (pagesRefs.value[systemStore.currTabbar.path] && pagesRefs.value[systemStore.currTabbar.path].$) {
+                // #ifdef MP
+                systemStore.currTabbar.path.indexOf('addon') != -1 && language.loadAllLocaleMessages('addon', uni.getLocale())
+                // #endif
+
                 // 执行页面onshow onload事件
                 pagesRefs.value[systemStore.currTabbar.path].$.root.onLoad.forEach(el => {
                     el(systemStore.currTabbar.query || {})

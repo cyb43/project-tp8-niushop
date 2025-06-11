@@ -1,1 +1,0 @@
-import{a as r,b as l,e as _,__tla as o}from"./entry.0c3067f3.js";let t,s=Promise.all([(()=>{try{return o}catch{}})()]).then(async()=>{t=r((a,p)=>{l()||_().$patch(e=>{e.route=a.path})})});export{s as __tla,t as default};
