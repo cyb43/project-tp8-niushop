@@ -1,6 +1,6 @@
 <template>
     <u-popup :show="show" @close="show = false" mode="bottom" :round="10">
-        <view @touchmove.prevent.stop class="popup-common">
+        <view class="popup-common">
             <view class="title">请选择自提点</view>
             <scroll-view scroll-y="true" class="h-[50vh]">
                 <view class="p-[var(--popup-sidebar-m)] pt-0 text-sm">
@@ -93,6 +93,9 @@ const getStoreListFn = (callback: any) => {
         setTimeout(() => {
             getStoreList({ latlng }).then(({ data }) => {
                 storeList.value = data
+                if (data.length) {
+                    selectStore(data[0]) // 默认选择第一个
+                }
                 if (typeof callback == 'function') {
                     callback(data);
                 }

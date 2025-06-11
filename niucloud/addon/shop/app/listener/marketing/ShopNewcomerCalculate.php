@@ -54,7 +54,7 @@ class ShopNewcomerCalculate
                     [ $sku_info[ 'sku_id' ] ],
                     OrderDiscountDict::DISCOUNT,
                     1,
-                    number_format($sku_info[ 'member_price' ] - $newcomer_price, '2', '.'),
+                    number_format($sku_info[ 'price' ] - $newcomer_price, '2', '.'),
                     ActiveDict::NEWCOMER_DISCOUNT,
                     $newcomer_goods_info[ 'active_id' ],
                     '新人专享',

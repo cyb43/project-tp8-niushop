@@ -2,23 +2,23 @@
     <div class="main-container">
 
         <el-card class="card !border-none" shadow="never">
-            <el-page-header :content="pageName" :icon="ArrowLeft" @back="back()" />
+            <el-page-header :content="pageName" :icon="ArrowLeft" @back="back()"/>
         </el-card>
 
         <!-- 表单 -->
         <el-card class="box-card mt-[15px] !border-none" shadow="never" v-loading="loading">
             <el-form :model="formData" label-width="120px" ref="formRef" :rules="formRules" class="page-form">
                 <!-- 活动名称： -->
-                <el-form-item :label="t('name')" prop="active_name">
+                <el-form-item :label="t('name')" prop="name">
                     <div>
-                        <el-input v-model.trim="formData.active_name" clearable :placeholder="t('namePlaceholder')" class="input-width" :maxlength="20" />
+                        <el-input v-model.trim="formData.name" clearable :placeholder="t('namePlaceholder')" class="input-width" :maxlength="20"/>
                         <p class=" text-[14px] text-[#999]">{{ t('nameTip') }}</p>
                     </div>
                 </el-form-item>
                 <!-- 活动标题： -->
-                <el-form-item :label="t('title')" prop="active_desc">
+                <el-form-item :label="t('title')" prop="remark">
                     <div>
-                        <el-input v-model.trim="formData.active_desc" clearable :placeholder="t('titlePlaceholder')" class="input-width" :maxlength="20" />
+                        <el-input v-model.trim="formData.remark" clearable :placeholder="t('titlePlaceholder')" class="input-width" :maxlength="20"/>
                         <p class=" text-[14px] text-[#999]">{{ t('titleTip') }}</p>
                     </div>
                 </el-form-item>
@@ -30,35 +30,56 @@
                 </el-form-item>
                 <!-- 选择商品 -->
                 <el-form-item :label="t('selectProduct')" class="!m-0">
-                    <goods-select-popup ref="goodsSelectPopupRef" v-model="formData.goods_ids" @goodsSelect="goodsSelect" :min="1" :max="99" />
+                    <goods-select-popup ref="goodsSelectPopupRef" v-model="formData.goods_ids" @goodsSelect="goodsSelect" :min="1" :max="99"/>
                 </el-form-item>
                 <el-form-item prop="goods_list"></el-form-item>
                 <el-form-item v-if="formData.goods_list.length&& goodsTable.data">
                     <div class="w-full sku_list">
                         <el-table class="!w-[1400px] !max-w-[100%]" :data="goodsTable.list" size="large" ref="goods_listTableRef" @selection-change="handleSelectionChange">
                             <template #empty>
-                                <span>{{ t('emptyData')}}</span>
+                                <span>{{ t('emptyData') }}</span>
                             </template>
 
-                            <el-table-column type="selection" width="55" />
+                            <el-table-column type="selection" width="55"/>
                             <el-table-column :label="t('goodsSelectPopupGoodsInfo')" min-width="300">
                                 <template #default="{ row }">
-                                    <div class="flex items-center cursor-pointer">
-                                        <div class="min-w-[60px] h-[60px] flex items-center justify-center">
-                                            <el-image v-if="row.goods_cover_thumb_small" class="w-[60px] h-[60px]" :src="img(row.goods_cover_thumb_small)" fit="contain">
-                                                <template #error>
-                                                    <div class="image-slot">
-                                                        <img class="w-[60px] h-[60px]" src="@/addon/shop/assets/goods_default.png" />
-                                                    </div>
-                                                </template>
-                                            </el-image>
-                                            <img v-else class="w-[70px] h-[60px]" src="@/addon/shop/assets/goods_default.png" fit="contain" />
+                                    <el-form-item :prop="'goods_list.' + row.index + '.goods_id'" :rules="[{
+                                        trigger: 'blur',
+                                        validator: (rule: any, value: any, callback: any) => {
+                                            if (validchcklist.length > 0) {
+                                                let hasError = false;
+                                                validchcklist.forEach((item: any) => {
+                                                    if (row.goods_id == item.goods_id) {
+                                                        hasError = true;
+                                                        callback(item.error_msg);
+                                                    }
+                                                });
+                                                if (!hasError) {
+                                                    callback(); // 校验通过
+                                                }
+                                            } else {
+                                                callback(); // 校验通过
+                                            }
+
+                                        }
+                                    }]" class="sku-form-item-wrap py-[10px]">
+                                        <div class="flex items-center cursor-pointer">
+                                            <div class="min-w-[60px] h-[60px] flex items-center justify-center">
+                                                <el-image v-if="row.goods_cover_thumb_small" class="w-[60px] h-[60px]" :src="img(row.goods_cover_thumb_small)" fit="contain">
+                                                    <template #error>
+                                                        <div class="image-slot">
+                                                            <img class="w-[60px] h-[60px]" src="@/addon/shop/assets/goods_default.png"/>
+                                                        </div>
+                                                    </template>
+                                                </el-image>
+                                                <img v-else class="w-[70px] h-[60px]" src="@/addon/shop/assets/goods_default.png" fit="contain"/>
+                                            </div>
+                                            <div class="ml-2">
+                                                <span :title="row.goods_name" class="multi-hidden">{{ row.goods_name }}</span>
+                                                <span class="text-primary text-[12px]">{{ row.goods_type_name }}</span>
+                                            </div>
                                         </div>
-                                        <div class="ml-2">
-                                            <span :title="row.goods_name" class="multi-hidden">{{ row.goods_name }}</span>
-                                            <span class="text-primary text-[12px]">{{ row.goods_type_name }}</span>
-                                        </div>
-                                    </div>
+                                    </el-form-item>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="price" :label="t('price')" min-width="130">
@@ -69,6 +90,7 @@
 
                             <el-table-column :label="t('discounts')" width="170">
                                 <template #default="{ row,$index }">
+
                                     <el-form-item v-if="!row.goodsSku.sku_spec_format" :key="row.goods_id" :prop="'goods_list.'+row.index + '.discount_rate'" :rules="[{
                                         trigger: 'blur',
                                         validator: (rule: any, value: any, callback: any) => {
@@ -85,20 +107,24 @@
                                             }
                                         }
                                     }]" class="sku-form-item-wrap">
-                                        <el-input v-model.trim="row.discount_rate" @blur="inputBlur(row,'discount',row.index)" clearable placeholder="0.00" maxlength="8" />
+                                        <el-input v-model.trim="row.discount_rate" @blur="inputBlur(row,'discount',row.index)" clearable placeholder="0" maxlength="8"/>
                                     </el-form-item>
-                                    <el-form-item :prop="'goods_list.'+row.index + '.valid'" :rules="[{
+                                    <el-form-item :prop="'goods_list.'+row.index + '.min_discount_rate'" :rules="[{
                                         trigger: 'blur',
                                         validator: (rule: any, value: any, callback: any) => {
                                             if (!value) {
                                                 callback(t('skuDiscountSettingsPlaceholder'))
-                                            } else {
+                                            } else if(row.min_discount_rate<0 || row.max_discount_rate<0){
+                                                callback(t('discountsTips'));
+                                            }else if(row.min_discount_rate>9.9 || row.max_discount_rate>9.9){
+                                                callback(t('discountsTips'));
+                                            }else {
                                                 callback();
                                             }
                                         }
                                     }]" v-else>
-                                    <span v-if="row.valid && row.min_discount_rate!=Infinity&&row.max_discount_rate!=-Infinity">{{ row.min_discount_rate==row.max_discount_rate?row.min_discount_rate:row.min_discount_rate+'-'+row.max_discount_rate }}</span>
-                                    <span v-else>--</span>
+                                        <span v-if="row.valid && row.min_discount_rate!=Infinity&&row.max_discount_rate!=-Infinity">{{ row.min_discount_rate == row.max_discount_rate ? row.min_discount_rate : row.min_discount_rate + '-' + row.max_discount_rate }}</span>
+                                        <span v-else>--</span>
                                     </el-form-item>
                                 </template>
                             </el-table-column>
@@ -120,10 +146,10 @@
                                                 }
                                         }
                                         }]" class="sku-form-item-wrap">
-                                        <el-input v-model.trim="row.reduce_money" @blur="inputBlur(row,'reduce',row.index)" clearable placeholder="0.00" maxlength="8" />
+                                        <el-input v-model.trim="row.reduce_money" @blur="inputBlur(row,'reduce',row.index)" clearable placeholder="0.00" maxlength="8"/>
                                     </el-form-item>
                                     <el-form-item v-else>
-                                        <span v-if="row.valid && row.min_reduce_money!=Infinity&&row.max_reduce_money!=-Infinity">{{ row.min_reduce_money==row.max_reduce_money?row.min_reduce_money:row.min_reduce_money+'-'+row.max_reduce_money }}</span>
+                                        <span v-if="row.valid && row.min_reduce_money!=Infinity&&row.max_reduce_money!=-Infinity">{{ row.min_reduce_money == row.max_reduce_money ? row.min_reduce_money : row.min_reduce_money + '-' + row.max_reduce_money }}</span>
                                         <span v-else>--</span>
                                     </el-form-item>
                                 </template>
@@ -146,27 +172,24 @@
                                                 }
                                         }
                                     }]" class="sku-form-item-wrap">
-                                        <el-input v-model.trim="row.specify_price" clearable @blur="inputBlur(row,'specify',row.index)" placeholder="0.00" maxlength="8" />
+                                        <el-input v-model.trim="row.specify_price" clearable @blur="inputBlur(row,'specify',row.index)" placeholder="0.00" maxlength="8"/>
                                     </el-form-item>
                                     <el-form-item v-else>
-                                        <span v-if="row.valid && row.min_specify_price!=Infinity&&row.max_specify_price!=-Infinity">{{ row.min_specify_price==row.max_specify_price?row.min_specify_price:row.min_specify_price+'-'+row.max_specify_price }}</span>
+                                        <span v-if="row.valid && row.min_specify_price!=Infinity&&row.max_specify_price!=-Infinity">{{ row.min_specify_price == row.max_specify_price ? row.min_specify_price : row.min_specify_price + '-' + row.max_specify_price }}</span>
                                         <span v-else>--</span>
                                     </el-form-item>
                                 </template>
                             </el-table-column>
                             <el-table-column :label="t('discountType')" width="130">
                                 <template #default="{ row }">
-                                    <span v-if="!row.goodsSku.sku_spec_format">{{row.discount_type=='discount'?t('discounts'):row.discount_type=='reduce'?t('reduceMoney'):t('promotional')}}</span>
+                                    <span v-if="!row.goodsSku.sku_spec_format">{{ row.discount_type == 'discount' ? t('discounts') : row.discount_type == 'reduce' ? t('reduceMoney') : t('promotional') }}</span>
                                     <el-form-item v-else>请在设置中查看</el-form-item>
                                 </template>
                             </el-table-column>
-                            <el-table-column :label="t('operation')"  align="right" min-width="160">
+                            <el-table-column :label="t('operation')" align="right" min-width="160">
                                 <template #default="{row}">
-                                    <!-- <el-button type="primary" link @click="enabledEvent(row)">{{ row.is_enabled?t('noEnabled'):t('enabled') }}</el-button> -->
-                                    <el-button v-if="row.goodsSku.sku_spec_format" type="primary" link @click="skuDiscountSettingsEvent(formData.goods_list[row.index])">
-                                        {{t('skuDiscountSettings') }}
-                                    </el-button>
-                                    <el-button type="primary" link @click="deleteEvent(row.index)">{{t('delete') }}</el-button>
+                                    <el-button v-if="row.goodsSku.sku_spec_format" type="primary" link @click="skuDiscountSettingsEvent(formData.goods_list[row.index])">{{ t('skuDiscountSettings') }}</el-button>
+                                    <el-button type="primary" link @click="deleteEvent(row.index)">{{ t('delete') }}</el-button>
                                 </template>
                             </el-table-column>
                         </el-table>
@@ -177,27 +200,25 @@
                                 </el-checkbox>
 
                                 <label>{{ t('batchOperation') }}</label>
-                                <!-- <el-select v-model="batchOperation.discount_type" class="!w-[130px] ml-[10px]" @change="batchOperation.discountNumber=''">
-                                    <el-option :label="t('discounts')" value="discount" />
-                                    <el-option :label="t('reduceMoney')" value="reduce" />
-                                    <el-option :label="t('promotional')" value="specify" />
-                                </el-select> -->
-                                <el-input v-model.trim="batchOperation.discountNumber" clearable
-                                          :placeholder="batchOperation.discount_type=='discount'?t('discounts'):batchOperation.discount_type=='reduce'?t('reduceMoney'):t('promotional')"
-                                          class="!w-[130px] ml-[10px]" maxlength="8" />
+                                <el-select v-model="batchOperation.discount_type" class="!w-[130px] ml-[10px]" @change="batchOperation.discountNumber=''">
+                                    <el-option :label="t('discounts')" value="discount"/>
+                                    <el-option :label="t('reduceMoney')" value="reduce"/>
+                                    <el-option :label="t('promotional')" value="specify"/>
+                                </el-select>
+                                <el-input v-model.trim="batchOperation.discountNumber" clearable :placeholder="batchOperation.discount_type=='discount'?t('discounts'):batchOperation.discount_type=='reduce'?t('reduceMoney'):t('promotional')" class="!w-[130px] ml-[10px]" maxlength="8"/>
                                 <el-button class="ml-[10px]" type="primary" @click="saveBatch">{{ t('confirm') }}
                                 </el-button>
                             </div>
                             <el-pagination v-model:current-page="goodsTable.page" v-model:page-size="goodsTable.limit"
                                            layout="total, prev, pager, next, jumper" :total="goodsTable.total"
-                                           @current-change="setGoodsList" />
+                                           @current-change="setGoodsList"/>
                         </div>
                     </div>
                 </el-form-item>
             </el-form>
         </el-card>
 
-        <goods-sku-popup ref="goodsSkuPopupRef" @skuSave="skuSave" />
+        <goods-sku-popup ref="goodsSkuPopupRef" @skuSave="skuSave"/>
 
         <!-- 提交按钮 -->
         <div class="fixed-footer-wrap">
@@ -210,13 +231,13 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, computed, reactive, nextTick} from 'vue'
-import {t} from '@/lang'
-import {useRoute, useRouter} from 'vue-router'
-import {addActiveDiscount} from "@/addon/shop/api/marketing";
-import {FormInstance, ElMessage} from 'element-plus'
+import { ref, computed, reactive } from 'vue'
+import { t } from '@/lang'
+import { useRoute, useRouter } from 'vue-router'
+import { addActiveDiscount, goodscheck } from "@/addon/shop/api/marketing";
+import { FormInstance, ElMessage } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import {deepClone, img} from '@/utils/common'
+import { deepClone, img } from '@/utils/common'
 import goodsSelectPopup from '@/addon/shop/views/goods/components/goods-select-popup.vue'
 import goodsSkuPopup from '@/addon/shop/views/marketing/discount/components/goods-sku-popup.vue'
 
@@ -231,8 +252,8 @@ const goodsSelectPopupRef: any = ref(null)
 end_time.setTime(end_time.getTime() + 3600 * 1000 * 2 * 360) // 设置结束默认时间为当前时间30天后
 
 const initialFormData = {
-    active_name: '', // 名称
-    active_desc: '', // 标题
+    name: '', // 名称
+    remark: '', // 标题
     active_status: '',
     start_time: '',
     end_time: '',
@@ -241,7 +262,7 @@ const initialFormData = {
     goods_list: [],
     discount_time: [start_time, end_time],
 }
-const formData: Record<string, any> = ref({...initialFormData})
+const formData: Record<string, any> = ref({ ...initialFormData })
 const formRef = ref<FormInstance>()
 
 // 表单验证规则
@@ -253,24 +274,24 @@ const regExp = {
 
 const formRules = computed(() => {
     return {
-        active_name: [
-            {required: true, message: t('namePlaceholder'), trigger: 'blur'},
+        name: [
+            { required: true, message: t('namePlaceholder'), trigger: 'blur' },
             { validator: noSpaceValidator, trigger: 'blur' }
         ],
-        active_desc: [
-            {required: true, message: t('titlePlaceholder'), trigger: 'blur'},
+        remark: [
+            { required: true, message: t('titlePlaceholder'), trigger: 'blur' },
             { validator: noSpaceValidator, trigger: 'blur' }
         ],
         goods_list: [
-            {required: true, message: t('selectProductPlaceholder'), trigger: 'change'}
+            { required: true, message: t('selectProductPlaceholder'), trigger: 'change' }
         ],
         discount_time: [
-            {required: true, validator: receiveTime, trigger: 'change'}
+            { required: true, validator: receiveTime, trigger: 'change' }
         ],
     }
 })
 
-const noSpaceValidator = (rule: any, value: any, callback: any)=>{
+const noSpaceValidator = (rule: any, value: any, callback: any) => {
     if (value.trim() === '') {
         return callback(new Error(t('noSpaceAllowed')));
     }
@@ -320,7 +341,7 @@ const validFn = (row: any) => {
     }
 }
 
-const onSave = (formEl: FormInstance | undefined) => {
+const onSave = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return
     for (var i = 0; i < formData.value.goods_list.length; i++) {
         let el = formData.value.goods_list[i]
@@ -350,32 +371,29 @@ const onSave = (formEl: FormInstance | undefined) => {
             }
         }
     }
-    nextTick(async () => {
-        await formEl.validate((valid) => {
-            if (valid) {
-                loading.value = true
-                formData.value.start_time = formData.value.discount_time[0]
-                formData.value.end_time = formData.value.discount_time[1]
-                formData.value.goods_data = JSON.stringify(formData.value.goods_list)
-                addActiveDiscount(formData.value).then(res => {
-                    loading.value = false
-                    history.back()
-                }).catch(() => {
-                    loading.value = false
-                })
-            }
-        })
+    await formEl.validate(async (valid) => {
+        if (valid) {
+            loading.value = true
+            formData.value.start_time = formData.value.discount_time[0]
+            formData.value.end_time = formData.value.discount_time[1]
+            formData.value.goods_data = JSON.stringify(formData.value.goods_list)
+            addActiveDiscount(formData.value).then(res => {
+                loading.value = false
+                history.back()
+            }).catch(() => {
+                loading.value = false
+            })
+        }
     })
-
 }
 
-    interface goodsTableInterface {
-        page: number,
-        limit: number,
-        total: number,
-        data: any,
-        list: Array<any>,
-    }
+interface goodsTableInterface {
+    page: number,
+    limit: number,
+    total: number,
+    data: any,
+    list: Array<any>,
+}
 
 const goodsTable = reactive<goodsTableInterface>({
     page: 1,
@@ -384,7 +402,7 @@ const goodsTable = reactive<goodsTableInterface>({
     data: [],
     list: []
 })
-
+const validchcklist = ref([])
 const goodsSelect = (value: any) => {
     if (formData.value.goods_list.length) {
         let goods_list = deepClone(Object.values(value)).map((el: any, index: number) => {
@@ -400,11 +418,10 @@ const goodsSelect = (value: any) => {
             el.index = index
             el.valid = false
             formData.value.goods_list.forEach((v: any) => {
-                if (v.goods_id == el.goods_id){
-                    el = Object.assign(el, v)//合并已填写数据及新选择的数据 
+                if (v.goods_id == el.goods_id) {
+                    el = Object.assign(el, v)//合并已填写数据及新选择的数据
                     el.index = index
-                } 
-                    
+                }
             })
             return el
         })
@@ -426,8 +443,18 @@ const goodsSelect = (value: any) => {
         })
     }
     setGoodsList()
-    if(formRef.value) formRef.value.validateField('goods_list').catch(()=>{})
-    // getGoodsSkuNoPageListFn(value.join(','))
+    if (formRef.value) formRef.value.validateField('goods_list').catch(() => {
+    })
+    goodscheck({
+        goods_ids: formData.value.goods_ids,
+        start_time: formData.value.discount_time[0],
+        end_time: formData.value.discount_time[1],
+        discount_id: ""
+    }).then((res: any) => {
+        validchcklist.value = res.data.data
+        formRef.value.validateField().catch(() => {
+        })
+    })
 }
 
 //设置sku初始数据
@@ -475,7 +502,9 @@ const deleteEvent = (index: number) => {
     })
     formData.value.goods_ids.splice(index, 1)
     setGoodsList(goodsTable.page)
-    if(formRef.value) formRef.value.validateField('goods_list').catch(()=>{})
+    if (formRef.value) formRef.value.validateField('goods_list').catch(() => {
+    })
+    formRef.value.validateField().catch(() => {    })
 }
 
 //设置sku折扣
@@ -490,11 +519,11 @@ const skuSave = (row: any) => {
     })
 }
 
-    /*****批量设置 ****/
-    interface batchOperationInterface {
-        discount_type: any,
-        discountNumber: any,
-    }
+/*****批量设置 ****/
+interface batchOperationInterface {
+    discount_type: any,
+    discountNumber: any,
+}
 
 const batchOperation = ref<batchOperationInterface>({
     discount_type: 'discount',
@@ -537,7 +566,7 @@ const saveBatch = () => {
     if (!multipleSelection.value.length) {
         ElMessage({
             type: 'warning',
-            message: `${t('batchEmptySelectedGoodsTips')}`
+            message: `${ t('batchEmptySelectedGoodsTips') }`
         })
         return
     }
@@ -545,25 +574,25 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsPlaceholder')}`
+                message: `${ t('discountsPlaceholder') }`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.number.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsTips')}`
+                message: `${ t('discountsTips') }`
             })
             return
         } else if (batchOperation.value.discountNumber <= 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsTipsTwo')}`
+                message: `${ t('discountsTipsTwo') }`
             })
             return
         } else if (batchOperation.value.discountNumber > 9.9) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsTipsThree')}`
+                message: `${ t('discountsTipsThree') }`
             })
             return
         }
@@ -571,19 +600,19 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('reduceMoneyPlaceholder')}`
+                message: `${ t('reduceMoneyPlaceholder') }`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.digit.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${t('reduceMoneyTips')}`
+                message: `${ t('reduceMoneyTips') }`
             })
             return
         } else if (batchOperation.value.discountNumber <= 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('reduceMoneyTipsTwo')}`
+                message: `${ t('reduceMoneyTipsTwo') }`
             })
             return
         }
@@ -592,19 +621,19 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('promotionalPlaceholder')}`
+                message: `${ t('promotionalPlaceholder') }`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.digit.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${t('promotionalTips')}`
+                message: `${ t('promotionalTips') }`
             })
             return
         } else if (batchOperation.value.discountNumber <= 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('promotionalTipsTwo')}`
+                message: `${ t('promotionalTipsTwo') }`
             })
             return
         }
@@ -624,7 +653,7 @@ const saveBatch = () => {
                         el.reduce_money = (el.goodsSku.price - el.specify_price).toFixed(2)
                     } else if (batchOperation.value.discount_type == 'reduce') {//减价
                         el.reduce_money = batchOperation.value.discountNumber + ''
-                        el.specify_price = el.goodsSku.price - el.reduce_money.toFixed(2)
+                        el.specify_price = (el.goodsSku.price - el.reduce_money).toFixed(2)
                         el.discount_price = (el.goodsSku.price - el.reduce_money).toFixed(2)
                         el.discount_rate = (el.specify_price / el.goodsSku.price * 10).toFixed(1)
 
@@ -635,9 +664,14 @@ const saveBatch = () => {
                         el.discount_rate = (el.specify_price / el.goodsSku.price * 10).toFixed(1)
                     }
                     el.discount_type = batchOperation.value.discount_type + ''
+                    if (formRef.value) {
+                        formRef.value.validateField('goods_list.' + index + '.discount_rate')
+                        formRef.value.validateField('goods_list.' + index + '.specify_price')
+                        formRef.value.validateField('goods_list.' + index + '.reduce_money')
+                    }
                 } else {
                     el.skuList.forEach((sku: any) => {
-                        if(sku.is_enabled===1){
+                        if (sku.is_enabled === 1) {
                             if (batchOperation.value.discount_type == 'discount') {
                                 //折扣
                                 sku.discount_rate = batchOperation.value.discountNumber + ''
@@ -648,7 +682,7 @@ const saveBatch = () => {
                                 sku.reduce_money = (sku.price - sku.specify_price).toFixed(2)
                             } else if (batchOperation.value.discount_type == 'reduce') {//减价
                                 sku.reduce_money = batchOperation.value.discountNumber + ''
-                                sku.specify_price = sku.price - sku.reduce_money.toFixed(2)
+                                sku.specify_price = (sku.price - sku.reduce_money).toFixed(2)
                                 sku.discount_price = (sku.price - sku.reduce_money).toFixed(2)
                                 sku.discount_rate = (sku.specify_price / sku.price * 10).toFixed(1)
 
@@ -659,11 +693,16 @@ const saveBatch = () => {
                                 sku.discount_rate = (sku.specify_price / sku.price * 10).toFixed(1)
                             }
                             sku.discount_type = batchOperation.value.discount_type + ''
+                            if (formRef.value) {
+                                formRef.value.validateField('goods_list.' + index + '.discount_rate')
+                                formRef.value.validateField('goods_list.' + index + '.specify_price')
+                                formRef.value.validateField('goods_list.' + index + '.reduce_money')
+                            }
                         }
                     })
-                    let discount_rate_list = el.skuList.filter((sku:any)=>sku.is_enabled===1).map((sku:any)=>Number(sku.discount_rate))
-                    let reduce_money_list = el.skuList.filter((sku:any)=>sku.is_enabled===1).map((sku:any)=>Number(sku.reduce_money))
-                    let specify_price_list = el.skuList.filter((sku:any)=>sku.is_enabled===1).map((sku:any)=>Number(sku.specify_price))
+                    let discount_rate_list = el.skuList.filter((sku: any) => sku.is_enabled === 1).map((sku: any) => Number(sku.discount_rate))
+                    let reduce_money_list = el.skuList.filter((sku: any) => sku.is_enabled === 1).map((sku: any) => Number(sku.reduce_money))
+                    let specify_price_list = el.skuList.filter((sku: any) => sku.is_enabled === 1).map((sku: any) => Number(sku.specify_price))
                     el.max_discount_rate = Math.max(...discount_rate_list)
                     el.min_discount_rate = Math.min(...discount_rate_list)
                     el.max_reduce_money = Math.max(...reduce_money_list)
@@ -675,10 +714,8 @@ const saveBatch = () => {
             }
         })
     })
-    // isIndeterminate.value = false
-    // toggleCheckbox.value = false
-    // batchOperation.value.discountNumber = ''
-    // goods_listTableRef.value.clearSelection()
+    formRef.value.validateField().catch(() => {
+    })
 }
 
 /**** 修改单行 *****/
@@ -691,8 +728,10 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
             //减价
             row.reduce_money = (row.goodsSku.price - row.specify_price).toFixed(2)
             if (formRef.value) {
-                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {})
-                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {})
+                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {
+                })
+                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {
+                })
             }
         }
     } else if (discount_type == 'reduce') {//减价
@@ -701,8 +740,10 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
             row.discount_price = (row.goodsSku.price - row.reduce_money).toFixed(2)
             row.discount_rate = (row.specify_price / row.goodsSku.price * 10).toFixed(1)
             if (formRef.value) {
-                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {})
-                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {})
+                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {
+                })
+                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {
+                })
             }
         }
 
@@ -712,8 +753,10 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
             row.reduce_money = (row.goodsSku.price - row.specify_price).toFixed(2)
             row.discount_rate = (row.specify_price / row.goodsSku.price * 10).toFixed(1)
             if (formRef.value) {
-                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {})
-                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {})
+                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {
+                })
+                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {
+                })
             }
         }
 
@@ -744,30 +787,29 @@ const back = () => {
 </script>
 
 <style lang="scss" scoped>
-    input::-webkit-outer-spin-button,
-    input::-webkit-inner-spin-button {
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        -o-appearance: none !important;
-        -ms-appearance: none !important;
-        appearance: none !important;
-        margin: 0;
-    }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    -o-appearance: none !important;
+    -ms-appearance: none !important;
+    appearance: none !important;
+    margin: 0;
+}
 
-    input[type="number"] {
-        -webkit-appearance: textfield;
-        -moz-appearance: textfield;
-        -o-appearance: textfield;
-        -ms-appearance: textfield;
-        appearance: textfield;
-    }
+input[type="number"] {
+    -webkit-appearance: textfield;
+    -moz-appearance: textfield;
+    -o-appearance: textfield;
+    -ms-appearance: textfield;
+    appearance: textfield;
+}
 
-    .sku-form-item-wrap :deep(.el-form-item__content) {
-        margin-left: 0 !important;
-    }
+.sku-form-item-wrap :deep(.el-form-item__content) {
+    margin-left: 0 !important;
+}
 
-    .sku_list :deep(.cell) {
-        // min-height: 60px !important;
-        overflow: initial !important;
-    }
+.sku_list :deep(.cell) {
+    overflow: initial !important;
+}
 </style>

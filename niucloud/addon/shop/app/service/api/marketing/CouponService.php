@@ -234,7 +234,7 @@ class CouponService extends BaseApiService
                 throw new CommonException('COUPON_NOT_EXIST');
             }
 
-            if($info['status'] != 1){
+            if($info['status'] != CouponDict::NORMAL){
                 throw new CommonException('COUPON_INVALID');//优惠券已失效
             }
 

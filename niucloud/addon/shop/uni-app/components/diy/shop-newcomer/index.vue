@@ -5,7 +5,7 @@
                 <image v-if="diyComponent.textImg" class="h-[34rpx] w-[auto]" :src="img(diyComponent.textImg)" mode="heightFix" />
                 <view class="time-wrap flex items-center ml-[auto]" v-show="timeData && Object.keys(timeData).length">
                     <text v-if="!getToken() && diyStore.mode != 'decorate'" class="text-[24rpx] font-500" :style="{color: diyComponent.countDown.otherColor}">活动未开始</text>
-                    <block v-else-if="activeState()">
+                    <template v-else-if="activeState()">
                         <text :style="{color: diyComponent.countDown.otherColor}" class="mr-[10rpx] text-[24rpx]">距结束还有</text>
                         <up-count-down class="text-[#fff] text-[28rpx]" :time="newcomerTime" format="HH:mm:ss" @change="onChange">
                             <view class="flex">
@@ -25,7 +25,7 @@
                                 </view>
                             </view>
                         </up-count-down>
-                    </block>
+                    </template>
                     <text v-else class="text-[28rpx]" :style="{color: diyComponent.countDown.otherColor}">活动已结束
                     </text>
                 </view>
@@ -51,7 +51,7 @@
                             </view>
                         </view>
                     </view>
-                    <block v-for="(item,index) in list" :key="index">
+                    <template v-for="(item,index) in list" :key="index">
                         <view v-if="index > 0"
                               class="ml-[10rpx] inline-flex flex-col items-center p-[16rpx] bg-[#fff] box-border"
                               :style="commonTempCss()" @click="toDetail(item)">
@@ -67,7 +67,7 @@
                                 <text class="text-[24rpx] font-500 truncate">{{ goodsPrice(item) }}</text>
                             </view>
                         </view>
-                    </block>
+                    </template>
                 </view>
             </scroll-view>
         </view>
@@ -76,7 +76,7 @@
                 <image v-if="diyComponent.textImg" class="h-[34rpx] w-[auto]" :src="img(diyComponent.textImg)" mode="heightFix" />
                 <view class="time-wrap flex items-center ml-[auto]" v-show="timeData && Object.keys(timeData).length">
                     <text v-if="!getToken() && diyStore.mode != 'decorate'" class="text-[24rpx] font-500" :style="{color: diyComponent.countDown.otherColor}">活动未开始</text>
-                    <block v-else-if="activeState()">
+                    <template v-else-if="activeState()">
                         <text :style="{color: diyComponent.countDown.otherColor}" class="mr-[10rpx] text-[24rpx]">倒计时</text>
                         <up-count-down class="text-[#fff] text-[28rpx]" :time="newcomerTime" format="DD:HH:mm" @change="onChange">
                             <view class="flex">
@@ -97,7 +97,7 @@
                                 </view>
                             </view>
                         </up-count-down>
-                    </block>
+                    </template>
                     <text v-else class="text-[28rpx]" :style="{color: diyComponent.countDown.otherColor}">活动已结束
                     </text>
                 </view>
@@ -170,7 +170,7 @@
                                 </template>
                             </u--image>
                         </view>
-                        <image class="h-[32rpx] w-[auto] mt-[12rpx] mb-[10rpx]" :src="img('addon/shop/diy/newcomer/style_3_img.png')" mode="heightFix"></image>
+                        <image class="h-[32rpx] w-[auto] mt-[12rpx] mb-[10rpx]" :src="img('addon/shop/diy/newcomer/style_3_img.png')" mode="heightFix" />
                         <view class="flex items-center text-[#FF0E00] pb-[2rpx]">
                             <text class="text-[20rpx] font-500">￥</text>
                             <text class="text-[30rpx] max-w-[120rpx] font-500 truncate">{{ goodsPrice(item) }}</text>
@@ -185,7 +185,7 @@
                 <image v-if="diyComponent.textImg" class="h-[34rpx] w-[auto]" :src="img(diyComponent.textImg)" mode="heightFix" />
                 <view class="time-wrap ml-[auto] flex items-center -mt-[8rpx]" v-show="timeData && Object.keys(timeData).length">
                     <text v-if="!getToken() && diyStore.mode != 'decorate'" :style="{color: diyComponent.countDown.otherColor}" class="w-[200rpx] text-center text-[24rpx] font-500 pb-[4rpx]">活动未开始</text>
-                    <block v-else-if="activeState()">
+                    <template v-else-if="activeState()">
                         <text :style="{color: diyComponent.countDown.otherColor}" class="mr-[8rpx] text-[24rpx]">本场仅剩</text>
                         <up-count-down class="text-[#fff] text-[28rpx]" :time="newcomerTime" format="HH:mm:ss" @change="onChange">
                             <view class="flex">
@@ -205,7 +205,7 @@
                                 </view>
                             </view>
                         </up-count-down>
-                    </block>
+                    </template>
                     <text v-else :style="{color: diyComponent.countDown.otherColor}" class="w-[200rpx] text-center text-[24rpx] pb-[4rpx]">活动已结束</text>
                 </view>
             </view>

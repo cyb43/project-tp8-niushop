@@ -1,33 +1,69 @@
 <template>
     <div class="main-container">
-        <el-card class="card !border-none mb-[15px]" shadow="never">
+        <el-card class="card !border-none" shadow="never">
             <el-page-header :content="id ? t('updateStore') : t('addStore')" :icon="ArrowLeft" @back="back" />
         </el-card>
-        <el-card class="box-card !border-none" shadow="never" v-loading="loading">
+
+        <el-card class="box-card mt-[15px] !border-none" shadow="never" v-loading="loading">
             <el-form :model="formData" label-width="140px" ref="formRef" :rules="formRules" class="page-form">
                 <el-form-item :label="t('storeName')" prop="store_name">
-                    <el-input v-model.trim="formData.store_name" clearable :placeholder="t('storeNamePlaceholder')"
-                              class="input-width" />
+                    <el-input v-model.trim="formData.store_name" clearable :placeholder="t('storeNamePlaceholder')" class="input-width" maxlength="30" />
                 </el-form-item>
                 <el-form-item :label="t('storeDesc')">
-                    <el-input v-model.trim="formData.store_desc" type="textarea" rows="4" clearable
-                              :placeholder="t('storeDescPlaceholder')" class="input-width" />
+                    <el-input v-model.trim="formData.store_desc" type="textarea" rows="4" clearable :placeholder="t('storeDescPlaceholder')" class="input-width" maxlength="200" />
                 </el-form-item>
                 <el-form-item :label="t('storeLogo')">
                     <upload-image v-model="formData.store_logo" />
                 </el-form-item>
                 <el-form-item :label="t('storeMobile')" prop="store_mobile">
-                    <el-input v-model.trim="formData.store_mobile" clearable :placeholder="t('storeMobilePlaceholder')"
-                              class="input-width" @keyup="filterNumber($event)"
-                              @blur="formData.store_mobile = $event.target.value" />
+                    <el-input v-model.trim="formData.store_mobile" clearable :placeholder="t('storeMobilePlaceholder')" class="input-width" @keyup="filterNumber($event)" @blur="formData.store_mobile = $event.target.value" maxlength="11" />
                 </el-form-item>
                 <el-form-item :label="t('tradeTime')" prop="trade_time">
                     <div>
-                        <el-input v-model.trim="formData.trade_time" clearable :placeholder="t('tradeTimePlaceholder')"
-                                  class="input-width" />
+                        <el-input v-model.trim="formData.trade_time" clearable :placeholder="t('tradeTimePlaceholder')" class="input-width" />
                         <p class="text-[12px] text-[#999]">{{ t('tradeTimeTips') }}</p>
                     </div>
                 </el-form-item>
+
+                <el-form-item :label="t('storeDate')" prop="time_week">
+                    <el-checkbox-group v-model="formData.time_week">
+                        <el-checkbox :label="'1'">{{ t('monday') }}</el-checkbox>
+                        <el-checkbox :label="'2'">{{ t('tuesday') }}</el-checkbox>
+                        <el-checkbox :label="'3'">{{ t('wednesday') }}</el-checkbox>
+                        <el-checkbox :label="'4'">{{ t('thursday') }}</el-checkbox>
+                        <el-checkbox :label="'5'">{{ t('friday') }}</el-checkbox>
+                        <el-checkbox :label="'6'">{{ t('saturday') }}</el-checkbox>
+                        <el-checkbox :label="'0'">{{ t('sunday') }}</el-checkbox>
+                    <br />
+                    </el-checkbox-group>
+                </el-form-item>
+
+                <el-form-item :label="t('storeTime')" prop="trade_time_json">
+                    <div>
+                        <div>
+                            <div v-for="(timeRange, index) in formData.trade_time_json" :key="index" class="mb-3">
+                                <el-time-picker v-model="timeRange.start_time" :placeholder="t('startTime')" format="HH:mm" value-format="HH:mm" :picker-options="{selectableRange: '00:00 - 23:59'}"/>
+                                <span class="mx-2">-</span>
+                                <el-time-picker v-model="timeRange.end_time" :placeholder="t('endTime')" format="HH:mm" value-format="HH:mm" :picker-options="{selectableRange: '00:00 - 23:59'}"/>
+                                <span v-if="index > 0"  class="text-primary cursor-pointer ml-[10px]" @click="removeTimeRange(index)"> {{ t('delete') }}</span>
+                            </div>
+                            <span class="text-primary cursor-pointer mr-[10px]" @click="addTimeRange" v-if="formData.trade_time_json.length < 3"> {{ t('addTimeRange') }}</span>
+                        </div>
+                        <div class="text-[12px] text-[#999]">{{ t('storeDateTips') }}</div>
+                    </div>
+                    
+                </el-form-item>
+
+                <el-form-item :label="t('storeTimeInterval')" prop="time_interval">
+                    <div>
+                        <el-radio-group v-model="formData.time_interval">
+                            <el-radio v-for="(item, key) in time_interval_list" :key="key" :label="item.type">{{ item.name }}</el-radio>
+                        </el-radio-group>
+                        <p class="text-[12px] text-[#999]">{{ t('storeTimeIntervalTips') }}</p>
+                    </div>
+                    
+                </el-form-item>
+
                 <el-form-item :label="t('storeAddress')" prop="address_area">
                     <el-select v-model="formData.province_id" value-key="id" clearable class="w-[200px]"  ref="provinceRef">
                         <el-option :label="t('provincePlaceholder')" :value="0"/>
@@ -43,7 +79,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item prop="address">
-                    <el-input v-model.trim="formData.address" clearable :placeholder="t('addressPlaceholder')"  class="input-width"/>
+                    <el-input v-model.trim="formData.address" clearable :placeholder="t('addressPlaceholder')" @input="areaChange()"  class="input-width"/>
                 </el-form-item>
 
                 <el-form-item>
@@ -52,7 +88,7 @@
             </el-form>
         </el-card>
         <div class="fixed-footer-wrap">
-            <div class="fixed-footer !z-[9999]">
+            <div class="fixed-footer !z-[1000]">
                 <el-button type="primary" @click="onSave(formRef)">{{ t('save') }}</el-button>
                 <el-button @click="back()">{{ t('cancel') }}</el-button>
             </div>
@@ -64,16 +100,17 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { t } from '@/lang'
 import type { FormInstance } from 'element-plus'
-import { getStoreInfo, addStore, editStore } from '@/addon/shop/api/delivery'
+import { ArrowLeft } from '@element-plus/icons-vue'
+import { getStoreInfo, addStore, editStore, getStoreInit } from '@/addon/shop/api/delivery'
 import { getMap, getAreaListByPid, getAreaByCode } from '@/app/api/sys'
 import { useRoute } from 'vue-router'
 import { createMarker, latLngToAddress, addressToLatLng } from '@/utils/qqmap'
 import { filterNumber, debounce } from '@/utils/common'
+import { cloneDeep } from 'lodash-es'
 
 const route = useRoute()
 const id: number = parseInt(route.query.id as string)
 const loading = ref(false)
-const pageName = route.meta.title
 interface areaType{
     province: any[],
     city: any[],
@@ -109,7 +146,16 @@ onMounted(() => {
             initMap()
         }, 500)
     }
+    getStoreInitFn()
 })
+const week_list = ref({})
+const time_interval_list = ref({})
+const getStoreInitFn = () => {
+    getStoreInit().then(res => {
+        week_list.value = res.data.week_list
+        time_interval_list.value = res.data.time_interval_list
+    })
+}
 
 /**
  * 初始化地图
@@ -190,10 +236,40 @@ const initialFormData = {
     full_address: '',
     longitude: 116.397190,
     latitude: 39.908626,
-    trade_time: ''
+    trade_time: '',
+    time_week: ['1', '2', '3', '4', '5', '6', '0'],
+    trade_time_json: [
+        { start_time: '', end_time: '' } // 初始一个时间段
+    ],
+    time_interval: 30
 }
 
 const formData: Record<string, any> = reactive({ ...initialFormData })
+
+// 添加时间段
+const addTimeRange = () => {
+    formData.trade_time_json.push({ start_time: '', end_time: '' })
+}
+
+// 删除时间段
+const removeTimeRange = (index: number) => {
+    formData.trade_time_json.splice(index, 1)
+}
+
+const timeTransition = (time:any) => {
+    const arr = time.split(':')
+    const num = arr[0] * 60 * 60 + arr[1] * 60
+    return num
+}
+
+const timestampTransition = (timeStamp:any) => {
+    let hour = Math.floor(timeStamp / (60 * 60))
+    let minute = Math.floor(timeStamp / 60) - (hour * 60)
+    hour = hour < 10 ? ('0' + hour) : hour
+    minute = minute < 10 ? ('0' + minute) : minute
+
+    return hour + ':' + minute
+}
 
 const setFormData = async (id: number = 0) => {
     loading.value = true
@@ -201,9 +277,16 @@ const setFormData = async (id: number = 0) => {
     const data = await (await getStoreInfo(id)).data
     Object.keys(formData).forEach((key: string) => {
         if (data[key] != undefined) formData[key] = data[key]
+        if (key == "trade_time_json" && Array.isArray(data[key])) {
+            formData[key] = data[key].map((item: any) => ({
+                start_time: timestampTransition(item.start_time),
+                end_time: timestampTransition(item.end_time)
+            }))
+        }
     })
     loading.value = false
 }
+
 if (id) setFormData(id)
 
 const formRef = ref<FormInstance>()
@@ -241,6 +324,38 @@ const formRules = computed(() => {
         ],
         address: [
             { required: true, message: t('addressPlaceholder'), trigger: 'blur' }
+        ],
+        time_week: [
+            { required: true, message: t('selectBusinessDays'), trigger: 'change' }
+        ],
+        trade_time_json: [
+            {
+                validator: (rule: any, value: any, callback: any) => {
+                    if (!value || value.length === 0) {
+                        return callback(new Error(t('tradeTimePlaceholderTwo')))
+                    }
+                    for (let i = 0; i < value.length; i++) {
+                        const timeRange = value[i]
+                        if (!timeRange.start_time || !timeRange.end_time) {
+                            return callback(new Error(t('tradeTimePlaceholderTwo')))
+                        }
+                        // 结束时间不能小于或等于开始时间
+                        if (timeRange.end_time <= timeRange.start_time) {
+                            return callback(new Error(t('tradeTimePlaceholderFour')))
+                        }
+                        // 确保后一个时间段的开始时间不能小于前一个时间段的结束时间
+                        if (i > 0 && value[i].start_time < value[i - 1].end_time) {
+                            return callback(new Error(t('tradeTimePlaceholderFive')))
+                        }
+                    }
+                    callback()
+                },
+                trigger: 'change',
+                required: true
+            }
+        ],
+        time_interval: [
+            { required: true, message: t('tradeTimePlaceholderThree'), trigger: 'change' }
         ]
     }
 })
@@ -316,7 +431,8 @@ const areaChange = debounce(() => {
         const address = [
             formData.province_id ? provinceRef.value.states.selectedLabel : '',
             formData.city_id ? cityRef.value.states.selectedLabel : '',
-            formData.district_id ? districtRef.value.states.selectedLabel : ''
+            formData.district_id ? districtRef.value.states.selectedLabel : '',
+            formData.address
         ]
 
         addressToLatLng({ mapKey, address: address.join('') }).then(({ message, result }) => {
@@ -373,14 +489,14 @@ watch(() => storeArea.district_id, (nval) => {
 
 const onSave = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return
-    await formEl.validate(async (valid) => {
+    await formEl.validate(async(valid) => {
         if (valid) {
             loading.value = true
 
-            const data = formData
-            formData.province_name = formData.province_id ? provinceRef.value.states.selectedLabel : '',
-                formData.city_name = formData.city_id ? cityRef.value.states.selectedLabel : '',
-                formData.district_name = formData.district_id ? districtRef.value.states.selectedLabel : ''
+            const data = cloneDeep(formData)
+            formData.province_name = formData.province_id ? provinceRef.value.states.selectedLabel : ''
+            formData.city_name = formData.city_id ? cityRef.value.states.selectedLabel : ''
+            formData.district_name = formData.district_id ? districtRef.value.states.selectedLabel : ''
             const address = [
                 data.province_id ? provinceRef.value.states.selectedLabel : '',
                 data.city_id ? cityRef.value.states.selectedLabel : '',
@@ -389,7 +505,14 @@ const onSave = async (formEl: FormInstance | undefined) => {
             ]
             data.full_address = address.join('')
 
+            // **转换时间段为时间戳**
+            data.trade_time_json = formData.trade_time_json.map(range => ({
+                start_time: range.start_time ? timeTransition(range.start_time) : null,
+                end_time: range.end_time ? timeTransition(range.end_time) : null
+            }))
+
             const save = id ? editStore : addStore
+
             save(data).then(res => {
                 loading.value = false
                 history.back()

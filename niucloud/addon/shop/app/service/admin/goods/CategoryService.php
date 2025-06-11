@@ -147,10 +147,15 @@ class CategoryService extends BaseAdminService
             $data[ 'category_full_name' ] = $info->category_name . '/' . $data[ 'category_name' ];
             $data[ 'level' ] = 2;
         }
-
         $data[ 'update_time' ] = time();
-        $this->model->where([ [ 'category_id', '=', $id ] ])->update($data);
-        return true;
+        try {
+            (new GoodsService())->batchUpdateCategory($id,$category_info['pid'],$data['pid']);
+            $this->model->where([ [ 'category_id', '=', $id ] ])->update($data);
+            return true;
+        }catch (AdminException $e) {
+            throw new AdminException($e->getMessage());
+        }
+
     }
 
     /**

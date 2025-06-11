@@ -17,6 +17,7 @@ use addon\shop\app\model\goods\Goods;
 use addon\shop\app\model\goods\GoodsSku;
 use addon\shop\app\model\goods\Rank;
 use addon\shop\app\model\goods\Stat;
+use addon\shop\app\service\core\goods\CoreGoodsActivePriceService;
 use addon\shop\app\service\core\goods\CoreGoodsRankConfigService;
 use core\base\BaseApiService;
 
@@ -262,32 +263,31 @@ class RankService extends BaseApiService
                 $goods_list = $query->select()->toArray();
             }
         }
-        $goods_service = new GoodsService();
         //获取商品SKU、会员价格信息
-        $member_info = [];
+        $goods_active_price_service = (new CoreGoodsActivePriceService());
         if (isset($goods_list[ 'data' ])) {
             if (!empty($goods_list[ 'data' ])) {
-                if (!empty($this->member_id)) {
-                    $member_info = $goods_service->getMemberInfo();
-                }
                 foreach ($goods_list[ 'data' ] as $key => &$item) {
                     $item[ 'rank_num' ] = $key + 1;
                     $item[ 'goodsSku' ] = $this->getGoodsSku($item);
-                    if (!empty($this->member_id) && !empty($item[ 'goodsSku' ])) {
-                        $item[ 'goodsSku' ][ 'member_price' ] = $goods_service->getMemberPrice($member_info, $item[ 'member_discount' ], $item[ 'goodsSku' ][ 'member_price' ], $item[ 'goodsSku' ][ 'price' ]);
+                    if (!empty($item[ 'goodsSku' ])) {
+                        $item[ 'goodsSku' ][ 'member_discount' ] = $item[ 'member_discount' ];
+                        $show_price = $goods_active_price_service->getShowPrice($item[ 'goodsSku' ], $this->member_id);
+                        $item[ 'goodsSku' ][ 'show_price' ] = $show_price[ 'show_price' ];
+                        $item[ 'goodsSku' ][ 'show_type' ] = $show_price[ 'show_type' ];
                     }
                 }
             }
         } else {
             if (!empty($goods_list)) {
-                if (!empty($this->member_id)) {
-                    $member_info = $goods_service->getMemberInfo();
-                }
                 foreach ($goods_list as $key => &$item) {
                     $item[ 'rank_num' ] = $key + 1;
                     $item[ 'goodsSku' ] = $this->getGoodsSku($item);
-                    if (!empty($this->member_id) && !empty($item[ 'goodsSku' ])) {
-                        $item[ 'goodsSku' ][ 'member_price' ] = $goods_service->getMemberPrice($member_info, $item[ 'member_discount' ], $item[ 'goodsSku' ][ 'member_price' ], $item[ 'goodsSku' ][ 'price' ]);
+                    if (!empty($item[ 'goodsSku' ])) {
+                        $item[ 'goodsSku' ][ 'member_discount' ] = $item[ 'member_discount' ];
+                        $show_price = $goods_active_price_service->getShowPrice($item[ 'goodsSku' ], $this->member_id);
+                        $item[ 'goodsSku' ][ 'show_price' ] = $show_price[ 'show_price' ];
+                        $item[ 'goodsSku' ][ 'show_type' ] = $show_price[ 'show_type' ];
                     }
                 }
             }

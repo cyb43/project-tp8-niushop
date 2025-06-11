@@ -23,7 +23,7 @@
 				</el-form-item>
 
 				<el-form-item :label="t('mobile')" prop="mobile">
-					<el-input v-model.trim="formData.mobile" clearable :placeholder="t('mobilePlaceholder')" class="input-width"  @keyup="filterNumber($event)" @blur="formData.mobile = $event.target.value"/>
+					<el-input v-model.trim="formData.mobile" clearable :placeholder="t('mobilePlaceholder')" maxlength="11" class="input-width"  @keyup="filterNumber($event)" @blur="formData.mobile = $event.target.value"/>
 				</el-form-item>
 
 				<el-form-item :label="t('fullAddress')" prop="address_area">
@@ -42,7 +42,7 @@
 				</el-form-item>
 
 				<el-form-item prop="address">
-					<el-input v-model.trim="formData.address" clearable :placeholder="t('addressPlaceholder')"  class="input-width"/>
+					<el-input v-model.trim="formData.address" clearable :placeholder="t('addressPlaceholder')" @input="areaChange()" class="input-width"/>
 				</el-form-item>
 
 				<el-form-item>
@@ -63,6 +63,7 @@
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { t } from '@/lang'
 import type { FormInstance } from 'element-plus'
+import { ArrowLeft } from "@element-plus/icons-vue"
 import { getShopAddressInfo, addShopAddress, editShopAddress } from '@/addon/shop/api/shop_address'
 import { getMap, getAreaListByPid, getAreaByCode } from '@/app/api/sys'
 import { useRoute } from 'vue-router'
@@ -330,7 +331,8 @@ const areaChange = debounce(() => {
         const address = [
             formData.province_id ? (provinceRef.value.selectedLabel || province) : '',
             formData.city_id ? (cityRef.value.selectedLabel || city) : '',
-            formData.district_id ? (districtRef.value.selectedLabel || district) : ''
+            formData.district_id ? (districtRef.value.selectedLabel || district) : '',
+            formData.address
         ]
 
         addressToLatLng({ mapKey, address: address.join('') }).then(({ message, result }) => {

@@ -42,6 +42,7 @@ class OrderCreate extends BaseApiController
     {
         $data = $this->request->params([
             ['order_key', []],
+            ['delivery', [] ],
             ['member_remark', ''],//买家留言
             ['invoice', []],//发票
         ]);

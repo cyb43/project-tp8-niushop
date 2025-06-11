@@ -52,6 +52,7 @@ trait CoreOrderCreateTrait
         'order_money' => 0
     ];//基本数据处理(整体的数据)
     public $goods_data = [];//商品数据处理
+    public $impulse_buy_list = [];//顺买商品数据处理
     public $extend_data = [];//活动数据
     public $form_data = [];// 万能表单数据
     public $config = [];//配置集合
@@ -86,7 +87,6 @@ trait CoreOrderCreateTrait
         try {
             $order = ( new Order() )->create($order_data);
             $this->order_id = $order[ 'order_id' ];
-
             // 添加订单项目表
             $order_goods_model = new OrderGoods();
             $order_goods_data = array_map(function($value) {

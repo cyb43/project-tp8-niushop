@@ -44,4 +44,3 @@ export function orderCreateCalculate(params: Record<string, any>) {
 export function orderCreate(params: Record<string, any>) {
     return request.post('shop/exchange_order/create', params)
 }
-

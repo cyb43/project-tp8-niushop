@@ -2,9 +2,9 @@
   "title": "商城系统",
   "desc": "实物虚拟商品，订单，物流同城配送，门店自提",
   "key": "shop",
-  "version": "6.4.4",
+  "version": "6.4.6",
   "author": "niucloud",
   "type": "app",
   "support_app": "",
-  "support_version": "1.5.2"
+  "support_version": "1.5.4"
 }

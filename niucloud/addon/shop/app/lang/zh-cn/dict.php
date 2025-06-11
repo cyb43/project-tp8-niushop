@@ -19,6 +19,7 @@ return [
     'dict_shop_order' => [
         'status_wait_pay' => '待支付',
         'status_wait_shipping' => '待发货',
+        'status_wait_pickup' => '待提货',
         'status_wait_take' => '待收货',
         'status_finish' => '已完成',
         'status_close' => '已关闭'
@@ -30,6 +31,13 @@ return [
         'virtual' => '虚拟发货',
         'none_express' => '无需物流'
     ],
+    'dict_shop_delivery_store_time_interval' => [
+        '30' => '30分钟',
+        '60' => '1小时',
+        '90' => '90分钟',
+        '120' => '2小时',
+    ],
+
     'dict_shop_coupon' => [
         'user' => '手动领取',
         'grant' => '后台或活动发放',
@@ -48,6 +56,23 @@ return [
         'invalid' => '已失效',
         'send' => '后台发放',
         'receive' => '用户手动领取'
+    ],
+    'dict_shop_send_coupon_range' => [//后台发送优惠券范围类型
+        'all' => '全部会员',
+        'member' => '选择会员',
+        'member_level' => '按会员等级',
+        'member_label' => '按会员标签',
+    ],
+    'dict_shop_send_coupon_range_type_desc' => [//后台发送优惠券范围类型描述
+        'all' => '全部会员',
+        'member' => '指定会员',
+        'member_level' => '指定会员等级',
+        'member_label' => '指定会员标签',
+    ],
+    'dict_shop_send_coupon_status' => [//后台发送优惠券状态
+        'wait' => '待发放',
+        'progress' => '发放中',
+        'finish' => '发放完成',
     ],
     'dict_wap_index' => [
         'shop' => '商城',
@@ -93,13 +118,21 @@ return [
         'store_agree_refund_wait_transfer' => '同意售后申请',
         'store_refund_transfering' => '转账中',
         'finish' => '退款成功',
-        'close' => '退款关闭'
+        'close' => '退款关闭',
+        'shop_active_close_refund' => '商家关闭售后'
+    ],
+    'dict_shop_order_close_type' => [
+        'shop_close' => '后台关闭',
+        'buyer_close' => '用户关闭',
+        'auto_close' => '未支付自动关闭',
+        'refund_close' => '退款完成关闭',
     ],
     'dict_diy' => [
         'shop_component_type_basic' => '商城组件',
         'page_shop_index' => '商城首页',
         'page_shop_member_index' => '商城个人中心',
         'page_shop_point_index' => '积分商城',
+        'page_shop_detail' => '商品详情',
 
         'shop_title' => '商城',
         'shop_link' => '商城系统',
@@ -200,7 +233,7 @@ return [
 
     'dict_shop_point_exchange_type' => [
         'goods' => '商品',
-        'coupon' => '优惠卷',
+        'coupon' => '优惠券',
         'balance' => '余额',
     ],
 
@@ -236,7 +269,7 @@ return [
     'dict_member' => [
         'account_point_exchange_close' => '兑换订单关闭',
         'account_point_exchange_order' => '兑换订单消费',
-        'account_point_exchange_refund' => '兑换订单维权',
+        'account_point_exchange_refund' => '兑换订单售后',
         'account_point_consume_reward' => '下单奖励',
         'account_point_manjian_gift_give' => '满减送活动赠品发放',
         'account_point_manjian_gift_back' => '满减送活动赠品退还',
@@ -306,6 +339,12 @@ return [
         'stock' => '商品库存',
         'diy_form' => '万能表单',
     ],
-
-
+    'dict_shop_goods_sort_config'=>[
+        'asc'=>'正序排序',
+        'desc'=>'倒序排序',
+        'price'=>'价格',
+        'sort'=>'排序号',
+        'sale_num'=>'销量',
+        'create_time'=>'创建时间',
+    ],
 ];

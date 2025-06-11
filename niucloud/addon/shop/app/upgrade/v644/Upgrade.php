@@ -20,16 +20,21 @@ class Upgrade
      */
     private function handleData()
     {
+        try {
 
-        $brand_model = new Brand();
-        // 更新商品品牌自定义颜色
-        $brand_model->where([ [ 'brand_id', '>', 0 ] ])->update([
-            'color_json' => [
-                'text_color' => 'rgba(255, 255, 255, 1)',
-                'bg_color' => 'rgba(255, 65, 66, 1)',
-                'border_color' => ''
-            ]
-        ]);
+            $brand_model = new Brand();
+            // 更新商品品牌自定义颜色
+            $brand_model->where([ [ 'brand_id', '>', 0 ] ])->update([
+                'color_json' => [
+                    'text_color' => 'rgba(255, 255, 255, 1)',
+                    'bg_color' => 'rgba(255, 65, 66, 1)',
+                    'border_color' => ''
+                ]
+            ]);
+        } catch (\Exception $e) {
+
+        }
+
     }
 
     /**

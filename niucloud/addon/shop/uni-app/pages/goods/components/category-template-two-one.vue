@@ -1,14 +1,24 @@
 <template>
     <view class=" bg-[var(--page-bg-color)] overflow-hidden min-h-screen">
         <view class="mescroll-box" v-if="tabsData.length">
+            <!--  #ifdef H5 -->
             <view v-if="config.search.control" class="search-box box-border z-10 fixed top-0 left-0 right-0  h-[100rpx] bg-[#fff]">
+            <!--  #endif -->
+            <!--  #ifndef H5 -->
+            <view v-if="config.search.control" class="search-box box-border z-10 fixed top-[160rpx] left-0 right-0  h-[100rpx] bg-[#fff]">
+            <!--  #endif -->
                 <view class="flex-1 search-input">
                     <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                     <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" placeholderClass="text-[var(--text-color-light9)]" @confirm="searchNameFn">
                     <text v-if="searchName" class="nc-iconfont nc-icon-cuohaoV6xx1 clear" @click="searchName=''"></text>
                 </view>
             </view>
+            <!--  #ifdef H5 -->
             <view class="tabs-box z-2 fixed left-0 bg-[#fff] bottom-[50px] top-0" :class="{ '!top-[100rpx]': config.search.control }">
+            <!--  #endif -->
+            <!--  #ifndef H5 -->
+            <view class="tabs-box z-2 fixed left-0 bg-[#fff] bottom-[50px] top-0" :class="{ '!top-[260rpx]': config.search.control }">
+            <!--  #endif -->
                 <scroll-view :scroll-y="true" class="scroll-height">
                     <view class="bg-[var(--temp-bg)]">
                         <view class="tab-item"

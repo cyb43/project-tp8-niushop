@@ -108,7 +108,7 @@ class RefundActionService extends BaseApiService
     }
 
     /**
-     * 维权
+     * 售后
      * @param $data
      * @return true
      */
@@ -118,7 +118,7 @@ class RefundActionService extends BaseApiService
         //查询订单项信息
         $order_refund_info = $this->model->where([
             ['order_refund_no', '=', $order_refund_no],
-            ['member_id', '=', $this->member_id],
+            ['member_id', '=', $this->member_id]
         ])->findOrEmpty();
         if ($order_refund_info->isEmpty()) throw new ApiException('SHOP_ORDER_IS_INVALID');//退款已失效
         if (!in_array($order_refund_info['status'], [OrderRefundDict::BUYER_APPLY_WAIT_STORE, OrderRefundDict::STORE_REFUSE_REFUND_GOODS_APPLY_WAIT_BUYER])) throw new ApiException('SHOP_ORDER_IS_INVALID');//退款已失效(只有被拒绝的请求才可以修改退款)

@@ -175,7 +175,7 @@
         <goods-price-edit-popup ref="goodsPriceEditPopupRef" @load="loadGoodsList" />
 
         <!-- 商品推广弹出框 -->
-        <goods-spread-popup ref="goodsSpreadPopupRef" />
+        <spread-popup ref="spreadPopupRef" />
 
         <!-- 会员价弹出框 -->
         <goods-member-price-popup ref="memberPricePopupRef" @load="loadGoodsList" />
@@ -191,14 +191,14 @@ import { t } from '@/lang'
 import { debounce, img, filterDigit, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { cloneDeep, multiply } from 'lodash-es'
+import { cloneDeep } from 'lodash-es'
 import goodsMemberPricePopup from '@/addon/shop/views/goods/components/goods-member-price-popup.vue'
 import goodsStockEditPopup from '@/addon/shop/views/goods/components/goods-stock-edit-popup.vue'
 import goodsPriceEditPopup from '@/addon/shop/views/goods/components/goods-price-edit-popup.vue'
-import goodsSpreadPopup from '@/addon/shop/views/goods/components/goods-spread-popup.vue'
 import goodsBatchSettingsPopup from '@/addon/shop/views/goods/components/goods-batch-settings-popup.vue'
 import { getGoodsPageList, getCategoryTree, getGoodsType, getBrandList, getLabelList, editGoodsSort, editGoodsStatus, copyGoods, deleteGoods } from '@/addon/shop/api/goods'
 import { getMemberLevelAll } from '@/app/api/member'
+import spreadPopup from '@/components/spread-popup/index.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -442,8 +442,8 @@ const batchSetGoods = () => {
     }
     goodsBatchSettingPopupRef.value.show(multipleSelection.value)
 }
-/** ***************** 批量设置-end *************************/
 
+/** ***************** 批量设置-end *************************/
 
 const batchDeleteGoods = () => {
     if (multipleSelection.value.length == 0) {
@@ -485,11 +485,11 @@ const sortInputListener = debounce((sort, row) => {
     if (isNaN(sort) || !regExp.number.test(sort)) {
         ElMessage({
             type: 'warning',
-            message: `${t('sortTips')}`
+            message: `${ t('sortTips') }`
         })
         return
     }
-    if(sort>99999999){
+    if (sort > 99999999) {
         row.sort = 99999999
     }
     editGoodsSort({
@@ -607,10 +607,16 @@ const editStockEvent = (data: any) => {
 }
 
 // 商品推广
-const goodsSpreadPopupRef: any = ref(null)
+const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    goodsSpreadPopupRef.value.show(data)
+    const pagePath = "/addon/shop/pages/goods/detail"
+    const columnName = "goods_id"
+    const columnValue = data.goods_id
+    const title = "商品推广"
+    const folder = "goods"
+
+    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
 }
 
 /** ***************** 会员价-start *************************/
@@ -648,7 +654,7 @@ const copyEvent = (data: any) => {
                 loadGoodsList()
             }
             repeat.value = false
-        }).catch(err => {
+        }).catch(() => {
             repeat.value = false
         })
     })

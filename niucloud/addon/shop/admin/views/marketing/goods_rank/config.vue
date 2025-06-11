@@ -115,7 +115,6 @@ const onSave = async () => {
     await formRef.value?.validate(async(valid) => {
         if (valid) {
             preventDuplication.value = true;
-            console.log(formData.value);
 
             setRankConfig(formData.value).then(() => {
                 getRankConfigFn();

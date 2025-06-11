@@ -25,8 +25,9 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue';
 import { useDiy } from '@/hooks/useDiy'
+import { useShare } from '@/hooks/useShare'
 import diyGroup from '@/addon/components/diy/group/index.vue'
-
+const { setShare } = useShare()
 const diy = useDiy({
     name: 'DIY_SHOP_INDEX'
 })
@@ -40,6 +41,8 @@ diy.onLoad();
 
 // 监听页面显示
 diy.onShow((data: any) => {
+    let share = data.share ? JSON.parse(data.share) : null;
+    setShare(share);
     diyGroupRef.value?.refresh();
     // #ifdef MP
     nextTick(() => {

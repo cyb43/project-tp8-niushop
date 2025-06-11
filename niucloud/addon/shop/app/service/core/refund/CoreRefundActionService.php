@@ -145,7 +145,7 @@ class CoreRefundActionService extends BaseCoreService
      * @param $data
      * @return void
      */
-    public function close($data)
+    public function close($data,$refund_status=OrderRefundDict::CLOSE)
     {
         $order_refund_no = $data[ 'order_refund_no' ];
         //查询订单项信息
@@ -161,7 +161,7 @@ class CoreRefundActionService extends BaseCoreService
         if ($order_refund_info->isEmpty()) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID');//退款已失效
         if (in_array($order_refund_info[ 'status' ], [ OrderRefundDict::STORE_AGREE_REFUND_WAIT_TRANSFER, OrderRefundDict::STORE_REFUND_TRANSFERING, OrderRefundDict::FINISH, OrderRefundDict::CLOSE ])) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID_OR_FINISH');//退款已失效(退款已完成或已关闭)
         $update_data = array(
-            'status' => OrderRefundDict::CLOSE,
+            'status' => $refund_status,
             'close_time' => time()
         );
         $order_refund_info->save($update_data);

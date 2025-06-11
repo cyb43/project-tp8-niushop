@@ -1,12 +1,12 @@
 {
-	"templateName":"运费模板名称",
-	"templateNamePlaceholder":"请输入运费模板名称",
-	"createTime":"创建时间",
-	"addTemplate":"添加运费模板",
-	"updateTemplate":"编辑运费模板",
-	"templateDeleteTips":"确定要删除该模板吗？",
-	"feeTypeName": "计费类型",
-	"freeShipping": "指定区域包邮",
-	"open": "启用",
-	"close": "关闭"
+  "templateName": "运费模板名称",
+  "templateNamePlaceholder": "请输入运费模板名称",
+  "createTime": "创建时间",
+  "addTemplate": "添加运费模板",
+  "updateTemplate": "编辑运费模板",
+  "templateDeleteTips": "确定要删除该模板吗？",
+  "feeTypeName": "计费类型",
+  "freeShipping": "指定区域包邮",
+  "open": "启用",
+  "close": "关闭"
 }

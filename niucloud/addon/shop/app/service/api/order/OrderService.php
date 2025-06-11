@@ -143,7 +143,7 @@ class OrderService extends BaseApiService
      */
     public function getDetail($order_id)
     {
-        $field = 'relate_id,activity_type,point,order_id,order_no,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,invoice_id,create_time,pay_time,delivery_time,take_time,finish_time,close_time,delivery_type,taker_name,taker_mobile,taker_province,taker_city,taker_district,taker_address,taker_full_address,taker_longitude,taker_latitude,take_store_id,is_enable_refund,member_remark,shop_remark,close_remark,discount_money,is_evaluate,form_record_id';
+        $field = 'buyer_ask_delivery_time,relate_id,activity_type,point,order_id,order_no,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,invoice_id,create_time,pay_time,delivery_time,take_time,finish_time,close_time,delivery_type,taker_name,taker_mobile,taker_province,taker_city,taker_district,taker_address,taker_full_address,taker_longitude,taker_latitude,take_store_id,is_enable_refund,member_remark,shop_remark,close_remark,discount_money,is_evaluate,form_record_id';
         $info = $this->model->where([ [ 'order_id|out_trade_no', '=', $order_id ], [ 'member_id', '=', $this->member_id ] ])->field($field)
             ->with(
                 [
@@ -194,6 +194,28 @@ class OrderService extends BaseApiService
                     } else {
                         $v[ 'unit' ] = '件';
                     }
+                    if(isset($v['extend']['is_impulse_buy']) == 1){
+                        $impulse_buy_num = $v['extend']['impulse_buy_goods_num'] ?? 0;//5
+                        $impulse_buy_price_total = $v['extend']['impulse_buy_price'] ?? 0;
+                        if($impulse_buy_num > 0){
+                            $impulse_buy_price = $impulse_buy_price_total/$impulse_buy_num;
+                            if ($impulse_buy_num == 1){
+                                $impulse_buy_tips = '第1'.$v[ 'unit' ].$impulse_buy_price.'元';
+                            }else{
+                                $impulse_buy_tips = '第1-'.$impulse_buy_num. $v[ 'unit' ].$impulse_buy_price.'元';
+                                if ($v['num'] > $impulse_buy_num){
+                                    if ($impulse_buy_num+1 == $v['num']){
+                                        $impulse_buy_tips .= ' 第'.($impulse_buy_num+1). $v[ 'unit' ].$v['price'].'元';
+                                    }else{
+                                        $impulse_buy_tips .= ' 第'.($impulse_buy_num+1).'-'.$v['num']. $v[ 'unit' ].$v['price'].'元';
+                                    }
+                                }
+                            }
+                        }else{//全原价
+                            $impulse_buy_tips = '第1-'.$v['num']. $v[ 'unit' ].$v['price'].'元';
+                        }
+                    }
+                    $v['impulse_buy_tips'] = $impulse_buy_tips ?? "";
                     ( new CoreManjianService() )->getOrderGoodsGiveInfo($v, $info[ 'order_goods' ], $this->member_id);
                 }
             }
@@ -279,7 +301,7 @@ class OrderService extends BaseApiService
         $data[ 'main_id' ] = $this->member_id;
         //查询订单
         $where = array(
-            [ 'order_id', '=', $order_id ],
+            [ 'order_id', '=', $order_id ]
         );
         $order = $this->model->where($where)->findOrEmpty()->toArray();
         if (empty($order)) throw new ApiException('SHOP_ORDER_NOT_FOUND');//订单不存在

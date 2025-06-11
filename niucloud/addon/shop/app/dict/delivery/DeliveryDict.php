@@ -24,6 +24,23 @@ class DeliveryDict
     const LOCAL_DELIVERY = 'local_delivery';
     //自提
     const STORE = 'store';
+    /**
+     * 周列表
+     */
+    const WEEK_LIST = [
+        1 => [ 'name' => '周一', 'type' => 1 ],
+        2 => [ 'name' => '周二', 'type' => 2 ],
+        3 => [ 'name' => '周三', 'type' => 3 ],
+        4 => [ 'name' => '周四', 'type' => 4 ],
+        5 => [ 'name' => '周五', 'type' => 5 ],
+        6 => [ 'name' => '周六', 'type' => 6 ],
+        0 => [ 'name' => '周日', 'type' => 0 ],
+    ];
+    //时间间隔 单位 分钟
+    const TIME_INTERVAL_30 = 30;
+    const TIME_INTERVAL_60 = 60;
+    const TIME_INTERVAL_90 = 90;
+    const TIME_INTERVAL_120 = 120;
 
     /**
      * 获取配送方式(用于订单)
@@ -41,6 +58,43 @@ class DeliveryDict
         if ($type == '') {
             return $data;
         }
-        return $data[$type] ?? '';
+        return $data[ $type ] ?? '';
+    }
+
+    /**
+     * 获取周列表
+     * @param string $type
+     * @return array|array[]|string
+     */
+    public static function getWeekList($week = '')
+    {
+        if ($week !== '') {
+            return self::WEEK_LIST[ $week ];
+        }
+        return self::WEEK_LIST;
+    }
+
+    public static function getTimeIntervalList($time_interval = '')
+    {
+        $list = [
+            self::TIME_INTERVAL_30 => [
+                'type' => self::TIME_INTERVAL_30,
+                'name' => get_lang('dict_shop_delivery_store_time_interval.30'),
+            ],
+            self::TIME_INTERVAL_60 => [
+                'type' => self::TIME_INTERVAL_60,
+                'name' => get_lang('dict_shop_delivery_store_time_interval.60'),
+            ],
+            self::TIME_INTERVAL_90 => [
+                'type' => self::TIME_INTERVAL_90,
+                'name' => get_lang('dict_shop_delivery_store_time_interval.90'),
+            ],
+            self::TIME_INTERVAL_120 => [
+                'type' => self::TIME_INTERVAL_120,
+                'name' => get_lang('dict_shop_delivery_store_time_interval.120'),
+            ],
+        ];
+        if ($time_interval == '') return $list;
+        return $list[ $time_interval ];
     }
 }

@@ -43,8 +43,7 @@
                                         </div>
                                     </template>
                                 </el-image>
-                                <img v-else class="w-[60px] h-[60px]" src="@/addon/shop/assets/goods_default.png"
-                                     fit="contain" />
+                                <img v-else class="w-[60px] h-[60px]" src="@/addon/shop/assets/goods_default.png" fit="contain" />
                             </div>
                             <div class="ml-2 flex flex-col items-start">
                                 <span :title="row.goods_name" class="multi-hidden leading-[1.4]">{{ row.goods_name }}</span>
@@ -57,8 +56,7 @@
                     </div>
                 </div>
 
-                <div v-if="!goodsTable.data.length && !goodsTable.loading"
-                     class="h-[60px] flex items-center justify-center border-solid border-[#e5e7eb] py-[12px] border-b-[1px]">暂无数据</div>
+                <div v-if="!goodsTable.data.length && !goodsTable.loading" class="h-[60px] flex items-center justify-center border-solid border-[#e5e7eb] py-[12px] border-b-[1px]">暂无数据</div>
             </div>
         </div>
 

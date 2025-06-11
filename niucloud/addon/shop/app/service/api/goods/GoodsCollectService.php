@@ -14,6 +14,7 @@ namespace addon\shop\app\service\api\goods;
 use addon\shop\app\model\goods\Goods;
 use addon\shop\app\model\goods\GoodsCollect;
 use addon\shop\app\model\goods\Stat;
+use addon\shop\app\service\core\goods\CoreGoodsActivePriceService;
 use addon\shop\app\service\core\goods\CoreGoodsCollectNumService;
 use addon\shop\app\service\core\goods\CoreGoodsStatService;
 use core\base\BaseApiService;
@@ -37,11 +38,22 @@ class GoodsCollectService extends BaseApiService
     public function getMemberGoodsCollectList()
     {
         $search_model = $this->model->where([ [ 'member_id', '=', $this->member_id ],['goods.delete_time','=',0] ])
-            ->withJoin(['goods'=> [ 'goods_id', 'goods_name', 'goods_cover', 'status']])
+            ->withJoin(['goods'=> [ 'goods_id', 'goods_name', 'goods_cover', 'status', 'member_discount']])
             ->with(['goodsSku' ])
             ->append([ 'goods_cover_thumb_mid' ])
             ->order('create_time desc');
         $list = $this->pageQuery($search_model);
+
+        if (!empty($list['data'])){
+            $goods_active_price_service = (new CoreGoodsActivePriceService());
+            foreach ($list['data'] as &$v){
+                $v[ 'member_discount' ] = $v[ 'goods' ][ 'member_discount' ] ?? '';
+                //获取展示活动价格
+                $show_price_data = $goods_active_price_service->getActivePrice($v, $this->member_id);
+                $v[ 'show_price' ] = $show_price_data[ 'show_price' ];
+                $v[ 'show_type' ] = $show_price_data[ 'show_type' ];
+            }
+        }
         return $list;
     }
 
@@ -84,7 +96,7 @@ class GoodsCollectService extends BaseApiService
         // 商品收藏统计
         foreach ($data[ 'goods_ids' ] as $value) {
             $goods_info = ( new Goods() )->where([
-                [ 'goods_id', '=', $value ],
+                [ 'goods_id', '=', $value ]
             ])->findOrEmpty()->toArray();
             if (empty($goods_info)) continue;
 

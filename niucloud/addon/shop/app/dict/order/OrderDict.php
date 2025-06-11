@@ -83,7 +83,7 @@ class OrderDict
         ];
     }//买家主动关闭
 
-    public static function getStatus($status = '')
+    public static function getStatus($status = '',$delivery_type='')
     {
         $data = [
             self::WAIT_PAY => [
@@ -100,7 +100,7 @@ class OrderDict
                 ],
             ],
             self::WAIT_DELIVERY => [
-                'name' => get_lang('dict_shop_order.status_wait_shipping'),//待发货
+                'name' => $delivery_type == OrderDeliveryDict::STORE ? get_lang('dict_shop_order.status_wait_pickup'): get_lang('dict_shop_order.status_wait_shipping'),//待发货
                 'status' => self::WAIT_DELIVERY,
                 'is_refund' => 0,
                 'action' => [],

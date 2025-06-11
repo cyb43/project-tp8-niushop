@@ -22,7 +22,7 @@ return [
             //是否减少
             'dec' => 0,
         ],
-        //兑换订单维权
+        //兑换订单售后
         'account_point_exchange_refund' => [
             //名称
             'name' => get_lang('dict_member.account_point_exchange_refund'),

@@ -82,7 +82,6 @@
 
 <script lang="ts" setup>
 import { t } from '@/lang'
-import { img } from '@/utils/common'
 import useDiyStore from '@/stores/modules/diy'
 import { ref, reactive } from 'vue'
 import rankSelectPopup from '@/addon/shop/views/marketing/goods_rank/components/rank-select-popup.vue'

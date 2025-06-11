@@ -54,12 +54,12 @@
                         </view>
                     </view>
                     <view class="flex flex-wrap mt-[16rpx]" v-if="goodsDetail.label_info && goodsDetail.label_info.length">
-                        <block v-for="item in goodsDetail.label_info" :key="item.label_id">
+                        <template v-for="item in goodsDetail.label_info" :key="item.label_id">
                             <image class="img-tag middle" v-if="item.style_type == 'icon' && item.icon" :src="img(item.icon)" mode="heightFix" @error="diyGoods.error(item,'icon')" />
                             <view class="base-tag middle" v-else-if="item.style_type == 'diy' || !item.icon" :style="diyGoods.baseTagStyle(item)">
                                 {{ item.label_name }}
                             </view>
-                        </block>
+                        </template>
                     </view>
                 </view>
                 <view class="mt-[24rpx] sidebar-margin card-template" v-if="isGoodsPropertyTemp">
@@ -114,12 +114,12 @@
                 <view class="my-[var(--top-m)] goods-sku sidebar-margin card-template" v-if="goodsDetail.goods && goodsDetail.goods.attr_format && Object.keys(goodsDetail.goods.attr_format).length">
                     <view class="title mb-[30rpx]">商品属性</view>
                     <view>
-                        <block v-for="(item,index) in goodsDetail.goods.attr_format" :key="index">
+                        <template v-for="(item,index) in goodsDetail.goods.attr_format" :key="index">
                             <view v-if="index < 4 || isAttrFormatShow" class="card-template-item">
                                 <view class="text-[26rpx] leading-[30rpx] w-[160rpx] font-400 shrink-0 text-[var(--text-color-light9)]">{{ item.attr_value_name }}</view>
                                 <view class="text-[#333] box-border value-wid text-[26rpx] leading-[30rpx] font-400 pl-[20rpx]">{{ Array.isArray(item.attr_child_value_name) ? item.attr_child_value_name.join(',') : item.attr_child_value_name }}</view>
                             </view>
-                        </block>
+                        </template>
                         <view v-if="goodsDetail.goods.attr_format.length > 4" class="flex-center" @click="isAttrFormatShow = !isAttrFormatShow">
                             <text class="text-[24rpx] mr-[10rpx]">{{ isAttrFormatShow ? '展开' : '收起' }}</text>
                             <text class="nc-iconfont !text-[22rpx]" :class="{'nc-icon-xiaV6xx': isAttrFormatShow, 'nc-icon-shangV6xx-1': !isAttrFormatShow}"></text>

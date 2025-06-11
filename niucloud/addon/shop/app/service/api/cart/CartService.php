@@ -14,8 +14,8 @@ namespace addon\shop\app\service\api\cart;
 use addon\shop\app\model\cart\Cart;
 use addon\shop\app\model\goods\Goods;
 use addon\shop\app\model\goods\GoodsSku;
-use addon\shop\app\service\api\goods\GoodsService;
 use addon\shop\app\service\api\marketing\ManjianService;
+use addon\shop\app\service\core\goods\CoreGoodsActivePriceService;
 use addon\shop\app\service\core\goods\CoreGoodsCartNumService;
 use addon\shop\app\service\core\goods\CoreGoodsStatService;
 use addon\shop\app\service\core\goods\CoreGoodsLimitBuyService;
@@ -197,13 +197,16 @@ class CartService extends BaseApiService
                     $query->withField('goods_id, status,delete_time,member_discount,is_discount');
                 },
             ])->order($order)->select()->toArray();
-        $goods_service = new GoodsService();
-        $member_info = $goods_service->getMemberInfo();
 
         array_multisort(array_column($list, 'id'), SORT_ASC, $list);
+        $goods_active_price_service = (new CoreGoodsActivePriceService());
         foreach ($list as $k => &$v) {
             if (!empty($v[ 'goodsSku' ])) {
-                $v[ 'goodsSku' ][ 'member_price' ] = $goods_service->getMemberPrice($member_info, $v[ 'goods' ][ 'member_discount' ], $v[ 'goodsSku' ][ 'member_price' ], $v[ 'goodsSku' ][ 'price' ]);
+                $v[ 'goodsSku' ][ 'member_discount' ] = $v[ 'goods' ][ 'member_discount' ] ?? '';
+                //获取展示活动价格
+                $show_price_data = $goods_active_price_service->getActivePrice($v[ 'goodsSku' ], $this->member_id);
+                $v[ 'goodsSku' ][ 'show_price' ] = $show_price_data[ 'show_price' ];
+                $v[ 'goodsSku' ][ 'show_type' ] = $show_price_data[ 'show_type' ];
             }
             if (!empty($v[ 'goods' ])) {
                 // 限购查询当前会员已购数量
@@ -238,14 +241,17 @@ class CartService extends BaseApiService
                 },
             ])->order($order)->select()->toArray();
 
-        $goods_service = new GoodsService();
-        $member_info = $goods_service->getMemberInfo();
 
         array_multisort(array_column($list, 'id'), SORT_ASC, $list);
+        $goods_active_price_service = (new CoreGoodsActivePriceService());
         $gift_goods = [];
         foreach ($list as $k => &$v) {
             if (!empty($v[ 'goodsSku' ])) {
-                $v[ 'goodsSku' ][ 'member_price' ] = $goods_service->getMemberPrice($member_info, $v[ 'goods' ][ 'member_discount' ], $v[ 'goodsSku' ][ 'member_price' ], $v[ 'goodsSku' ][ 'price' ]);
+                $v[ 'goodsSku' ][ 'member_discount' ] = $v[ 'goods' ][ 'member_discount' ] ?? '';
+                //获取展示活动价格
+                $show_price_data = $goods_active_price_service->getActivePrice($v[ 'goodsSku' ], $this->member_id);
+                $v[ 'goodsSku' ][ 'show_price' ] = $show_price_data[ 'show_price' ];
+                $v[ 'goodsSku' ][ 'show_type' ] = $show_price_data[ 'show_type' ];
             }
             if (!empty($v[ 'goods' ])) {
                 // 限购查询当前会员已购数量
@@ -275,7 +281,7 @@ class CartService extends BaseApiService
         //满减
         $data = ( new CoreManjianService() )->manjianPromotion($data, $this->member_id);
         $promotion_money = $data[ 'promotion_money' ] ?? 0;
-        $order_money = $data[ 'goods_money' ] - $promotion_money;
+        $order_money = max($data['goods_money'] - $promotion_money, 0);
         $data[ 'order_money' ] = $order_money;
 
         $good_list = $data[ 'goods_list' ];
@@ -316,7 +322,7 @@ class CartService extends BaseApiService
         $sku_id_list = array_column($sku_ids, 'sku_id');
         $sku_num_list = array_column($sku_ids, 'num', 'sku_id');
         //组装商品列表
-        $field = 'goodsSku.sku_id, goodsSku.sku_name,  goodsSku.price, goodsSku.stock, goodsSku.goods_id, cart.id as cart_id,cart.num, goodsSku.member_price,goods.member_discount';
+        $field = 'goodsSku.sku_id, goodsSku.sku_name,  goodsSku.price, goodsSku.stock, goodsSku.goods_id, cart.id as cart_id,cart.num, goodsSku.member_price, goods.member_discount, goodsSku.sale_price';
         $condition = [
             [ 'goodsSku.sku_id', 'in', $sku_id_list ],
         ];
@@ -328,23 +334,21 @@ class CartService extends BaseApiService
             ->join('shop_goods goods', 'goods.goods_id = goodsSku.goods_id')
             ->select()
             ->toArray();
-        $goods_service = new GoodsService();
-        $member_info = $goods_service->getMemberInfo();
 
         $data[ 'goods_num' ] = 0;
         $data[ 'goods_money' ] = 0;
         $data[ 'goods_list' ] = [];
         $data[ 'coupon_money' ] = 0; //优惠券金额
         $data[ 'promotion_money' ] = 0; //优惠金额
+        $goods_active_price_service = (new CoreGoodsActivePriceService());
         if (!empty($goods_list)) {
             foreach ($goods_list as $k => $v) {
-                $member_price = $goods_service->getMemberPrice($member_info, $v[ 'member_discount' ], $v[ 'member_price' ], $v[ 'price' ]);
+                //获取展示活动价格
+                $show_price_data = $goods_active_price_service->getActivePrice($v, $this->member_id);
+                $v[ 'show_price' ] = $show_price_data[ 'show_price' ];
+                $v[ 'show_type' ] = $show_price_data[ 'show_type' ];
                 $item_num = $sku_num_list[ $v[ 'sku_id' ] ];
-                $price = $v[ 'price' ];
-                if (isset($member_price) && !empty($member_price) && $member_price < $v[ 'price' ]) {
-                    $price = $member_price;
-                }
-                $v[ 'price' ] = $price;
+                $price = $v[ 'show_price' ];
                 $v[ 'goods_money' ] = $price * $item_num;
                 $v[ 'real_goods_money' ] = $v[ 'goods_money' ];
                 $v[ 'promotion' ] = [];

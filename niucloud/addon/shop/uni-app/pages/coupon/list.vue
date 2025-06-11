@@ -2,7 +2,8 @@
     <view class="bg-[var(--page-bg-color)] min-h-[100vh] overflow-hidden" :style="themeColor()">
         <view class="coupon-header fixed  left-0 right-0 top-0 z-10080">
             <!-- #ifdef MP-WEIXIN -->
-            <view :style="{height: headStyle, backgroundImage: 'url(' + img('addon/shop/coupon/coupon_uniapp.png') + ')',backgroundSize: '100%', backgroundPosition: 'bottom', backgroundRepeat: 'no-repeat'}"><top-tabbar :data="param" class="top-header" />
+            <view :style="{height: headStyle, backgroundImage: 'url(' + img('addon/shop/coupon/coupon_uniapp.png') + ')',backgroundSize: '100%', backgroundPosition: 'bottom', backgroundRepeat: 'no-repeat'}">
+                <top-tabbar :data="param" class="top-header" />
             </view>
             <!-- #endif -->
             <!-- #ifdef H5 -->
@@ -88,7 +89,6 @@
                                 </view>
                             </view>
                         </view>
-                        {{ }}
                         <view v-if="item.btnType === 'collecting'" @click.stop="collecting(item.id, index)" class="pr-[20rpx] pl-[34rpx]">
                             <button class="flex-center" :style="{width:'150rpx',height:'60rpx',color:'#fff', fontSize:'24rpx', padding:'0', backgroundColor:'var(--primary-color)',border:'none',borderRadius:'30rpx'}">立即领取</button>
                         </view>
@@ -194,9 +194,10 @@ const userInfo = computed(() => memberStore.info)
 
 watch(() => userInfo.value, (newValue, oldValue) => {
     if (newValue) {
-        getMescroll().resetUpScroll();
+        if (getMescroll()) getMescroll().resetUpScroll();
     }
 }, { immediate: true, deep: true })
+
 const getShopCouponListFn = (mescroll: any) => {
     loading.value = true;
     let data: object = {

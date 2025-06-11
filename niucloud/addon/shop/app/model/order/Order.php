@@ -11,6 +11,7 @@
 
 namespace addon\shop\app\model\order;
 
+use addon\shop\app\dict\delivery\DeliveryDict;
 use addon\shop\app\dict\order\OrderDeliveryDict;
 use addon\shop\app\dict\order\OrderDict;
 use addon\shop\app\model\delivery\Store;
@@ -19,6 +20,7 @@ use app\model\member\Member;
 use app\model\pay\Pay;
 use core\base\BaseModel;
 use think\db\Query;
+use think\model\concern\SoftDelete;
 use think\model\relation\HasMany;
 use think\model\relation\HasOne;
 
@@ -27,7 +29,7 @@ use think\model\relation\HasOne;
  */
 class Order extends BaseModel
 {
-
+    use SoftDelete;
     /**
      * 数据表主键
      * @var string
@@ -55,6 +57,14 @@ class Order extends BaseModel
 
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
+
+    /**
+     * 定义软删除标记字段.
+     * @var string
+     */
+    protected $deleteTime = 'delete_time';
+
+    protected $defaultSoftDelete = 0;
 
     /**
      * 订单项
@@ -177,7 +187,7 @@ class Order extends BaseModel
     {
         if (empty($data[ 'status' ]))
             return '';
-        return OrderDict::getStatus()[ $data[ 'status' ] ] ?? '';
+        return OrderDict::getStatus($data[ 'status' ],$data['delivery_type'])?? '';
     }
 
     /**

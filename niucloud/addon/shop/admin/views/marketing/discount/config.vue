@@ -98,8 +98,8 @@ const getActiveDiscountConfigFn=()=>{
     }).catch(() => {
         loading.value = false
     })
-    
 }
+
 getActiveDiscountConfigFn()
 const addConfigList = ()=>{
     formData.value.list.push({imageUrl:'',toLink:{name: ''}})

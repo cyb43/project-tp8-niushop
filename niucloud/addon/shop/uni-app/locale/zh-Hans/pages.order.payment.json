@@ -7,5 +7,17 @@
     "orderDetail": "详情",
 	"evaluate": "评价",
     "orderListempty":"暂无订单",
-	"emptyAddress":"暂无收货地址，请先创建地址"
+	"emptyAddress":"暂无收货地址，请先创建地址",
+	"changeIt":"换一换",
+	"activityInstructions":"活动说明",
+	"goodsLimitThree":"该商品起购",
+	"piece":"件",
+	"goodsLimitTwo":"该商品每人限购",
+	"goodsLimitOne":"该商品单次限购",
+	"stockNotEnough":"商品库存不足",
+	"limitPlaceholderTwo":"件，超过按",
+	"limitPlaceholderThree":"购买",
+	"limitPlaceholderOne":"限购",
+	"buyWithOneClick":"一键购买",
+	"know":"我知道了"
 }

@@ -7,20 +7,18 @@
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                 <el-form :inline="true" :model="importFileTableData.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('createTime')" prop="create_time">
-                        <el-date-picker v-model="importFileTableData.searchParam.create_time" type="datetimerange"
-                            value-format="YYYY-MM-DD HH:mm:ss" :start-placeholder="t('startTime')"
-                            :end-placeholder="t('endTime')" />
+                        <el-date-picker v-model="importFileTableData.searchParam.create_time" type="datetimerange" value-format="YYYY-MM-DD HH:mm:ss" :start-placeholder="t('startTime')" :end-placeholder="t('endTime')" />
                     </el-form-item>
                     <el-form-item :label="t('operationType')" prop='type'>
-						<el-select v-model="importFileTableData.searchParam.type" clearable class="input-item">
-							<el-option v-for="(v,k) in deliveryType" :key="k" :label="v" :value="k"></el-option>
-						</el-select>
-					</el-form-item>
+                        <el-select v-model="importFileTableData.searchParam.type" clearable class="input-item">
+                            <el-option v-for="(v,k) in deliveryType" :key="k" :label="v" :value="k"></el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item :label="t('state')" prop='status'>
-						<el-select v-model="importFileTableData.searchParam.status" clearable class="input-item">
+                        <el-select v-model="importFileTableData.searchParam.status" clearable class="input-item">
                             <el-option v-for="(v,k) in deliveryState" :key="k" :label="v" :value="k"></el-option>
-						</el-select>
-					</el-form-item>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item :label="t('operator')" prop='pay_type'>
                         <el-select v-model="importFileTableData.searchParam.main_id" clearable class="input-width" filterable>
                             <el-option v-for="item in allUserList" :key="item.uid" :label="item.username" :value="item.uid">
@@ -31,7 +29,7 @@
                                 </div>
                             </el-option>
                         </el-select>
-					</el-form-item>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="loadInvoiceList()">{{ t('search') }}</el-button>
                         <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
@@ -46,7 +44,7 @@
                         <span>{{ !importFileTableData.loading ? t('emptyData') : '' }}</span>
                     </template>
                     <el-table-column prop="type_name" :label="t('operationType')" min-width="100" />
-                    <el-table-column :label="t('operator')" min-width="100" >
+                    <el-table-column :label="t('operator')" min-width="100">
                         <template #default="{ row }">
                             <div class="flex items-center">
                                 <span>{{ row?.user?.username }}</span>
@@ -72,17 +70,15 @@
                 </el-table>
                 <div class="mt-[16px] flex justify-end">
                     <el-pagination v-model:current-page="importFileTableData.page"
-                        v-model:page-size="importFileTableData.limit"
-                        layout="total, sizes, prev, pager, next, jumper" :total="importFileTableData.total"
-                        @size-change="loadInvoiceList()" @current-change="loadInvoiceList" />
+                                   v-model:page-size="importFileTableData.limit"
+                                   layout="total, sizes, prev, pager, next, jumper" :total="importFileTableData.total"
+                                   @size-change="loadInvoiceList()" @current-change="loadInvoiceList" />
                 </div>
                 <import-data ref="importDataDialog" @complete="loadInvoiceList()" />
 
                 <!-- 失败原因弹窗 -->
                 <el-dialog v-model="causeFailureDialog" :title="t('checkCause1')" width="420px">
-                    <div class="break-all -mt-[20px]">
-                        {{causeFailureContent}}
-                    </div>
+                    <div class="break-all -mt-[20px]">{{ causeFailureContent }}</div>
                     <template #footer>
                         <span class="dialog-footer">
                             <el-button @click="causeFailureDialog = false">{{ t('confirm') }}</el-button>
@@ -98,7 +94,11 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getOrderBatchDeliveryList, getOrderBatchDeliveryType, getOrderBatchDeliveryState } from '@/addon/shop/api/order'
+import {
+    getOrderBatchDeliveryList,
+    getOrderBatchDeliveryType,
+    getOrderBatchDeliveryState
+} from '@/addon/shop/api/order'
 import { FormInstance } from 'element-plus'
 import { getAllUserList } from '@/app/api/user'
 import importData from '@/addon/shop/views/order/components/import-data.vue'
@@ -111,7 +111,7 @@ const pageName = route.meta.title
 const deliveryType = ref([])
 const deliveryState = ref([])
 const allUserList = ref<any[]>([])
-const setFormData = async () => {
+const setFormData = async() => {
     deliveryType.value = await (await getOrderBatchDeliveryType()).data
     deliveryState.value = await (await getOrderBatchDeliveryState()).data
     allUserList.value = await (await getAllUserList({})).data
@@ -161,8 +161,8 @@ const loadInvoiceList = (page: number = 1) => {
 loadInvoiceList()
 
 // 下载
-const examineDownloadFn = (path:any) => {
-    const url = `${import.meta.env.VITE_IMG_DOMAIN || location.origin}/${path}`
+const examineDownloadFn = (path: any) => {
+    const url = `${ import.meta.env.VITE_IMG_DOMAIN || location.origin }/${ path }`
     window.open(url)
 }
 

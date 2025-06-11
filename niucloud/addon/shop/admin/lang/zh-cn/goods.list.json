@@ -14,23 +14,21 @@
   "startSaleNumTips": "最低销量输入错误",
   "endSaleNumPlaceholder": "最高销量",
   "endSaleNumTips": "最高销量输入错误",
-  "shopSaleNumTips":"最低销量不能大于最高销量",
+  "shopSaleNumTips": "最低销量不能大于最高销量",
   "skuPrice": "价格",
   "startPricePlaceholder": "最低价格",
   "startPriceTips": "最低价格输入错误",
   "endPricePlaceholder": "最高价格",
   "endPriceTips": "最高价格输入错误",
-  "shopPriceTips":"最低价格不能大于最高价格",
+  "shopPriceTips": "最低价格不能大于最高价格",
   "statusOn": "销售中",
   "statusOff": "仓库中",
   "statusAll": "全部商品",
-
   "batchOnGoods": "批量上架",
   "batchOffGoods": "批量下架",
   "batchDeleteGoods": "批量删除",
   "batchSetting": "批量设置",
   "batchEmptySelectedGoodsTips": "请选择要操作的商品",
-
   "goodsInfo": "商品",
   "stock": "库存",
   "status": "状态",
@@ -40,55 +38,44 @@
   "addGoods": "添加商品",
   "statusActionOn": "上架",
   "statusActionOff": "下架",
-  "statusChangeTips":"确定要下架该商品吗？",
+  "statusChangeTips": "确定要下架该商品吗？",
   "spreadGoods": "推广",
   "copyGoods": "复制",
-
   "updateGoods": "编辑商品",
   "goodsCopyTips": "确定要复制该商品吗？",
   "goodsDeleteTips": "确定要删除该商品吗？",
   "batchGoodsDeleteTips": "确定要删除这些商品吗",
-
   "batchOperationSku": "批量设置",
   "editStockPopupTitle": "编辑商品库存",
   "editPricePopupTitle": "编辑商品价格",
-
   "skuName": "规格名称",
-
   "price": "销售价",
   "pricePlaceholder": "请输入销售价",
   "priceTips": "销售价格式输入错误",
   "priceNotZeroTips": "销售价不能小于0",
-
   "marketPrice": "划线价",
   "marketPricePlaceholder": "请输入划线价",
   "marketPriceTips": "划线价格式输入错误",
   "marketPriceNotZeroTips": "划线价不能小于0",
-
   "market_price": "划线价",
   "market_pricePlaceholder": "请输入划线价",
   "market_priceTips": "划线价格式输入错误",
   "market_priceNotZeroTips": "划线价不能小于0",
-
   "costPrice": "成本价",
   "costPricePlaceholder": "请输入成本价",
   "costPriceTips": "成本价格式输入错误",
   "costPriceNotZeroTips": "成本价不能小于0",
-
   "cost_price": "成本价",
   "cost_pricePlaceholder": "请输入成本价",
   "cost_priceTips": "成本价格式输入错误",
   "cost_priceNotZeroTips": "成本价不能小于0",
-
   "stockPlaceholder": "请输入库存",
   "stockTips": "库存格式输入错误",
   "stockNotZeroTips": "库存不能小于0",
-
   "goodsSpreadTitle": "商品推广",
   "spreadLink": "推广链接",
   "copy": "复制",
   "downloadQrcode": "下载二维码",
-
   "memberPrice": "会员价",
   "editMemberPricePopupTitle": "编辑会员价",
   "memberDiscount": "会员价优惠方式",
@@ -104,8 +91,6 @@
   "memberPricePlaceholder": "请输入会员价",
   "discountHint": "会员折扣说明：按照默认会员等级折扣优惠",
   "fixedPriceHint": "会员价说明：指定优惠价格，商品未参与活动时，按照会员价优惠，若商品参与活动，则以活动价为准",
-
-
   "addGoodsLabel": "添加商品标签",
   "addGoodsService": "添加商品服务",
   "addGoodsCategory": "添加分类",
@@ -133,9 +118,9 @@
   "addDeliveryTemplateId": "添加运费模板",
   "deliveryType": "配送方式",
   "deliveryTypePlaceholder": "请选择配送方式",
-  "yuan":"元",
-  "label":"商品标签",
-  "service":"商品服务",
+  "yuan": "元",
+  "label": "商品标签",
+  "service": "商品服务",
   "virtualSaleNum": "虚拟销量",
   "goodsBrand": "商品品牌",
   "goodsPoster": "商品海报",
@@ -147,8 +132,8 @@
   "stockNum": "目标数值",
   "stockNumTips": "批量调整商品库存，若商品正在参与营销活动，则不会修改库存",
   "confirm": "确认",
-
   "diyForm": "万能表单",
   "diyFormPlaceholder": "请选择万能表单",
-  "addDiyForm": "添加表单"
+  "addDiyForm": "添加表单",
+  "productClassificationPlaceholder":"请选择商品分类"
 }

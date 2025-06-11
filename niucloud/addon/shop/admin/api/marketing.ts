@@ -103,20 +103,49 @@ export function editCoupon(params: Record<string, any>) {
 
 /**
  * 删除优惠券
- * @param id
+ * @param params
  * @returns
  */
-export function deleteCoupon(id: number) {
-    return request.delete(`shop/goods/coupon/${ id }`, { showSuccessMessage: true })
+export function deleteCoupon(params: Record<string, any>) {
+    return request.post(`shop/goods/coupon/delete`, params, { showSuccessMessage: true })
 }
 
 /**
  * 关闭优惠券
- * @param id
+ * @param params
  * @returns
  */
-export function closeCoupon(id: number) {
-    return request.put(`shop/goods/coupon/invalid/${ id }`, { showSuccessMessage: true })
+export function closeCoupon(params: Record<string, any>) {
+    return request.put(`shop/goods/coupon/invalid`, params, { showSuccessMessage: true })
+}
+
+/**
+ * 发送优惠券
+ * @param params
+ * @returns
+ */
+export function sendCoupon(params: Record<string, any>) {
+    return request.post(`shop/goods/coupon/send/${ params.id }`, params, {
+        showErrorMessage: true,
+        showSuccessMessage: true
+    })
+}
+
+/**
+ * 获取优惠券发放记录
+ * @param params
+ * @returns
+ */
+export function getCouponSendRecords(params: Record<string, any>) {
+    return request.get(`shop/goods/coupon/send/pages/${ params.id }`, { params });
+}
+
+/**
+ * 优惠券init
+ * @returns
+ */
+export function initCoupon() {
+    return request.get(`shop/goods/coupon/send/init`)
 }
 
 /************ 限时折扣 ****************/
@@ -137,8 +166,19 @@ export function getActiveDiscountStatusList() {
     return request.get(`shop/active/status`)
 }
 
+
 /**
- * 获取限时折扣详情
+ * 获取指定活动的折扣信息。
+ *
+ * @param active_id 获取基本信息
+ * @returns
+ */
+export function getBasicInformation(active_id: number) {
+    return request.get(`shop/active/discount/info/${ active_id }`);
+}
+
+/**
+ * 获取限时折扣详情 编辑
  * @param active_id
  * @returns
  */
@@ -161,7 +201,7 @@ export function addActiveDiscount(params: Record<string, any>) {
  * @returns
  */
 export function editActiveDiscount(params: Record<string, any>) {
-    return request.put(`shop/active/discount/${ params.active_id }`, params, {
+    return request.put(`shop/active/discount/${ params.discount_id }`, params, {
         showErrorMessage: true,
         showSuccessMessage: true
     })
@@ -204,6 +244,15 @@ export function getActiveDiscountGoodsPageList(params: Record<string, any>) {
  */
 export function getActiveDiscountOrderPageList(params: Record<string, any>) {
     return request.get(`shop/active/discount/order/${ params.active_id }`, { params })
+}
+
+/**
+ * 限时折扣商品校验
+ * @param params
+ * @returns
+ */
+export function goodscheck(params: Record<string, any>) {
+    return request.post(`shop/active/discount/goods/check`, params, {})
 }
 
 /**
@@ -597,3 +646,4 @@ export function batchDeleteManjian(params: Record<string, any>) {
 export function batchCloseMajian(params: Record<string, any>) {
     return request.put(`shop/manjian/goods/batchClose`, params, { showSuccessMessage: true })
 }
+

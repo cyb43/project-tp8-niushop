@@ -119,12 +119,12 @@ watch(
 const refresh = () => {
     // 装修模式下刷新
     if (diyStore.mode == 'decorate') {
-        if (diyComponent.value.componentName == 'ShopGoodsRanking') {
+        if (diyComponent.value && diyComponent.value.componentName == 'ShopGoodsRanking') {
             const fakeGoods = {
                 goods_name: '商品名称',
                 goods_cover_thumb_mid: '',
                 goodsSku: {
-                    price: 10
+                    show_price: 10
                 },
                 rank_num: 0  // 初始化为 0，后续会递增
             };

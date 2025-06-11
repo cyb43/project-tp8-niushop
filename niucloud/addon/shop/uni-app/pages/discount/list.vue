@@ -14,13 +14,12 @@
                     <view class="flex items-end h-[100%]" :style="{'width':187.5*discountList.length+'rpx'}">
                         <view class="w-[187.5rpx] h-[100rpx] relative flex-shrink-0" v-for="(item,index) in discountList" @click="navClick(item)">
                             <view class="w-full absolute left-0 top-0 z-10 text-[#fff] text-center pt-[14rpx]">
-                                <view class="text-[28rpx] leading-[39rpx] font-500 px-[10rpx] h-[39rpx] overflow-hidden" :class="{'!text-[#333]':active==item.active_id}">{{ item.active_desc }}</view>
+                                <view class="text-[28rpx] leading-[39rpx] font-500 px-[10rpx] h-[39rpx] overflow-hidden" :class="{'!text-[#333]':active==item.discount_id}">{{ item.name }}</view>
                                 <view class="flex justify-center w-full">
-                                    <text class="text-[22rpx] h-[36rpx] flex-center mt-[5rpx]"
-                                          :class="{'active flex items-center justify-center':active==item.active_id}">{{ item.active_status == 'not_active' ? '预告' : item.active_status_name }}</text>
+                                    <text class="text-[22rpx] h-[36rpx] flex-center mt-[5rpx]" :class="{'active flex items-center justify-center':active==item.discount_id}">{{ item.status == 'not_active' ? '预告' : item.status_name }}</text>
                                 </view>
                             </view>
-                            <template v-if="active==item.active_id">
+                            <template v-if="active==item.discount_id">
                                 <image v-if="discountList.length<4" class="absolute bottom-0 z-5 h-[110rpx] z-5"
                                        :class="{'left-0 w-[230rpx]':index==0,'left-[-41.25rpx] w-[270rpx]':index!=0}"
                                        :src="img(index==0?'addon/shop/discount/nav-left.png':'addon/shop/discount/nav-center.png')" />
@@ -37,10 +36,12 @@
 
         <mescroll-body v-if="discountList.length" ref="mescrollRef" :top="mescrollTop" @init="mescrollInit" :down="{ use: false }" @up="getActiveDiscountGoodsListFn">
             <view class="sidebar-margin py-[var(--top-m)] bg-[#F4F6F8]">
-                <block v-for="(item,index) in list" :key="index">
+         
+                <template v-for="(item,index) in list" :key="index">
+                 
                     <view class="bg-[#fff] p-[20rpx] flex rounded-[var(--rounded-big)]" :class="{'mb-[var(--top-m)]':index<list.length-1}" @click="toLink(item)">
                         <view class="w-[240rpx] h-[240rpx] rounded-[var(--goods-rounded-big)] overflow-hidden">
-                            <u--image width="240rpx" height="240rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.goods_cover_thumb_mid ? item.goods_cover_thumb_mid : '')" model="aspectFill">
+                            <u--image width="240rpx" height="240rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.goods_cover ? item.goods_cover_thumb_mid : '')" model="aspectFill">
                                 <template #error>
                                     <image class="rounded-[var(--goods-rounded-big)] overflow-hidden w-[240rpx] h-[240rpx]" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                 </template>
@@ -58,30 +59,29 @@
 
                             <view
                                 class="relative overflow-hidden w-full h-[88rpx] flex justify-between mt-[20rpx] rounded-[100rpx]"
-                                :class="{'bg-[var(--primary-color-light)]': item.activeGoods.active_goods_status=='active','bg-[#FFF6F1]': item.activeGoods.active_goods_status!='active' }">
+                                :class="{'bg-[var(--primary-color-light)]': item.discount_status=='active','bg-[#FFF6F1]': item.discount_status!='active' }">
                                 <view class="mr-[20rpx] pl-[30rpx] flex-1 flex flex-col justify-center">
                                     <view class="flex items-end">
-                                        <view class="text-[var(--price-text-color)] flex items-baseline"
-                                              :class="{'!text-[var(--primary-color)]':item.activeGoods.active_goods_status!='active'}">
+                                        <view class="text-[var(--price-text-color)] flex items-baseline" :class="{'!text-[var(--primary-color)]':item.discount_status!='active'}">
                                             <text class="text-[26rpx] leading-[26rpx] font-500 mr-[4rpx] price-font">￥</text>
-                                            <text class="text-[44rpx] leading-[40rpx] font-500 price-font">{{ parseFloat(item.goodsSku.active_discount_price).toFixed(2).split('.')[0] }}.</text>
-                                            <text class="text-[26rpx] leading-[28rpx] font-500 price-font">{{ parseFloat(item.goodsSku.active_discount_price).toFixed(2).split('.')[1] }}</text>
+                                            <text class="text-[44rpx] leading-[40rpx] font-500 price-font">{{ parseFloat(item.goodsSku.discount_price).toFixed(2).split('.')[0] }}.</text>
+                                            <text class="text-[26rpx] leading-[28rpx] font-500 price-font">{{ parseFloat(item.goodsSku.discount_price).toFixed(2).split('.')[1] }}</text>
                                         </view>
-                                        <view v-if="item.goodsSku.active_discount_rate<10"
+                                        <view v-if="item.goodsSku.discount_rate<10"
                                               class="mb-[4rpx] text-[var(--price-text-color)] px-[4rpx] border-[1rpx] border-[var(--primary-color)] border-solid  text-[18rpx] ml-[4rpx] rounded-[4rpx] leading-[24rpx]"
-                                              :class="{'!border-[var(--primary-color)]':item.activeGoods.active_goods_status!='active'}">{{ item.goodsSku.active_discount_rate }}折</view>
+                                              :class="{'!border-[var(--primary-color)]':item.discount_status!='active'}">{{ item.goodsSku.discount_rate }}折</view>
                                     </view>
                                     <view class="flex items-center mt-[4rpx]">
                                         <view class="w-[20rpx] h-[20rpx] mr-[4rpx] rounded-[20rpx] text-[#fff] bg-[var(--primary-color)] flex items-center justify-center"
-                                            :class="{'!bg-[var(--primary-color)]':item.activeGoods.active_goods_status!='active'}">
+                                            :class="{'!bg-[var(--primary-color)]':item.discount_status!='active'}">
                                             <text class="text-[10rpx] nc-icon-biaoqianV6mm1 nc-iconfont"></text>
                                         </view>
                                         <view class="text-[18rpx] font-400 text-[var(--price-text-color)] leading-[24rpx]"
-                                            :class="{'!text-[var(--primary-color)]':item.activeGoods.active_goods_status!='active'}">已省{{ item.goodsSku.active_reduce_money }}元</view>
+                                            :class="{'!text-[var(--primary-color)]':item.discount_status!='active'}">已省{{ item.goodsSku.reduce_money }}元</view>
                                     </view>
                                 </view>
-                                <view class="discount-btn text-[var(--primary-color)] iconfont iconUnion" v-if="item.activeGoods.active_goods_status!='active'">
-                                    <text class="desc">{{ item.activeGoods.active_goods_status_name }}</text>
+                                <view class="discount-btn text-[var(--primary-color)] iconfont iconUnion" v-if="item.discount_status!='active'">
+                                    <text class="desc">{{ item.discount_status_name }}</text>
                                 </view>
                                 <view class="discount-btn text-[var(--primary-color)] iconfont iconUnion" v-else>
                                     <text class="icon iconfont iconqiang"></text>
@@ -90,7 +90,7 @@
                             </view>
                         </view>
                     </view>
-                </block>
+                </template>
                 <mescroll-empty v-if="!list.length && !loading" :option="{tip : '暂无商品，请看看其他商品吧！'}"></mescroll-empty>
             </view>
         </mescroll-body>
@@ -167,8 +167,8 @@ const getActiveDiscountListFn = () => {
 
 getActiveDiscountListFn()
 const navClick = (item: any) => {
-    active.value = item.active_id
-    active_name.value = item.active_status_name
+    active.value = item.discount_id
+    active_name.value = item.status_name
     getMescroll()?.resetUpScroll();
     uni.pageScrollTo({
         scrollTop: 0, //距离页面顶部的距离
@@ -182,7 +182,7 @@ const getActiveDiscountGoodsListFn = (mescroll: any) => {
     let data: object = {
         page: mescroll.num,
         limit: mescroll.size,
-        active_id: active.value
+        discount_id: active.value
     };
 
     getActiveDiscountGoodsList(data).then((res: any) => {
@@ -214,8 +214,8 @@ const toRedirect = (index: any) => {
 }
 
 const toLink = (item: any) => {
-    if (item.activeGoods.active_goods_status != 'active') {
-        uni.showToast({ title: `活动${ item.activeGoods.active_goods_status_name }`, icon: 'none' })
+    if (item.discount_status != 'active') {
+        uni.showToast({ title: `活动${ item.discount_status_name }`, icon: 'none' })
         return;
     }
     redirect({ url: '/addon/shop/pages/goods/detail', param: { sku_id: item.goodsSku.sku_id, type: 'discount' } })

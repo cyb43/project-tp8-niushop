@@ -5,7 +5,7 @@
         <!-- #endif -->
         <!-- 顶部图片 -->
         <view class="rank-head">
-            <image class="w-[100%] h-[435rpx]" :src="img(rankConfig.rank_images)" mode="aspectFill"></image>
+            <image class="w-[100%] h-[435rpx]" :src="img(rankConfig.rank_images)" mode="aspectFill" />
             <view class="content-box">
                 <!-- 榜单分类按钮 -->
                 <scroll-view scroll-x="true" class="category-slider" scroll-with-animation :scroll-into-view="'id' + activeIndex">
@@ -37,7 +37,7 @@
                       @click="toLink(item.goods_id)">
                     <view class="w-[240rpx] h-[240rpx] flex items-center justify-center relative">
                         <!-- 榜单排名图片 -->
-                        <image v-if="index < 5" class="absolute top-[7rpx] left-[10rpx] w-[50rpx] h-[58rpx]" :style="{ zIndex:9 }" :src="getRankBadge(item.rank_num)" mode="aspectFill"></image>
+                        <image v-if="index < 5" class="absolute top-[7rpx] left-[10rpx] w-[50rpx] h-[58rpx]" :style="{ zIndex:9 }" :src="getRankBadge(item.rank_num)" mode="aspectFill" />
                         <view class="absolute top-[15rpx] left-[10rpx] flex items-center justify-center w-[50rpx] h-[50rpx]" v-if="index < 5" :style="{ zIndex: 10 }">
                             <text class="text-[24rpx] font-bold text-[#fff]">{{ index + 1 }}</text>
                         </view>
@@ -62,13 +62,16 @@
                                 <view class="base-tag" v-else-if="tagItem.style_type == 'diy' || !tagItem.icon" :style="diyGoods.baseTagStyle(tagItem)">{{ tagItem.label_name }}</view>
                             </template>
                         </view>
-                        <view class="flex items-center justify-between">
+                        <view class="flex items-center">
                             <view class="text-[var(--price-text-color)] price-font flex items-baseline">
                                 <text class="text-[24rpx] font-500">￥</text>
                                 <text class="text-[40rpx] font-500">{{ diyGoods.goodsPrice(item).toFixed(2).split('.')[0] }}</text>
                                 <text class="text-[24rpx] font-500">.{{ diyGoods.goodsPrice(item).toFixed(2).split('.')[1] }}</text>
                             </view>
-                            <view :id="'itemCart' + index" class="w-[102rpx] box-border text-center text-[#fff] primary-btn-bg h-[46rpx] text-[22rpx] leading-[46rpx] rounded-[100rpx]">去购买</view>
+							<image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+							<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+							<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	
+                            <view :id="'itemCart' + index" class="w-[102rpx] box-border ml-auto text-center text-[#fff] primary-btn-bg h-[46rpx] text-[22rpx] leading-[46rpx] rounded-[100rpx]">去购买</view>
                         </view>
                     </view>
                 </view><mescroll-empty v-if="!rankGoodsList.length && loading" :option="{tip : '暂无商品', btnText:'去逛逛'}"
@@ -148,14 +151,14 @@ const calculateCentered = () => {
         const query = uni.createSelectorQuery();
         query.selectAll('.category-btn').boundingClientRect((rects) => {
             if (rects && rects.length > 0) {
-                const totalWidth = rects.reduce((sum, rect) => sum + rect.width, 0);
+                const totalMarginRight = uni.upx2px(20) * (rects.length - 1); // 记得把 rpx 转成 px
+                const totalWidth = rects.reduce((sum, rect) => sum + rect.width, 0) + totalMarginRight;
                 const screenWidth = uni.getSystemInfoSync().windowWidth;
-                centered.value = totalWidth <= screenWidth; // 判断是否需要居中
+                centered.value = totalWidth <= screenWidth * 0.93; // 判断是否需要居中
             } else {
                 console.error('Failed to get .category-btn elements.');
             }
-        })
-        .exec();
+        }).exec();
     });
 };
 
@@ -334,7 +337,7 @@ onLoad(async(option: any) => {
         width: 100rpx;
         height: 44rpx;
         border-radius: 10rpx;
-        font-family: PingFang SC, PingFang SC;
+        font-family: PingFang SC;
         font-weight: 500;
         font-size: 24rpx;
         color: #FFFFFF;

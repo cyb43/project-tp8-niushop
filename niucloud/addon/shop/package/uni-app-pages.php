@@ -123,13 +123,15 @@ return [
                     "path": "pages/goods/collect",
                     "style": {
                         "navigationBarTitleText": "%shop.pages.goods.collect%"
-                    }
+                    },
+					"needLogin": true
                 },
                 {
                     "path": "pages/goods/browse",
                     "style": {
                         "navigationBarTitleText": "%shop.pages.goods.browse%"
-                    }
+                    },
+					"needLogin": true
                 },
                 {
                     "path": "pages/goods/category",
@@ -157,6 +159,9 @@ return [
                 {
                     "path": "pages/order/payment",
                     "style": {
+                        // #ifndef H5
+                        "navigationStyle": "custom",
+                        // #endif
                         "navigationBarTitleText": "%shop.pages.order.payment%"
                     },
                     "needLogin": true
@@ -224,6 +229,9 @@ return [
                 {
                     "path": "pages/point/payment",
                     "style": {
+                        // #ifndef H5
+                        "navigationStyle": "custom",
+                        // #endif
                         "navigationBarTitleText": "%shop.pages.point.payment%"
                     }
                 },

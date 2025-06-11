@@ -9,7 +9,7 @@ class Kdbird
     private $AppKey; // 快递鸟分配的公司编码
     private $is_pay;
 
-    private $traces_url = 'https://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx'; // 实时查询物流轨迹信息
+    private $traces_url = 'https://api.kdniao.com/api/dist'; // 实时查询物流轨迹信息
 
     public function __construct($config)
     {
@@ -37,12 +37,12 @@ class Kdbird
 
         $data = array(
             'EBusinessID' => $this->EBusinessID,
-            'RequestType' => '1002',
+            'RequestType' => '8001',
             'RequestData' => urlencode($requestData),
             'DataType' => '2',
         );
 
-        if ($this->is_pay == 2) $data[ 'RequestType' ] = 8001;
+        if ($this->is_pay == 2) $data[ 'RequestType' ] = 8002;
 
         $data[ 'DataSign' ] = $this->encrypt($requestData, $this->AppKey);
         $result = $this->sendPost($this->traces_url, $data);

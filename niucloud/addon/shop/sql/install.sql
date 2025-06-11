@@ -103,6 +103,25 @@ CREATE TABLE `{{prefix}}shop_coupon_member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券会员领取记录表';
 
 
+DROP TABLE IF EXISTS `{{prefix}}shop_coupon_send_records`;
+CREATE TABLE `{{prefix}}shop_coupon_send_records` (
+    `id`             INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `coupon_id`      INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '优惠券id',
+    `send_num`       INT(11) NOT NULL COMMENT '每位会员发放数量',
+    `range_type`     VARCHAR(20)  NOT NULL DEFAULT '' COMMENT '发券范围',
+    `range_param`    TEXT                  DEFAULT NULL COMMENT '范围对应参数',
+    `success_num`    INT(11) NOT NULL DEFAULT 0 COMMENT '发放成功数',
+    `status`         VARCHAR(255) NOT NULL DEFAULT '' COMMENT '状态 wait-待发送 process-发送中 finish-结束',
+    `member_num`     INT(11) NOT NULL DEFAULT 0 COMMENT '发放会员数',
+    `end_time`       INT(11) NOT NULL DEFAULT 0 COMMENT '发放结束时间',
+    `admin_uid`      INT(11) NOT NULL DEFAULT 0 COMMENT '操作人id',
+    `admin_username` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '操作人名称',
+    `create_time`    INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `update_time`    INT(11) NOT NULL DEFAULT 0 COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='优惠券发券记录表';
+
+
 DROP TABLE IF EXISTS `{{prefix}}shop_delivery_company`;
 CREATE TABLE `{{prefix}}shop_delivery_company` (
   `company_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -117,7 +136,7 @@ CREATE TABLE `{{prefix}}shop_delivery_company` (
   `create_time` int(11) NOT NULL DEFAULT '0',
   `update_time` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`company_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT = '站点快递表';
 
 
 DROP TABLE IF EXISTS `{{prefix}}shop_delivery_deliver`;
@@ -178,7 +197,7 @@ CREATE TABLE `{{prefix}}shop_delivery_local_delivery` (
   `end_time` INT(11) NOT NULL DEFAULT 0 COMMENT '当日的营业结束时间',
   `delivery_time` VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '配送时间段',
   PRIMARY KEY (`local_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='自提点表';
 
 
 DROP TABLE IF EXISTS `{{prefix}}shop_delivery_shipping_template`;
@@ -219,6 +238,44 @@ CREATE TABLE `{{prefix}}shop_delivery_shipping_template_item` (
   KEY `express_template_item_fee_type` (`fee_type`),
   KEY `express_template_item_template_id` (`template_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='运费模板细节';
+
+
+DROP TABLE IF EXISTS `{{prefix}}shop_discount`;
+CREATE TABLE `{{prefix}}shop_discount` (
+  `discount_id` int UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '活动id',
+  `name` varchar(255) NOT NULL DEFAULT '' COMMENT '活动名称',
+  `remark` text DEFAULT NULL COMMENT '活动说明',
+  `start_time` int NOT NULL DEFAULT 0 COMMENT '活动开始时间',
+  `end_time` int NOT NULL DEFAULT 0 COMMENT '活动结束时间',
+  `status` varchar(50) NOT NULL DEFAULT '' COMMENT '活动状态',
+  `order_money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '活动累计金额',
+  `order_num` int NOT NULL DEFAULT 0 COMMENT '活动累计订单数',
+  `member_num` int NOT NULL DEFAULT 0 COMMENT '活动参与会员数',
+  `success_num` int NOT NULL DEFAULT 0 COMMENT '活动成功参与会员数',
+  `create_time` int NOT NULL DEFAULT 0 COMMENT '添加时间',
+  `update_time` int NOT NULL DEFAULT 0 COMMENT '修改时间',
+  PRIMARY KEY (`discount_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='限时折扣表';
+
+
+DROP TABLE IF EXISTS `{{prefix}}shop_discount_goods`;
+CREATE TABLE `{{prefix}}shop_discount_goods` (
+  `discount_goods_id` int NOT NULL AUTO_INCREMENT COMMENT '活动商品id',
+  `discount_id` int NOT NULL DEFAULT 0 COMMENT '活动id',
+  `goods_id` int NOT NULL DEFAULT 0 COMMENT '商品id',
+  `sku_id` int NOT NULL DEFAULT 0 COMMENT '商品规格id',
+  `status` varchar(50) NOT NULL DEFAULT '' COMMENT '商品状态',
+  `type` varchar(255) NOT NULL DEFAULT '' COMMENT '折扣类型',
+  `rate` decimal(10, 1) NOT NULL COMMENT '折扣',
+  `reduce_money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '减钱',
+  `discount_price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '活动商品价格（展示，搜索）',
+  `order_money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '活动累计金额',
+  `order_num` int NOT NULL DEFAULT 0 COMMENT '活动累计订单数',
+  `member_num` int NOT NULL DEFAULT 0 COMMENT '活动参与会员数',
+  `success_num` int NOT NULL DEFAULT 0 COMMENT '活动成功参与会员数',
+  `is_enabled` int NOT NULL DEFAULT 1 COMMENT '是否参与活动',
+  PRIMARY KEY (`discount_goods_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='限时折扣商品表';
 
 
 DROP TABLE IF EXISTS `{{prefix}}shop_goods`;
@@ -347,7 +404,7 @@ CREATE TABLE `{{prefix}}shop_goods_evaluate` (
   `member_id` int(11) NOT NULL DEFAULT '0' COMMENT '会员ID',
   `member_head` varchar(255) NOT NULL DEFAULT '' COMMENT '会员头像',
   `member_name` varchar(100) NOT NULL DEFAULT '' COMMENT '会员名称',
-  `content` varchar(3000) NOT NULL COMMENT '评价内容',
+  `content` varchar(3000) NOT NULL DEFAULT '' COMMENT '评价内容',
   `images` varchar(3000) NOT NULL DEFAULT '' COMMENT '评价图片',
   `is_anonymous` tinyint(4) NOT NULL DEFAULT '1' COMMENT '1匿名  2不匿名',
   `scores` tinyint(4) NOT NULL DEFAULT '1' COMMENT '评论分数 1-5',
@@ -602,7 +659,8 @@ CREATE TABLE `{{prefix}}shop_order` (
   `invoice_id` int(11) NOT NULL DEFAULT '0' COMMENT '发票id，0表示不开发票',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `pay_time` int(11) NOT NULL DEFAULT '0' COMMENT '订单支付时间',
-  `delivery_time` int(11) NOT NULL DEFAULT '0' COMMENT '订单发货时间',
+  `delivery_time` int(11) NOT NULL DEFAULT 0 COMMENT '订单发货时间/自提订单自提时间',
+  `buyer_ask_delivery_time` varchar(255) NOT NULL DEFAULT '' COMMENT '购买人要求的配送/发货/自提时间（文本）',
   `take_time` int(11) NOT NULL DEFAULT '0' COMMENT '订单收货时间',
   `finish_time` int(11) NOT NULL DEFAULT '0' COMMENT '订单完成时间',
   `close_time` int(11) NOT NULL DEFAULT '0' COMMENT '订单关闭时间',
@@ -641,7 +699,7 @@ CREATE TABLE `{{prefix}}shop_order_batch_delivery` (
   `id` INT(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `main_id` INT(11) NOT NULL DEFAULT 0 COMMENT '操作人id',
   `status` INT(11) NOT NULL DEFAULT 1 COMMENT '状态 进行中  已完成  已失败',
-  `type` VARCHAR(255) NOT NULL DEFAULT '操作类型 批量发货  批量打单 ....' COMMENT '操作类型',
+  `type` varchar(255) NOT NULL DEFAULT '' COMMENT '操作类型 批量发货  批量打单 ....',
   `total_num` INT(11) NOT NULL DEFAULT 0 COMMENT '总发货单数',
   `success_num` INT(11) NOT NULL DEFAULT 0 COMMENT '成功发货单数',
   `fail_num` INT(11) NOT NULL DEFAULT 0 COMMENT '失败发货单数',
@@ -649,7 +707,7 @@ CREATE TABLE `{{prefix}}shop_order_batch_delivery` (
   `output` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '对外输出记录',
   `fail_output` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '失败记录',
   `fail_remark` VARCHAR(1000) NOT NULL DEFAULT '' COMMENT '失败原因',
-  `create_time` INT(11) NOT NULL COMMENT '创建时间',
+  `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
   `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '操作时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单批量发货表';
@@ -840,7 +898,7 @@ CREATE TABLE `{{prefix}}shop_point_exchange_order` (
   `delete_time` int(11) NOT NULL DEFAULT '0' COMMENT '订单删除',
   `num` int(11) NOT NULL DEFAULT '0' COMMENT '兑换数量',
   `status` varchar(50) NOT NULL DEFAULT '' COMMENT '订单状态',
-  `order_money` decimal(10,2) NOT NULL COMMENT '订单金额',
+  `order_money` decimal(10,2) NOT NULL DEFAULT 0.00 COMMENT '订单金额',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='积分兑换订单表';
 
@@ -872,7 +930,10 @@ CREATE TABLE `{{prefix}}shop_store` (
   `full_address` varchar(255) NOT NULL DEFAULT '' COMMENT '完整地址',
   `longitude` varchar(255) NOT NULL DEFAULT '' COMMENT '经度',
   `latitude` varchar(255) NOT NULL DEFAULT '' COMMENT '纬度',
-  `trade_time` varchar(255) NOT NULL DEFAULT '' COMMENT '营业时间',
+  `trade_time` varchar(255) NOT NULL DEFAULT '' COMMENT '营业时间(文本展示使用)',
+  `time_week` text DEFAULT NULL COMMENT '自定义的营业时间["0","1","2","3","4","5","6"]周日-周六',
+  `trade_time_json` text DEFAULT NULL COMMENT '营业时间',
+  `time_interval` int NOT NULL DEFAULT 0 COMMENT '时段设置（分钟）',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '添加时间',
   `update_time` int(11) NOT NULL DEFAULT '0' COMMENT '更新时间',
   PRIMARY KEY (`store_id`)

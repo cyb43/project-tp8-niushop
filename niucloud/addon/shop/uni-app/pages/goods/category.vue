@@ -68,8 +68,6 @@ onShow(() => {
 	top: 92rpx !important;
 	left: 166rpx !important;
 	z-index: 8 !important;
-
-
 }
 .category .labelPopup :deep(.u-slide-down-enter-active){
 	top: 92rpx !important;

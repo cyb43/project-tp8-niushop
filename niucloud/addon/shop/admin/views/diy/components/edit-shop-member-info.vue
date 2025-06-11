@@ -1,45 +1,45 @@
 <template>
-	<!-- 内容 -->
-	<div class="content-wrap" v-show="diyStore.editTab == 'content'">
-		<div class="edit-attr-item-wrap">
-			<h3 class="mb-[10px]">{{ t('memberStyle') }}</h3>
-			<el-form label-width="80px" class="px-[10px]">
-				<el-form-item :label="t('bgUrl')">
-					<upload-image v-model="diyStore.editComponent.bgUrl" :limit="1"/>
-				</el-form-item>
-			</el-form>
-			<el-form label-width="80px" class="px-[10px]">
-				<el-form-item :label="t('shopMemberInfoComponentAccount')">
-					<el-switch v-model="diyStore.editComponent.isShowAccount" />
-				</el-form-item>
-			</el-form>
-		</div>
-	</div>
+    <!-- 内容 -->
+    <div class="content-wrap" v-show="diyStore.editTab == 'content'">
+        <div class="edit-attr-item-wrap">
+            <h3 class="mb-[10px]">{{ t('memberStyle') }}</h3>
+            <el-form label-width="80px" class="px-[10px]">
+                <el-form-item :label="t('bgUrl')">
+                    <upload-image v-model="diyStore.editComponent.bgUrl" :limit="1" />
+                </el-form-item>
+            </el-form>
+            <el-form label-width="80px" class="px-[10px]">
+                <el-form-item :label="t('shopMemberInfoComponentAccount')">
+                    <el-switch v-model="diyStore.editComponent.isShowAccount" />
+                </el-form-item>
+            </el-form>
+        </div>
+    </div>
 
-	<!-- 样式 -->
-	<div class="style-wrap" v-show="diyStore.editTab == 'style'">
-		<div class="edit-attr-item-wrap">
-			<h3 class="mb-[10px]">{{ t('memberStyle') }}</h3>
-			<el-form label-width="80px" class="px-[10px]">
-				<el-form-item :label="t('textColor')">
-					<el-color-picker v-model="diyStore.editComponent.textColor"/>
-				</el-form-item>
-			</el-form>
-			<el-form label-width="80px" class="px-[10px]">
-				<el-form-item :label="t('shopMemberInfoComponentUidTextColor')">
-					<el-color-picker v-model="diyStore.editComponent.uidTextColor"/>
-				</el-form-item>
-			</el-form>
-			<el-form label-width="80px" class="px-[10px]">
-				<el-form-item :label="t('shopMemberInfoComponentAccountTextColor')">
-					<el-color-picker v-model="diyStore.editComponent.accountTextColor"/>
-				</el-form-item>
-			</el-form>
-		</div>
+    <!-- 样式 -->
+    <div class="style-wrap" v-show="diyStore.editTab == 'style'">
+        <div class="edit-attr-item-wrap">
+            <h3 class="mb-[10px]">{{ t('memberStyle') }}</h3>
+            <el-form label-width="80px" class="px-[10px]">
+                <el-form-item :label="t('textColor')">
+                    <el-color-picker v-model="diyStore.editComponent.textColor" />
+                </el-form-item>
+            </el-form>
+            <el-form label-width="80px" class="px-[10px]">
+                <el-form-item :label="t('shopMemberInfoComponentUidTextColor')">
+                    <el-color-picker v-model="diyStore.editComponent.uidTextColor" />
+                </el-form-item>
+            </el-form>
+            <el-form label-width="80px" class="px-[10px]">
+                <el-form-item :label="t('shopMemberInfoComponentAccountTextColor')">
+                    <el-color-picker v-model="diyStore.editComponent.accountTextColor" />
+                </el-form-item>
+            </el-form>
+        </div>
 
-		<!-- 组件样式 -->
-		<slot name="style"></slot>
-	</div>
+        <!-- 组件样式 -->
+        <slot name="style"></slot>
+    </div>
 </template>
 
 <script lang="ts" setup>

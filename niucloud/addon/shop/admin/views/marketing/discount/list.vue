@@ -12,11 +12,11 @@
             <!-- 搜索 -->
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                 <el-form :inline="true" :model="tableData.searchParam" ref="searchFormRef">
-                    <el-form-item :label="t('name')" prop="active_name">
-                        <el-input v-model.trim="tableData.searchParam.active_name" :placeholder="t('namePlaceholder')" />
+                    <el-form-item :label="t('name')" prop="name">
+                        <el-input v-model.trim="tableData.searchParam.name" :placeholder="t('namePlaceholder')" />
                     </el-form-item>
-                    <el-form-item :label="t('status')" prop='active_status'>
-                        <el-select v-model="tableData.searchParam.active_status" clearable :placeholder="t('statusPlaceholder')" class="input-item">
+                    <el-form-item :label="t('status')" prop='status'>
+                        <el-select v-model="tableData.searchParam.status" clearable :placeholder="t('statusPlaceholder')" class="input-item">
                             <el-option v-for="(item, key) in activeStatusOption" :key="key" :label="item" :value="key"></el-option>
                         </el-select>
                     </el-form-item>
@@ -34,12 +34,12 @@
                         <span>{{ !tableData.loading ? t('emptyData') : '' }}</span>
                     </template>
 
-                    <el-table-column prop="active_name" :label="t('name')" min-width="130" />
-                    <el-table-column prop="active_desc" :label="t('title')" min-width="130" />
-                    <el-table-column prop="active_status_name" :label="t('status')" min-width="130" />
-                    <el-table-column prop="active_order_money" :label="t('paymentAmount')" min-width="130" />
-                    <el-table-column prop="active_order_num" :label="t('orderCount')" min-width="130" />
-                    <el-table-column prop="active_member_num" :label="t('memberCount')" min-width="130" />
+                    <el-table-column prop="name" :label="t('name')" min-width="130" />
+                    <el-table-column prop="remark" :label="t('title')" min-width="130" />
+                    <el-table-column prop="status_name" :label="t('status')" min-width="130" />
+                    <el-table-column prop="order_money" :label="t('paymentAmount')" min-width="130" />
+                    <el-table-column prop="order_num" :label="t('orderCount')" min-width="130" />
+                    <el-table-column prop="member_num" :label="t('memberCount')" min-width="130" />
                     <el-table-column :label="t('discountTime')"  min-width="150">
                         <template #default="{ row }">
                             <div>
@@ -50,10 +50,10 @@
                     </el-table-column>
                     <el-table-column :label="t('operation')" fixed="right" align="right" min-width="160">
                        <template #default="{ row }">
-                            <el-button v-if="row.active_status=='not_active'||row.active_status=='active'" type="primary" link @click="editEvent(row.active_id)">{{ t('edit') }}</el-button>
-                            <el-button type="primary" link @click="detailEvent(row.active_id)">{{ t('detail') }}</el-button>
-                            <el-button v-if="row.active_status=='active'" type="primary" link @click="closeEvent(row.active_id)">{{ t('close') }}</el-button>
-                            <el-button v-if="row.active_status!='active'" type="primary" link @click="deleteEvent(row.active_id)">{{ t('delete') }}</el-button>
+                            <el-button v-if="row.status=='not_active'||row.status=='active'" type="primary" link @click="editEvent(row.discount_id)">{{ t('edit') }}</el-button>
+                            <el-button type="primary" link @click="detailEvent(row.discount_id)">{{ t('detail') }}</el-button>
+                            <el-button v-if="row.status=='active'" type="primary" link @click="closeEvent(row.discount_id)">{{ t('close') }}</el-button>
+                            <el-button v-if="row.status!='active'" type="primary" link @click="deleteEvent(row.discount_id)">{{ t('delete') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -90,8 +90,8 @@ const tableData = reactive({
     loading: false,
     data: [],
     searchParam: {
-        active_name: '',
-        active_status:''
+        name: '',
+        status: ''
     }
 })
 const searchFormRef = ref<FormInstance>()

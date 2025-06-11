@@ -19,9 +19,10 @@
                                     <text class="ml-[10rpx]">{{ item.order_no }}</text>
                                     <text class="text-[#303133] text-[26rpx] font-400 nc-iconfont nc-icon-fuzhiV6xx1 ml-[11rpx]" @click.stop="copy(item.order_no)"></text>
                                 </view>
-                                <view class="text-[#303133] text-[26rpx] leading-[34rpx]" :class="{'text-primary': item.status  == 1,'!text-[var(--text-color-light9)]' :item.status  == 5 || item.status  == -1}">{{ item.status_name.name }}</view>
+								<view v-if="item.status  == -1" class="text-[#303133] text-[26rpx] max-w-[85px] leading-[34rpx] truncate" :class="{'text-primary': item.status  == 1,'!text-[var(--text-color-light9)]' :item.status  == 5 || item.status  == -1}">{{ item.close_type_name }}</view>
+                                <view v-else class="text-[#303133] text-[26rpx] leading-[34rpx]" :class="{'text-primary': item.status  == 1,'!text-[var(--text-color-light9)]' :item.status  == 5 || item.status  == -1}">{{ item.status_name.name }}</view>
                             </view>
-                            <block v-for="(subItem, index) in item.order_goods" :key="index">
+                            <template v-for="(subItem, index) in item.order_goods" :key="index">
                                 <view class="flex box-border mt-[20rpx]">
                                     <u--image width="150rpx" height="150rpx" :radius="'var(--goods-rounded-big)'" :src="img(subItem.goods_image_thumb_small ? subItem.goods_image_thumb_small : '')" mode="aspectFill">
                                         <template #error>
@@ -31,20 +32,27 @@
                                     <view class="ml-[20rpx] flex flex-1 flex-col box-border">
                                         <view class="flex justify-between items-baseline">
                                             <view class="max-w-[322rpx] text-[28rpx] leading-[40rpx] font-400 truncate text-[#303133]">{{ subItem.goods_name }}</view>
-                                            <block v-if="item.activity_type == 'exchange'">
+                                            <template v-if="item.activity_type == 'exchange'">
                                                 <view class="text-right ml-[10rpx] leading-[42rpx]" v-if="parseFloat(subItem.price)">
                                                     <text class="text-[22rpx] font-400 price-font">￥</text>
                                                     <text class="text-[36rpx] font-500 price-font">{{ parseFloat(subItem.price).toFixed(2).split('.')[0] }}</text>
                                                     <text class="text-[22rpx] font-500 price-font">.{{ parseFloat(subItem.price).toFixed(2).split('.')[1] }}</text>
                                                 </view>
-                                            </block>
-                                            <block v-else>
+                                            </template>
+                                            <template v-else-if="subItem.extend && subItem.extend.is_impulse_buy">
+                                                <view class="text-right ml-[10rpx] leading-[42rpx]" v-if="parseFloat(subItem.goods_money)">
+                                                    <text class="text-[22rpx] font-400 price-font">￥</text>
+                                                    <text class="text-[36rpx] font-500 price-font">{{ parseFloat(subItem.goods_money).toFixed(2).split('.')[0] }}</text>
+                                                    <text class="text-[22rpx] font-500 price-font">.{{ parseFloat(subItem.goods_money).toFixed(2).split('.')[1] }}</text>
+                                                </view>
+                                            </template>
+                                            <template v-else>
                                                 <view class="text-right leading-[42rpx] ml-[10rpx]">
                                                     <text class="text-[22rpx] price-font">￥</text>
                                                     <text class="text-[36rpx] font-500 price-font">{{ parseFloat(subItem.price).toFixed(2).split('.')[0] }}</text>
                                                     <text class="text-[22rpx] font-500 price-font">.{{ parseFloat(subItem.price).toFixed(2).split('.')[1] }}</text>
                                                 </view>
-                                            </block>
+                                            </template>
                                         </view>
                                         <view class="flex justify-between items-baseline text-[#303133] mt-[14rpx]">
                                             <view>
@@ -60,27 +68,27 @@
                                     <image class="h-[24rpx] w-[56rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
                                     <view class="text-[24rpx] text-[#FFB000] leading-[34rpx] ml-[8rpx]">第1{{ subItem.unit }}，￥{{ parseFloat(subItem.extend.newcomer_price).toFixed(2) }}/{{ subItem.unit }}；第{{ subItem.num > 2 ? '2~' + subItem.num : '2' }}{{ subItem.unit }}，￥{{ parseFloat(subItem.price).toFixed(2) }}/{{ subItem.unit }}</view>
                                 </view>
-                            </block>
+                            </template>
                         </view>
                         <view class="flex justify-end items-center mt-[20rpx]">
                             <view class="flex items-baseline">
                                 <view class="text-[22rpx] text-[var(--text-color-light9)] leading-[30rpx] mr-[6rpx]" v-if="parseFloat(item.delivery_money)">{{ t('service') }}</view>
                                 <view class="text-[22rpx] font-400 leading-[30rpx] text-[#303133]">{{ t('actualPayment') }}：</view>
                                 <view class="leading-[1] text-[var(--price-text-color)]">
-                                    <block v-if="item.activity_type == 'exchange'">
+                                    <template v-if="item.activity_type == 'exchange'">
                                         <text class="text-[36rpx] mr-[2rpx] leading-[40rpx] price-font font-500">{{ item.point }}</text>
                                         <text class="text-[20rpx] leading-[28rpx] font-500">{{ t('point') }}</text>
-                                        <block v-if="parseFloat(item.order_money)">
+                                        <template v-if="parseFloat(item.order_money)">
                                             <text class="text-[20rpx] mx-[4rpx] font-500 leading-[28rpx]">+</text>
                                             <text class="text-[36rpx] font-500 leading-[40rpx] price-font">{{ parseFloat(item.order_money).toFixed(2) }}</text>
                                             <text class="text-[20rpx] font-500 leading-[28rpx] ml-[2rpx]">{{ t('money') }}</text>
-                                        </block>
-                                    </block>
-                                    <block v-else>
+                                        </template>
+                                    </template>
+                                    <template v-else>
                                         <text class="text-[22rpx] leading-[26rpx] price-font">￥</text>
                                         <text class="text-[36rpx] font-500 leading-[40rpx] price-font">{{ parseFloat(item.order_money).toFixed(2).split('.')[0] }}</text>
                                         <text class="text-[22rpx] font-500 leading-[28rpx] price-font">.{{ parseFloat(item.order_money).toFixed(2).split('.')[1] }}</text>
-                                    </block>
+                                    </template>
                                 </view>
                             </view>
                         </view>

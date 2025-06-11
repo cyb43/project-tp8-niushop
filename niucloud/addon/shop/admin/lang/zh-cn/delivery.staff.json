@@ -1,9 +1,9 @@
 {
-    "addDeliveryPersonnel":"添加配送员",
-    "updateDeliver":"编辑配送员",
-    "deliverName":"配送员名称",
-    "deliverMobile":"配送员手机号",
-    "deliverNamePlaceholder":"请输入配送员名称",
-    "deliverMobilePlaceholder":"请输入配送员手机号",
-    "deliverDeleteTips":"确定要删除该数据吗？"
+  "addDeliveryPersonnel": "添加配送员",
+  "updateDeliver": "编辑配送员",
+  "deliverName": "配送员名称",
+  "deliverMobile": "配送员手机号",
+  "deliverNamePlaceholder": "请输入配送员名称",
+  "deliverMobilePlaceholder": "请输入配送员手机号",
+  "deliverDeleteTips": "确定要删除该数据吗？"
 }

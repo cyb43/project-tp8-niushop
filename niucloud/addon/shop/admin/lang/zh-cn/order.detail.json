@@ -130,5 +130,11 @@
   "refundPayPrice": "实付金额",
   "refundGoodsNum": "数量",
   "refundGoodsPlaceholder": "请选择退款的商品",
-  "formDetail": "表单详情"
+  "formDetail": "表单详情",
+  "buyerAskDeliveryTime": "要求自提时间",
+  "verifyCode": "核销码",
+  "buyers": "买家",
+  "buyersReserveMobile": "预留手机",
+  "storeTakerName": "提货人",
+  "verifierMember": "核销人"
 }

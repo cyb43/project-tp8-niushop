@@ -41,7 +41,7 @@ class Discount extends BaseApiController
             [ "end_price", "" ], // 价格结束区间
             [ 'order', '' ], // 排序方式（综合：空，销量：sale_num，价格：price）
             [ 'sort', 'desc' ], // 升序：asc，降序：desc
-            [ 'active_id', 0 ],
+            [ 'discount_id', 0 ],
         ]);
 
         return success(( new DiscountService() )->getGoodsPage($data));

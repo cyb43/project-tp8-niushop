@@ -56,7 +56,7 @@
         </el-card>
 
         <!-- 商品分类推广弹出框 -->
-        <goods-category-spread-popup ref="goodsCategorySpreadPopupRef" />
+        <spread-popup ref="spreadPopupRef" />
 
     </div>
 </template>
@@ -68,11 +68,11 @@ import { getCategoryTree, deleteCategory, updateCategory, editCategory } from '@
 import { img } from '@/utils/common'
 import { ElMessageBox } from 'element-plus'
 import categoryEdit from '@/addon/shop/views/goods/components/category-edit.vue'
-import goodsCategorySpreadPopup from '@/addon/shop/views/goods/components/goods-category-spread-popup.vue'
 import { useRoute,useRouter } from 'vue-router'
 import Sortable from 'sortablejs'
 import { useTemplateRefsList } from '@vueuse/core'
 import { cloneDeep } from 'lodash-es'
+import spreadPopup from '@/components/spread-popup/index.vue'
 
 const route = useRoute()
 const pageName = route.meta.title
@@ -225,10 +225,16 @@ const deleteEvent = (row: any) => {
 }
 
 // 商品分类推广
-const goodsCategorySpreadPopupRef: any = ref(null)
+const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    goodsCategorySpreadPopupRef.value.show(data)
+    const pagePath = "/addon/shop/pages/goods/list"
+    const columnName = "curr_goods_category"
+    const columnValue = data.category_id
+    const title = "商品分类推广"
+    const folder = "goods_category"
+
+    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
 }
 
 const router = useRouter()

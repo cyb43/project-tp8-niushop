@@ -23,6 +23,16 @@ use addon\shop\app\service\admin\delivery\StoreService;
 class Store extends BaseAdminController
 {
     /**
+     * 获取展示用信息
+     * @param int $id
+     * @return \think\Response
+     */
+    public function init()
+    {
+        return success(( new StoreService() )->getInitInfo());
+    }
+
+    /**
      * 获取自提门店列表
      * @return \think\Response
      */
@@ -45,6 +55,7 @@ class Store extends BaseAdminController
         return success(( new StoreService() )->getInfo($id));
     }
 
+
     /**
      * 添加自提门店
      * @return \think\Response
@@ -64,6 +75,10 @@ class Store extends BaseAdminController
             [ "longitude", "" ],
             [ "latitude", "" ],
             [ "trade_time", "" ],
+            [ "time_type", "" ],//类型
+            [ "time_week", [] ],//周数组
+            [ "time_interval", "" ],//间隔时间段 单位分钟
+            [ "trade_time_json", [] ],//营业时间
         ]);
         $this->validate($data, 'addon\shop\app\validate\delivery\Store.add');
         $id = ( new StoreService() )->add($data);
@@ -86,7 +101,10 @@ class Store extends BaseAdminController
             [ "full_address", "" ],
             [ "longitude", "" ],
             [ "latitude", "" ],
-            [ "trade_time", "" ]
+            [ "trade_time", "" ],
+            [ "time_week", [] ],//周数组
+            [ "time_interval", "" ],//间隔时间段 单位分钟
+            [ "trade_time_json", "" ],//营业时间
         ]);
         $address = $this->request->params([
             [ "province_name", "" ],

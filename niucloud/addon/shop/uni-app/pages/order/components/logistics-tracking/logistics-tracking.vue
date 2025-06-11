@@ -35,9 +35,9 @@
                     <scroll-view v-else :scroll-y="true" style="height:53vh;padding: 20rpx;box-sizing: border-box;"
                                  class="bg-white rounded-md">
                         <u-steps :current="0" dot direction="column" activeColor="var(--primary-color)">
-                            <block v-for="(item,index) in showList.traces.list" :key="index + 'id'">
+                            <template v-for="(item,index) in showList.traces.list" :key="index + 'id'">
                                 <u-steps-item :title="item.remark" :desc="item.datetime"></u-steps-item>
-                            </block>
+                            </template>
                         </u-steps>
                     </scroll-view>
                 </view>

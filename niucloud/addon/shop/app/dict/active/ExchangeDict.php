@@ -15,7 +15,7 @@ class ExchangeDict
 {
     //活动商品类型
     const GOODS = 'goods';//商品
-    const COUPON = 'coupon';//优惠卷
+    const COUPON = 'coupon';//优惠券
     const BALANCE = 'balance';//余额
 
     //活动状态

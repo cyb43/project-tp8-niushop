@@ -4,8 +4,7 @@
             <view class="px-[var(--sidebar-m)] py-[var(--top-m)]" v-if="info.length">
                 <template v-for="(item, index)  in info" :key="index">
                     <view class="card-template mb-[var(--top-m)]">
-                        <view class="bg-[var(--temp-bg)] p-[20rpx] rounded-[var(--rounded-mid)] flex"
-                              @click="redirect({ url: '/addon/shop/pages/goods/detail', param: { goods_id: item.goods_id } })">
+                        <view class="bg-[var(--temp-bg)] p-[20rpx] rounded-[var(--rounded-mid)] flex" @click="redirect({ url: '/addon/shop/pages/goods/detail', param: { goods_id: item.goods_id } })">
                             <u--image radius="var(--goods-rounded-mid)" width="150rpx" height="150rpx" :src="img(item.order_goods.goods_image_thumb_mid ? item.order_goods.goods_image_thumb_mid : '')" model="aspectFill">
                                 <template #error>
                                     <u-icon name="photo" color="#999" size="50"></u-icon>

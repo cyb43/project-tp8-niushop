@@ -29,6 +29,7 @@ use app\dict\pay\PayDict;
 use app\model\diy_form\DiyFormRecordsFields;
 use app\model\member\Member;
 use app\model\pay\Pay;
+use app\model\verify\Verify;
 use app\service\core\pay\CorePayService;
 use core\base\BaseAdminService;
 use core\exception\AdminException;
@@ -57,7 +58,7 @@ class OrderService extends BaseAdminService
      */
     public function getPage(array $where)
     {
-        $field = 'point,activity_type,order_id,order_no,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,create_time,pay_time,delivery_type,taker_name,taker_mobile,taker_full_address,take_store_id,is_enable_refund,member_remark,shop_remark,close_remark,pay_money';
+        $field = 'buyer_ask_delivery_time,point,activity_type,order_id,order_no,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,create_time,pay_time,delivery_type,taker_name,taker_mobile,taker_full_address,take_store_id,is_enable_refund,member_remark,shop_remark,close_type,close_remark,pay_money';
         $order = 'create_time desc';
 
         $pay_where = [];
@@ -65,6 +66,7 @@ class OrderService extends BaseAdminService
             if ($where[ 'pay_type' ] == PayDict::FRIENDSPAY) {
                 $pay_where = [
                     [ 'pay.main_id', '<>', Db::raw("pay.from_main_id") ],
+                    [ 'pay.from_main_id', '>', 0 ],
                     [ 'pay.status', '=', PayDict::STATUS_FINISH ]
                 ];
             } else {
@@ -72,9 +74,9 @@ class OrderService extends BaseAdminService
             }
         }
         $member_where = [];
-        if ($where['keyword'] != ''){
+        if ($where[ 'keyword' ] != '') {
             $member_where = [
-                [ 'member.member_no|member.nickname|member.username|member.mobile', 'like' , "%" . $where['keyword'] . "%" ],
+                [ 'member.member_no|member.nickname|member.username|member.mobile', 'like', "%" . $where[ 'keyword' ] . "%" ],
             ];
         }
         $search_model = $this->model
@@ -82,25 +84,27 @@ class OrderService extends BaseAdminService
             ->withSearch([ 'search_type', 'order_from', 'join_status', 'create_time', 'join_pay_time', 'activity_type' ], $where)
             ->field($field)
             ->withJoin([
-                'pay' => function(Query $query) use ($pay_where) {
+                'pay' => function (Query $query) use ($pay_where) {
                     $query->where($pay_where);
                 },
-                'member'=> function(Query $query) use ($member_where) {
+                'member' => function (Query $query) use ($member_where) {
                     $query->where($member_where);
                 },
             ], 'left')
             ->with([
-                'order_goods' => function($query) {
-                    $query->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, is_enable_refund, goods_type, delivery_status, status,discount_money,delivery_id,is_gift')->append([ 'delivery_status_name', 'status_name', 'goods_image_thumb_small' ]);
+                'order_goods' => function ($query) {
+                    $query->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, is_enable_refund, goods_type, delivery_status, status,discount_money,delivery_id,is_gift')->append([ 'delivery_status_name', 'status_name', 'goods_image_thumb_small', 'impulse_buy_info' ]);
                 }
             ])->order($order)->append([ 'order_from_name', 'order_type_name', 'status_name', 'delivery_type_name' ]);
         $order_status_list = OrderDict::getStatus();
-        $list = $this->pageQuery($search_model, function($item, $key) use ($order_status_list) {
+        $order_close_list = OrderDict::getCloseType();
+        $list = $this->pageQuery($search_model, function ($item, $key) use ($order_status_list, $order_close_list) {
+            $item[ 'close_type_name' ] = $order_close_list[ $item[ 'close_type' ] ] ?? "";
             $item[ 'order_status_data' ] = $order_status_list[ $item[ 'status' ] ] ?? [];
             $item_pay = $item[ 'pay' ];
             if (!empty($item_pay)) {
                 $item_pay->append([ 'type_name' ]);
-                $item_pay[ 'pay_type_name' ] = PayDict::getPayType()[PayDict::FRIENDSPAY]['name'] ?? '';
+                $item_pay[ 'pay_type_name' ] = PayDict::getPayType()[ PayDict::FRIENDSPAY ][ 'name' ] ?? '';
             }
         });
         return $list;
@@ -113,30 +117,41 @@ class OrderService extends BaseAdminService
      */
     public function getDetail(int $order_id)
     {
-        $field = 'activity_type,point,order_id,order_no,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,invoice_id,create_time,pay_time,delivery_time,take_time,finish_time,close_time,delivery_type,taker_name,taker_mobile,taker_province,taker_city,taker_district,taker_address,taker_full_address,taker_longitude,taker_latitude,take_store_id,is_enable_refund,member_remark,shop_remark,close_remark,discount_money,form_record_id';
+        $field = 'activity_type,point,order_id,order_no,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,invoice_id,create_time,pay_time,delivery_time,take_time,finish_time,close_time,delivery_type,taker_name,taker_mobile,buyer_ask_delivery_time,taker_province,taker_city,taker_district,taker_address,taker_full_address,taker_longitude,taker_latitude,take_store_id,is_enable_refund,member_remark,shop_remark,close_remark,discount_money,form_record_id';
         $info = $this->model->where([ [ 'order_id', '=', $order_id ] ])->field($field)
             ->with(
                 [
-                    'order_goods' => function($query) {
-                        $query->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, is_enable_refund, goods_type, delivery_status, status,discount_money,delivery_id,is_gift,form_record_id')->append([ 'delivery_status_name', 'status_name' ]);
+                    'order_goods' => function ($query) {
+                        $query->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, is_enable_refund, goods_type, delivery_status, status,discount_money,delivery_id,is_gift,form_record_id')->append([ 'delivery_status_name', 'status_name', 'impulse_buy_info' ]);
                     },
-                    'member' => function($query) {
+                    'member' => function ($query) {
                         $query->field('member_id, nickname, mobile, headimg');
                     },
-                    'order_log' => function($query) {
+                    'order_log' => function ($query) {
                         $query->field('order_id, content, main_type, create_time, main_id, type')->order("create_time desc, id desc")->append([ 'main_type_name', 'type_name', 'main_name' ]);
                     },
-                    'order_discount' => function($query) {
+                    'order_discount' => function ($query) {
                         $query->field('order_id,discount_type,money');
                     }
                 ])->append([ 'order_from_name', 'order_type_name', 'status_name', 'delivery_type_name' ])->findOrEmpty()->toArray();
+        $info[ 'verify_code' ] = ''; // 核销码
+        $info[ 'verifier_member' ] = ''; // 核销员
         $order_status_list = OrderDict::getStatus();
         if (!empty($info)) $info[ 'order_status_data' ] = $order_status_list[ $info[ 'status' ] ] ?? [];
-
         if ($info[ 'delivery_type' ] == DeliveryDict::STORE) {
             $info[ 'store' ] = ( new Store() )->where([ [ 'store_id', '=', $info[ 'take_store_id' ] ] ])
                 ->field('store_id, store_name, full_address, store_mobile, trade_time')
                 ->findOrEmpty()->toArray();
+            $verify_info = ( new Verify() )->where([
+                [ 'type', '=', 'shopPickUpOrder' ],
+                [ 'relate_tag', '=', $order_id ]
+            ])->field('id, code, verifier_member_id')->with([ 'member' => function ($query) {
+                $query->field('member_id, nickname');
+            } ])->findOrEmpty()->toArray();
+            if (!empty($verify_info)) {
+                $info[ 'verify_code' ] = $verify_info[ 'code' ];
+                $info[ 'verifier_member' ] = $verify_info[ 'member' ];
+            }
         }
 
         if ($info[ 'delivery_type' ] == DeliveryDict::EXPRESS) {
@@ -154,10 +169,10 @@ class OrderService extends BaseAdminService
                 if ($info[ 'member_id' ] != $info[ 'pay' ][ 'main_id' ]) {
                     $member_info = ( new Member() )->where([ [ 'member_id', '=', $info[ 'pay' ][ 'main_id' ] ] ])->findOrEmpty()->toArray();
                     if (!empty($member_info)) {
-                        $info[ 'pay' ][ 'pay_member' ] = $member_info['nickname'];
+                        $info[ 'pay' ][ 'pay_member' ] = $member_info[ 'nickname' ];
                     }
                 }
-                $info[ 'pay' ][ 'pay_type_name' ] = PayDict::getPayType()[PayDict::FRIENDSPAY]['name'] ?? '';
+                $info[ 'pay' ][ 'pay_type_name' ] = PayDict::getPayType()[ PayDict::FRIENDSPAY ][ 'name' ] ?? '';
             }
         }
 
@@ -177,8 +192,8 @@ class OrderService extends BaseAdminService
         $info[ 'manjian_discount_money' ] = number_format($manjian_discount_money, 2, '.', '');
 
         $diy_form_records_fields_model = new DiyFormRecordsFields();
-        if (!empty($info['form_record_id'])) {
-            $field_count = $diy_form_records_fields_model->where([[ 'record_id', '=', $info['form_record_id'] ]])->count();
+        if (!empty($info[ 'form_record_id' ])) {
+            $field_count = $diy_form_records_fields_model->where([ [ 'record_id', '=', $info[ 'form_record_id' ] ] ])->count();
             if ($field_count > 0) {
                 $info[ 'form_record_show' ] = true;
             } else {
@@ -187,15 +202,37 @@ class OrderService extends BaseAdminService
         }
         if (!empty($info[ 'order_goods' ])) {
             foreach ($info[ 'order_goods' ] as &$item) {
-                $field_count = $diy_form_records_fields_model->where([[ 'record_id', '=', $item['form_record_id'] ]])->count();
+                $field_count = $diy_form_records_fields_model->where([ [ 'record_id', '=', $item[ 'form_record_id' ] ] ])->count();
                 if ($field_count > 0) {
                     $item[ 'form_record_show' ] = true;
                 } else {
                     $item[ 'form_record_show' ] = false;
                 }
+                $impulse_buy_tips = '';
+                if (isset($item[ 'extend' ][ 'is_impulse_buy' ]) == 1) {
+                    $impulse_buy_num = $item[ 'extend' ][ 'impulse_buy_goods_num' ] ?? 0;//5
+                    $impulse_buy_price_total = $item[ 'extend' ][ 'impulse_buy_price' ] ?? 0;
+                    if ($impulse_buy_num > 0) {
+                        $impulse_buy_price = $impulse_buy_price_total / $impulse_buy_num;
+                        if ($impulse_buy_num == 1) {
+                            $impulse_buy_tips = '第1' . '件' . $impulse_buy_price . '元';
+                        } else {
+                            $impulse_buy_tips = '第1-' . $impulse_buy_num . '件' . $impulse_buy_price . '元';
+                            if ($item[ 'num' ] > $impulse_buy_num) {
+                                if ($impulse_buy_num + 1 == $item[ 'num' ]) {
+                                    $impulse_buy_tips .= ' 第' . ( $impulse_buy_num + 1 ) . '件' . $item[ 'price' ] . '元';
+                                } else {
+                                    $impulse_buy_tips .= ' 第' . ( $impulse_buy_num + 1 ) . '-' . $item[ 'num' ] . '件' . $item[ 'price' ] . '元';
+                                }
+                            }
+                        }
+                    } else {//全原价
+                        $impulse_buy_tips = '第1-' . $item[ 'num' ] . '件' . $item[ 'price' ] . '元';
+                    }
+                }
+                $item[ 'impulse_buy_info' ][ 'show_tips' ] = $impulse_buy_tips;
             }
         }
-
         return $info;
     }
 
@@ -449,7 +486,7 @@ class OrderService extends BaseAdminService
                 }
             } else {
                 $geofence = new Polygon();
-                $geofence->addPoints(array_map(function($latlng) {
+                $geofence->addPoints(array_map(function ($latlng) {
                     return new Coordinate($latlng[ 'lat' ], $latlng[ 'lng' ]);
                 }, $area[ 'area_json' ][ 'paths' ]));
                 if ($geofence->contains($address_point)) {
@@ -477,5 +514,34 @@ class OrderService extends BaseAdminService
             $order_from_list = array_merge($order_from_list, $item);
         }
         return $order_from_list;
+    }
+
+    /**
+     * 待确定删除逻辑之后再细化
+     * @param $order_ids
+     * @return bool|void
+     */
+    public function delete($order_ids)
+    {
+        if (!empty($order_ids)) {
+            $status_list = $this->model->whereIn('order_id', $order_ids)->column('status,out_trade_no');
+            $status_arr = array_column($status_list, null, 'status');
+            $status_arr = array_unique($status_arr);
+            if (count($status_arr) > 1) {
+                $error_order_str = '';
+                foreach ($status_list as $item) {
+                    if ($item[ 'status' ] == OrderDict::CLOSE) {
+                        continue;
+                    }
+                    $error_order_str .= $item[ 'out_trade_no' ] . ',';
+                }
+                $error_order_str = rtrim($error_order_str, ',');
+                $error_str = sprintf(get_lang('SHOP_ORDER_DELETE_STATUS_ERROR'), $error_order_str);
+                throw new AdminException($error_str);
+            }
+            return $this->model::destroy(function ($query) use ($order_ids) {
+                $query->where([ [ 'order_id', 'in', $order_ids ] ]);
+            });
+        }
     }
 }

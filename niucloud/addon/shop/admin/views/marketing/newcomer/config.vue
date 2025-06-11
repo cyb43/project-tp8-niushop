@@ -7,13 +7,13 @@
             <!-- <el-tabs v-model="activeName">
                 <el-tab-pane :label="t('basicInfoTab')" name="basic"> -->
                     <el-alert type="warning" :closable="false" class="!mb-[0px]">
-						<template #default>
-							<p class="mb-[5px]">* 新人专享活动旨在通过专属优惠提升新老客户的转化率。达到参与门槛的用户可以享受特定商品的限时新人价优惠。</p>
-							<p class="mb-[5px]">* 每位用户限购1件新人专享商品，超出1件的部分将按正常价购买。</p>
-							<p class="mb-[5px]">* 订单支付成功后，将视为用户已参与过新人专享活动。</p>
-							<p class="mb-[5px]">* 若订单中的单个商品发生退款，用户将无法重新参与新人专享活动，只有当整个订单全部退货后，用户方可重新参与该活动。</p>
-						</template>
-					</el-alert>
+                        <template #default>
+                            <p class="mb-[5px]">* 新人专享活动旨在通过专属优惠提升新老客户的转化率。达到参与门槛的用户可以享受特定商品的限时新人价优惠。</p>
+                            <p class="mb-[5px]">* 每位用户限购1件新人专享商品，超出1件的部分将按正常价购买。</p>
+                            <p class="mb-[5px]">* 订单支付成功后，将视为用户已参与过新人专享活动。</p>
+                            <p class="mb-[5px]">* 若订单中的单个商品发生退款，用户将无法重新参与新人专享活动，只有当整个订单全部退货后，用户方可重新参与该活动。</p>
+                        </template>
+                    </el-alert>
                     <el-form :model="formData" label-width="120px" ref="formRef" :rules="formRules" class="page-form">
                         <el-card class="box-card !border-none" shadow="never">
                             <h3 class="panel-title !text-sm pl-[15px]">{{ t('basicInfoTab') }}</h3>

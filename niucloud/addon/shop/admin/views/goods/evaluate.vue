@@ -4,9 +4,7 @@
 
             <div class="flex justify-between items-center">
                 <span class="text-page-title">{{ pageName }}</span>
-                <el-button type="primary" @click="addEvent">
-                    {{ t('addEvaluate') }}
-                </el-button>
+                <el-button type="primary" @click="addEvent">{{ t('addEvaluate') }}</el-button>
             </div>
 
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
@@ -119,7 +117,7 @@ import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
 import { getEvaluateList, deleteEvaluate, adoptEvaluate, refuseEvaluate, replyEvaluate, toppingEvaluate, cancelToppingEvaluate } from '@/addon/shop/api/goods'
 import EvaluateAdd from '@/addon/shop/views/goods/components/evaluate-add.vue'
-import { img } from '@/utils/common'
+import { img, setTablePageStorage,getTablePageStorage} from '@/utils/common'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'
 
@@ -154,17 +152,18 @@ const loadEvaluateList = (page: number = 1) => {
         evaluateTable.loading = false
         evaluateTable.data = res.data.data
         evaluateTable.total = res.data.total
-        evaluateTable.data.map((item: any)=> {
-            item.previewList = item.images.map((el:any)=> {
+        evaluateTable.data.map((item: any) => {
+            item.previewList = item.images.map((el: any) => {
                 return img(el)
             })
             return item
         })
+        setTablePageStorage(evaluateTable.page, evaluateTable.limit, evaluateTable.searchParam)
     }).catch(() => {
         evaluateTable.loading = false
     })
 }
-loadEvaluateList()
+loadEvaluateList(getTablePageStorage(evaluateTable.searchParam).page)
 
 const editEvaluateDialog: Record<string, any> | null = ref(null)
 /**
@@ -204,7 +203,6 @@ const adoptEvent = (id: number) => {
     ).then(() => {
         adoptEvaluate(id).then(() => {
             loadEvaluateList()
-        }).catch(() => {
         })
     })
 }
@@ -257,7 +255,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
             replyEvaluate(data).then(res => {
                 loadEvaluateList()
                 replyShowDialog.value = false
-            }).catch(err => {
+            }).catch(() => {
                 replyShowDialog.value = false
             })
         }

@@ -10,6 +10,8 @@ return [
     'SHOP_GOODS_CATEGORY_EXIST_CHILD' => '当前分类存在下级，不可修改为该上级',
     'SHOP_GOODS_CATEGORY_EXIST_GOODS' => '当前分类下存在商品，不可删除',
     'SHOP_GOODS_NOT_EXIST' => '商品不存在',
+    'SHOP_GOODS_LABEL_NAME_REPEAT'=>'标签名称重复',
+    'SHOP_GOODS_LABEL_IN_USE'=>'该标签正在使用中',
     'NOT_SUPPORT_DELIVERY_TYPE' => '不支持选择的配送方式',
     'NOT_SUPPORT_DELIVERY_ADDRESS' => '所选的收货地址不支持配送',
     'NOT_SELECT_ADDRESS' => '需要先选择收货地址',
@@ -31,6 +33,7 @@ return [
     'SHOP_COUPON_IS_USED_OR_EXIST' => '优惠券不存在或已使用',
     'SHOP_COUPON_VALID_END_TIME_NOT_ALLOW_LT_START_TIME' => '优惠券的有效期结束时间不能小于当前时间',
     'SHOP_COUPON_IN_USE_NOT_ALLOW_EDIT' => '优惠券正在参与营销活动，禁止修改',
+    'SHOP_COUPON_IN_USE_NOT_ALLOW_DEL' => '优惠券已有用户领取，禁止删除',
     'SHOP_GOODS_NOT_HAS_DEFAULT_SPEC' => '商品缺少默认规格',
     'SHOP_GOODS_DELISTED' => '此商品已下架',
     'SHOP_GOODS_EVALUATE_SUCCESS' => '评价成功',
@@ -108,6 +111,7 @@ return [
     'SHOP_ORDER_BUYER_APPLY_REFUND' => '买家申请退款',
     'SHOP_ORDER_STORE_ACTIVE_REFUND' => '卖家主动退款',
     'SHOP_ORDER_REFUND_DELIVERY_NOT_ALLOW_REFUND_GOODS' => '待发货的商品项不允许退货退款',
+    'SHOP_ORDER_DELETE_STATUS_ERROR' => '删除订单中有未完成订单：%s',
     /*********************************************  订单退款 end ****************************************************/
 
 
@@ -136,8 +140,8 @@ return [
     'EXCHANGE_GOODS_POINT_GREATER_THAN_ZERO' => '商品兑换积分要大于零',
     'EXCHANGE_GOODS_STOCK_GREATER_THAN_ZERO' => '商品兑换库存要大于零',
     'EXCHANGE_GOODS_NOT_EMPTY' => '请选择参与活动商品',
-    'EXCHANGE_COUPON_NOT_EMPTY' => '请选择要参与的优惠卷',
-    'EXCHANGE_COUPON_NOT_EXIST' => '优惠卷不存在',
+    'EXCHANGE_COUPON_NOT_EMPTY' => '请选择要参与的优惠券',
+    'EXCHANGE_COUPON_NOT_EXIST' => '优惠券不存在',
     'EXCHANGE_BALANCE_GREATER_THAN_ZERO' => '商品兑换余额要大于零',
     'EXCHANGE_DETA_NOT_FOUND' => '积分信息活动未找到',
     'EXCHANGE_ACTIVITY_REMOVE' => '此积分商品已经下架',
@@ -163,5 +167,22 @@ return [
     'MANJIANSONG_CLOSED' => '满减送活动已关闭',
     'MANJIANSONG_NOT_FOUND' => '满减送活动未找到',
     /*********************************************   满减送end ****************************************************/
+
+    /*********************************************  限时折扣start ****************************************************/
+    'DISCOUNT_END_TIME_NOT_LESS_CURRENT_TIME' => '活动结束时间不能小于当前时间',
+    'DISCOUNT_GOODS_NOT_EMPTY' => '请选择参与活动商品',
+    'DISCOUNT_GOODS_SKU_NOT_EMPTY' => '商品规格不能为空',
+    'DISCOUNT_NOT_FOUND' => '活动未找到',
+    'DISCOUNT_NOT_EDIT' => '活动不可编辑',
+    'DISCOUNT_GOODS_NOT_REPEAR' => '同一商品在一个时间段内只能参加一个限时折扣活动',
+    'DISCOUNT_NOT_DELETE' => '进行中活动不能直接删除',
+    'DISCOUNT_GOODS_DISCOUNT_TYPE_NOT_EMPTY' => '折扣类型不能为空',
+    'DISCOUNT_GOODS_DISCOUNT_TYPE_ERROR' => '折扣类型错误',
+    'DISCOUNT_GOODS_DISCOUNT_PRICE_NOT_EMPTY' => '折扣价格discount_price不能为空',
+    'DISCOUNT_GOODS_SPECIFY_PRICE_NOT_EMPTY' => '促销价不能为空',
+    'DISCOUNT_GOODS_DISCOUNT_RATE_NOT_EMPTY' => '打折折扣不能为空',
+    'DISCOUNT_GOODS_REDUCE_MONEY_NOT_EMPTY' => '减钱金额不能为空',
+    'DISCOUNT_IS_ENABLED_NOT_EMPTY' => 'is_enabled必传',
+    /*********************************************  限时折扣end ****************************************************/
 
 ];

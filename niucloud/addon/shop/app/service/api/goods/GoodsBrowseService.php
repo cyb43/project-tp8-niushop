@@ -14,6 +14,7 @@ namespace addon\shop\app\service\api\goods;
 use addon\shop\app\model\goods\Browse;
 use addon\shop\app\model\goods\Goods;
 use addon\shop\app\model\goods\GoodsSku;
+use addon\shop\app\service\core\goods\CoreGoodsActivePriceService;
 use addon\shop\app\service\core\goods\CoreGoodsStatService;
 use core\base\BaseApiService;
 use core\exception\CommonException;
@@ -48,12 +49,13 @@ class GoodsBrowseService extends BaseApiService
             ->order('browse_time desc');
         $list = $this->pageQuery($search_model);
         if (!empty($list[ 'data' ])) {
-            $goods_service = ( new GoodsService() );
-            $member_info = $goods_service->getMemberInfo();
+            $goods_active_price_service = (new CoreGoodsActivePriceService());
             foreach ($list[ 'data' ] as &$v) {
-                if (!empty($v[ 'member_price' ])) {
-                    $v[ 'member_price' ] = $goods_service->getMemberPrice($member_info, $v[ 'member_discount' ], $v[ 'member_price' ], $v[ 'price' ]);
-                }
+                $v[ 'member_discount' ] = $v[ 'goods' ][ 'member_discount' ] ?? '';
+                //获取展示活动价格
+                $show_price_data = $goods_active_price_service->getActivePrice($v, $this->member_id);
+                $v[ 'show_price' ] = $show_price_data[ 'show_price' ];
+                $v[ 'show_type' ] = $show_price_data[ 'show_type' ];
                 $v[ 'browse_time_str' ] = strtotime($v[ 'browse_time' ]);
             }
         }

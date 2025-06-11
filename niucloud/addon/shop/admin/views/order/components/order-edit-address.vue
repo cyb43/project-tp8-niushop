@@ -44,8 +44,8 @@
                 <!-- 门店自提 -->
                 <el-form-item :label="t('selfPickupStores')" v-if="changeDeliveryType == 'store'">
                     <el-select v-model="formData.take_store_id" value-key="store_id" @change="selectStore" >
-						<el-option v-for="(item, index) in deliveryList " :key="index" :label="item.store_name" :value="item.store_id"/>
-				    </el-select>
+                        <el-option v-for="(item, index) in deliveryList " :key="index" :label="item.store_name" :value="item.store_id"/>
+                    </el-select>
                 </el-form-item>
 
             </el-form>
@@ -314,7 +314,7 @@ const initMap = () => {
 
 const latLngChange = (lat: number, lng: number) => {
     latLngToAddress({ mapKey, lat, lng }).then(({ message, result }) => {
-        
+
         if (message == 'query ok' || message == 'Success') {
             formData.taker_latitude = result.location.lat
             formData.taker_longitude = result.location.lng

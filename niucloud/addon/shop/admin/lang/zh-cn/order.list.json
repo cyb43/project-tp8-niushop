@@ -18,7 +18,7 @@
   "startDate": "开始时间",
   "endDate": "结束时间",
   "piece": "件",
-  "rightsProtection": "维权",
+  "rightsProtection": "售后",
   "activeRefund": "主动退款",
   "notes": "备注",
   "offlinePayment": "线下支付",
@@ -157,5 +157,6 @@
   "package": "包裹",
   "noLogisticsRequired": "无需物流",
   "notLogistics": "暂无物流信息",
-  "orderInfoEmpty": "暂无数据"
+  "orderInfoEmpty": "暂无数据",
+  "buyerAskDeliveryTime": "要求自提时间"
 }

@@ -101,5 +101,15 @@ class Refund extends BaseAdminController
         return success(data: ( new RefundActionService() )->getOrderRefundMoney($data));
     }
 
+    /**
+     * 关闭售后
+     * @return void
+     */
+    public function closeRefund($order_refund_no)
+    {
+        (new RefundActionService())->closeRefund($order_refund_no);
+        return success();
+    }
+
 
 }

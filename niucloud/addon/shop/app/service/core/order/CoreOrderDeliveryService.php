@@ -383,11 +383,11 @@ class CoreOrderDeliveryService extends BaseCoreService
         $order->save($order_data);
         //订单发货后操作
         $data[ 'order_data' ] = $order->toArray();
-//        event('AfterShopOrderDelivery', $data);
+        event('AfterShopOrderDelivery', $data);
         //订单发货操作
         CoreOrderEventService::orderDelivery($data);
         //订单发货后操作
-        CoreOrderEventService::orderDeliveryAfter($data);
+//        CoreOrderEventService::orderDeliveryAfter($data);
 
         //如果有且只有一个虚拟商品并且已经收货，则订单完成
         $order_goods_list = ( new OrderGoods() )->where([
@@ -535,7 +535,7 @@ class CoreOrderDeliveryService extends BaseCoreService
 
                     if (!empty($info) && $info[ 'express_company_id' ] && !empty($delivery_list)) {
                         $tracking_no = $info[ 'express_number' ];
-                        $index = array_search($info[ 'company' ][ 'company_name' ], array_column($delivery_list, 'delivery_name'));
+                        $index = array_search($info[ 'company' ][ 'express_no' ], array_column($delivery_list, 'delivery_id'));
                         if ($index !== false && isset($delivery_list[ $index ])) {
                             $express_company = $delivery_list[ $index ][ 'delivery_id' ];
                         }

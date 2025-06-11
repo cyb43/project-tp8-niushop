@@ -34,7 +34,7 @@
                         </view>
                     </view>
                     <view v-if="detail.delivery_type == 'store'">
-                        <view class="flex items-center">
+                        <view class="flex items-center mb-3">
                             <view>
                                 <u--image class="overflow-hidden" radius="var(--goods-rounded-mid)" width="100rpx"
                                           height="100rpx" :src="img(detail.store.store_logo ? detail.store.store_logo : '')" model="aspectFill">
@@ -49,6 +49,18 @@
                                 <text class="text-[24rpx] text-[var(--text-color-light6)] leading-[1.4]">{{ detail.store.full_address }}</text>
                             </view>
                         </view>
+						<view class="justify-between card-template-item" v-if="detail.taker_name">
+						    <view class="text-[28rpx]">姓名</view>
+						    <view class="text-[28rpx]">{{ detail.taker_name }}</view>
+						</view>
+						<view class="justify-between card-template-item" v-if="detail.taker_mobile">
+						    <view class="text-[28rpx]">预留手机</view>
+						    <view class="text-[28rpx]">{{ detail.taker_mobile }}</view>
+						</view>
+						<view class="justify-between card-template-item" v-if="detail.buyer_ask_delivery_time">
+						    <view class="text-[28rpx]">提货时间</view>
+						    <view class="text-[28rpx]">{{ detail.buyer_ask_delivery_time }}</view>
+						</view>
                     </view>
                     <view class="flex" v-if="detail.delivery_type == 'local_delivery'">
                         <text @click="getAddress"
@@ -62,14 +74,39 @@
                         </view>
                     </view>
                 </view>
+				<!-- 自提核销-->
+				<template v-if="isShowSelfPickup">
+				    <view class="sidebar-margin  mt-[var(--top-m)] card-template" v-if="selfPickupInfo && selfPickupInfo.length">
+				        <swiper class="h-[450rpx]" circular indicator-dots="true" v-if="selfPickupInfo.length > 1">
+				            <swiper-item v-for="(item,index) in selfPickupInfo" :key="index">
+				                <view class="flex flex-col items-center justify-center">
+				                    <image :src="item.qrcode" class="w-[300rpx] h-[auto]" mode="widthFix" />
+				                </view>
+				                <view class="flex items-center justify-center mt-[30rpx]">
+				                    <text class="text-[28rpx] font-500">{{ item.code }}</text>
+				                    <text class="text-[var(--text-color-light6)] text-[24rpx] ml-[10rpx] border-[2rpx] border-solid border-[#666] bg-[#f7f7f7] px-[12rpx] py-[6rpx] rounded" @click="copy(item.code)">复制</text>
+				                </view>
+				            </swiper-item>
+				        </swiper>
+				        <template v-else>
+				            <view class="flex flex-col items-center justify-center">
+				                <image :src="selfPickupInfo[0].qrcode" class="w-[300rpx] h-[auto]" mode="widthFix" />
+				            </view>
+				            <view class="flex items-center justify-center mt-[30rpx]">
+				                <text class="text-[28rpx] font-500">{{ selfPickupInfo[0].code }}</text>
+				                <text class="text-[var(--text-color-light6)] text-[24rpx] ml-[10rpx] border-[2rpx] border-solid border-[#666] bg-[#f7f7f7] px-[12rpx] py-[6rpx] rounded" @click="copy(selfPickupInfo[0].code)">复制</text>
+				            </view>
+				        </template>
+				
+				    </view>
+				</template>
                 <view class="sidebar-margin card-template p-[0] py-[var(--pad-top-m)] overflow-hidden"
                       :class="{'pb-[var(--pad-top-m)]': detail.gift_goods.length <= 0}"
                       :style="detail.delivery_type == 'virtual' ? 'margin-top: -86rpx' : 'margin-top: 20rpx'">
                     <view v-for="(goodsItem, goodsIndex) in detail.goods" :key="goodsIndex"
                           class="px-[var(--pad-sidebar-m)]">
                         <view class="order-goods-item flex justify-between flex-wrap mb-[20rpx]">
-                            <view class="w-[150rpx] h-[150rpx] rounded-[var(--goods-rounded-big)] overflow-hidden"
-                                  @click="goodsEvent(goodsItem.goods_id)">
+                            <view class="w-[150rpx] h-[150rpx] rounded-[var(--goods-rounded-big)] overflow-hidden" @click="goodsEvent(goodsItem.goods_id)">
                                 <u--image class="overflow-hidden" radius="var(--goods-rounded-big)" width="150rpx"
                                           height="150rpx" :src="img(goodsItem.goods_image_thumb_small ? goodsItem.goods_image_thumb_small : '')" model="aspectFill">
                                     <template #error>
@@ -100,23 +137,35 @@
                                             <text class="text-[32rpx] ml-[4rpx]">积分</text>
                                         </view>
                                         <text class="mx-[4rpx] text-[32rpx]" v-if="parseFloat(goodsItem.price) && goodsItem.extend && parseFloat(goodsItem.extend.point) > 0">+</text>
-                                        <block v-if="parseFloat(goodsItem.price) && goodsItem.extend && parseFloat(goodsItem.extend.point) > 0">
+                                        <template v-if="parseFloat(goodsItem.price) && goodsItem.extend && parseFloat(goodsItem.extend.point) > 0">
                                             <text class="text-[40rpx] font-200">{{ parseFloat(goodsItem.price).toFixed(2) }}</text>
                                             <text class="text-[32rpx] ml-[4rpx]">元</text>
-                                        </block>
-                                        <block v-if="goodsItem.extend && goodsItem.extend && goodsItem.extend.is_newcomer">
+                                        </template>
+                                        <template v-if="goodsItem.extend && goodsItem.extend.is_newcomer">
                                             <text class="text-[24rpx]">￥</text>
                                             <text class="text-[40rpx] font-500">{{ parseFloat(goodsItem.price).toFixed(2).split('.')[0] }}</text>
                                             <text class="text-[24rpx] font-500">.{{ parseFloat(goodsItem.price).toFixed(2).split('.')[1] }}</text>
-                                        </block>
-                                        <block v-if="!goodsItem.extend">
+                                        </template>
+                                        <template v-if="goodsItem.extend && goodsItem.extend.is_impulse_buy">
+                                            <text class="text-[24rpx]">￥</text>
+                                            <text class="text-[40rpx] font-500">{{ parseFloat(goodsItem.goods_money).toFixed(2).split('.')[0] }}</text>
+                                            <text class="text-[24rpx] font-500">.{{ parseFloat(goodsItem.goods_money).toFixed(2).split('.')[1] }}</text>
+                                        </template>
+                                        <template v-if="!goodsItem.extend">
                                             <text class="text-[24rpx]">￥</text>
                                             <text class="text-[40rpx] font-500">{{ parseFloat(goodsItem.price).toFixed(2).split('.')[0] }}</text>
                                             <text class="text-[24rpx] font-500">.{{ parseFloat(goodsItem.price).toFixed(2).split('.')[1] }}</text>
-                                        </block>
+                                        </template>
                                     </view>
                                     <text class="text-right text-[26rpx]">x{{ goodsItem.num }}</text>
                                 </view>
+                            </view>
+                        </view>
+                        <view class="flex items-center box-border mt-[8rpx]"
+                              v-if="goodsItem.extend && goodsItem.extend.is_impulse_buy && goodsItem.num>1">
+                            <image class="h-[24rpx] w-[56rpx]" :src="img('addon/shop/impulse_buy.png')" mode="heightFix" />
+                            <view class="text-[24rpx] text-[#FFB000] leading-[34rpx] ml-[8rpx]">
+                                {{ goodsItem.impulse_buy_tips }}
                             </view>
                         </view>
                         <view class="flex items-center box-border mt-[8rpx]"
@@ -126,7 +175,7 @@
                                 第1{{ goodsItem.unit }}，￥{{ parseFloat(goodsItem.extend.newcomer_price).toFixed(2) }}/{{ goodsItem.unit }}；第{{ goodsItem.num > 2 ? '2~' + goodsItem.num : '2' }}{{ goodsItem.unit }}，￥{{ parseFloat(goodsItem.price).toFixed(2) }}/{{ goodsItem.unit }}
                             </view>
                         </view>
-                        <view class="flex justify-end w-[100%] mt-[30rpx]"
+                        <view class="flex justify-end w-[100%] mt-[30rpx] mb-[20rpx]"
                               v-if="(goodsItem.status != '1') || (goodsItem.is_enable_refund == 1)">
                             <view v-if="goodsItem.status != '1'"
                                   class="text-[22rpx] text-[#303133] leading-[50rpx] px-[20rpx] border-[2rpx] border-solid border-[#999] rounded-full"
@@ -154,8 +203,7 @@
                             </view>
                             <view class="ml-[16rpx] py-[8rpx] flex flex-1 flex-col justify-between">
                                 <view class="flex items-center">
-                                    <view
-                                        class="bg-[var(--primary-color-light)] whitespace-nowrap text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center w-[64rpx] h-[34rpx] mr-[6rpx]">
+                                    <view class="bg-[var(--primary-color-light)] whitespace-nowrap text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center w-[64rpx] h-[34rpx] mr-[6rpx]">
                                         赠品
                                     </view>
                                     <view class="text-[26rpx] max-w-[400rpx] truncate leading-[40rpx] text-[#333]">{{ goodsItem.goods_name }}</view>
@@ -188,15 +236,19 @@
                         <view class="text-[28rpx]">{{ t('createTime') }}</view>
                         <view class="text-[28rpx]">{{ detail.create_time }}</view>
                     </view>
+					<view class="justify-between card-template-item" v-if="detail.member_remark">
+					    <view class="text-[28rpx]">{{ t('memberRemark') }}</view>
+					    <view class="text-[28rpx]">{{ detail.member_remark }}</view>
+					</view>
                     <view class=" card-template-item justify-between">
                         <view class="text-[28rpx]">{{ t('deliveryType') }}</view>
                         <view class="text-[28rpx]">{{ detail.delivery_type_name }}</view>
                     </view>
-                    <view v-if="detail.pay" class=" card-template-item justify-between !mb-[18rpx]">
+                    <view v-if="detail.pay" class="card-template-item justify-between" :class="{ '!mb-[18rpx]' : detail.member_id !== detail.pay.main_id && detail.pay.status == 2 }">
                         <view class="text-[28rpx]">{{ t('payTypeName') }}</view>
                         <view class="text-[28rpx]">{{ detail.pay.type_name }}</view>
                     </view>
-                    <view v-if="detail.pay && detail.member_id !== detail.pay.main_id && detail.pay.status == 2 "
+                    <view v-if="detail.pay && detail.member_id !== detail.pay.main_id && detail.pay.status == 2"
                           class="card-template-item justify-end">
                         <view class="friend-pay relative px-[20rpx] py-[12rpx] bg-[#F2F2F2] rounded-[10rpx] flex items-center">
                             <u-avatar :src="img(detail.pay.pay_member_headimg)" size="20" leftIcon="none" :default-url="img('static/resource/images/default_headimg.png')" />
@@ -210,7 +262,7 @@
 
                 </view>
                 <!-- 核销码 -->
-                <block v-if="isShowVerify">
+                <template v-if="isShowVerify">
                     <view class="sidebar-margin  mt-[var(--top-m)] card-template" v-if="verifyInfo && verifyInfo.length">
                         <swiper class="h-[450rpx]" circular indicator-dots="true" v-if="verifyInfo.length > 1">
                             <swiper-item v-for="(item,index) in verifyInfo" :key="index">
@@ -223,15 +275,15 @@
                                 </view>
                             </swiper-item>
                         </swiper>
-                        <block v-else>
+                        <template v-else>
                             <view class="flex flex-col items-center justify-center">
-                                <image :src="verifyInfo[0].qrcode" class="w-[300rpx] h-[auto]" mode="widthFix"></image>
+                                <image :src="verifyInfo[0].qrcode" class="w-[300rpx] h-[auto]" mode="widthFix" />
                             </view>
                             <view class="flex items-center justify-center mt-[30rpx]">
                                 <text class="text-[28rpx] font-500">{{ verifyInfo[0].code }}</text>
                                 <text class="text-[var(--text-color-light6)] text-[24rpx] ml-[10rpx] border-[2rpx] border-solid border-[#666] bg-[#f7f7f7] px-[12rpx] py-[6rpx] rounded" @click="copy(verifyInfo[0].code)">复制</text>
                             </view>
-                        </block>
+                        </template>
 
                     </view>
                     <view class="sidebar-margin mt-[var(--top-m)] card-template">
@@ -245,7 +297,7 @@
                             <view class="price-font font-500 text-[28rpx]">{{ verifyGoodsData.verify_expire_time ? verifyGoodsData.verify_expire_time : '永久' }}</view>
                         </view>
                     </view>
-                </block>
+                </template>
 
                 <!-- 待付款订单的万能表单信息 -->
                 <view :class="{'sidebar-margin mt-[var(--top-m)] card-template' : orderDiyFormData.length }"
@@ -258,11 +310,11 @@
                         <view class="price-font font-500">
                             <text v-if="parseFloat(detail.point) > 0" class="text-[28rpx]">{{ detail.point }}积分</text>
                             <text v-if="parseFloat(detail.point) > 0 && parseFloat(detail.goods_money)" class="mx-[4rpx] text-[28rpx]">+</text>
-                            <block v-if="parseFloat(detail.goods_money) || !parseFloat(detail.point)">
+                            <template v-if="parseFloat(detail.goods_money) || !parseFloat(detail.point)">
                                 <text class="text-[28rpx]">￥</text>
                                 <text class="text-[28rpx]">{{ parseFloat(detail.goods_money).toFixed(2).split('.')[0] }}</text>
                                 <text class="text-[28rpx]">.{{ parseFloat(detail.goods_money).toFixed(2).split('.')[1] }}</text>
-                            </block>
+                            </template>
                         </view>
                     </view>
                     <view class=" card-template-item justify-between" v-if="parseFloat(detail.delivery_money)">
@@ -319,11 +371,11 @@
                         <view class="min-w-[180rpx] box-border text-[26rpx]  h-[70rpx] flex-center text-center border-[2rpx] border-solid border-[#999] rounded-full ml-[20rpx] text-[var(--text-color-light6)]" v-if="detail.status == 1" @click="orderBtnFn('close')">{{ t('orderClose') }}</view>
                         <view class="min-w-[180rpx] box-border  text-[26rpx] h-[70rpx] flex-center text-center text-[#fff] primary-btn-bg rounded-full ml-[20rpx]" v-if="detail.status == 1" @click="orderBtnFn('pay')">{{ t('topay') }}</view>
                         <view v-if="detail.status == 3" class="min-w-[180rpx] box-border  text-[26rpx] h-[70rpx] flex-center text-center  text-[#fff]  primary-btn-bg rounded-full ml-[20rpx]" @click="orderBtnFn('finish')">{{ t('orderFinish') }}</view>
-                        <block v-if="detail.status == 5 && isShowEvaluate">
+                        <template v-if="detail.status == 5 && isShowEvaluate">
                             <view v-if="detail.is_evaluate == 1 || (detail.is_evaluate != 1 && evaluateConfig.is_evaluate == 1)"
                                 class="min-w-[180rpx] box-border text-[26rpx]  h-[70rpx] flex-center border-[2rpx] border-solid border-[#999] rounded-full ml-[20rpx] !text-[var(--text-color-light6)]"
                                 @click="orderBtnFn('evaluate')">{{ detail.is_evaluate == 1 ? t('selectedEvaluate') : t('evaluate') }}</view>
-                        </block>
+                        </template>
                     </view>
                 </view>
             </view>
@@ -408,6 +460,11 @@ const orderDetailFn = (id: any) => {
             obj.order_goods_id = res.data.order_goods[0].order_goods_id
             getVerifyCodeFn(obj);
         }
+		if (res.data.order_goods && res.data.order_goods.length && isShowSelfPickup.value) {
+		    let obj: any = {};
+		    obj.order_id = res.data.order_id
+		    getSelfPickupCodeFn(obj);
+		}
 
         detail.value.goods = []; //购买商品
         detail.value.gift_goods = []; //赠品
@@ -429,7 +486,6 @@ const orderDetailFn = (id: any) => {
         if (evaluateCount == detail.value.order_goods.length) {
             isShowEvaluate.value = false;
         }
-
         sendMessageTitle.value = detail.value.order_goods[0].goods_name
         sendMessageImg.value = img(detail.value.order_goods[0].goods_image_thumb_small || '')
         loading.value = false;
@@ -657,6 +713,26 @@ const getVerifyCodeFn = (data: any) => {
     })
 }
 /************ 虚拟商品核销-end ***************/
+
+/************ 自提核销-start ***************/
+// const verifyGoodsData = ref({}) //虚拟商品
+const isShowSelfPickup = computed(() => {
+    let bool = false;
+    // if (detail.value.order_goods.length == 1) {
+        // verifyGoodsData.value = detail.value.order_goods[0]
+        bool = detail.value.delivery_type == 'store' && detail.value.status == 2 ? true : false;
+    // }
+    return bool
+})
+const selfPickupInfo = ref([])
+const getSelfPickupCodeFn = (data: any) => {
+    selfPickupInfo.value = [];
+
+    getVerifyCode('shopPickUpOrder', data).then((res: any) => {
+        selfPickupInfo.value = res.data;
+    })
+}
+/************ 自提核销-end ***************/
 
 // 商品表单信息
 const goodsDiyFormData = ref([]);

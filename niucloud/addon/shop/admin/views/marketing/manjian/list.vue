@@ -12,12 +12,12 @@
                 <el-form-item :label="t('name')" prop="manjian_name">
                     <el-input v-model.trim="tableData.searchParam.manjian_name" :placeholder="t('namePlaceholder')" />
                 </el-form-item>
-                <el-form-item>
                 <el-form-item :label="t('activityTime')" prop="create_time">
-				    <el-date-picker v-model="tableData.searchParam.create_time" type="datetimerange" value-format="YYYY-MM-DD HH:mm:ss" :start-placeholder="t('startDate')" :end-placeholder="t('endDate')" />
-			    </el-form-item>
-                <el-button type="primary" @click="loadManjianList()">{{ t("search") }}</el-button>
-                <el-button @click="resetForm(searchFormRef)">{{ t("reset") }}</el-button>
+                    <el-date-picker v-model="tableData.searchParam.create_time" type="datetimerange" value-format="YYYY-MM-DD HH:mm:ss" :start-placeholder="t('startDate')" :end-placeholder="t('endDate')" />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="loadManjianList()">{{ t("search") }}</el-button>
+                    <el-button @click="resetForm(searchFormRef)">{{ t("reset") }}</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -107,8 +107,8 @@ const tabHandleClick = (tab: any, event: Event) => {
 
 // 获取列表
 const loadManjianList = (page: number = 1) => {
-   tableData.loading = true;
-   tableData.page = page;
+    tableData.loading = true
+    tableData.page = page
 
     getManjianList({
         page: tableData.page,
@@ -118,18 +118,18 @@ const loadManjianList = (page: number = 1) => {
         tableData.loading = false;
         tableData.data = res.data.data;
         tableData.total = res.data.total;
-        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam);
+        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam)
     }).catch(() => {
-        tableData.loading = false;
-    });
-};
+        tableData.loading = false
+    })
+}
 
 loadManjianList(getTablePageStorage(tableData.searchParam).page);
 
 const resetForm = (formEl: FormInstance | undefined) => {
-    if (!formEl) return;
-    formEl.resetFields();
-    loadManjianList();
+    if (!formEl) return
+    formEl.resetFields()
+    loadManjianList()
 };
 
 const handleChange = () => {
@@ -144,15 +144,15 @@ const getManjianStatusListFn = () => {
 }
 
 getManjianStatusListFn()
-//编辑满减送活动
+// 编辑满减送活动
 const editEvent = (data: any) => {
     router.push('/shop/marketing/manjian/edit?id='+data.manjian_id)
 }
 
 //详情
 const manjianDetailDialog: Record<string, any> | null = ref(null)
-const detailEvent=(id:number)=>{
-    let data = {id: id};
+const detailEvent = (id:number) => {
+    let data = { id: id };
     manjianDetailDialog.value.setFormData(data);
     manjianDetailDialog.value.showDialog = true;
 }
@@ -281,12 +281,12 @@ const batchCloseManjianFn = () => {
 
         batchCloseMajian({ manjian_id }).then(() => {
             loadManjianList();
-        repeat.value = false;
+            repeat.value = false;
         }).catch(() => {
-        repeat.value = false;
+            repeat.value = false;
         });
     });
-};
+}
 
 </script>
 

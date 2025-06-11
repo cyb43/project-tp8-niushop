@@ -47,12 +47,12 @@ const useCartStore = defineStore('cart', {
                                 sku_id: item.sku_id,
                                 stock: item.goodsSku.stock,
                                 num: item.num,
-                                sale_price: item.goodsSku.price
+                                sale_price: item.goodsSku.show_price
                             };
 
-                            if (item.goods.member_discount && getToken() && item.goodsSku.member_price != item.goodsSku.price) {
-                                cart.sale_price = item.goodsSku.member_price ? item.goodsSku.member_price : item.goodsSku.price // 会员价
-                            }
+                            // if (item.goods.member_discount && getToken() && item.goodsSku.member_price != item.goodsSku.price) {
+                            //     cart.sale_price = item.goodsSku.member_price ? item.goodsSku.member_price : item.goodsSku.price // 会员价
+                            // }
 
                             // todo sale_price 改成 price
 

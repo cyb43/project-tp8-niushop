@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+
 /**
  * 获取商品统计基本信息
  * @returns
@@ -14,6 +15,7 @@ export function getGoodsStatisticsBasic(params: Record<string, any>) {
 export function getGoodsStatisticsTrend(params: Record<string, any>) {
     return request.get('shop/goods/statistics/trend', { params })
 }
+
 /**
  * 获取商品排行榜统计类型
  */

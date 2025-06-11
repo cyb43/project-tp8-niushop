@@ -3,6 +3,7 @@ declare (strict_types=1);
 
 namespace addon\shop\app\listener\order;
 
+use addon\shop\app\service\core\goods\CoreGoodsStatService;
 use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\dict\order\OrderDict;
 use addon\shop\app\model\order\OrderDiscounts;
@@ -69,6 +70,9 @@ class AfterShopOrderClose
                     'goods_id' => $v['goods_id'],
                     'sku_id' => $v['sku_id']
                 ]);
+
+                // 商品销量累减 - 下单数
+                CoreGoodsStatService::decStat([ 'goods_id' => $v[ 'goods_id' ], 'time' => $order_data['create_time'], 'sale_num' => $v[ 'num' ] ]);
             }
 
             //发票改变状态........

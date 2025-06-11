@@ -1,17 +1,21 @@
 <template>
     <view class="min-h-screen bg-[var(--page-bg-color)] overflow-hidden">
         <view class="mescroll-box bg-[var(--page-bg-color)]"
-              :class="{ 'cart': config.cart.control && config.cart.event === 'cart', 'detail': !(config.cart.control && config.cart.event === 'cart') }"
-              v-if="tabsData.length">
+              :class="{ 'cart': config.cart.control && config.cart.event === 'cart', 'detail': !(config.cart.control && config.cart.event === 'cart') }" v-if="tabsData.length">
             <mescroll-body ref="mescrollRef" :down="{ use: false }" @init="mescrollInit" @up="getListFn">
+                <!--  #ifdef H5 -->
                 <view v-if="config.search.control" class="search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[100rpx] box-border">
+                <!--  #endif -->
+                <!--  #ifndef H5 -->
+                <view v-if="config.search.control" class="search-box z-10 bg-[#fff] fixed top-[156rpx] left-0 right-0 h-[100rpx] box-border">
+                <!--  #endif -->
                     <view class="flex-1 search-input">
                         <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                         <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" @confirm="searchNameFn" placeholderClass="text-[var(--text-color-light9)]">
                         <text v-if="searchName" class="nc-iconfont nc-icon-cuohaoV6xx1 clear" @click="searchName=''"></text>
                     </view>
                 </view>
-                <!--  #ifdef  H5 -->
+                <!--  #ifdef H5 -->
                 <view class="tabs-box z-2 fixed left-0 bg-[#fff] bottom-[50px] top-0"
                       :class="{ '!top-[100rpx]': config.search.control, 'pb-[98rpx]': config.cart.control && config.cart.event === 'cart' }">
                     <scroll-view :scroll-y="true" class="scroll-height">
@@ -27,7 +31,7 @@
                 </view>
                 <!--  #endif -->
                 <!--  #ifndef  H5 -->
-                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0" :class="{ 'top-[126rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
+                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0" :class="{ 'top-[258rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
                     <scroll-view :scroll-y="true" class="scroll-height">
                         <view class="bg-[var(--temp-bg)]">
                             <view class="tab-item" :class="{ 'tab-item-active': index == tabActive,'rounded-br-[12rpx]':tabActive-1===index,'rounded-tr-[12rpx]':tabActive+1===index}"
@@ -56,8 +60,10 @@
                                         <text class="text-[40rpx] font-500">{{ parseFloat(goodsPrice(item)).toFixed(2).split('.')[0] }}</text>
                                         <text class="text-[24rpx] font-500">.{{ parseFloat(goodsPrice(item)).toFixed(2).split('.')[1] }}</text>
                                         <image class="h-[24rpx] max-w-[46rpx] ml-[6rpx]" v-if="priceType(item) == 'member_price'" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+										<image class="h-[24rpx] max-w-[60rpx] ml-[6rpx]" v-if="priceType(item) == 'newcomer_price'" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+										<image class="h-[24rpx] max-w-[80rpx] ml-[6rpx]" v-if="priceType(item) == 'discount_price'" :src="img('addon/shop/discount.png')" mode="heightFix" /> 
                                     </view>
-                                    <block v-if="!item.isMaxBuy">
+                                    <template v-if="!item.isMaxBuy">
                                         <view v-if=" (item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && config.cart.control && config.cart.event === 'cart'" class="flex items-center">
                                             <view class="relative w-[32rpx] h-[32rpx]">
                                                 <text class="text-[32rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[14rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
@@ -101,7 +107,7 @@
                                                     :class="['absolute right-[-10rpx] top-[-10rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
                                             </view>
                                         </template>
-                                    </block>
+                                    </template>
                                 </view>
                             </view>
                         </view>
@@ -569,20 +575,14 @@ const settlement = () => {
 // 价格类型
 const priceType = (data: any) => {
     let type = "";
-    if (data.member_discount && getToken() && data.goodsSku.member_price != data.goodsSku.price) {
-        type = 'member_price' // 会员价
-    }
+	type = data.goodsSku.show_type
     return type;
 }
 
 // 商品价格
 const goodsPrice = (data: any) => {
     let price = "0.00";
-    if (data.member_discount && getToken() && data.goodsSku.member_price != data.goodsSku.price) {
-        price = data.goodsSku.member_price ? data.goodsSku.member_price : data.goodsSku.price // 会员价
-    } else {
-        price = data.goodsSku.price
-    }
+	price = data.goodsSku.show_price
     return price;
 }
 </script>

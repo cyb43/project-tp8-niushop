@@ -14,7 +14,7 @@ return [
         'AfterGoodsEdit' => [
             'addon\shop\app\listener\point_exchange\AfterGoodsEdit'
         ],
-        //订单创建后
+        //订单创建
         'ShopOrderCreate' => [ 'addon\shop\app\listener\order\ShopOrderCreate' ],
         //订单创建时 优惠抵扣减免业务
         'ShopOrderDiscountCreate' => [
@@ -40,7 +40,7 @@ return [
         ],
         //活动信息
         'ShopGoodsMarketCalculate' => [
-            'addon\shop\app\listener\marketing\ShopDiscountCalculate',   //限时折扣
+//            'addon\shop\app\listener\marketing\ShopDiscountCalculate',   //限时折扣
             'addon\shop\app\listener\marketing\ShopNewcomerCalculate'   //新人专享
         ],
         /***************************************************** 退款 start *****************************************************/
@@ -76,7 +76,6 @@ return [
         'CouponReceiveType' => [ 'addon\shop\app\listener\coupon\CouponReceiveListener' ],
         'CouponCheck' => [ 'addon\shop\app\listener\coupon\CouponCheckListener' ],
 
-
         //获取海报数据
         'GetPosterType' => [ 'addon\shop\app\listener\poster\ShopPosterType' ],
         'GetPosterData' => [ 'addon\shop\app\listener\poster\ShopPoster' ],
@@ -87,7 +86,7 @@ return [
             'addon\shop\app\listener\order_export\ShopOrderExportTypeListener',
             //订单项导出
             'addon\shop\app\listener\order_export\ShopOrderGoodsExportTypeListener',
-            //退款维权导出
+            //退款售后导出
             'addon\shop\app\listener\refund_export\ShopOrderRefundExportTypeListener',
             //发票列表导出
             'addon\shop\app\listener\order_export\ShopInvoiceExportTypeListener',
@@ -98,7 +97,7 @@ return [
             'addon\shop\app\listener\order_export\ShopOrderExportDataListener',
             //订单项导出
             'addon\shop\app\listener\order_export\ShopOrderGoodsExportDataListener',
-            //退款维权导出
+            //退款售后导出
             'addon\shop\app\listener\refund_export\ShopOrderRefundExportDataListener',
             //发票列表导出
             'addon\shop\app\listener\order_export\ShopInvoiceExportDataListener',
@@ -112,15 +111,11 @@ return [
         'VerifyCreate' => [ 'addon\shop\app\listener\verify\VerifyCreateListener' ],
         'Verify' => [ 'addon\shop\app\listener\verify\VerifyListener' ],
         'VerifyInfo' => [ 'addon\shop\app\listener\verify\VerifyInfoListener' ],
+        'VerifyCheck' => ['addon\shop\app\listener\verify\VerifyCheckListener'],
 
-        'ActiveStartAfter' => [
-            'addon\shop\app\listener\marketing\DiscountActiveStartAfter'
+        'GetGoodsJoinInfo' => [
+            'addon\shop\app\listener\marketing\GetGoodsJoinInfo'
         ],
-
-        'ActiveEndAfter' => [
-            'addon\shop\app\listener\marketing\DiscountActiveEndAfter'
-        ],
-
         'ActiveSaveAfter' => [
             'addon\shop\app\listener\marketing\ShopActiveSaveAfter'
         ],
@@ -151,6 +146,8 @@ return [
         'ThemeColor' => [ 'addon\shop\app\listener\diy\ThemeColorListener' ],
         //万能表单删除前
         'BeforeFormDelete' => [ 'addon\shop\app\listener\diy\BeforeFormDeleteListener' ],
+        //获取商品展示价格
+        'GoodsShowPrice' => [ 'addon\shop\app\listener\goods\GoodsShowPriceListener' ]
 
     ],
     'subscribe' => [

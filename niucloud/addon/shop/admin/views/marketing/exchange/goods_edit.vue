@@ -1,9 +1,8 @@
 <template>
     <div class="main-container" v-loading="loading">
-
-		<el-card class="card !border-none" shadow="never">
-		    <el-page-header :content="pageName" :icon="ArrowLeft" @back="back()" />
-		</el-card>
+        <el-card class="card !border-none" shadow="never">
+            <el-page-header :content="pageName" :icon="ArrowLeft" @back="back()" />
+        </el-card>
 
         <!-- 表单 -->
         <el-form class="page-form mt-[15px]" :model="formData" label-width="120px" ref="formRef" :rules="formRules">
@@ -135,7 +134,7 @@
                                                     callback(t('limitTipsThree'))
                                                 } else if(parseInt(value)>parseInt(row.goods_stock)){
                                                     callback(t('stockTipsThree'))
-                                                } else { 
+                                                } else {
                                                     callback();
                                                 }
                                         }

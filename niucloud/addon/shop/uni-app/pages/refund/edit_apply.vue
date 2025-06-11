@@ -96,10 +96,7 @@
                     </view>
                     <view class="w-full">
                         <view class="py-[var(--top-m)] px-[var(--sidebar-m)] box-border">
-                            <button
-                                class="primary-btn-bg !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500"
-                                :loading="operateLoading" @click="save">提交
-                            </button>
+                            <button class="primary-btn-bg !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500" :loading="operateLoading" @click="save">提交</button>
                         </view>
                     </view>
 

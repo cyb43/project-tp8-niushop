@@ -19,20 +19,14 @@ export function useGoods(params: any = {}) {
     // 价格类型
     const priceType = (data: any) => {
         let type = "";
-        if (data.member_discount && getToken() && data.goodsSku.member_price != data.goodsSku.price) {
-            type = 'member_price' // 会员价
-        }
+		type = data.goodsSku.show_type
         return type;
     }
 
     // 商品价格
     const goodsPrice = (data: any) => {
         let price = "0.00";
-        if (data.member_discount && getToken() && data.goodsSku.member_price != data.goodsSku.price) {
-            price = data.goodsSku.member_price ? data.goodsSku.member_price : data.goodsSku.price // 会员价
-        } else {
-            price = data.goodsSku ? data.goodsSku.price : data.price; //兼容商品推荐组件
-        }
+		price = data.goodsSku.show_price
         return parseFloat(price);
     }
 

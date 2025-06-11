@@ -11,11 +11,13 @@
 
 namespace addon\shop\app\service\core\order;
 
+use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\dict\order\OrderDict;
 use addon\shop\app\dict\order\OrderGoodsDict;
 use addon\shop\app\model\cart\Cart;
 use addon\shop\app\model\goods\GoodsSku;
 use addon\shop\app\model\order\Order;
+use addon\shop\app\service\core\goods\CoreGoodsActivePriceService;
 use app\dict\member\MemberDict;
 use app\model\member\MemberLevel;
 use app\service\core\member\CoreMemberService;
@@ -80,8 +82,9 @@ class CoreOrderCreateService extends BaseCoreService
 
             //收发货相关
             'delivery_type' => $this->delivery[ 'delivery_type' ] ?? '',
-            'taker_name' => $this->delivery[ 'take_address' ][ 'name' ] ?? '',
-            'taker_mobile' => $this->delivery[ 'take_address' ][ 'mobile' ] ?? '',
+            'taker_name' => $data[ 'delivery' ][ 'taker_name' ] ?? $this->delivery[ 'take_address' ][ 'name' ] ?? '',
+            'taker_mobile' => $data[ 'delivery' ][ 'taker_mobile' ] ?? $this->delivery[ 'take_address' ][ 'mobile' ] ?? '',
+            'buyer_ask_delivery_time' => $data[ 'delivery' ][ 'buyer_ask_delivery_time' ] ?? '', // 购买者期望的时间
             'taker_province' => $this->delivery[ 'take_address' ][ 'province_id' ] ?? 0,
             'taker_city' => $this->delivery[ 'take_address' ][ 'city_id' ] ?? 0,
             'taker_district' => $this->delivery[ 'take_address' ][ 'district_id' ] ?? 0,
@@ -99,7 +102,8 @@ class CoreOrderCreateService extends BaseCoreService
         ];//总
 
         $order_goods_data = [];//项
-        foreach ($this->goods_data as $v) {
+        $write_goods_data = array_merge($this->goods_data, $this->impulse_buy_list);
+        foreach ($write_goods_data as $v) {
             $order_goods_data[] = [
                 'member_id' => $data[ 'member_id' ],
                 'goods_id' => $v[ 'goods_id' ],
@@ -137,8 +141,9 @@ class CoreOrderCreateService extends BaseCoreService
         //参数赋值
         $this->setParam($data);
         $this->order_key = $this->param[ 'order_key' ] ?? '';
-        if (empty($this->order_key)) {
-            $this->confirm();
+        $is_need_recalculate = $data[ 'is_need_recalculate' ] ?? 0;
+        if (empty($this->order_key) || $is_need_recalculate == 1) {
+            $this->confirm($this->order_key);
         }
         //获取订单数据的缓存
         $this->getOrderCache($this->order_key . '_basic');
@@ -154,8 +159,9 @@ class CoreOrderCreateService extends BaseCoreService
         $discount_money = $this->moneyFormat($this->basic[ 'discount_money' ] ?? 0);//优惠金额
         $delivery_money = $this->moneyFormat($this->basic[ 'delivery_money' ] ?? 0);
         $goods_money = $this->moneyFormat($this->basic[ 'goods_money' ] ?? 0);
+        $order_money = $this->moneyFormat($this->basic[ 'order_money' ] ?? 0);
 
-        $order_money = $this->moneyFormat($this->moneyCalculate($delivery_money, $goods_money, -$discount_money));
+        $order_money = $this->moneyFormat($this->moneyCalculate($order_money, $delivery_money, $goods_money, -$discount_money));
         $this->basic[ 'discount_money' ] = $discount_money;
         $this->basic[ 'delivery_money' ] = $delivery_money;
         $this->basic[ 'goods_money' ] = $goods_money;
@@ -177,7 +183,7 @@ class CoreOrderCreateService extends BaseCoreService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function confirm()
+    public function confirm($order_key = '')
     {
         //查看会员信息
         $member_id = $this->param[ 'member_id' ];
@@ -202,13 +208,14 @@ class CoreOrderCreateService extends BaseCoreService
         $order_cache = get_object_vars($this);
         unset($order_cache[ 'param' ]);
         unset($order_cache[ 'order_key' ]);
-        $order_key = $this->setOrderCache('', $order_cache);
+        if (empty($order_key)) {
+            $order_key = $this->setOrderCache('', $order_cache);
+        }
         //将基础订单数据单独存放一个缓存
         $order_basic_key = $order_key . '_basic';
         $this->setOrderCache($order_basic_key, $order_cache);
 
         $this->order_key = $order_key;
-
         return true;
     }
 
@@ -241,7 +248,6 @@ class CoreOrderCreateService extends BaseCoreService
         $sku_list = ( new  GoodsSku() )->where($sku_condition)->with([ 'goods' ])->field('sku_id, sku_name, sku_image, goods_id, price, stock, weight, volume,sku_id, sku_spec_format,member_price, sale_price')->select()->toArray();
         $sku_list = array_column($sku_list, null, 'sku_id');
         //商品数据  查询商品列表
-
         $order_data = [];
         $goods_list = [];
         $order_money = $goods_money = $delivery_money = 0;
@@ -249,6 +255,7 @@ class CoreOrderCreateService extends BaseCoreService
         $body = '';
         //订单中包含的商品形式
         $has_goods_types = [];
+        $activity_type = $this->extend_data[ 'activity_type' ] ?? '';
         foreach ($sku_data as $v) {
             $sku_id = $v[ 'sku_id' ];
             $num = $v[ 'num' ];
@@ -257,13 +264,26 @@ class CoreOrderCreateService extends BaseCoreService
             $market_type_id = $v[ 'market_type_id' ] ?? 0;
             $sku_info = $sku_list[ $sku_id ] ?? [];
             if (empty($sku_info)) throw new CommonException('SHOP_ORDER_CARTS_EXPIRE');//无效的商品
+            $sku_info[ 'member_discount' ] = $sku_info[ 'goods' ][ 'member_discount' ] ?? '';
 
             //商品原价
             $sku_info[ 'original_price' ] = $sku_info[ 'price' ];
-
-            // 计算会员价
-            $sku_info[ 'price' ] = $this->getMemberPrice($sku_info);
-            $sku_info[ 'member_price' ] = $sku_info[ 'price' ];
+            //获取活动价格
+            $sku_info[ 'show_type' ] = 'original_price';
+            $sku_info[ 'active_id' ] = '';
+            if ($activity_type != ActiveDict::NEWCOMER_DISCOUNT){
+                $goods_active_price_service = (new CoreGoodsActivePriceService());
+                $show_price_data = $goods_active_price_service->getActivePrice($sku_info, $this->member_id);
+                $sku_info[ 'show_type' ] = $show_price_data[ 'show_type' ];
+                $sku_info[ 'price' ] = $show_price_data[ 'show_price' ];
+                $sku_info[ 'active_id' ] = $show_price_data[ 'discount_id' ] ?? '';
+            }else{
+                $sku_info[ 'member_price' ] = $this->getMemberPrice($sku_info);
+                $sku_info[ 'price' ] = $sku_info[ 'member_price' ];
+                if ($sku_info[ 'member_price' ] < $sku_info[ 'price' ]){
+                    $sku_info[ 'show_type' ] = 'member_price';
+                }
+            }
 
             //默认金额填充
             $sku_info[ 'discount_money' ] = 0;
@@ -291,43 +311,67 @@ class CoreOrderCreateService extends BaseCoreService
             $sku_info[ 'market_type' ] = $market_type;//活动类型
             $sku_info[ 'market_type_id' ] = $market_type_id;//活动id
 
-            //活动操纵数据  market_data 活动信息
-            $temp = [];
-            $temp_list = array_filter(event('ShopGoodsMarketCalculate', [
-                'sku_info' => $sku_info,
-                'sku_data' => $sku_data,
-                'order_obj' => $this
-            ]));
+            // 计算商品小计
+            $price = $sku_info[ 'price' ];
+            $sku_info[ 'goods_money' ] = $price * $num;
 
-            foreach ($temp_list as $item) {
-                if (!empty($item)) $temp = $item;
-            }
-            if (!empty($temp)) {
-                $sku_info = $temp[ 'sku_info' ];
-                if (!empty($this->extend_data)) {
-                    $this->extend_data[ 'relate_id' ] = $temp[ 'relate_id' ] ?? 0;
-                    $this->extend_data[ 'activity_type' ] = $temp[ 'activity_type' ] ?? '';
+            /****顺手买商品不参与任何其他活动 进行单独计算****/
+            if (!isset($v[ 'impulse_buy_goods_id' ])) {
+                // 活动操纵数据  market_data 活动信息
+                $temp = [];
+                // 过滤活动计算结果，去除空元素
+                $temp_list = array_filter(event('ShopGoodsMarketCalculate', [
+                    'sku_info' => $sku_info,
+                    'sku_data' => $sku_data,
+                    'order_obj' => $this
+                ]));
 
-                    // 目前礼品卡用到
-                    if (!empty($temp[ 'basic' ]) && isset($temp[ 'basic' ][ 'delivery_money' ])) {
-                        $this->extend_data[ 'delivery_money' ] = $temp[ 'basic' ][ 'delivery_money' ];
+                // 获取最后一个非空的活动计算结果
+                if (!empty($temp_list)) {
+                    $temp = end($temp_list);
+                }
+
+                if (!empty($temp)) {
+                    // 更新 SKU 信息
+                    $sku_info = $temp[ 'sku_info' ];
+                    if (!empty($this->extend_data)) {
+                        // 更新扩展数据中的关联 ID 和活动类型
+                        $this->extend_data[ 'relate_id' ] = $temp[ 'relate_id' ] ?? 0;
+                        $this->extend_data[ 'activity_type' ] = $temp[ 'activity_type' ] ?? '';
                     }
                 }
-            } else {
-                $price = $sku_info[ 'price' ];
-                $sku_info[ 'goods_money' ] = $price * $num;//小计
             }
-            $goods_money += $sku_info[ 'goods_money' ];
 
-            $goods_list[ $sku_id ] = $sku_info;
+            $goods_money += $sku_info[ 'goods_money' ];
             $body = $body ? $body . ( $sku_info[ 'sku_name' ] . $sku_info[ 'goods' ][ 'goods_name' ] ) : ( $sku_info[ 'sku_name' ] . $sku_info[ 'goods' ][ 'goods_name' ] );
+            $goods_list[ $sku_id ] = $sku_info;
         }
+
+        /*****顺手买开始*****/
+        $impulse_buy_goods = $this->param[ 'impulse_buy_goods' ] ?? [];
+        $impulse_buy_list = [];
+        if (!empty($impulse_buy_goods)) {
+            $temp_list = array_filter(event('ShopImpulseBuyGoodsMarketCalculate', [
+                'data' => $impulse_buy_goods,
+                'member_id' => $this->member_id,
+                'goods_money' => $goods_money,
+                'order_obj' => $this
+            ]))[ 0 ] ?? [];
+            if (!empty($temp_list)) {
+                $impulse_buy_list = $temp_list[ 'impulse_buy_data' ];
+                $goods_money = $temp_list[ 'goods_money' ];
+                $order_money = $temp_list[ 'order_money' ];
+                $this->basic[ 'order_money' ] += $order_money;
+            }
+        }
+        /*****顺手买结束*****/
+
         $this->basic[ 'has_goods_types' ] = $has_goods_types;
         $this->basic[ 'total_num' ] = $total_num;
         $this->goods_data = $goods_list;
+        $this->impulse_buy_list = $impulse_buy_list;
         $this->basic[ 'goods_money' ] = $goods_money;
         $this->basic[ 'body' ] = $body;
-
         return $order_data;
     }
 

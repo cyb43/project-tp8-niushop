@@ -120,7 +120,6 @@ export function deleteShippingTemplate(template_id: number) {
     })
 }
 
-
 /*********************************  自提门店  ***************************************/
 /**
  * 获取自提门店列表
@@ -138,6 +137,15 @@ export function getStoreList(params: Record<string, any>) {
  */
 export function getStoreInfo(store_id: number) {
     return request.get(`shop/delivery/store/${ store_id }`);
+}
+
+/**
+ * 获取初始化页面信息
+ * @param params
+ * @returns
+ */
+export function getStoreInit() {
+    return request.get(`shop/delivery/store/init`)
 }
 
 /**
@@ -202,7 +210,7 @@ export function getShopDeliveryList() {
  * @returns
  */
 export function setShopDeliveryConfig(params: Record<string, any>) {
-    return request.put(`shop/delivery/setConfig`, params)
+    return request.put(`shop/delivery/setConfig`, params, { showSuccessMessage: true })
 }
 
 /**

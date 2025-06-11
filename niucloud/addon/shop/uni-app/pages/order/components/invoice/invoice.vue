@@ -40,18 +40,18 @@
                             <view class="mt-[10rpx]">
                                 <u-form-item label="发票内容" prop="header_name">
                                     <view class="flex flex-wrap">
-                                        <block v-for="(item,index) in config.invoice_content">
+                                        <template v-for="(item,index) in config.invoice_content">
                                             <view
                                                 class="box-border rounded px-[20rpx] py-[12rpx] leading-[1.4] border-[2rpx] border-[var(--temp-bg)] border-solid text-[24rpx] bg-[var(--temp-bg)] my-[10rpx]"
                                                 :class="{'!bg-[var(--primary-color-light)] !text-[var(--primary-color)] !border-primary': formData.name == item, 'mr-[20rpx]': (config.invoice_content.length-1) != index}"
                                                 @click="formData.name = item">{{ item }}</view>
-                                        </block>
+                                        </template>
                                     </view>
                                 </u-form-item>
                             </view>
                             <view class="mt-[10rpx]">
                                 <u-form-item label="发票抬头" prop="header_name">
-                                    <u-input fontSize="28rpx" v-model.trim="formData.header_name" border="none"
+                                    <u-input fontSize="28rpx" v-model.trim="formData.header_name" border="none" maxlength="50"
                                              placeholder-class="!text-[var(--text-color-light9)] text-[28rpx]" clearable
                                              placeholder="请输入发票抬头" />
                                 </u-form-item>
@@ -60,7 +60,7 @@
                                 <view class="mt-[10rpx]">
                                     <u-form-item label="纳税人识别号" prop="tax_number">
                                         <u-input fontSize="28rpx" v-model.trim="formData.tax_number" border="none"
-                                                 clearable placeholder="请输入纳税人识别号"
+                                                 clearable placeholder="请输入纳税人识别号" maxlength="20"
                                                  placeholder-class="!text-[var(--text-color-light9)] text-[28rpx]"
                                                  @change="inputChange" />
                                     </u-form-item>
@@ -77,7 +77,7 @@
                                     <u-form-item label="注册地址">
                                         <u-input fontSize="28rpx" v-model="formData.address"
                                                  placeholder-class="!text-[var(--text-color-light9)] text-[28rpx]"
-                                                 border="none" clearable
+                                                 border="none" clearable maxlength="120"
                                                  placeholder="(选填)请输入企业注册地址" />
                                     </u-form-item>
                                 </view>
@@ -85,7 +85,7 @@
                                     <u-form-item label="注册电话">
                                         <u-input fontSize="28rpx" v-model="formData.telephone"
                                                  placeholder-class="!text-[var(--text-color-light9)] text-[28rpx]"
-                                                 border="none" clearable
+                                                 border="none" clearable maxlength="12"
                                                  placeholder="(选填)请输入企业注册电话" />
                                     </u-form-item>
                                 </view>
@@ -93,7 +93,7 @@
                                     <u-form-item label="开户银行">
                                         <u-input fontSize="28rpx" v-model="formData.bank_name"
                                                  placeholder-class="!text-[var(--text-color-light9)] text-[28rpx]"
-                                                 border="none" clearable
+                                                 border="none" clearable maxlength="50"
                                                  placeholder="(选填)请输入企业开户银行" />
                                     </u-form-item>
                                 </view>
@@ -101,7 +101,7 @@
                                     <u-form-item label="银行账号">
                                         <u-input fontSize="28rpx" v-model="formData.bank_card_number"
                                                  placeholder-class="!text-[var(--text-color-light9)] text-[28rpx]"
-                                                 border="none" clearable
+                                                 border="none" clearable maxlength="25"
                                                  placeholder="(选填)请输入企业开户银行账号" />
                                     </u-form-item>
                                 </view>

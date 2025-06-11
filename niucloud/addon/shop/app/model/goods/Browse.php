@@ -51,7 +51,7 @@ class Browse extends BaseModel
      */
     public function goodsSku()
     {
-        return $this->hasOne(GoodsSku::class, 'sku_id', 'sku_id')->bind(['price','market_price','member_price']);
+        return $this->hasOne(GoodsSku::class, 'sku_id', 'sku_id')->bind(['price','market_price','member_price','sale_price']);
     }
 
 }

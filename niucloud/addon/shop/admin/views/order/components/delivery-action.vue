@@ -190,7 +190,7 @@ const electronicSheetIdPass = (rule: any, value: any, callback: any) => {
 }
 
 const selectable = (row:any, index:number) => {
-    if (row.status == 2 || row.delivery_status == 'delivery_finish' || row.status == 3 || row.is_gift == 1) {
+    if (row.status == 2 || row.delivery_status != 'wait_delivery'  || row.status == 3 || row.is_gift == 1) {
         return false
     }
     return true

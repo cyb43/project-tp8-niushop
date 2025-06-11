@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div @click="show">
+        <div class="leading-[1]" @click="show">
             <slot>
-                <el-button>{{ t('goodsSelectPopupSelectGoodsButton') }}</el-button>
+                <el-button :disabled="prop.disabled">{{ t('goodsSelectPopupSelectGoodsButton') }}</el-button>
                 <div class="inline-block ml-[10px] text-[14px]" v-show="goodsIds.length">
                     <span>{{ t('goodsSelectPopupSelect') }}</span>
                     <span class="text-primary mx-[2px]">{{ goodsIds.length }}</span>
@@ -27,7 +27,7 @@
                         :options="goodsCategoryOptions" :placeholder="t('goodsSelectPopupGoodsCategoryPlaceholder')"
                         clearable :props="{ value: 'value', label: 'label', emitPath:false }" />
                 </el-form-item>
-                <el-form-item :label="t('goodsSelectPopupGoodsType')" prop="goods_type" class="form-item-wrap">
+                <el-form-item :label="t('goodsSelectPopupGoodsType')" prop="goods_type" class="form-item-wrap" v-if="!prop.goodsType">
                     <el-select v-model="goodsTable.searchParam.goods_type" :placeholder="t('goodsSelectPopupGoodsTypePlaceholder')" clearable>
                         <el-option v-for="item in goodsType" :key="item.type" :label="item.name" :value="item.type" />
                     </el-select>
@@ -42,7 +42,7 @@
                 <div class="table-head flex items-center bg-[#f5f7f9] py-[8px]">
                     <div class="w-[3%]"></div>
                     <div class="w-[7%]">
-                        <el-checkbox v-model="staircheckAll" :indeterminate="isStairIndeterminate" @change="handleCheckAllChange" />
+                        <el-checkbox v-model="staircheckAll" v-if="prop.max>1" :indeterminate="isStairIndeterminate" @change="handleCheckAllChange" />
                     </div>
                     <div class="w-[50%]">商品信息</div>
                     <div class="w-[20%]">商品价格</div>
@@ -58,7 +58,7 @@
                             <div class="w-[7%]">
                                 <el-checkbox v-model="row.secondLevelCheckAll" :indeterminate="row.isSecondLevelIndeterminate" @change="secondLevelHandleCheckAllChange($event,row)" />
                             </div>
-                            <div class="flex items-center cursor-pointer w-[50%]">
+                            <div class="flex items-center cursor-pointer w-[50%] pr-[25px]">
                                 <div class="min-w-[60px] h-[60px] flex items-center justify-center">
                                     <el-image v-if="row.goods_cover_thumb_small" class="w-[60px] h-[60px]" :src="img(row.goods_cover_thumb_small)" fit="contain">
                                         <template #error>
@@ -108,15 +108,13 @@
                         </div>
                     </div>
 
-                    <div v-if="!goodsTable.data.length && !goodsTable.loading" class="h-[60px] flex items-center justify-center border-solid border-[#e5e7eb] py-[12px] border-b-[1px]">
-                        暂无数据
-                    </div>
+                    <div v-if="!goodsTable.data.length && !goodsTable.loading" class="h-[60px] flex items-center justify-center border-solid border-[#e5e7eb] py-[12px] border-b-[1px]">暂无数据</div>
                 </div>
             </div>
 
             <div class="mt-[16px] flex">
                 <div class="flex items-center flex-1">
-                    <div class="layui-table-bottom-left-container mr-[10px]" v-show="selectGoodsNum">
+                    <div class="mr-[10px]" v-show="selectGoodsNum">
                         <span>{{ t('goodsSelectPopupBeforeTip') }}</span>
                         <span class="text-primary mx-[2px]">{{ selectGoodsNum }}</span>
                         <span>{{ t('goodsSelectPopupAfterTip') }}</span>
@@ -148,7 +146,7 @@ import { getGoodsSelectPageList,getGoodsSkuNoPageList, getCategoryTree, getGoods
 
 const prop = defineProps({
     modelValue: {
-        type: String,
+        type: [String, Array],
         default: ''
     },
     max: {
@@ -171,6 +169,14 @@ const prop = defineProps({
         type: [String,Number],
         default: 0 // 查询是否赠品，0：不查赠品，1：查询赠品
     },
+    disabled: {
+        type: Boolean,
+        default: false
+    },
+    goodsType: {
+        type: String,
+        default: ''
+    }
 })
 
 const emit = defineEmits(['update:modelValue','goodsSelect'])
@@ -222,6 +228,7 @@ const goodsTable = reactive({
 })
 
 goodsTable.searchParam.is_gift = prop.isGift ? prop.isGift : 0;
+goodsTable.searchParam.goods_type = prop.goodsType ? prop.goodsType : '';
 
 const searchFormRef = ref()
 
@@ -277,9 +284,6 @@ const initData = () => {
 initData()
 
 const goodsListTableRef = ref()
-
-// 选中数据
-const multipleSelection: any = ref([])
 
 // 箭头选择事件
 const secondLevelArrowChange = (data)=>{
@@ -579,6 +583,10 @@ const show = () => {
 
 const getGoodsSkuNoPageListFn = () =>{
     const searchData = cloneDeep(goodsTable.searchParam);
+    // 改变类型，防止下面比对因为类型原因，导致错误
+    goodsIds.value.forEach((item:any, index:any, arr)=>{
+        arr[index] = Number(item)
+    })
     getGoodsSkuNoPageList({...searchData}).then((res:any)=>{
         const selectGoodsData = res.data;
         // 赋值已选择的商品
@@ -609,7 +617,6 @@ const getGoodsSkuNoPageListFn = () =>{
                 }
             }
         }
-
 
         setGoodsSelected();
     })

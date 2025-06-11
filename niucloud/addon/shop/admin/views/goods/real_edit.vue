@@ -209,7 +209,7 @@
                                 <div class="spec-edit-list">
                                     <div class="spec-item" v-for="(item, index) in goodsEdit.goodsSpecFormat" :key="item.id">
                                         <div class="spec-name-wrap">
-                                            <el-input v-model.trim="item.spec_name" clearable :placeholder="t('specNamePlaceholder')" class="input-width" maxlength="20" />
+                                            <el-input v-model.trim="item.spec_name" clearable :placeholder="t('specNamePlaceholder')" class="input-width" maxlength="30" />
                                         </div>
                                         <div class="spec-value-wrap">
                                             <ul ref="specValueRef">
@@ -217,7 +217,7 @@
 
                                                     <el-input v-model.trim="specValue.spec_value_name" clearable
                                                         :placeholder="t('specValueNamePlaceholder')" class="input-width"
-                                                        :suffix-icon="Rank" maxlength="20"
+                                                        :suffix-icon="Rank" maxlength="30"
                                                         @input="goodsEdit.specValueNameInputListener">
                                                     </el-input>
                                                     <el-icon class="icon" :size="20" color="#7b7b7b" @click="goodsEdit.deleteSpecValue(index, specIndex)">
@@ -536,10 +536,10 @@
                                             <tr class="goods-attr-tr goods-new-attr-tr" v-for="(item,index) in goodsEdit.attrTableData" :key="index">
                                                 <td v-if="item.attr_value_id > 0">{{item.attr_value_name}}</td>
                                                 <td v-else>
-                                                    <el-input v-model.trim="item.attr_value_name" maxlength="20" show-word-limit clearable/>
+                                                    <el-input v-model.trim="item.attr_value_name" maxlength="30" show-word-limit clearable/>
                                                 </td>
                                                 <td>
-                                                    <el-input v-if="item.type == 'text'" maxlength="20" show-word-limit v-model.trim="item.select_child_val" clearable/>
+                                                    <el-input v-if="item.type == 'text'" maxlength="30" show-word-limit v-model.trim="item.select_child_val" clearable/>
                                                     <div v-else-if="item.type == 'radio'">
                                                         <el-radio-group v-model="item.select_child_name" @change="goodsEdit.attrRadioChange(index,$event)">
                                                             <el-radio v-for="(childItem,childIndex) in item.child" :key="childIndex" :label="childItem.id">{{ childItem.name }}</el-radio>
@@ -590,12 +590,12 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref ,onMounted,nextTick} from 'vue'
 import { t } from '@/lang'
 import { FormInstance } from 'element-plus'
 import { Rank, ArrowLeft } from '@element-plus/icons-vue'
 import { filterNumber } from '@/utils/common'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { addGoods, editGoods, getGoodsInit } from '@/addon/shop/api/goods'
 import {
     getShopDeliveryList,
@@ -603,9 +603,7 @@ import {
 } from '@/addon/shop/api/delivery'
 import { useGoodsEdit } from './public/js/useGoodsEdit'
 
-const route = useRoute()
 const router = useRouter()
-const pageName = route.meta.title
 
 const basicFormRef = ref<FormInstance>()
 const priceStockFormRef = ref<FormInstance>()
@@ -860,10 +858,26 @@ const skuVolumeRules = () => {
 const save = () => {
     goodsEdit.save()
 }
+
+onMounted(() => {
+    nextTick(() => {
+        document.addEventListener("click", (event) => {
+            // 检查点击的是否是 Cascader 选项文本
+            const labelNode = event.target.closest(".el-cascader-node__label");
+            if (labelNode) {
+                // 找到最近的 checkbox 并触发点击
+                const checkbox = labelNode.parentNode.querySelector(".el-checkbox");
+                if (checkbox) {
+                    checkbox.click();
+                }
+            }
+        });
+    });
+});
 </script>
 
 <style lang="scss" scoped>
-	@import 'public/css/goods_edit.scss';
+@import 'public/css/goods_edit.scss';
 </style>
 <style lang="scss">
     .edui-default .edui-editor{
@@ -872,4 +886,12 @@ const save = () => {
     .el-cascader__tags.is-validate{
         right: 30px !important;
     }
+    // .choice .el-cascader-node {
+    //     pointer-events: none; /* 让默认点击无效 */
+    // }
+
+    // .choice .el-cascader-node__label,
+    // .choice .el-checkbox {
+    //     pointer-events: auto; /* 让文字和复选框可点击 */
+    // }
 </style>

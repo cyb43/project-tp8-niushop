@@ -34,7 +34,12 @@ class Store extends BaseModel
      * @var string
      */
     protected $name = 'shop_store';
-
+    protected $type = [
+        'create_time' => 'timestamp',
+        'update_time' => 'timestamp',
+    ];
+    protected $json = ['time_week','trade_time_json'];
+    protected $jsonAssoc = true;
 
     /**
      * 搜索器:自提门店门店名称

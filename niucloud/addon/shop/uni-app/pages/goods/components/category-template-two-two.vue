@@ -2,7 +2,13 @@
     <view class="min-h-screen bg-[var(--page-bg-color)] overflow-hidden">
         <view class="mescroll-box bg-[#f6f6f6]" :class="{ 'cart': config.cart.control && config.cart.event === 'cart', 'detail': !(config.cart.control && config.cart.event === 'cart') }" v-if="tabsData.length">
             <mescroll-body ref="mescrollRef" :down="{ use: false }" @init="mescrollInit" @up="getListFn">
+
+                <!--  #ifdef  H5 -->
                 <view v-if="config.search.control" class="box-border search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[96rpx]">
+                <!--  #endif -->
+                <!--  #ifndef  H5 -->
+                <view v-if="config.search.control" class="box-border search-box z-10 bg-[#fff] fixed top-[162rpx] left-0 right-0 h-[96rpx]">
+                <!--  #endif -->
                     <view class="flex-1 search-input">
                         <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                         <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" placeholderClass="text-[var(--text-color-light9)]" @confirm="searchNameFn">
@@ -25,7 +31,7 @@
 
                 <!--  #ifndef  H5 -->
                 <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0"
-                      :class="{ 'top-[96rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
+                      :class="{ 'top-[258rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
                     <scroll-view :scroll-y="true" class="scroll-height">
                         <view class="bg-[var(--temp-bg)]">
                             <view class="tab-item"
@@ -37,9 +43,17 @@
                     </scroll-view>
                 </view>
                 <!--  #endif -->
+
+                <!--  #ifdef  H5 -->
                 <view class="flex items-center h-[98rpx] pl-[24rpx] pr-[48rpx] py-[20rpx] z-10 bg-white fixed left-[168rpx] right-0 box-border top-0"
-                    :class="{ '!top-[94rpx]': config.search.control }"
-                    v-if="tabsData[tabActive]?.child_list && tabsData[tabActive]?.child_list.length">
+                      :class="{ '!top-[94rpx]': config.search.control }"
+                      v-if="tabsData[tabActive]?.child_list && tabsData[tabActive]?.child_list.length">
+                <!--  #endif -->
+                <!--  #ifndef  H5 -->
+                <view class="flex items-center h-[98rpx] pl-[24rpx] pr-[48rpx] py-[20rpx] z-10 bg-white fixed left-[168rpx] right-0 box-border top-0"
+                      :class="{ '!top-[258rpx]': config.search.control }"
+                      v-if="tabsData[tabActive]?.child_list && tabsData[tabActive]?.child_list.length">
+                <!--  #endif -->
                     <template v-if="!labelPopup">
                         <scroll-view :scroll-x="true" scroll-with-animation
                                      :scroll-into-view="'id' + (subActive ? subActive - 1 : 0)"
@@ -61,8 +75,13 @@
                     </template>
                 </view>
                 <view class="labelPopup" :class="{ 'active': config.search.control }">
-                    <u-popup :show="labelPopup" mode="top" @close="labelPopup = false">
-                        <view class="flex flex-wrap pt-[20rpx] pb-[24rpx]" @touchmove.prevent.stop>
+					<!--  #ifdef  H5 -->
+					<u-popup :show="labelPopup" mode="top" zIndex='1' @close="labelPopup = false"  :customStyle="{top: '192rpx', left :'168rpx'}" :overlayStyle="{top: '192rpx', left :'168rpx'}">
+					<!--  #endif -->
+					<!--  #ifndef  H5 -->
+					<u-popup :show="labelPopup" mode="top" zIndex='1' @close="labelPopup = false"  :customStyle="{top: '355rpx', left :'168rpx'}" :overlayStyle="{top: '355rpx', left :'168rpx'}">
+					<!--  #endif -->
+                        <view class="flex flex-wrap pt-[20rpx] pb-[24rpx] pr-[100rpx]" @touchmove.prevent.stop>
                             <text
                                 class="px-[14rpx] flex-shrink-0 w-[160rpx] box-border ml-[20rpx] mb-[26rpx] h-[60rpx] text-center leading-[56rpx] text-[24rpx] border-[2rpx] border-solid !rounded-[100rpx] text-[#333] truncate"
                                 :class="{ 'bg-[var(--primary-color-light)] font-500 text-[var(--primary-color)] border-[var(--primary-color)]': index === subActive, 'border-[var(--temp-bg)]  bg-[var(--temp-bg)]': index != subActive }"
@@ -91,8 +110,10 @@
                                         <text class="text-[40rpx] font-500">{{ parseFloat(goodsPrice(item)).toFixed(2).split('.')[0] }}</text>
                                         <text class="text-[24rpx] font-500">.{{ parseFloat(goodsPrice(item)).toFixed(2).split('.')[1] }}</text>
                                         <image class="h-[24rpx] max-w-[46rpx] ml-[6rpx]" v-if="priceType(item) == 'member_price'" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+										<image class="h-[24rpx] max-w-[60rpx] ml-[6rpx]" v-if="priceType(item) == 'newcomer_price'" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+										<image class="h-[24rpx] max-w-[80rpx] ml-[6rpx]" v-if="priceType(item) == 'discount_price'" :src="img('addon/shop/discount.png')" mode="heightFix" /> 
                                     </view>
-                                    <block v-if="!item.isMaxBuy">
+                                    <template v-if="!item.isMaxBuy">
                                         <view v-if="(item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && config.cart.control && config.cart.event === 'cart'" class="flex items-center">
                                             <view class="relative w-[32rpx] h-[32rpx]">
                                                 <text class="text-[32rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[12rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
@@ -138,7 +159,7 @@
                                                     :class="['absolute right-[-10rpx] top-[-10rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
                                             </view>
                                         </template>
-                                    </block>
+                                    </template>
                                 </view>
                             </view>
                         </view>
@@ -220,7 +241,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, getCurrentInstance } from 'vue';
 import { t } from '@/locale';
-import { img, redirect, getToken } from '@/utils/common';
+import { img, redirect } from '@/utils/common';
 import { getGoodsCategoryTree, getGoodsPages } from '@/addon/shop/api/goods';
 import MescrollBody from '@/components/mescroll/mescroll-body/mescroll-body.vue';
 import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.vue';
@@ -644,20 +665,14 @@ const settlement = () => {
 // 价格类型
 const priceType = (data: any) => {
     let type = "";
-    if (data.member_discount && getToken() && data.goodsSku.member_price != data.goodsSku.price) {
-        type = 'member_price' // 会员价
-    }
+	type = data.goodsSku.show_type
     return type;
 }
 
 // 商品价格
 const goodsPrice = (data: any) => {
     let price = "0.00";
-    if (data.member_discount && getToken() && data.goodsSku.member_price != data.goodsSku.price) {
-        price = data.goodsSku.member_price ? data.goodsSku.member_price : data.goodsSku.price // 会员价
-    } else {
-        price = data.goodsSku.price
-    }
+	price = data.goodsSku.show_price
     return price;
 }
 </script>
@@ -791,14 +806,27 @@ const goodsPrice = (data: any) => {
 }
 
 /*  #ifdef  H5  */
+// .category .labelPopup :deep(.u-transition) {
+//     top: 92rpx !important;
+//     left: 168rpx !important;
+//     z-index: 8 !important;
+// }
+
+// .category .labelPopup.active :deep(.u-transition) {
+//     top: 192rpx !important;
+// }
+
+/*  #endif  */
+
+/*  #ifdef MP-WEIXIN  */
 .category .labelPopup :deep(.u-transition) {
-    top: 92rpx !important;
+    top: 192rpx !important;
     left: 168rpx !important;
     z-index: 8 !important;
 }
 
 .category .labelPopup.active :deep(.u-transition) {
-    top: 192rpx !important;
+    top: 292rpx !important;
 }
 
 /*  #endif  */
@@ -899,6 +927,7 @@ const goodsPrice = (data: any) => {
 }
 
 /*  #endif  */
+
 .mescroll-empty.empty-page.part {
     width: 542rpx;
     height: 542rpx;
@@ -910,4 +939,18 @@ const goodsPrice = (data: any) => {
         height: 120rpx !important;
     }
 }
+</style>
+<style>
+/*  #ifdef MP-WEIXIN  */
+.category .labelPopup :deep(.u-transition) {
+    top: 192rpx !important;
+    left: 168rpx !important;
+    z-index: 8 !important;
+}
+
+.category .labelPopup.active :deep(.u-transition) {
+    top: 292rpx !important;
+}
+
+/*  #endif  */	
 </style>

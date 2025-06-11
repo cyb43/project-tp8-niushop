@@ -3334,7 +3334,11 @@ return [
                             [
                                 "title" => "积分兑换",
                                 "link" => [
-                                    "name" => ""
+                                    "name" => "SHOP_LINK",
+                                    "parent" => "SHOP_FENXIAO_LINK",
+                                    "title" => "积分商城",
+                                    "url" => "/addon/shop/pages/point/index",
+                                    "action" => ""
                                 ],
                                 "imageUrl" => "addon/shop/diy/member/style1/nav_point_change.png",
                                 "label" => [

@@ -18,7 +18,7 @@ use think\facade\Route;
 /**
  * 商城系统
  */
-Route::group('shop', function() {
+Route::group('shop', function () {
 
     /***************************************************** 商品 ****************************************************/
 
@@ -145,7 +145,7 @@ Route::group('shop', function() {
     ->middleware(ApiLog::class);
 
 
-Route::group('shop', function() {
+Route::group('shop', function () {
 
     /***************************************************** 购物车 ****************************************************/
 
@@ -236,18 +236,18 @@ Route::group('shop', function() {
     Route::put('goods/collect', 'addon\shop\app\api\controller\goods\GoodsCollect@cancelGoodsCollect');
 
     //商品足迹
-    Route::get('goods/browse','addon\shop\app\api\controller\goods\GoodsBrowse@getMemberGoodsBrowseList');
+    Route::get('goods/browse', 'addon\shop\app\api\controller\goods\GoodsBrowse@getMemberGoodsBrowseList');
 
     //商品足迹添加
-    Route::post('goods/browse','addon\shop\app\api\controller\goods\GoodsBrowse@addGoodsBrowse');
+    Route::post('goods/browse', 'addon\shop\app\api\controller\goods\GoodsBrowse@addGoodsBrowse');
 
     //商品足迹删除
-    Route::delete('goods/browse','addon\shop\app\api\controller\goods\GoodsBrowse@deleteGoodsBrowse');
+    Route::delete('goods/browse', 'addon\shop\app\api\controller\goods\GoodsBrowse@deleteGoodsBrowse');
 
-    //订单维权 列表
+    //订单售后 列表
     Route::get('order/refund', 'addon\shop\app\api\controller\refund\Refund@lists');
 
-    //订单维权 列表
+    //订单售后 列表
     Route::get('order/refund/:order_refund_no', 'addon\shop\app\api\controller\refund\Refund@detail');
 
     // 查询订单项可退款信息
@@ -256,19 +256,19 @@ Route::group('shop', function() {
     // 查询订单项退款信息
     Route::get('refund/refund_data_by_no', 'addon\shop\app\api\controller\refund\Refund@getRefundDataByOrderRefundNo');
 
-    // 申请维权
+    // 申请售后
     Route::post('refund/apply', 'addon\shop\app\api\controller\refund\Refund@apply');
 
     // 修改退款申请
     Route::put('refund/:order_refund_no', 'addon\shop\app\api\controller\refund\Refund@edit');
 
-    // 维权退货
+    // 售后退货
     Route::post('refund/delivery/:order_refund_no', 'addon\shop\app\api\controller\refund\Refund@delivery');
 
-    // 修改维权退货信息
+    // 修改售后退货信息
     Route::put('refund/delivery/:order_refund_no', 'addon\shop\app\api\controller\refund\Refund@editDelivery');
 
-    // 取消维权
+    // 取消售后
     Route::put('refund/close/:order_refund_no', 'addon\shop\app\api\controller\refund\Refund@close');
 
     // 退款原因
@@ -285,6 +285,7 @@ Route::group('shop', function() {
 
     // 发票列表
     Route::get('invoice', 'addon\shop\app\api\controller\order\Invoice@lists');
+
     // 发票详情
     Route::get('invoice/:id', 'addon\shop\app\api\controller\order\Invoice@info');
 

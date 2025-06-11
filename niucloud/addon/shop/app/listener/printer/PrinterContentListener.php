@@ -14,8 +14,9 @@ namespace addon\shop\app\listener\printer;
 use addon\shop\app\model\order\Order;
 use app\model\pay\Pay;
 use app\model\sys\SysPrinterTemplate;
-use app\service\admin\sys\ConfigService;
 use app\service\core\printer\CorePrinterService;
+use app\service\admin\sys\ConfigService;
+
 
 /**
  * 商品订单小票打印内容
@@ -60,7 +61,7 @@ class PrinterContentListener
                         $query->field('order_goods_id, order_id, goods_id, sku_id, goods_name, sku_name, price, num, goods_money, discount_money, status, order_goods_money, original_price')->append([ 'status_name' ]);
                     },
                     'member' => function($query) {
-                        $query->field('member_id,mobile,balance,point');
+                        $query->field('member_id,nickname,mobile,balance,point');
                     }
                 ])->append([ 'order_from_name', 'status_name', 'delivery_type_name' ])->findOrEmpty()->toArray();
 
@@ -152,7 +153,6 @@ class PrinterContentListener
         // 小票名称
         if ($data[ 'ticket_name' ][ 'status' ] == 1 && !empty($data[ 'ticket_name' ][ 'value' ])) {
 
-
             // 文字大小
             if ($data[ 'ticket_name' ][ 'fontSize' ] == 'big') {
                 $content .= "<FH2>";
@@ -179,7 +179,7 @@ class PrinterContentListener
             $content .= str_repeat('.', 32);
         }
 
-        $site_info = (new ConfigService())->getWebSite();
+        $site_info = ( new ConfigService() )->getWebSite();
 
         // 商城名称
         if ($data[ 'shop_name' ][ 'status' ] == 1 && !empty($site_info[ 'site_name' ])) {
@@ -446,7 +446,7 @@ class PrinterContentListener
 
             // 买家昵称
             if (in_array('nickname', $data[ 'member_basic_info' ][ 'value' ])) {
-                $content .= '会员昵称：' . $order_info[ 'taker_name' ] . "\n";
+                $content .= '会员昵称：' . $order_info[ 'member' ][ 'nickname' ] . "\n";
             }
 
             // 账户余额

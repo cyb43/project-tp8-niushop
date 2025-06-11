@@ -115,9 +115,12 @@ class Coupon extends BaseAdminController
      * @param $id  商品优惠券id
      * @return \think\Response
      */
-    public function del(int $id)
+    public function del()
     {
-        ( new CouponService() )->del($id);
+        $data = $this->request->params([
+            [ 'ids', [] ],
+        ]);
+        ( new CouponService() )->del($data['ids']);
         return success('DELETE_SUCCESS');
     }
 
@@ -173,9 +176,12 @@ class Coupon extends BaseAdminController
     /**
      * 优惠券关闭
      */
-    public function couponInvalid($id)
+    public function couponInvalid()
     {
-        ( new CouponService() )->couponInvalid($id);
+        $data = $this->request->params([
+            [ "ids", [] ],
+        ]);
+        ( new CouponService() )->couponInvalid($data['ids']);
         return success('SUCCESS');
     }
 
@@ -185,6 +191,47 @@ class Coupon extends BaseAdminController
     public function getCouponStatus()
     {
         return success(data:CouponDict::getStatus());
+    }
+
+    /**
+     * 获取发送优惠券范围初始化数据
+     * @return \think\Response
+     */
+    public function getSendRangeInit()
+    {
+        return success([
+            'range_type_list'=>CouponDict::getSendCouponRangeType(),
+        ]);
+    }
+
+    /**
+     * 获取发送记录分页列表
+     * @return \think\Response
+     */
+
+    public function getSendPages($coupon_id)
+    {
+        $data = $this->request->params([
+            [ "range_type", '' ],
+            ['create_time', []],
+        ]);
+        return success(( new CouponService() )->getSendReordsPageList($coupon_id,$data));
+    }
+
+    /**
+     * 添加发送记录
+     * @param $coupon_id
+     * @return \think\Response
+     */
+    public function addSendRecord($coupon_id)
+    {
+        $data = $this->request->params([
+            [ "range_type", '' ],
+            [ "range_param", '' ],
+            [ "send_num", '' ],
+        ]);
+        ( new CouponService() )->addSendRecords($coupon_id,$data);
+        return success("SUCCESS");
     }
 
 }

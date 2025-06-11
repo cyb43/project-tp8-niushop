@@ -83,7 +83,7 @@ class Label extends BaseAdminController
 
     /**
      * 商品标签编辑
-     * @param $id  商品标签id
+     * @param $id  `商品标签id`
      * @return \think\Response
      */
     public function edit($id)

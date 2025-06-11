@@ -35,7 +35,7 @@
                 <view class="absolute top-0 left-0 w-full h-full transition-transform duration-300 ease-linear transform"
                     :class="{'translate-x-0':switchMedia === 'img','translate-x-full':switchMedia != 'img'}">
                     <view class="swiper-box">
-                        <u-swiper :list="goodsDetail.goods.goods_image"
+                      <u-swiper :list="goodsDetail.goods.goods_image"
                                   :indicator="goodsDetail.goods.goods_image.length"
                                   :indicatorStyle="{'bottom': '70rpx'}" :autoplay="switchMedia === 'img'?true:false"
                                   height="100vw" radius="0" @click="swiperClick"></u-swiper>
@@ -51,7 +51,7 @@
                     <text :class="{ '!bg-[var(--primary-color)]': switchMedia == 'img' }" @click="(switchMedia = 'img'), videoContext.pause()">图片</text>
                 </view> -->
             </view>
-            <view v-if="priceType != ''"
+            <view v-if="priceType != 'original_price'"
                   class="rounded-t-[40rpx] -mt-[44rpx] relative flex items-center justify-between !bg-cover box-border pb-[26rpx] h-[136rpx] px-[30rpx]"
                   :style="{ background: 'url(' + img('addon/shop/detail/discount_price_bg.png') + ') no-repeat'}">
                 <view class="text-[#fff]">
@@ -98,8 +98,8 @@
             </view>
             <view class="bg-[var(--page-bg-color)] rounded-[40rpx] overflow-hidden -mt-[34rpx] relative">
                 <view class="detail-title relative px-[30rpx]"
-                      :class="{'pt-[40rpx]': priceType != '','pt-[30rpx]': priceType == ''}">
-                    <view class="text-[var(--price-text-color)] flex items-baseline mb-[12rpx]" v-if="priceType === ''">
+                      :class="{'pt-[40rpx]': priceType != 'original_price','pt-[30rpx]': priceType == 'original_price'}">
+                    <view class="text-[var(--price-text-color)] flex items-baseline mb-[12rpx]" v-if="priceType == 'original_price'">
                         <view class="inline-block goods-price-time">
                             <text class="price-font text-[32rpx]">￥</text>
                             <text class="price-font text-[48rpx]">{{ parseFloat(goodsPrice).toFixed(2).split('.')[0] }}</text>
@@ -130,10 +130,10 @@
                         </view>
                     </view>
                     <view class="flex flex-wrap mt-[16rpx]" v-if="goodsDetail.label_info && goodsDetail.label_info.length">
-                        <block v-for="item in goodsDetail.label_info" :key="item.label_id">
+                        <template v-for="item in goodsDetail.label_info" :key="item.label_id">
                             <image class="img-tag middle" v-if="item.style_type == 'icon' && item.icon" :src="img(item.icon)" mode="heightFix" @error="diyGoods.error(item,'icon')" />
                             <view class="base-tag middle" v-else-if="item.style_type == 'diy' || !item.icon" :style="diyGoods.baseTagStyle(item)">{{ item.label_name }}</view>
-                        </block>
+                        </template>
                     </view>
                 </view>
                 <view class="mt-[24rpx] sidebar-margin card-template" v-if="isGoodsPropertyTemp">
@@ -156,11 +156,11 @@
                     <view @click="couponListShow = true" v-if="couponList.length" class="card-template-item">
                         <text class="text-[#333] text-[26rpx] leading-[30rpx] font-400 shrink-0 mr-[20rpx]">领券</text>
                         <view class="ml-auto flex-1 flex-nowrap flex items-center overflow-hidden h-[44rpx] content-between">
-                            <block v-for="(item, index) in couponList" :key="index">
+                            <template v-for="(item, index) in couponList" :key="index">
                                 <text v-if="index < 3"
                                       class="tag-item whitespace-nowrap border-[2rpx] px-[6rpx] h-[40rpx] border-solid border-[var(--primary-color)] text-[var(--primary-color)] mt-[4rpx]"
                                       :class="{'mr-[12rpx]': couponList.length != (index+1) && index < 2, 'ml-auto': index == 0}">{{ item.title }}</text>
-                            </block>
+                            </template>
                         </view>
                         <text class="nc-iconfont nc-icon-youV6xx text-[26rpx] text-[var(--text-color-light6)] ml-[8rpx]"></text>
                     </view>
@@ -212,13 +212,13 @@
                 <view class="my-[var(--top-m)] goods-sku sidebar-margin card-template" v-if="goodsDetail.goods && goodsDetail.goods.attr_format && Object.keys(goodsDetail.goods.attr_format).length">
                     <view class="title mb-[30rpx]">商品属性</view>
                     <view>
-                        <block v-for="(item,index) in goodsDetail.goods.attr_format" :key="index">
+                        <template v-for="(item,index) in goodsDetail.goods.attr_format" :key="index">
                             <view v-if="index < 4 || isAttrFormatShow" class="card-template-item">
                                 <text class="text-[26rpx] leading-[30rpx] w-[160rpx] font-400 shrink-0 text-[var(--text-color-light9)]">{{ item.attr_value_name }}</text>
                                 <view class="text-[#333] box-border value-wid text-[26rpx] leading-[30rpx] font-400 pl-[20rpx]">{{ Array.isArray(item.attr_child_value_name) ? item.attr_child_value_name.join(',') : item.attr_child_value_name }}</view>
                                 <!-- <text class="nc-iconfont nc-icon-youV6xx text-[26rpx] text-[var(--text-color-light6)] ml-[8rpx]"></text> -->
                             </view>
-                        </block>
+                        </template>
                         <view v-if="goodsDetail.goods.attr_format.length > 4" class="flex-center" @click="isAttrFormatShow = !isAttrFormatShow">
                             <text class="text-[24rpx] mr-[10rpx]">{{ !isAttrFormatShow ? '展开' : '收起' }}</text>
                             <text class="nc-iconfont !text-[22rpx]" :class="{'nc-icon-xiaV6xx': !isAttrFormatShow, 'nc-icon-shangV6xx-1': isAttrFormatShow}"></text>
@@ -272,9 +272,9 @@
                                 class="!w-[420rpx] flex-1 !h-[70rpx] font-500 text-[26rpx] !text-[#fff] !bg-[#ccc] !m-0 leading-[70rpx] rounded-full remove-border"
                         >商品为赠品不可购买
                         </button>
-                        <block v-else-if="maxBuy > 0 || maxBuy == -1">
+                        <template v-else-if="maxBuy > 0 || maxBuy == -1">
                             <button
-                                v-if="goodsDetail.type == '' && (goodsDetail.goods.goods_type == 'real' || (goodsDetail.goods.goods_type == 'virtual' && goodsDetail.goods.virtual_receive_type != 'verify'))"
+                                v-if="pageParameter.type != 'newcomer_discount' && (goodsDetail.goods.goods_type == 'real' || (goodsDetail.goods.goods_type == 'virtual' && goodsDetail.goods.virtual_receive_type != 'verify'))"
                                 class="cart-btn-bg flex-1 !h-[70rpx] font-500 text-[26rpx] !text-[#fff] !m-0 !mr-[16rpx] leading-[70rpx] rounded-full remove-border" @click="buyFn('join_cart')">
                                 加入购物车
                             </button>
@@ -289,7 +289,7 @@
                                     class="flex-1 !h-[70rpx] font-500 text-[26rpx] !text-[#fff] !bg-[#ccc] !m-0 !mr-[16rpx] leading-[70rpx] rounded-full remove-border"
                             >已售罄
                             </button>
-                        </block>
+                        </template>
                         <button v-else-if="maxBuy == 0"
                                 :style="{ width : '420rpx' + '!important'  }"
                                 class="flex-1 !h-[70rpx] font-500 text-[26rpx] !text-[#fff] !bg-[#ccc] !m-0 leading-[70rpx] rounded-full remove-border"
@@ -346,8 +346,7 @@
                         <view class="title">优惠券</view>
                         <scroll-view class="h-[520rpx]" scroll-y="true">
                             <view class="px-[32rpx]">
-                                <view
-                                    class="mb-[30rpx] flex items-center border-[2rpx] border-solid border-[rgba(0,0,0,.1)] rounded-[var(--rounded-small)]"
+                                <view class="mb-[30rpx] flex items-center border-[2rpx] border-solid border-[rgba(0,0,0,.1)] rounded-[var(--rounded-small)]"
                                     v-for="(item, index) in couponList" :key="index">
                                     <view
                                         class="flex flex-col items-center my-[20rpx] w-[200rpx] border-0 border-r-[2rpx] border-dashed border-[rgba(0,0,0,.1)]">
@@ -485,7 +484,8 @@ const getDetailInfo = () => {
         goodsDetail.value = deepClone(res.data);
         isCollect.value = goodsDetail.value.goods.is_collect;
         goodsDetail.value.delivery_type_list = goodsDetail.value.goods.delivery_type_list ? Object.values(goodsDetail.value.goods.delivery_type_list) : [];
-        goodsDetail.value.goods.goods_image = goodsDetail.value.goods.goods_image_thumb_big;
+        // goodsDetail.value.goods.goods_image = goodsDetail.value.goods.goods_image_thumb_big;
+		goodsDetail.value.goods.goods_image = goodsDetail.value.goods.goods_image.split(',');
         goodsDetail.value.goods.goods_image.forEach((item: any, index: any) => {
             goodsDetail.value.goods.goods_image[index] = img(item);
         })
@@ -567,6 +567,7 @@ const getDetailInfo = () => {
 
                 if (sharePosterRef.value) {
                     posterParam.sku_id = goodsDetail.value.sku_id;
+					if(pageParameter.type)   posterParam.active = pageParameter.type;
                     if (userInfo.value && userInfo.value.member_id) posterParam.member_id = userInfo.value.member_id;
                     sharePosterRef.value.loadPoster();
                 }
@@ -934,27 +935,25 @@ const openShareFn = () => {
 /************* 分享海报-end **************/
 
 // 价格类型
-const priceType = ref('') //''=>原价，新人价=>newcomer_price，discount_price=>折扣价，member_price=>会员价
-
+//''=>原价，新人价=>newcomer_price，discount_price=>折扣价，member_price=>会员价
+const priceType = computed(() =>  {
+    let type = "";
+	if(goodsDetail.value.type == 'newcomer_discount'&&getToken()&&goodsDetail.value.newcomer_price){
+		type='newcomer_price'
+	}else{
+		type = goodsDetail.value.show_type
+	}
+	
+    return type;
+})
 // 商品价格
 const goodsPrice = computed(() => {
     let price = "0.00";
-    if (Object.keys(goodsDetail.value).length && goodsDetail.value.type == 'newcomer_discount' && goodsDetail.value.is_newcomer && goodsDetail.value.newcomer_price != goodsDetail.value.price) {
-        // 新人价
-        price = goodsDetail.value.newcomer_price;
-        priceType.value = 'newcomer_price'
-    } else if (Object.keys(goodsDetail.value).length && goodsDetail.value.type == 'discount' && Object.keys(goodsDetail.value.goods).length && goodsDetail.value.goods.is_discount && goodsDetail.value.sale_price != goodsDetail.value.price) {
-        // 折扣价
-        price = goodsDetail.value.sale_price ? goodsDetail.value.sale_price : goodsDetail.value.price;
-        priceType.value = 'discount_price'
-    } else if (Object.keys(goodsDetail.value).length && Object.keys(goodsDetail.value.goods).length && goodsDetail.value.goods.member_discount && getToken() && goodsDetail.value.member_price != goodsDetail.value.price) {
-        // 会员价
-        price = goodsDetail.value.member_price ? goodsDetail.value.member_price : goodsDetail.value.price;
-        priceType.value = 'member_price'
-    } else {
-        price = goodsDetail.value.price
-        priceType.value = ''
-    }
+	if(goodsDetail.value.type == 'newcomer_discount' &&getToken() &&goodsDetail.value.newcomer_price){
+		price=goodsDetail.value.newcomer_price
+	}else{
+		price = goodsDetail.value.show_price
+	}
     return price;
 })
 

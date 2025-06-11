@@ -16,12 +16,13 @@ use core\base\BaseApiService;
 
 
 /**
- * 商品配置服务层
- * Class ConfigService
- * @package addon\shop\app\service\api\goods
+ * 商品分类服务层
+ * Class CategoryService
+ * @package addon\shop\app\service\admin\goods
  */
 class ConfigService extends BaseApiService
 {
+    public $core__goods_config_service;
     public function __construct()
     {
         parent::__construct();

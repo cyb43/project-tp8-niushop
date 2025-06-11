@@ -3,7 +3,7 @@
         <view :style="warpCss" class="overflow-hidden">
             <view :style="maskLayer"></view>
             <view :class="{'diy-shop-goods-list relative flex flex-wrap justify-between': diyComponent.style != 'style-2', 'biserial-goods-list': diyComponent.style == 'style-2'}">
-                <block v-if="diyComponent.style == 'style-1'">
+                <template v-if="diyComponent.style == 'style-1'">
                     <view class="bg-white w-full flex p-[20rpx] overflow-hidden" :class="{ 'mt-[20rpx]': index > 0 }"
                           :style="itemCss" v-for="(item,index) in goodsList" :key="item.goods_id" @click="toLink(item)">
                         <u--image :radius="imageRounded.val" width="200rpx" height="200rpx" :src="img(item.goods_cover_thumb_mid || '')" model="aspectFill">
@@ -34,6 +34,8 @@
                                             <text class="text-[40rpx] font-500">{{ parseFloat(diyGoods.goodsPrice(item)).toFixed(2) }}</text>
                                         </view>
                                         <image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+										<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+										<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />
                                     </view>
                                     <text v-if="diyComponent.saleStyle.control"
                                           class="mt-[8rpx] text-[22rpx] text-[var(--text-color-light9)]"
@@ -46,14 +48,14 @@
                                         <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
                                     </view>
                                     <view v-else :style="goodsBtnCss" class="w-[50rpx] h-[50rpx] rounded-[50%] flex items-center justify-center">
-                                        <text :class="[diyComponent.btnStyle.style]" class="nc-iconfont text-[30rpx]"></text>
+                                        <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
                                     </view>
                                 </view>
                             </view>
                         </view>
                     </view>
-                </block>
-                <block v-if="diyComponent.style == 'style-2'">
+                </template>
+                <template v-if="diyComponent.style == 'style-2'">
                     <view>
                         <template v-for="(item,index) in goodsList">
                             <view v-if="(index%2) == 0" class="flex flex-col bg-[#fff] box-border overflow-hidden"
@@ -63,8 +65,7 @@
                                         <image :style="{'width': style2Width,'height': style2Width, 'border-radius': imageRounded.val}" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                     </template>
                                 </u--image>
-                                <view
-                                    class="relative min-h-[44rpx] px-[16rpx] flex-1 pt-[16rpx] pb-[20rpx] flex flex-col justify-between">
+                                <view class="relative min-h-[44rpx] px-[16rpx] flex-1 pt-[16rpx] pb-[20rpx] flex flex-col justify-between">
                                     <view class="text-[#303133] leading-[40rpx] text-[28rpx] multi-hidden"
                                           :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }"
                                           v-if="diyComponent.goodsNameStyle.control">
@@ -80,14 +81,15 @@
                                     <view class="flex justify-between flex-wrap items-center mt-[20rpx]">
                                         <view class="flex flex-col">
                                             <view class="flex items-baseline leading-[1]" v-if="diyComponent.priceStyle.control">
-                                                <view
-                                                    class="text-[var(--price-text-color)] price-font block truncate max-w-[270rpx]"
+                                                <view class="text-[var(--price-text-color)] price-font block truncate max-w-[270rpx]"
                                                     :style="{ color : diyComponent.priceStyle.color }">
                                                     <text class="text-[24rpx] font-400">￥</text>
                                                     <text class="text-[40rpx] font-500">{{ parseFloat(diyGoods.goodsPrice(item)).toFixed(2).split('.')[0] }}</text>
                                                     <text class="text-[24rpx] font-500">.{{ parseFloat(diyGoods.goodsPrice(item)).toFixed(2).split('.')[1] }}</text>
                                                 </view>
                                                 <image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+												<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+												<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	 
                                             </view>
                                             <text v-if="diyComponent.saleStyle.control"
                                                   class="text-[22rpx] mt-[8rpx] text-[var(--text-color-light9)]"
@@ -100,7 +102,7 @@
                                                 <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
                                             </view>
                                             <view v-else :style="goodsBtnCss" class="w-[46rpx] h-[46rpx] rounded-[50%] flex items-center justify-center">
-                                                <text :class="[diyComponent.btnStyle.style]" class="nc-iconfont text-[30rpx]"></text>
+                                                <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
                                             </view>
                                         </view>
                                     </view>
@@ -116,8 +118,7 @@
                                         <image :style="{'width': style2Width,'height': style2Width, 'border-radius': imageRounded.val}" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                     </template>
                                 </u--image>
-                                <view
-                                    class="relative min-h-[44rpx] px-[16rpx] flex-1 pt-[16rpx] pb-[20rpx] flex flex-col justify-between">
+                                <view class="relative min-h-[44rpx] px-[16rpx] flex-1 pt-[16rpx] pb-[20rpx] flex flex-col justify-between">
                                     <view class="text-[#303133] leading-[40rpx] text-[28rpx] multi-hidden"
                                           :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }"
                                           v-if="diyComponent.goodsNameStyle.control">
@@ -138,7 +139,9 @@
                                                     <text class="text-[40rpx] font-500">{{ parseFloat(diyGoods.goodsPrice(item)).toFixed(2).split('.')[0] }}</text>
                                                     <text class="text-[24rpx] font-500">.{{ parseFloat(diyGoods.goodsPrice(item)).toFixed(2).split('.')[1] }}</text>
                                                 </view>
-                                                <image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+												<image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+												<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+												<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	 
                                             </view>
                                             <text v-if="diyComponent.saleStyle.control"
                                                   class="text-[22rpx] mt-[8rpx] text-[var(--text-color-light9)]"
@@ -151,7 +154,7 @@
                                                 <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
                                             </view>
                                             <view v-else :style="goodsBtnCss" class="w-[46rpx] h-[46rpx] rounded-[50%] flex items-center justify-center">
-                                                <text :class="[diyComponent.btnStyle.style]" class="nc-iconfont text-[30rpx]"></text>
+                                                <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
                                             </view>
                                         </view>
                                     </view>
@@ -159,8 +162,8 @@
                             </view>
                         </template>
                     </view>
-                </block>
-                <block v-if="diyComponent.style == 'style-3'">
+                </template>
+                <template v-if="diyComponent.style == 'style-3'">
                     <view :style="style3Css" v-if="goodsList.length">
                         <scroll-view :id="'warpStyle3-'+diyComponent.id" class="whitespace-nowrap min-h-[290rpx]" :scroll-x="true">
                             <view :id="'item'+index+diyComponent.id"
@@ -174,8 +177,7 @@
                                 </u--image>
                                 <view class="relative min-h-[40rpx] px-[10rpx] pt-[16rpx] pb-[10rpx]">
                                     <view class="text-[26rpx] text-[#303133] truncate" :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }" v-if="diyComponent.goodsNameStyle.control">{{ item.goods_name }}</view>
-                                    <view
-                                        class="text-[var(--price-text-color)] pt-[16rpx] pb-[6rpx] font-bold price-font block truncate max-w-[160rpx] leading-[1] overflow-hidden"
+                                    <view class="text-[var(--price-text-color)] pt-[16rpx] pb-[6rpx] font-bold price-font block truncate max-w-[160rpx] leading-[1] overflow-hidden"
                                         :style="{ color : diyComponent.priceStyle.color }"
                                         v-if="diyComponent.priceStyle.control">
                                         <text class="text-[20rpx] font-400 mr-[2rpx]">￥</text>
@@ -191,7 +193,7 @@
                         </scroll-view>
                     </view>
 
-                </block>
+                </template>
             </view>
         </view>
     </x-skeleton>
@@ -441,7 +443,7 @@ const refresh = () => {
             goods_name: "商品名称",
             sale_num: "100",
             unit: "件",
-            goodsSku: { price: 100 }
+            goodsSku: { show_price: 100 }
         };
         goodsList.value.push(obj);
         goodsList.value.push(obj);

@@ -17,9 +17,7 @@
                     </view>
                     <text class="nc-iconfont nc-icon-xiugaiV6xx text-[32rpx] ml-auto" @click="editAddress(item)"></text>
                 </view>
-                <view v-if="!addressList || addressList && !addressList.length"
-                      class="text-[var(--text-color-light6)] text-[28rpx] text-center">{{ t('emptyAddress') }}
-                </view>
+                <view v-if="!addressList || addressList && !addressList.length" class="text-[var(--text-color-light6)] text-[28rpx] text-center">{{ t('emptyAddress') }}</view>
             </scroll-view>
 
             <view class="btn-wrap">
@@ -35,13 +33,15 @@ import { getAddressList } from '@/app/api/member'
 import { t } from '@/locale'
 import { redirect } from '@/utils/common'
 
+const props = defineProps(['back']);
+
+const emits = defineEmits(['confirm'])
+
 const show = ref(false)
 const loading = ref(false)
 const currAddressId = ref('') // 选中的索引
 const propData: any = ref({})
 const addressList: any = ref([])
-
-const emits = defineEmits(['confirm'])
 
 const open = (data: any) => {
     show.value = true;
@@ -73,7 +73,7 @@ const editAddress = (data: any, isSelectMap: number = 2) => {
     uni.setStorage({
         key: 'selectAddressCallback',
         data: {
-            back: '/addon/shop/pages/order/payment',
+            back: props.back,
             delivery: propData.value.delivery
         },
         success() {
@@ -89,7 +89,7 @@ const addAddress = () => {
     uni.setStorage({
         key: 'selectAddressCallback',
         data: {
-            back: '/addon/shop/pages/order/payment',
+            back: props.back,
             delivery: propData.value.delivery
         },
         success() {

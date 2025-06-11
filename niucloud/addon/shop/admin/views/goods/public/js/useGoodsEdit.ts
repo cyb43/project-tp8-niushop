@@ -37,7 +37,7 @@ export function useGoodsEdit(params: any = {}) {
         goods_name: '',
         sub_title: '',
         goods_image: '',
-        goods_video:'',
+        goods_video: '',
         goods_category: '',
         brand_id: '',
         poster_id: '',
@@ -72,8 +72,8 @@ export function useGoodsEdit(params: any = {}) {
 
         // 商品详情
         goods_desc: '',
-        skuCheckAll :false,// 是否全选
-        skuIsIndeterminate : false,// 是否部分选中
+        skuCheckAll: false,// 是否全选
+        skuIsIndeterminate: false,// 是否部分选中
         skuCheckedCities: [],// 选中的规格
     })
 
@@ -366,6 +366,10 @@ export function useGoodsEdit(params: any = {}) {
         formData.addon_shop_supplier = data.addon_shop_supplier
         if (formData.addon_shop_supplier && formData.addon_shop_supplier.status == 1) {
             refreshSupplier()
+        }
+
+        if(data.default_sort){
+            formData.sort = data.default_sort;
         }
 
         if (formData.goods_id && data.goods_info) {
@@ -715,7 +719,7 @@ export function useGoodsEdit(params: any = {}) {
         }
         formData.skuCheckAll = false;// 是否全选
         formData.skuIsIndeterminate = false,// 是否部分选中
-        formData.skuCheckedCities = []// 选中的规格
+            formData.skuCheckedCities = []// 选中的规格
     }
 
     // 匹配规格值
@@ -787,7 +791,7 @@ export function useGoodsEdit(params: any = {}) {
 
     const skuHandleCheckAllChange = (value: any) => {
         formData.skuIsIndeterminate = false
-        if( value ) {
+        if (value) {
             formData.skuCheckedCities = Object.keys(goodsSkuData)
         } else {
             formData.skuCheckedCities = []
@@ -800,7 +804,7 @@ export function useGoodsEdit(params: any = {}) {
     }
     // 批量设置确认
     const saveBatch = () => {
-        if( formData.skuCheckedCities.length == 0 ) {
+        if (formData.skuCheckedCities.length == 0) {
             ElMessage({
                 type: 'warning',
                 message: `${ t('pleaseSelectSku') }`
@@ -1386,16 +1390,16 @@ export function useGoodsEdit(params: any = {}) {
     }
 
     const handleBlur = (e: any) => {
-        formRefArr.detailFormRef.value?.validateField('goods_desc')
+        formRefArr.detailFormRef?.validateField('goods_desc')
     }
 
-    const goodsVerifyFn = (data: any) =>{
-        if(!data.target.value) return false
+    const goodsVerifyFn = (data: any) => {
+        if (!data.target.value) return false
         const obj = {
             goods_id: formData.goods_id,
             sku_no: data.target.value
         }
-        goodsVerify(obj).then((res) =>{
+        goodsVerify(obj).then((res) => {
 
         })
     }

@@ -107,16 +107,13 @@
                         </div>
                     </div>
 
-                    <div v-if="!goodsTable.data.length && !goodsTable.loading" class="h-[60px] flex items-center justify-center border-solid border-[#e5e7eb] py-[12px] border-b-[1px]">
-                        暂无数据
-                    </div>
+                    <div v-if="!goodsTable.data.length && !goodsTable.loading" class="h-[60px] flex items-center justify-center border-solid border-[#e5e7eb] py-[12px] border-b-[1px]">暂无数据</div>
                 </div>
             </div>
 
-
             <div class="mt-[16px] flex">
                 <div class="flex items-center flex-1">
-                    <div class="layui-table-bottom-left-container mr-[10px]" v-show="selectGoodsNum">
+                    <div class="mr-[10px]" v-show="selectGoodsNum">
                         <span>{{ t('goodsSelectPopupBeforeTip') }}</span>
                         <span class="text-primary mx-[2px]">{{ selectGoodsNum }}</span>
                         <span>{{ t('goodsSelectPopupAfterTip') }}</span>
@@ -174,7 +171,6 @@ const emit = defineEmits(['update:modelValue','goodsSelect'])
 
 // 通过prop.mode来决定 数据前缀是sku_还是goods_
 let replacePrefix = prop.mode == "sku" ? 'sku_' : 'goods_';
-
 
 const isStairIndeterminate = ref(false);
 const staircheckAll = ref(false);
@@ -272,10 +268,6 @@ const initData = () => {
 initData()
 
 const goodsListTableRef = ref()
-
-// 选中数据
-const multipleSelection: any = ref([])
-
 
 // 箭头选择事件
 const secondLevelArrowChange = (data)=>{
@@ -379,7 +371,6 @@ const secondLevelHandleCheckAllChange = (isSelect,row)=>{
         setGoodsSelected();
     }
 }
-
 
 // 三级复选框
 const subChildHandleCheckAllChange  = (selected: any,parentData: any,data: any)=>{
@@ -608,7 +599,6 @@ const getGoodsSkuNoPageListFn = () =>{
                 }
             }
         }
-
 
         setGoodsSelected();
     })

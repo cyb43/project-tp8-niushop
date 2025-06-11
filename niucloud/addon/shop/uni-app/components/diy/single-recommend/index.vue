@@ -19,7 +19,7 @@
                         <image v-else :src="img('static/resource/images/diy/figure.png')" mode="heightFix" class="h-[504rpx] !w-full" :show-menu-by-longpress="true" />
                     </view>
                 </view>
-                <block v-else>
+                <template v-else>
                     <swiper class="swiper ns-indicator-dots-three h-[504rpx]" autoplay="true" circular="true"
                             :indicator-dots="isShowDots" @change="swiperChange"
                             :indicator-color="diyComponent.indicatorColor"
@@ -38,14 +38,14 @@
                         <view v-for="(numItem, numIndex) in diyComponent.list" :key="numIndex" :class="['swiper-dot', { active: numIndex == swiperIndex }]" :style="[numIndex == swiperIndex ? { backgroundColor: diyComponent.indicatorActiveColor } : { backgroundColor: diyComponent.indicatorColor }]"></view>
                     </view>
                     <!-- #endif -->
-                </block>
+                </template>
             </view>
 
             <view class="w-[340rpx] h-[504rpx] flex flex-col bg-[#fff] box-border overflow-hidden" :style="goodsTempCss" @click="toLink(goodsList[0])">
                 <view :style="goodsImgCss" class="w-[346rpx] h-[350rpx] overflow-hidden">
                     <u--image width="346rpx" height="350rpx" :src="img(goodsList[0].goods_cover_thumb_mid || '')" model="aspectFill">
                         <template #error>
-                            <image class="w-[346rpx] h-[350rpx]" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill"></image>
+                            <image class="w-[346rpx] h-[350rpx]" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                         </template>
                     </u--image>
                 </view>
@@ -58,7 +58,9 @@
                                 <text class="text-[40rpx] font-500">{{ parseFloat(diyGoods.goodsPrice(goodsList[0])).toFixed(2).split('.')[0] }}</text>
                                 <text class="text-[24rpx] font-500">.{{ parseFloat(diyGoods.goodsPrice(goodsList[0])).toFixed(2).split('.')[1] }}</text>
                             </view>
-                            <image v-if="diyGoods.priceType(goodsList[0]) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+							<image v-if="diyGoods.priceType(goodsList[0]) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+							<image v-else-if="diyGoods.priceType(goodsList[0]) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+							<image v-else-if="diyGoods.priceType(goodsList[0]) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	 
                         </view>
                         <view class="w-[44rpx] h-[44rpx] bg-[red] flex items-center justify-center rounded-[50%]" :style="{ backgroundColor : diyComponent.saleStyle.color }">
                             <text class="iconfont iconjia  font-500 text-[32rpx] text-[#fff]"></text>
@@ -182,7 +184,7 @@ const refresh = () => {
             goods_name: "商品名称",
             sale_num: "100",
             unit: "件",
-            goodsSku: { price: 100 }
+            goodsSku: { show_price: 100 }
         };
         goodsList.value.push(obj);
     } else {

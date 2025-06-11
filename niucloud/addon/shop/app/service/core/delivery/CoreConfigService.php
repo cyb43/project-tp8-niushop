@@ -48,6 +48,8 @@ class CoreConfigService extends BaseCoreService
                 'kd100_app_key' => '',
                 'kd100_customer' => 0
             ];
+        } else {
+            $info[ 'value' ][ 'interface_type' ] = intval($info[ 'value' ][ 'interface_type' ]);
         }
         return $info[ 'value' ];
     }

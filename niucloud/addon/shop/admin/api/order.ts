@@ -105,7 +105,7 @@ export function deliveryPackageList(params: Record<string, any>) {
 }
 
 /**
- * 退款维权列表
+ * 退款售后列表
  * @param {Record<string, any>} params
  * @return
  */
@@ -114,7 +114,7 @@ export function orderRefund(params: Record<string, any>) {
 }
 
 /**
- * 退款维权详情
+ * 退款售后详情
  */
 export function orderRefundDetail(refund_id: number) {
     return request.get(`shop/order/refund/${ refund_id }`)

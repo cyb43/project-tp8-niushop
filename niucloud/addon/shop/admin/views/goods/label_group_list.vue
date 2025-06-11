@@ -25,7 +25,7 @@
                         <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
                     </el-form-item>
                 </el-form>
-            </el-card>
+            </el-card> 
 
             <div class="mt-[10px]">
                 <el-table :data="labelTable.data" size="large" v-loading="labelTable.loading" @sort-change="sortChange">
@@ -66,7 +66,7 @@ import { getLabelGroupPageList, deleteLabelGroup, modifyLabelGroupSort } from '@
 import { ElMessageBox, FormInstance, ElMessage } from 'element-plus'
 import LabelGroupEdit from '@/addon/shop/views/goods/components/label-group-edit.vue'
 import { useRoute,useRouter } from 'vue-router'
-import { debounce } from '@/utils/common'
+import { debounce ,setTablePageStorage,getTablePageStorage} from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()
@@ -121,11 +121,12 @@ const loadLabelGroupList = (page: number = 1) => {
         labelTable.loading = false
         labelTable.data = res.data.data
         labelTable.total = res.data.total
+        setTablePageStorage(labelTable.page, labelTable.limit, labelTable.searchParam)
     }).catch(() => {
         labelTable.loading = false
     })
 }
-loadLabelGroupList()
+loadLabelGroupList(getTablePageStorage(labelTable.searchParam).page)
 
 const editLabelGroupDialog: Record<string, any> | null = ref(null)
 

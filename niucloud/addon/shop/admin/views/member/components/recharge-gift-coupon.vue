@@ -72,7 +72,6 @@ import { computed, reactive, ref, watch } from 'vue'
 import couponSelectPopup from '@/addon/shop/views/goods/components/coupon-select-popup.vue'
 import { FormRules } from 'element-plus'
 import {deepClone } from '@/utils/common'
-import Test from '@/utils/test'
 import { t } from "@/lang";
 
 const props = defineProps({

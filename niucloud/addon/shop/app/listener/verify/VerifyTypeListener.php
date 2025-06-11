@@ -26,9 +26,9 @@ class VerifyTypeListener
             'shopVirtualGoods' => [
                 'name' => '商城虚拟商品'
             ],
-//            'shopPickUpOrder' => [
-//                'name' => '商城自提订单'
-//            ],
+            'shopPickUpOrder' => [
+                'name' => '商城自提订单'
+            ],
         ];
     }
 }

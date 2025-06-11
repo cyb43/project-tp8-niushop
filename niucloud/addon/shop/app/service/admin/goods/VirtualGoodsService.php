@@ -13,11 +13,14 @@ namespace addon\shop\app\service\admin\goods;
 
 use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\model\active\ActiveGoods;
+use addon\shop\app\model\discount\DiscountGoods;
+use addon\shop\app\model\goods\Brand;
 use addon\shop\app\model\goods\Goods;
 use addon\shop\app\model\goods\GoodsSku;
 use addon\shop\app\model\goods\GoodsSpec;
 use addon\shop\app\model\goods\Stat;
 use addon\shop\app\model\order\OrderGoods;
+use addon\shop\app\service\core\goods\CoreGoodsConfigService;
 use app\model\diy_form\DiyForm;
 use app\service\admin\addon\AddonService;
 use core\base\BaseAdminService;
@@ -71,6 +74,9 @@ class VirtualGoodsService extends BaseAdminService
                 // 商品品牌，处理数据类型
                 if (empty($goods_info[ 'brand_id' ])) {
                     $goods_info[ 'brand_id' ] = '';
+                } else {
+                    $brand_count = ( new Brand() )->where([ [ 'brand_id', '=', $goods_info[ 'brand_id' ] ] ])->count();
+                    if ($brand_count == 0) $goods_info[ 'brand_id' ] = '';
                 }
 
                 // 供应商，处理数据类型
@@ -82,14 +88,18 @@ class VirtualGoodsService extends BaseAdminService
                 if (empty($goods_info[ 'label_ids' ])) {
                     $goods_info[ 'label_ids' ] = [];
                 } else {
-                    $goods_info[ 'label_ids' ] = array_map(function($item) { return (int) $item; }, $goods_info[ 'label_ids' ]);
+                    $goods_info[ 'label_ids' ] = array_map(function ($item) {
+                        return (int) $item;
+                    }, $goods_info[ 'label_ids' ]);
                 }
 
                 // 商品服务
                 if (empty($goods_info[ 'service_ids' ])) {
                     $goods_info[ 'service_ids' ] = [];
                 } else {
-                    $goods_info[ 'service_ids' ] = array_map(function($item) { return (int) $item; }, $goods_info[ 'service_ids' ]);
+                    $goods_info[ 'service_ids' ] = array_map(function ($item) {
+                        return (int) $item;
+                    }, $goods_info[ 'service_ids' ]);
                 }
 
                 // 商品参数，处理数据类型
@@ -159,6 +169,7 @@ class VirtualGoodsService extends BaseAdminService
             }
 
         }
+        $res[ 'default_sort' ] = ( new CoreGoodsConfigService() )->getDefaultSort();
 
         return $res;
     }
@@ -186,11 +197,17 @@ class VirtualGoodsService extends BaseAdminService
                 'goods_cover' => $data[ 'goods_cover' ],
                 'goods_image' => $data[ 'goods_image' ],
                 'goods_video' => $data[ 'goods_video' ],
-                'goods_category' => array_map(function($item) { return (string) $item; }, $data[ 'goods_category' ]),
+                'goods_category' => array_map(function ($item) {
+                    return (string) $item;
+                }, $data[ 'goods_category' ]),
                 'goods_desc' => $data[ 'goods_desc' ],
                 'brand_id' => $data[ 'brand_id' ],
-                'label_ids' => array_map(function($item) { return (string) $item; }, $data[ 'label_ids' ]),
-                'service_ids' => array_map(function($item) { return (string) $item; }, $data[ 'service_ids' ]),
+                'label_ids' => array_map(function ($item) {
+                    return (string) $item;
+                }, $data[ 'label_ids' ]),
+                'service_ids' => array_map(function ($item) {
+                    return (string) $item;
+                }, $data[ 'service_ids' ]),
                 'unit' => $data[ 'unit' ],
                 'stock' => $data[ 'stock' ],
                 'virtual_sale_num' => $data[ 'virtual_sale_num' ],
@@ -217,8 +234,8 @@ class VirtualGoodsService extends BaseAdminService
 
             $sku_data = [];
             if ($data[ 'spec_type' ] == 'single') {
-                 if(!empty( $data[ 'sku_no' ])){
-                    (new ConfigService())->verifySkuNo(['sku_no'=>$data['sku_no']]);
+                if (!empty($data[ 'sku_no' ])) {
+                    ( new ConfigService() )->verifySkuNo([ 'sku_no' => $data[ 'sku_no' ] ]);
                 }
                 // 单规格
                 $sku_data = [
@@ -237,9 +254,9 @@ class VirtualGoodsService extends BaseAdminService
                 $goods_sku_model->save($sku_data);
 
             } elseif ($data[ 'spec_type' ] == 'multi') {
-                $sku_no = implode(',', array_column($data['goods_sku_data'] ?? [], 'sku_no'));
-                if(!empty($sku_no)) {
-                    (new ConfigService())->verifySkuNo(['sku_no' => $sku_no]);
+                $sku_no = implode(',', array_column($data[ 'goods_sku_data' ] ?? [], 'sku_no'));
+                if (!empty($sku_no)) {
+                    ( new ConfigService() )->verifySkuNo([ 'sku_no' => $sku_no ]);
                 }
                 // 多规格数据
                 $default_spec_count = 0;
@@ -340,11 +357,17 @@ class VirtualGoodsService extends BaseAdminService
                 'goods_cover' => $data[ 'goods_cover' ],
                 'goods_image' => $data[ 'goods_image' ],
                 'goods_video' => $data[ 'goods_video' ],
-                'goods_category' => array_map(function($item) { return (string) $item; }, $data[ 'goods_category' ]),
+                'goods_category' => array_map(function ($item) {
+                    return (string) $item;
+                }, $data[ 'goods_category' ]),
                 'goods_desc' => $data[ 'goods_desc' ],
                 'brand_id' => $data[ 'brand_id' ],
-                'label_ids' => array_map(function($item) { return (string) $item; }, $data[ 'label_ids' ]),
-                'service_ids' => array_map(function($item) { return (string) $item; }, $data[ 'service_ids' ]),
+                'label_ids' => array_map(function ($item) {
+                    return (string) $item;
+                }, $data[ 'label_ids' ]),
+                'service_ids' => array_map(function ($item) {
+                    return (string) $item;
+                }, $data[ 'service_ids' ]),
                 'unit' => $data[ 'unit' ],
                 'stock' => $data[ 'stock' ],
                 'virtual_sale_num' => $data[ 'virtual_sale_num' ],
@@ -372,9 +395,9 @@ class VirtualGoodsService extends BaseAdminService
 
             $sku_data = [];
             if ($data[ 'spec_type' ] == 'single') {
-                if(!empty($data[ 'sku_no' ])) {
-                    $check = ['sku_no' => $data[ 'sku_no' ], 'goods_id' => $goods_id];
-                    (new ConfigService())->verifySkuNo($check);
+                if (!empty($data[ 'sku_no' ])) {
+                    $check = [ 'sku_no' => $data[ 'sku_no' ], 'goods_id' => $goods_id ];
+                    ( new ConfigService() )->verifySkuNo($check);
                 }
                 // 单规格
                 $sku_data = [
@@ -416,10 +439,10 @@ class VirtualGoodsService extends BaseAdminService
                 }
 
             } elseif ($data[ 'spec_type' ] == 'multi') {
-                $sku_no = implode(',', array_column($data['goods_sku_data'] ?? [], 'sku_no'));
-                if(!empty($sku_no)) {
-                    $check = ['sku_no' => $sku_no, 'goods_id' => $goods_id];
-                    (new ConfigService())->verifySkuNo($check);
+                $sku_no = implode(',', array_column($data[ 'goods_sku_data' ] ?? [], 'sku_no'));
+                if (!empty($sku_no)) {
+                    $check = [ 'sku_no' => $sku_no, 'goods_id' => $goods_id ];
+                    ( new ConfigService() )->verifySkuNo($check);
                 }
                 // 多规格数据
                 $first_sku_data = reset($data[ 'goods_sku_data' ]);
@@ -628,19 +651,38 @@ class VirtualGoodsService extends BaseAdminService
     public function getActiveGoodsCount($goods_id)
     {
         $active_goods_model = new ActiveGoods();
+        $discount_goods_model = new DiscountGoods();
         $field = 'active_goods_id,active_id';
-        $active_condition = [
-            [ 'active_goods_status', '=', 'active' ],
-            [ 'active_goods_type', 'in', [ ActiveDict::GOODS_SINGLE, ActiveDict::GOODS_INDEPENDENT ] ], // 单品活动、独立活动
-            [ 'goods_id', '=', $goods_id ]
-        ];
 
-        $active_goods_count = $active_goods_model->where($active_condition)->field($field)->with([
-            'active' => function($query) {
+        $condition = [];
+
+        // 判断 $goods_id 类型
+        if (is_array($goods_id)) {
+            $condition[] = [ 'goods_id', 'in', $goods_id ];
+        } else {
+            $condition[] = [ 'goods_id', '=', $goods_id ];
+        }
+
+        // 活动商品条件
+        $active_goods_count = $active_goods_model->where(array_merge($condition, [
+            [ 'active_goods_status', '=', 'active' ],
+            [ 'active_goods_type', 'in', [ ActiveDict::GOODS_SINGLE, ActiveDict::GOODS_INDEPENDENT ] ]
+        ]))->field($field)->with([
+            'active' => function ($query) {
                 $query->withField('active_id,active_name, active_desc, start_time, end_time');
             }
         ])->count();
-        return $active_goods_count;
+
+        // 折扣商品条件
+        $discount_goods_count = $discount_goods_model->where(array_merge($condition, [
+            [ 'status', '=', 'active' ]
+        ]))->field('discount_goods_id')->with([
+            'discount' => function ($query) {
+                $query->withField('discount_id');
+            }
+        ])->count();
+
+        return $active_goods_count + $discount_goods_count;
     }
 
 }

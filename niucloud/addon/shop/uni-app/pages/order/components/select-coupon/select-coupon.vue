@@ -15,9 +15,7 @@
                         <view class="flex border-0 !border-b border-[#eee] border-dashed pb-[20rpx]" :class="{ '!border-[var(--primary-color)]': coupon && coupon.id == item.id }">
                             <view class="flex-1 w-0">
                                 <view class="text-[30rpx] mb-[20rpx] font-500">{{ item.title }}</view>
-                                <view class="text-[24rpx] text-[var(--text-color-light6)]"
-                                      v-if="item.min_condition_money > 0">满{{ item.min_condition_money }}可用
-                                </view>
+                                <view class="text-[24rpx] text-[var(--text-color-light6)]" v-if="item.min_condition_money > 0">满{{ item.min_condition_money }}可用</view>
                                 <view class="text-[24rpx] text-[var(--text-color-light6)]" v-else>无门槛券</view>
                             </view>
                             <view class="text-[36rpx] price-font">

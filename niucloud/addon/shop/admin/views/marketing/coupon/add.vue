@@ -11,12 +11,14 @@
                 <!-- 优惠券信息 -->
                 <!-- 优惠券名称 -->
                 <el-form-item :label="t('title')" prop="title">
-                    <el-input v-model.trim="formData.title" clearable :placeholder="t('titlePlaceholder')" class="input-width" :maxlength="20" />
+                    <el-input v-model.trim="formData.title" clearable :placeholder="t('titlePlaceholder')"
+                        class="input-width" :maxlength="20" />
                 </el-form-item>
 
                 <!-- 优惠券面额 -->
                 <el-form-item :label="t('price')" prop="price">
-                    <el-input v-model.trim="formData.price" clearable :placeholder="t('pricePlaceholder')" class="input-width" maxlength="5" @keyup="filterDigit($event)">
+                    <el-input v-model.trim="formData.price" clearable :placeholder="t('pricePlaceholder')"
+                        class="input-width" maxlength="5" @keyup="filterDigit($event)">
                         <template #append>元</template>
                     </el-input>
                 </el-form-item>
@@ -24,9 +26,9 @@
                 <!-- 优惠券类型 -->
                 <el-form-item :label="t('type')" prop="type">
                     <el-radio-group v-model="formData.type">
-                        <el-radio :label="1">通用券</el-radio>
-                        <el-radio :label="2">品类券</el-radio>
-                        <el-radio :label="3">商品券</el-radio>
+                        <el-radio :value="1">通用券</el-radio>
+                        <el-radio :value="2">品类券</el-radio>
+                        <el-radio :value="3">商品券</el-radio>
                     </el-radio-group>
                 </el-form-item>
 
@@ -47,8 +49,8 @@
                 <!-- 使用门槛 -->
                 <el-form-item :label="t('threshold')">
                     <el-radio-group v-model="formData.threshold">
-                        <el-radio :label="1">{{ t('reduction') }}</el-radio>
-                        <el-radio :label="2">{{ t('noThreshold') }}</el-radio>
+                        <el-radio :value="1">{{ t('reduction') }}</el-radio>
+                        <el-radio :value="2">{{ t('noThreshold') }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
 
@@ -63,8 +65,8 @@
                 <!-- 使用时间 -->
                 <el-form-item :label="t('validType')">
                     <el-radio-group v-model="formData.valid_type">
-                        <el-radio :label="1">{{ t('days') }}</el-radio>
-                        <el-radio :label="2">{{ t('times') }}</el-radio>
+                        <el-radio :value="1">{{ t('days') }}</el-radio>
+                        <el-radio :value="2">{{ t('times') }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
 
@@ -77,7 +79,7 @@
                 </el-form-item>
 
                 <el-form-item prop="valid_time" v-if="formData.valid_type == 2">
-                    领劵后立即生效，使用时间截止至 
+                    领劵后立即生效，使用时间截止至
                     <div class="w-[220px] pl-[5px]">
                         <el-date-picker v-model="formData.valid_time" type="datetime" />
                     </div>
@@ -88,8 +90,8 @@
                 <el-form-item :label="t('receiveType')">
                     <div>
                         <el-radio-group v-model="formData.receive_type">
-                            <el-radio :label="1">{{ t('user') }}</el-radio>
-                            <el-radio :label="2">{{ t('grant') }}</el-radio>
+                            <el-radio :value="1">{{ t('user') }}</el-radio>
+                            <el-radio :value="2">{{ t('grant') }}</el-radio>
                         </el-radio-group>
                     </div>
                     <div class="form-tip">开启手动领取后，会员可以直接在优惠券列表以及优惠券推广中直接领取</div>
@@ -98,22 +100,23 @@
                 <!--  领取时间  -->
                 <el-form-item :label="t('receiveTime')" v-show="formData.receive_type == 1">
                     <el-radio-group v-model="formData.receive_type_time">
-                        <el-radio :label="1">{{ t('limitedTime') }}</el-radio>
-                        <el-radio :label="2">{{ t('unlimitedTime') }}</el-radio>
+                        <el-radio :value="1">{{ t('limitedTime') }}</el-radio>
+                        <el-radio :value="2">{{ t('unlimitedTime') }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
 
-                <el-form-item prop="receive_time" v-show="formData.receive_type_time == 1 && formData.receive_type == 1">
+                <el-form-item prop="receive_time"
+                    v-show="formData.receive_type_time == 1 && formData.receive_type == 1">
                     <div class="w-[180px]">
-                        <el-date-picker v-model="formData.receive_time" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"/>
+                        <el-date-picker v-model="formData.receive_time" type="datetimerange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期" />
                     </div>
                 </el-form-item>
 
                 <!--  优惠券数量  -->
                 <el-form-item :label="t('receiveNumber')" v-show="formData.receive_type == 1">
                     <el-radio-group v-model="formData.limit">
-                        <el-radio :label="1">{{ t('limit') }}</el-radio>
-                        <el-radio :label="2">{{ t('unlimited') }}</el-radio>
+                        <el-radio :value="1">{{ t('limit') }}</el-radio>
+                        <el-radio :value="2">{{ t('unlimited') }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
 
@@ -262,11 +265,11 @@ const validTime = (rule: any, value: any, callback: any) => {
     if (formData.value.valid_type == 2 && formData.value.valid_time <= Date.now()) {
         callback(new Error(t('有效期不能小于等于当前时间')))
     }
-    if(formData.value.valid_type == 2 && formData.value.receive_type_time == 1 && formData.value.receive_type == 1){
-		if (timestampFn(formData.value.valid_time) <= timestampFn(formData.value.receive_time[1])) {
-			callback(new Error(t('有效期不能小于等于领取结束时间')))
-		}
-	}
+    if (formData.value.valid_type == 2 && formData.value.receive_type_time == 1 && formData.value.receive_type == 1) {
+        if (timestampFn(formData.value.valid_time) <= timestampFn(formData.value.receive_time[1])) {
+            callback(new Error(t('有效期不能小于等于领取结束时间')))
+        }
+    }
     callback()
 }
 
@@ -297,7 +300,7 @@ const limitCountRule = (rule: any, value: any, callback: any) => {
     if (!formData.value.limit_count || formData.value.limit_count != '' && formData.value.limit_count < 1) {
         callback(new Error(t('userLimitCountPlaceholder')))
     }
-	if (formData.value.limit == 1 && formData.value.limit_count != '' && formData.value.remain_count != '' && parseInt(formData.value.limit_count) > parseInt(formData.value.remain_count)) {
+    if (formData.value.limit == 1 && formData.value.limit_count != '' && formData.value.remain_count != '' && parseInt(formData.value.limit_count) > parseInt(formData.value.remain_count)) {
         callback(new Error(t('限领张数不能大于发放数量')))
     }
     callback()

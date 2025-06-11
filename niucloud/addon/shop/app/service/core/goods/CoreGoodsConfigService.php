@@ -11,6 +11,7 @@
 
 namespace addon\shop\app\service\core\goods;
 
+use addon\shop\app\dict\goods\GoodsDict;
 use app\service\core\sys\CoreConfigService;
 use core\base\BaseCoreService;
 
@@ -24,6 +25,7 @@ class CoreGoodsConfigService extends BaseCoreService
 {
     public $search_key = 'GOODS_SEARCH_CONFIG';
     public $unique_key = 'GOODS_UNIQUE_CONFIG';
+    public $sort_key = 'GOODS_SORT_CONFIG';
     //系统配置文件
     public $core_config_service;
 
@@ -86,7 +88,7 @@ class CoreGoodsConfigService extends BaseCoreService
             ];
         } else {
             $data = [
-                "level" => (int)$res[ 'value' ][ 'level' ], // 展示分类等级
+                "level" => (int) $res[ 'value' ][ 'level' ], // 展示分类等级
                 "template" => $res[ 'value' ][ 'template' ], // 分类模版名称
                 'page_title' => $res[ 'value' ][ 'page_title' ], // 页面标题
                 "search" => $res[ 'value' ][ 'search' ],// 顶部搜索框
@@ -105,11 +107,11 @@ class CoreGoodsConfigService extends BaseCoreService
      */
     public function getSearchConfig()
     {
-        $data =  $this->core_config_service->getConfigValue($this->search_key);
-        if (empty($data)){
+        $data = $this->core_config_service->getConfigValue($this->search_key);
+        if (empty($data)) {
             return [
-                'default_word'=>'',
-                'search_words'=>[]
+                'default_word' => '',
+                'search_words' => []
             ];
         }
         return $data;
@@ -122,7 +124,7 @@ class CoreGoodsConfigService extends BaseCoreService
      */
     public function setSearchConfig($data)
     {
-        $data['search_words'] = explode(',', $data['search_words']);
+        $data[ 'search_words' ] = explode(',', $data[ 'search_words' ]);
         return $this->core_config_service->setConfig($this->search_key, $data);
     }
 
@@ -133,9 +135,9 @@ class CoreGoodsConfigService extends BaseCoreService
     public function getUniqueConfig()
     {
         $data = $this->core_config_service->getConfigValue($this->unique_key);
-        if (empty($data)){
+        if (empty($data)) {
             return [
-                'is_enable'=>0,
+                'is_enable' => 0,
             ];
         }
         return $data;
@@ -149,6 +151,48 @@ class CoreGoodsConfigService extends BaseCoreService
     public function setUniqueConfig($data)
     {
         return $this->core_config_service->setConfig($this->unique_key, $data);
+    }
+
+    /**
+     * 获取商品排序设置
+     * @return array|int[]|mixed
+     */
+    public function getSortConfig()
+    {
+        $data = $this->core_config_service->getConfigValue($this->sort_key);
+        if (empty($data)) {
+            $data = [
+                'sort_type' => 'desc',
+                'sort_column' => 'create_time',
+                'default_sort' => 0,
+            ];
+        }
+        $data[ 'init' ] = [
+            'sort_type' => GoodsDict::getSortTypeConfig(),
+            'sort_column' => GoodsDict::getSortColumnConfig(),
+        ];
+
+        return $data;
+    }
+
+    /**
+     * 获取设置的默认排序号
+     * @return int|mixed
+     */
+    public function getDefaultSort()
+    {
+        $sort_config = $this->getSortConfig();
+        return $sort_config[ 'default_sort' ] ?? 0;
+    }
+
+    /**
+     * 设置商品排序配置
+     * @param $data
+     * @return SysConfig|bool|\think\Model
+     */
+    public function setSortConfig($data)
+    {
+        return $this->core_config_service->setConfig($this->sort_key, $data);
     }
 
 }

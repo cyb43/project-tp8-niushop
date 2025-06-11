@@ -13,15 +13,23 @@ namespace addon\shop\app\service\admin\marketing;
 
 use addon\shop\app\dict\coupon\CouponDict;
 use addon\shop\app\dict\coupon\CouponMemberDict;
+use addon\shop\app\job\marketing\CouponSend;
 use addon\shop\app\model\coupon\Coupon;
 use addon\shop\app\model\coupon\CouponGoods;
 use addon\shop\app\model\coupon\CouponMember;
+use addon\shop\app\model\coupon\CouponSendRecord;
+use addon\shop\app\model\order\Order;
 use addon\shop\app\service\admin\goods\CategoryService;
+use app\model\member\Member;
+use app\model\member\MemberLabel;
+use app\model\member\MemberLevel;
 use app\service\core\sys\CoreConfigService;
 use core\exception\AdminException;
 use core\base\BaseAdminService;
 use core\exception\CommonException;
+use think\db\Query;
 use think\facade\Db;
+use function DI\string;
 
 /**
  * 优惠券服务层
@@ -72,7 +80,7 @@ class CouponService extends BaseAdminService
     {
         $field = 'id,title,price,type,receive_type,start_time,end_time,remain_count,receive_count,give_count,status,limit_count,min_condition_money,receive_status,valid_type,length,valid_end_time';
         $order = 'id desc';
-        $search_model = $this->model->where([ [ 'id', '>', 0 ] ])->withSearch([ "title", "status" ], $where)->append([ 'type_name', 'receive_type_name', 'status_name' ])->field($field)->order($order);
+        $search_model = $this->model->where([ [ 'id', '>', 0 ] ])->withSearch([ "title", "status" ], $where)->append([ 'is_show_send', 'type_name', 'receive_type_name', 'status_name' ])->field($field)->order($order);
         $list = $this->pageQuery($search_model);
         $coupon_member_model = new CouponMember();
         foreach ($list[ 'data' ] as $k => &$v) {
@@ -162,7 +170,13 @@ class CouponService extends BaseAdminService
         }
         if ($info[ 'type' ] == 3) {
             $goods_coupon_model = new CouponGoods();
-            $goods_coupon_list = $goods_coupon_model->where([ [ 'coupon_id', '=', $id ] ])->field('goods_id')->select()->toArray();
+            $goods_coupon_list = $goods_coupon_model->where([ [ 'coupon_id', '=', $id ] ])->withJoin([
+                'goods' => function ($query) {
+                    $query->where([
+                        [ 'status', '=', 1 ]
+                    ]);
+                }
+            ])->field('goods.goods_id')->select()->toArray();
             $info[ 'goods_ids' ] = array_column($goods_coupon_list, 'goods_id');
         } else {
             $info[ 'goods_ids' ] = [];
@@ -180,6 +194,7 @@ class CouponService extends BaseAdminService
 
         //查询已过期数量
         $info[ 'receive_expire_count' ] = $coupon_member_model->where([ [ 'coupon_id', '=', $info[ 'id' ] ], [ 'use_time', '=', 0 ], [ 'expire_time', '<', time() ] ])->count();
+
         return $info;
     }
 
@@ -397,27 +412,39 @@ class CouponService extends BaseAdminService
     }
 
     /**
-     * 删除优惠券(暂不使用)
-     * @param int $id
+     * 删除优惠券
+     * @param $ids
      * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    public function del(int $id)
+    public function del($ids)
     {
-        $coupon = $this->getInfo($id);
-        if (empty($coupon)) throw new AdminException('COUPON_NOT_EXIST');
-        $coupon_ids = $this->checkCouponInUse();
-        if (in_array($id, $coupon_ids)) {
-            throw new AdminException('SHOP_COUPON_IN_USE_NOT_ALLOW_EDIT');
+        if (empty($ids)) {
+            return true;
         }
-        $coupon_member_model = new CouponMember();
-        if ($coupon[ 'status' ] == CouponDict::NORMAL) {
-            // 检测是否存在未使用的优惠券
-            $coupon_member_info = $coupon_member_model->where([ [ 'coupon_id', '=', $id ], [ 'status', '=', 1 ] ])->find();
-            if ($coupon_member_info) {
-                throw new AdminException('该优惠券已被用户领取无法删除');
+        $coupon_list = $this->model->where([
+            [ 'id', 'in', implode(',', $ids) ],
+        ])->field('id,status,title')->select()->toArray();
+        $coupon_names = array_column($coupon_list, 'title', 'id');
+
+        $use_coupon_list = ( new CouponMember() )->where([
+            [ 'coupon_id', 'in', implode(',', $ids) ],
+            [ 'status', '=', CouponMemberDict::WAIT_USE ]
+        ])->field('coupon_id')->select()->toArray();
+
+        $not_del_coupon_list = array_unique(array_column($use_coupon_list, 'coupon_id'));
+        if (count($not_del_coupon_list) > 0) {
+            $err_str = '';
+            foreach ($not_del_coupon_list as $coupon_id) {
+                $err_str .= $coupon_names[ $coupon_id ] . '、';
             }
+            $err_str = rtrim($err_str, '、');
+            $err_str .= " \n" . get_lang('SHOP_COUPON_IN_USE_NOT_ALLOW_DEL');
+            throw new AdminException($err_str);
         }
-        return $this->model->where([ [ 'id', '=', $id ] ])->delete();
+        return $this->model->where([ [ 'id', 'in', implode(',', $ids) ] ])->delete();
     }
 
     /**
@@ -430,7 +457,7 @@ class CouponService extends BaseAdminService
         $coupon_member_model = new CouponMember();
         $member_where = [];
         if (isset($data[ 'keywords' ]) && $data[ 'keywords' ] != '') {
-            $member_where = [ [ 'member.nickname|member.mobile', 'like', '%' . $this->model->handelSpecialCharacter($data[ 'keywords' ]) . '%' ] ];
+            $member_where = [ [ 'member.member_no|member.username|member.nickname|member.mobile', 'like', '%' . $this->model->handelSpecialCharacter($data[ 'keywords' ]) . '%' ] ];
         }
         $memberList = $coupon_member_model->where([ [ 'coupon_id', '=', $data[ 'id' ] ] ])->withJoin([
             'member' => [ 'member_id', 'member_no', 'username', 'mobile', 'nickname' ],
@@ -464,20 +491,32 @@ class CouponService extends BaseAdminService
      * @param $status
      * @return true
      */
-    public function couponInvalid($id)
+    public function couponInvalid($ids)
     {
-        $coupon_ids = $this->checkCouponInUse();
-        if (in_array($id, $coupon_ids)) {
-            throw new AdminException('SHOP_COUPON_IN_USE_NOT_ALLOW_EDIT');
+        $use_coupon_ids = $this->checkCouponInUse();
+        $coupon_list = $this->model->where([
+            [ 'id', 'in', implode(',', $ids) ]
+        ])->field('id,status,title')->select()->toArray();
+        $coupon_names = array_column($coupon_list, 'title', 'id');
+        $diffIds = array_unique(array_intersect($use_coupon_ids, $ids));
+        if (count($diffIds) > 0) {
+            $err_str = '';
+            foreach ($diffIds as $coupon_id) {
+                $err_str .= $coupon_names[ $coupon_id ] . '、';
+            }
+            $err_str = rtrim($err_str, '、');
+            $err_str .= " \n" . get_lang('SHOP_COUPON_IN_USE_NOT_ALLOW_EDIT');
+            throw new AdminException($err_str);
         }
         $data = array(
             'status' => CouponDict::INVALID
         );
-        $res = $this->model->where([ [ 'id', '=', $id ] ])->update($data);
+        $res = $this->model->where([ [ 'id', 'in', implode(',', $ids) ] ])->update($data);
         $coupon_member_model = new CouponMember();
-        if ($res) $coupon_member_model->where([ [ 'coupon_id', '=', $id ], [ 'status', '=', CouponMemberDict::WAIT_USE ] ])->update([ 'status' => CouponMemberDict::INVALID ]);
+        if ($res) $coupon_member_model->where([ [ 'coupon_id', 'in', implode(',', $ids) ], [ 'status', '=', CouponMemberDict::WAIT_USE ] ])->update([ 'status' => CouponMemberDict::INVALID ]);
         return true;
     }
+
 
     /**
      * 优惠券使用检测
@@ -487,21 +526,117 @@ class CouponService extends BaseAdminService
     {
         $coupon_ids = [];
         $sign_config = ( new CoreConfigService() )->getConfig('SIGN_CONFIG');
-        if (!empty($sign_config) && !empty($sign_config['value'])) {
-            $sign_info = $sign_config['value'];
-            if (!empty($sign_info['day_award']) && !empty($sign_info['day_award']['shop_coupon'])) {
-                $coupon_ids = $sign_info['day_award']['shop_coupon']['coupon_id'];
+        if (!empty($sign_config) && !empty($sign_config[ 'value' ])) {
+            $sign_info = $sign_config[ 'value' ];
+            if (!empty($sign_info[ 'day_award' ]) && !empty($sign_info[ 'day_award' ][ 'shop_coupon' ])) {
+                $coupon_ids = $sign_info[ 'day_award' ][ 'shop_coupon' ][ 'coupon_id' ];
             }
-            if (!empty($sign_info['continue_award'])) {
-                foreach ($sign_info['continue_award'] as $item) {
-                    if (!empty($item['shop_coupon'])) {
-                        $coupon_ids = array_merge($coupon_ids, $item['shop_coupon']['coupon_id']);
+            if (!empty($sign_info[ 'continue_award' ])) {
+                foreach ($sign_info[ 'continue_award' ] as $item) {
+                    if (!empty($item[ 'shop_coupon' ])) {
+                        $coupon_ids = array_merge($coupon_ids, $item[ 'shop_coupon' ][ 'coupon_id' ]);
                     }
                 }
             }
             $coupon_ids = array_values(array_unique($coupon_ids));
         }
         return $coupon_ids;
+    }
+
+    public function getSendReordsPageList($coupon_id, $data)
+    {
+        $where[] = [ 'coupon_id', '=', $coupon_id ];
+        if (!empty($data[ 'range_type' ])) {
+            $where[] = [ 'range_type', '=', $data[ 'range_type' ] ];
+        }
+        $model = ( new CouponSendRecord() )->where($where)->with([
+            'coupon' => function ($query) {
+                $query->field('title,id');
+            }
+        ])->withSearch([ 'create_time' ], $data)->field("success_num,status,id,coupon_id,range_type,range_param,end_time,admin_username,create_time")->append([ 'status_name', 'range_param_value', 'range_type_name' ])->order('create_time desc');
+        $list = $this->pageQuery($model);
+        return $list;
+    }
+
+    /**
+     * 添加发券记录
+     * @param $coupon_id
+     * @param $data
+     * @return true
+     * @throws \think\db\exception\DbException
+     */
+    public function addSendRecords($coupon_id, $data)
+    {
+        $coupon = ( new Coupon() )->where([ [ 'id', '=', $coupon_id ] ])->findOrEmpty();
+        if ($coupon->isEmpty()) {
+            throw new CommonException('COUPON_NOT_EXIST');
+        }
+        if ($coupon->status != CouponDict::NORMAL) {
+            throw new CommonException('COUPON_INVALID');
+        }
+        $range_param = $data[ 'range_param' ] ?? [];
+        list($member_num, $range_param) = $this->getSendMemberNum($data[ 'range_type' ], $range_param);
+        $data = [
+            'coupon_id' => $coupon_id,
+            'send_num' => $data[ 'send_num' ],
+            'range_type' => $data[ 'range_type' ],
+            'range_param' => $range_param,
+            'member_num' => $member_num,
+            'status' => CouponDict::SEND_STATUS_WAIT,
+            'admin_uid' => $this->uid,
+            'admin_username' => $this->username,
+            'create_time' => time(),
+        ];
+        $record_id = ( new CouponSendRecord() )->insertGetId($data);
+//        (new CouponSend())->doJob($record_id);
+        CouponSend::dispatch([ 'record_id' => $record_id ]);
+        return true;
+    }
+
+    /**
+     * 获取发送用户数量
+     * @param $range_type
+     * @param $range_param
+     * @return array
+     * @throws \think\db\exception\DbException
+     */
+    public function getSendMemberNum($range_type, $range_param)
+    {
+        switch ($range_type) {
+            case CouponDict::SEND_RANGE_ALL:
+                $member_num = ( new Member() )->where([
+                    [ 'member_id', '>', 0 ]
+                ])->count();
+                break;
+            case CouponDict::SEND_RANGE_MEMBER:
+                $member_num = count($range_param[ 'member_ids' ]);
+                break;
+            case CouponDict::SEND_RANGE_MEMBER_LEVEL:
+                $member_level = $range_param[ 'member_level' ];
+                $member_num = ( new Member() )->where([
+                    [ 'member_level', 'in', implode(',', $member_level) ],
+                ])->count();
+                $level_names = ( new MemberLevel() )->where([
+                    [ 'level_id', 'in', implode(',', $member_level) ],
+                ])->column('level_name');
+                $range_param[ 'level_name' ] = implode('、', $level_names);
+                break;
+            case CouponDict::SEND_RANGE_MEMBER_LABEL:
+                $member_label = $range_param[ 'member_label' ];
+                $member_num = ( new Member() )->where([
+                    [ 'member_id', '>', 0 ]
+                ])->withSearch([ 'member_label' ], [ 'member_label' => $member_label ])->count();
+                $label_names = ( new MemberLabel() )->where([
+                    [ 'label_id', 'in', implode(',', $member_label) ],
+                ])->column('label_name') ?? [];
+                $range_param[ 'label_name' ] = implode('、', $label_names);;
+                break;
+            default:
+                $member_num = 0;
+                break;
+        }
+        return [ $member_num, $range_param ];
+
     }
 
 }

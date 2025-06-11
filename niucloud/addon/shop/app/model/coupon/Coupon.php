@@ -152,6 +152,20 @@ class Coupon extends BaseModel
         return CouponDict::getStatus()[$data['status']] ?? '';
     }
 
+    /**
+     * 发券按钮是否展示
+     * @param $value
+     * @param $data
+     * @return string
+     */
+    public function getIsShowSendAttr($value, $data)
+    {
+        if($data['status'] != CouponDict::NORMAL){
+            return 0;
+        }
+        return 1;
+    }
+
 
     /**
      * 活动开始时间搜索器

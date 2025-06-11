@@ -14,8 +14,7 @@
                             <view class="mt-[20rpx]">
                                 <view v-if="item.goods && item.goods.length" class="flex mt-[20rpx]">
                                     <view class="w-[100rpx] flex justify-end">
-                                        <view
-                                            class="bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center px-[12rpx] h-[38rpx] mr-[6rpx]">
+                                        <view class="bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center px-[12rpx] h-[38rpx] mr-[6rpx]">
                                             赠品
                                         </view>
                                     </view>
@@ -43,14 +42,14 @@
                                         </view>
                                     </view>
                                 </view>
-                                <block v-if="item.give && item.give.length">
+                                <template v-if="item.give && item.give.length">
                                     <view class="flex items-center mt-[24rpx]" v-for="(giveItem,giveIndex) in item.give" :key="giveIndex">
                                         <view class="w-[100rpx] flex justify-end">
                                             <view class="bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center px-[12rpx] h-[38rpx] mr-[6rpx]">{{ giveItem.label }}</view>
                                         </view>
                                         <text class="text-[24rpx]">{{ giveItem.content }}</text>
                                     </view>
-                                </block>
+                                </template>
                                 <view class="flex items-baseline mt-[24rpx]" v-if="item.coupon && item.coupon.length">
                                     <view class="w-[100rpx] flex justify-end">
                                         <view class="bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center px-[12rpx] h-[38rpx] mr-[6rpx]">优惠券</view>

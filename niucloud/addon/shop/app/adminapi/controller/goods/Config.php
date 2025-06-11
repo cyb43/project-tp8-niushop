@@ -10,6 +10,8 @@
 // +----------------------------------------------------------------------
 
 namespace addon\shop\app\adminapi\controller\goods;
+
+use addon\shop\app\dict\goods\GoodsDict;
 use addon\shop\app\service\admin\goods\ConfigService;
 use core\base\BaseAdminController;
 
@@ -22,7 +24,7 @@ class Config extends BaseAdminController
     public function getSearchConfig()
     {
 
-        return success((new ConfigService())->getSearchConfig());
+        return success(( new ConfigService() )->getSearchConfig());
     }
 
     /**
@@ -36,7 +38,7 @@ class Config extends BaseAdminController
             [ "default_word", "" ],
             [ "search_words", "" ]
         ]);
-        (new ConfigService())->setSearchConfig($data);
+        ( new ConfigService() )->setSearchConfig($data);
         return success('SUCCESS');
     }
 
@@ -47,7 +49,7 @@ class Config extends BaseAdminController
     public function getUniqueConfig()
     {
 
-        return success((new ConfigService())->getUniqueConfig());
+        return success(( new ConfigService() )->getUniqueConfig());
     }
 
     /**
@@ -59,7 +61,32 @@ class Config extends BaseAdminController
         $data = $this->request->params([
             [ "is_enable", 0 ]
         ]);
-        (new ConfigService())->setUniqueConfig($data);
+        ( new ConfigService() )->setUniqueConfig($data);
+        return success('SUCCESS');
+    }
+
+
+    /**
+     * 获取商品排序配置
+     * @return \think\Response
+     */
+    public function getSortConfig()
+    {
+        return success(( new ConfigService() )->getSortConfig());
+    }
+
+    /**
+     * 设置商品排序配置
+     * @return \think\Response
+     */
+    public function setSortConfig()
+    {
+        $data = $this->request->params([
+            [ "sort_type", GoodsDict::SORT_TYPE_ASC ],
+            [ "sort_column", GoodsDict::SORT_COLUMN_SORT ],
+            [ "default_sort", 0 ],
+        ]);
+        ( new ConfigService() )->setSortConfig($data);
         return success('SUCCESS');
     }
 }

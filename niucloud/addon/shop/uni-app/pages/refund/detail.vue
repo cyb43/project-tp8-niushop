@@ -358,7 +358,7 @@ const refundBtnFn = (type: any) => {
     }
 }
 
-// 撤销维权
+// 撤销售后
 const cancelRefundShow = ref(false);
 let currRefundOn = "";
 

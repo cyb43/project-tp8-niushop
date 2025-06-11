@@ -211,8 +211,8 @@
             </el-form>
 
             <el-card class="box-card !border-none relative" shadow="never" v-if="!loading && !formData">
-				<el-empty :description="t('orderInfoEmpty')" />
-			</el-card>
+                <el-empty :description="t('orderInfoEmpty')" />
+            </el-card>
 
             <!-- 拒绝退款弹框 -->
             <el-dialog v-model="refuseShowDialog" :title="t('orderRefundRefuse')" width="460px" class="diy-dialog-wrap" :destroy-on-close="true">
@@ -278,11 +278,10 @@ import { ref, reactive, computed } from 'vue'
 import { t } from '@/lang'
 import { orderRefundDetail, auditRefund, refundDelivery } from '@/addon/shop/api/order'
 import { getOrderRefundAddress } from '@/addon/shop/api/shop_address'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
 import { ElMessageBox, FormInstance } from 'element-plus'
 
-const route = useRoute()
 const router = useRouter()
 const loading = ref(false)
 let popTitle: string = '订单详情'
@@ -313,8 +312,6 @@ const getOrderInfoFn = async () => {
         loading.value = false
     }
 }
-
-
 
 // 退款参数
 const refuseShowDialog = ref(false)

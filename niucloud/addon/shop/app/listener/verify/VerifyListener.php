@@ -36,8 +36,9 @@ class VerifyListener
             //执行
             $param = $params[ 'data' ];//订单信息
             $order_goods_id = $param[ 'order_goods_id' ];
-            $order_goods_info = ( new OrderGoods() )->where([ [ 'order_goods_id', '=', $order_goods_id ] ])->findOrEmpty();
+            $order_goods_info = ( new OrderGoods() )->where([[ 'order_goods_id', '=', $order_goods_id ] ])->findOrEmpty();
             if ($order_goods_info->isEmpty()) throw new CommonException('SHOP_ORDER_NOT_FOUND');
+
             if (in_array($order_goods_info[ 'delivery_status' ], [ OrderDeliveryDict::TAKED, OrderDeliveryDict::EXPIRE ])) throw new CommonException('SHOP_ORDER_ITEM_HAS_BEEN_WRITTEN_OFF_OR_EXPIRED');
             if (in_array($order_goods_info[ 'status' ], [ OrderGoodsDict::REFUNDING, OrderGoodsDict::REFUND_FINISH ])) throw new CommonException('SHOP_THE_ITEM_IS_BEING_REFUNDED_OR_HAS_BEEN_REFUNDED');
             if (strtotime($order_goods_info[ 'verify_expire_time' ]) > 0 && strtotime($order_goods_info[ 'verify_expire_time' ]) < time()) throw new CommonException('SHOP_ORDER_ITEM_HAS_EXPIRED');
@@ -60,9 +61,25 @@ class VerifyListener
                 ]);
             }
             //存库
-        }
-        if ($params[ 'type' ] == 'shopPickUpOrder') {
-            //自提订单核销
+        } else if ($params[ 'type' ] == 'shopPickUpOrder') {
+            $param = $params[ 'data' ];//订单信息
+            $order_id = $param[ 'order_id' ];
+            $order_info = ( new Order() )->where([ [ 'order_id', '=', $order_id ] ])->findOrEmpty();
+            if ($order_info->isEmpty()) throw new CommonException('SHOP_ORDER_NOT_FOUND');
+            if (in_array($order_info[ 'status' ], [ OrderDict::FINISH, OrderDict::CLOSE ])) throw new CommonException('SHOP_ORDER_HAS_BEEN_CLOSED_OR_COMPLETED');
+            $order_goods_list = ( new OrderGoods() )->where([
+                [ 'order_id', '=', $order_id ],
+            ])->select()->toArray();
+            foreach ($order_goods_list as $order_goods_info) {
+                if (in_array($order_goods_info[ 'delivery_status' ], [ OrderDeliveryDict::TAKED, OrderDeliveryDict::EXPIRE ])) throw new CommonException('SHOP_ORDER_ITEM_HAS_BEEN_WRITTEN_OFF_OR_EXPIRED');
+                if (in_array($order_goods_info[ 'status' ], [ OrderGoodsDict::REFUNDING, OrderGoodsDict::REFUND_FINISH ])) throw new CommonException('SHOP_THE_ITEM_IS_BEING_REFUNDED_OR_HAS_BEEN_REFUNDED');
+            }
+            //暂时自提订单核销为统一核销 故校验完数据后直接结束该自提订单
+            ( new CoreOrderFinishService() )->finish([
+                'main_type' => OrderLogDict::SYSTEM,
+                'main_id' => 0,
+                'order_id' => $order_id,
+            ]);
         }
         return;
     }

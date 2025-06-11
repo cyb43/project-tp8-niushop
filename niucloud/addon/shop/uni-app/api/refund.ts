@@ -64,7 +64,7 @@ export function getRefundMoneyAgain(params: Record<string, any>) {
 }
 
 /**
- * 取消维权
+ * 取消售后
  */
 export function closeRefund(orderRefundNo: string) {
     return request.put(`shop/refund/close/${ orderRefundNo }`, {}, { showSuccessMessage: true })

@@ -9,6 +9,8 @@ DROP TABLE IF EXISTS `{{prefix}}shop_coupon_goods`;
 
 DROP TABLE IF EXISTS `{{prefix}}shop_coupon_member`;
 
+DROP TABLE IF EXISTS `{{prefix}}shop_coupon_send_records`;
+
 DROP TABLE IF EXISTS `{{prefix}}shop_delivery_company`;
 
 DROP TABLE IF EXISTS `{{prefix}}shop_delivery_deliver`;
@@ -20,6 +22,10 @@ DROP TABLE IF EXISTS `{{prefix}}shop_delivery_local_delivery`;
 DROP TABLE IF EXISTS `{{prefix}}shop_delivery_shipping_template`;
 
 DROP TABLE IF EXISTS `{{prefix}}shop_delivery_shipping_template_item`;
+
+DROP TABLE IF EXISTS `{{prefix}}shop_discount`;
+
+DROP TABLE IF EXISTS `{{prefix}}shop_discount_goods`;
 
 DROP TABLE IF EXISTS `{{prefix}}shop_goods`;
 

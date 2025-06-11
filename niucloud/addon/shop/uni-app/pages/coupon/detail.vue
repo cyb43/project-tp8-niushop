@@ -1,7 +1,6 @@
 <template>
     <view :style="themeColor()">
-        <view v-if="Object.keys(detail).length&&!loading" class="overflow-hidden min-h-screen bg-style relative"
-              :style="{ 'background': 'url(' + img('addon/shop/coupon/coupon_bg.png') + ') no-repeat' }">
+        <view v-if="Object.keys(detail).length&&!loading" class="overflow-hidden min-h-screen bg-style relative" :style="{ 'background': 'url(' + img('addon/shop/coupon/coupon_bg.png') + ') no-repeat' }">
             <!-- #ifdef MP -->
             <top-tabbar :data="topTabbarData" :scrollBool="topTabarObj.getScrollBool()" />
             <!-- #endif -->
@@ -18,15 +17,15 @@
                     <text v-else>满{{ detail.coupon_min_price }}元可用</text>
                 </view>
                 <view class="text-[26rpx] h-[36rpx] text-[#E22D17] mt-[44rpx] text-center flex justify-center items-center">
-                    <block v-if="detail.valid_type == 1">
+                    <template v-if="detail.valid_type == 1">
                         <text>领取之日起</text>
                         <text>{{ detail.length }}</text>
                         <text>天内有效</text>
-                    </block>
-                    <block v-else>
+                    </template>
+                    <template v-else>
                         <text>有效期至</text>
                         <text>{{ detail.valid_end_time ? detail.valid_end_time.slice(0, 10) : '' }}</text>
-                    </block>
+                    </template>
                 </view>
                 <view class="flex justify-center items-center mt-[20rpx]">
                     <text v-if="detail.btnType === 'collected'"

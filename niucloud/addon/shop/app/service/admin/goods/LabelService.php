@@ -64,7 +64,7 @@ class LabelService extends BaseAdminService
     public function getList(array $where = [], $field = 'label_id, label_name, group_id, style_type, color_json, icon, status, memo, sort, create_time, update_time')
     {
         $order = 'sort desc,label_id desc';
-        return $this->model->where([ [ 'label_id', '>', 0 ],['status','=',LabelDict::ENABLE]])->withSearch([ "label_name" ], $where)->field($field)
+        return $this->model->where([ ['status','=',LabelDict::ENABLE]])->withSearch([ "label_name" ], $where)->field($field)
             ->with([
                 'group' => function($query) {
                     $query->field('group_id, group_name');
@@ -100,7 +100,7 @@ class LabelService extends BaseAdminService
         $data[ 'create_time' ] = time();
         $brandInfo = $this->model->where([ [ 'label_name', '=', $data[ 'label_name' ] ] ])->findOrEmpty()->toArray();
         if ($brandInfo) {
-            throw new AdminException('标签已存在，请检查');
+            throw new AdminException('SHOP_GOODS_LABEL_NAME_REPEAT');
         }
         $res = $this->model->create($data);
         return $res->label_id;
@@ -117,7 +117,7 @@ class LabelService extends BaseAdminService
         $data[ 'update_time' ] = time();
         $labelInfo = $this->model->where([ [ 'label_name', '=', $data[ 'label_name' ] ] ])->findOrEmpty()->toArray();
         if ($labelInfo && $labelInfo[ 'label_id' ] != $id) {
-            throw new AdminException('标签已存在，请检查');
+            throw new AdminException('SHOP_GOODS_LABEL_NAME_REPEAT');
         }
 
         $this->model->where([ [ 'label_id', '=', $id ] ])->update($data);
@@ -133,9 +133,9 @@ class LabelService extends BaseAdminService
     {
         // 检测商品标签分组是否被使用
         $goods_model = new Goods();
-        $count = $goods_model->where([ [ 'goods_id', '>', 0 ], ])->withSearch([ 'label_ids' ], [ 'label_ids' => $id ])->count();
+        $count = $goods_model->where([ [ 'goods_id', '>', 0 ] ])->withSearch([ 'label_ids' ], [ 'label_ids' => $id ])->count();
         if ($count) {
-            throw new AdminException('该标签正在使用中，无法删除');
+            throw new AdminException('SHOP_GOODS_LABEL_IN_USE');
         }
         $model = $this->model->where([ [ 'label_id', '=', $id ] ])->find();
         $res = $model->delete();

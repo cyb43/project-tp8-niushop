@@ -42,7 +42,7 @@
                     <view class="goods-item-style-two flex flex-col bg-[#fff] box-border rounded-[var(--rounded-mid)] overflow-hidden mt-[var(--top-m)]" @click="toDetail(item.id)">
                         <!-- <u--image width="100%" height="350rpx" :src="img(item.goods_cover_thumb_mid ? item.goods_cover_thumb_mid : '')" model="aspectFill">
                           <template #error>
-                            <image class="w-[100%] h-[350rpx]" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill"></image>
+                            <image class="w-[100%] h-[350rpx]" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                           </template>
                         </u--image> -->
                         <image v-if="item.goods_cover_thumb_mid"

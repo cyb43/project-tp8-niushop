@@ -365,7 +365,7 @@ return [
                             "unique" => false,
                             "autofill" => false,
                             "privacyProtection" => false,
-                            'cache' => false,
+                            'cache' => true,
                             "default" => [
                                 "date" => "2025-01-15",
                                 "timestamp" => 1736913088.477

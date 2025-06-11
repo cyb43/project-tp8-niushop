@@ -91,7 +91,7 @@ const formRules = reactive<FormRules>({
             validator: (rule: any, value: any, callback: any) => {
                 if (formData.value.is_use) {
                     if (!formData.value.coupon_id.length) {
-                        callback('请输入选择优惠券')
+                        callback('请选择优惠券')
                     }
                     formData.value.coupon_id.forEach(id => {
                         if (!formData.value.coupon_list['id_' + id]) {

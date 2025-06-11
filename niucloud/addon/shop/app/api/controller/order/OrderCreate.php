@@ -43,10 +43,12 @@ class OrderCreate extends BaseApiController
             [ 'cart_ids', [] ],
             [ 'sku_data', [] ],
             [ 'delivery', [] ],
+            [ 'is_need_recalculate', 0 ],
 //            ['member_remark', ''],//买家留言
             [ 'discount', [] ],//优惠
 //            ['invoice', []],//发票
-            [ 'extend_data', [] ] // 扩展数据
+            [ 'extend_data', [] ],// 扩展数据
+            [ 'impulse_buy_goods', [] ] // 顺买商品信息
         ]);
         return success('SUCCESS', ( new OrderCreateService() )->calculate($data));
     }
@@ -60,7 +62,7 @@ class OrderCreate extends BaseApiController
         $data = $this->request->params([
             [ 'order_key', [] ],
             [ 'member_remark', '' ],//买家留言
-//            ['delivery', []],//配送参数
+            [ 'delivery', [] ],//配送参数
 //            ['discount', []],//优惠
             [ 'invoice', [] ],//发票
             [ 'form_data', [] ] // 万能表单数据

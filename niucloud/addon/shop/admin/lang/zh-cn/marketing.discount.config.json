@@ -1,8 +1,8 @@
 {
-    "headTitle":"顶部广告图",
-    "image":"图片上传",
-    "imagePlaceholder":"请上传图片",
-    "toLink":"跳转链接",
-    "toLinkPlaceholder":"请输入跳转链接",
-    "addConfigList":"添加广告图"
+  "headTitle": "顶部广告图",
+  "image": "图片上传",
+  "imagePlaceholder": "请上传图片",
+  "toLink": "跳转链接",
+  "toLinkPlaceholder": "请输入跳转链接",
+  "addConfigList": "添加广告图"
 }

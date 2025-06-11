@@ -179,4 +179,17 @@ class OrderGoods extends BaseModel
         }
         return '';
     }
+
+    public function getImpulseBuyInfoAttr($value, $data)
+    {
+        if(!empty($data['extend']) && isset($data['extend']['is_impulse_buy']) && $data['extend']['is_impulse_buy'] == 1){
+            $impulse_buy_price = $data['extend']['impulse_buy_price']/$data['extend']['impulse_buy_goods_num'];
+            $is_impulse_buy = 1;
+        }
+        return [
+            'is_impulse_buy'=>$is_impulse_buy ?? 0 ,
+            'impulse_buy_price'=>$impulse_buy_price ?? 0 ,
+        ];
+    }
+
 }

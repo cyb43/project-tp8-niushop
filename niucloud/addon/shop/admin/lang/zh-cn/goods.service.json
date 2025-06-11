@@ -1,10 +1,10 @@
 {
-      "serviceName":"服务名称",
-      "serviceNamePlaceholder":"请输入服务名称",
-      "desc":"描述",
-      "descPlaceholder":"请输入描述",
-      "addServe":"添加商品服务",
-      "updateServe":"编辑商品服务",
-      "serveDeleteTips":"确定要删除该数据吗？",
-	  "imagePlaceholder": "请上传服务图片"
+  "serviceName": "服务名称",
+  "serviceNamePlaceholder": "请输入服务名称",
+  "desc": "描述",
+  "descPlaceholder": "请输入描述",
+  "addServe": "添加商品服务",
+  "updateServe": "编辑商品服务",
+  "serveDeleteTips": "确定要删除该数据吗？",
+  "imagePlaceholder": "请上传服务图片"
 }

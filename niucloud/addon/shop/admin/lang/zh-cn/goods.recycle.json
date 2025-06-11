@@ -5,25 +5,18 @@
   "goodsCategoryPlaceholder": "全部",
   "goodsType": "商品类型",
   "goodsTypePlaceholder": "请选择商品类型",
-
   "price": "价格",
   "saleNum": "销量",
-
   "statusOn": "销售中",
   "statusOff": "仓库中",
-
   "batchRecycle": "批量恢复",
   "batchEmptySelectedGoodsTips": "请选择要操作的商品",
-
   "goodsInfo": "商品",
-
   "stock": "库存",
   "stockPlaceholder": "请输入商品库存（总和）",
-
   "status": "状态",
   "createTime": "创建时间",
   "recycle": "恢复",
-
   "goodsRecycleTips": "确定要恢复该商品吗？",
   "batchGoodsRecycleTips": "确定要恢复这些商品吗"
 }

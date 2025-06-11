@@ -1,9 +1,9 @@
 <template>
-	<div class="overflow-hidden" :style="componentStyle">商品名称</div>
+    <div class="overflow-hidden" :style="componentStyle">商品名称</div>
 </template>
 
 <script lang="ts" setup>
-import { ref,computed } from 'vue'
+import { ref, computed } from 'vue'
 import usePosterStore from '@/stores/modules/poster'
 
 const posterStore = usePosterStore()
@@ -15,27 +15,27 @@ const prop = defineProps({
     }
 })
 
-const data = computed(()=> {
+const data = computed(() => {
     return prop.value;
 })
 
-const componentStyle = computed(()=> {
+const componentStyle = computed(() => {
     var style = '';
-    style += `font-size: ${prop.value.fontSize}px;color: ${prop.value.fontColor};line-height: ${prop.value.lineHeight + prop.value.fontSize}px;`;
-    if(prop.value.x == 'left' || prop.value.x == 'center' || prop.value.x == 'right'){
-        style += `text-align: ${prop.value.x};`;
+    style += `font-size: ${ prop.value.fontSize }px;color: ${ prop.value.fontColor };line-height: ${ prop.value.lineHeight + prop.value.fontSize }px;`;
+    if (prop.value.x == 'left' || prop.value.x == 'center' || prop.value.x == 'right') {
+        style += `text-align: ${ prop.value.x };`;
     }
-    if(prop.value.weight){
+    if (prop.value.weight) {
         style += `font-weight: bold;`;
     }
-    if(!prop.value.fontFamily || prop.value.fontFamily == 'static/font/SourceHanSansCN-Regular.ttf'){
+    if (!prop.value.fontFamily || prop.value.fontFamily == 'static/font/SourceHanSansCN-Regular.ttf') {
         style += `font-family: poster_default_font;`;
     }
     let box: any = document.getElementById(prop.value.id)
     if (box) {
-        style += `width:${box.offsetWidth}px;height:${box.offsetHeight}px;`;
-    }else{
-        style += `width:${prop.value.width}px;height:${prop.value.height}px;`;
+        style += `width:${ box.offsetWidth }px;height:${ box.offsetHeight }px;`;
+    } else {
+        style += `width:${ prop.value.width }px;height:${ prop.value.height }px;`;
     }
     return style;
 })

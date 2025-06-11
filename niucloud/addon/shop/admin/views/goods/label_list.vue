@@ -99,7 +99,7 @@ import { getLabelPageList, deleteLabel, modifyLabelSort, getLabelGroupList, modi
 import { ElMessageBox, FormInstance, ElMessage } from 'element-plus'
 import LabelEdit from '@/addon/shop/views/goods/components/label-edit.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { debounce, img } from '@/utils/common'
+import { debounce, img, setTablePageStorage,getTablePageStorage} from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()
@@ -157,6 +157,8 @@ const loadLabelList = (page: number = 1) => {
         labelTable.loading = false
         labelTable.data = res.data.data
         labelTable.total = res.data.total
+        setTablePageStorage(labelTable.page, labelTable.limit, labelTable.searchParam)
+
     }).catch(() => {
         labelTable.loading = false
     })
@@ -169,7 +171,7 @@ const initData = ()=>{
             groupList.push(...data)
         }
     })
-    loadLabelList()
+    loadLabelList(getTablePageStorage(labelTable.searchParam).page)
 }
 
 initData();

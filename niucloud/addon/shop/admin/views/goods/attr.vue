@@ -4,9 +4,7 @@
 
             <div class="flex justify-between items-center">
                 <span class="text-lg">{{pageName}}</span>
-                <el-button type="primary" @click="addEvent">
-                    {{ t('addShopGoodsAttr') }}
-                </el-button>
+                <el-button type="primary" @click="addEvent">{{ t('addShopGoodsAttr') }}</el-button>
             </div>
 
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
@@ -81,7 +79,7 @@ import { reactive, ref,computed } from 'vue'
 import { t } from '@/lang'
 import { ElMessage,ElMessageBox,FormInstance } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { debounce,filterNumber } from '@/utils/common'
+import { debounce,filterNumber, setTablePageStorage,getTablePageStorage } from '@/utils/common'
 import { getAttrPageList, addAttr, deleteAttr,modifyAttrSort,editAttr} from '@/addon/shop/api/goods'
 
 const route = useRoute()
@@ -154,12 +152,13 @@ const loadShopGoodsAttrList = (page: number = 1) => {
         goodsAttrTable.loading = false
         goodsAttrTable.data = res.data.data
         goodsAttrTable.total = res.data.total
+        setTablePageStorage(goodsAttrTable.page, goodsAttrTable.limit, goodsAttrTable.searchParam)
     }).catch(() => {
         goodsAttrTable.loading = false
     })
 }
 
-loadShopGoodsAttrList()
+loadShopGoodsAttrList(getTablePageStorage(goodsAttrTable.searchParam).page)
 
 /**
  * 添加商品参数

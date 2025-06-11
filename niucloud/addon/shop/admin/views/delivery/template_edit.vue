@@ -1,10 +1,10 @@
 <template>
     <div class="main-container">
-        <el-card class="card !border-none mb-[15px]" shadow="never">
+        <el-card class="card !border-none" shadow="never">
             <el-page-header :content="pageName" :icon="ArrowLeft" @back="back" />
         </el-card>
-        
-        <el-card class="box-card !border-none" shadow="never">
+
+        <el-card class="box-card mt-[15px] !border-none" shadow="never">
             <el-form :model="formData" label-width="120px" ref="formRef" :rules="formRules" class="page-form" v-loading="loading">
                 <el-form-item :label="t('templateName')" prop="template_name">
                     <el-input v-model.trim="formData.template_name" clearable :placeholder="t('templateNamePlaceholder')" class="input-width" maxlength="60" />
@@ -143,6 +143,7 @@
 import { ref, reactive, computed } from 'vue'
 import { t } from '@/lang'
 import { ElTree, FormInstance, ElMessage } from 'element-plus'
+import { ArrowLeft } from '@element-plus/icons-vue'
 import { addShippingTemplate, editShippingTemplate, getShippingTemplateInfo } from '@/addon/shop/api/delivery'
 import { AnyObject } from '@/types/global'
 import { useRoute, useRouter } from 'vue-router'
@@ -433,7 +434,6 @@ const onSave = async (formEl: FormInstance | undefined) => {
                 return
             }
             loading.value = true
-
 
             const data:AnyObject = {
                 template_id: formData.template_id,

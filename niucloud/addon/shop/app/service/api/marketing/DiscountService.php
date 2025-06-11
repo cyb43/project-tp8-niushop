@@ -11,12 +11,12 @@
 
 namespace addon\shop\app\service\api\marketing;
 
-use addon\shop\app\dict\active\ActiveDict;
-use addon\shop\app\model\active\Active;
-use addon\shop\app\model\active\ActiveGoods;
+use addon\shop\app\dict\active\DiscountDict;
+use addon\shop\app\model\discount\Discount;
+use addon\shop\app\model\discount\DiscountGoods;
 use addon\shop\app\model\goods\Goods;
 use app\service\core\sys\CoreConfigService;
-use core\base\BaseAdminService;
+use core\base\BaseApiService;
 use think\facade\Db;
 
 /**
@@ -24,12 +24,12 @@ use think\facade\Db;
  * Class DiscountService
  * @package addon\shop\app\service\api\marketing
  */
-class DiscountService extends BaseAdminService
+class DiscountService extends BaseApiService
 {
     public function __construct()
     {
         parent::__construct();
-        $this->model = new Active();
+        $this->model = new Discount();
     }
 
     /**
@@ -39,22 +39,24 @@ class DiscountService extends BaseAdminService
      */
     public function getInfoByGoods($goods_id)
     {
-        $active_goods_model = new ActiveGoods();
+        $active_goods_model = new DiscountGoods();
 
-        $field = 'active_goods_id,active_id';
+        $field = 'discount_goods_id as active_goods_id,discount_id';
 
         $info = $active_goods_model->where([
-            [ 'active_goods_status', '=', 'active' ],
-            [ 'active_goods_type', '=', 'single' ],
-            [ 'active_class', '=', 'discount' ],
+            [ 'status', '=', 'active' ],
             [ 'goods_id', '=', $goods_id ]
         ])->field($field)
             ->with([
-                'active' => function($query) {
-                    $query->withField('active_id,active_name, active_desc, start_time, end_time');
+                'discount' => function($query) {
+                    $query->withField('discount_id,name as active_name, remark as active_desc, start_time, end_time');
                 }
             ])
             ->findOrEmpty()->toArray();
+        $info['active_id'] = $info['discount_id'];
+        $info['discount']['active_id'] = $info['active_id'];
+        $info['active'] = $info['discount'];
+        unset($info['discount']);
         return $info;
 
     }
@@ -79,10 +81,10 @@ class DiscountService extends BaseAdminService
      */
     public function getGoodsPage(array $where = [])
     {
-        $field = 'goods_id,label_ids,goods_name,sub_title,goods_category,goods_type,goods_cover,unit,status,sale_num + goods.virtual_sale_num as sale_num,member_discount,is_discount';
+        $field = 'goods_id,label_ids,goods_name,sub_title,goods_category,goods_type,goods_cover,unit,status,sale_num + virtual_sale_num as sale_num,member_discount,is_discount';
 
         $sku_where = [
-            [ 'status', '=', 1 ]
+            [ 'goods.status', '=', 1 ],
         ];
 
         if (!empty($where[ 'keyword' ])) {
@@ -95,50 +97,52 @@ class DiscountService extends BaseAdminService
         } else {
             $order = 'sort desc,create_time desc';
         }
-
         $search_model = ( new Goods() )
+            ->alias('goods')
             ->withSearch([ "brand_id", "goods_category", "label_ids", 'service_ids' ], $where)
             ->field($field)
-            ->with([ 'skuList' ])
-            ->withJoin([ 'activeGoods' => function($query) use ($where) {
-                $active_where = [ [ 'active_goods_status', 'in', [ ActiveDict::ACTIVE, ActiveDict::NOT_ACTIVE ] ], [ 'active_class', '=', ActiveDict::DISCOUNT ] ];
-                if ($where[ 'active_id' ]) $active_where[] = [ 'active_id', '=', $where[ 'active_id' ] ];
-                $query->where($active_where);
-            } ])
-            ->where($sku_where)->order($order)->append([ 'goods_type_name', 'goods_cover_thumb_mid', 'goods_label_name', 'activeGoods.active_goods_status_name' ]);
+            ->with([ 'skuList'])
+            ->withJoin([ 'discountGoods' => function($query) use ($where) {
+                $discount_where = [ [ 'discountGoods.status', 'in', [ DiscountDict::ACTIVE, DiscountDict::NOT_ACTIVE ] ] ];
+                if ($where[ 'discount_id' ]) $discount_where[] = [ 'discount_id', '=', $where[ 'discount_id' ] ];
+                $query->field('discount_id,discountGoods.status as discount_status')->where($discount_where);
+            } ], 'left')
+            ->group('goods.goods_id')
+            ->where($sku_where)->order($order)->hidden(['discountGoods'])->append([ 'goods_type_name', 'goods_cover_thumb_mid', 'goods_label_name', 'discount_status_name' ]);
         $list = $this->pageQuery($search_model);
 
-        foreach ($list[ 'data' ] as $key => $item) {
-            $active_goods_value = json_decode($item[ 'activeGoods' ][ 'active_goods_value' ], true);
-            $active_goods_value = array_column($active_goods_value, null, 'sku_id');
-            $sku_list = $item[ 'skuList' ] ?? [];
-            $sku_list = array_column($sku_list, null, 'sku_id');
-            foreach ($active_goods_value as $k => $v) {
-                if (!empty($v[ 'is_enabled' ])) {
-                    $goods_sku = $sku_list[ $v[ 'sku_id' ] ] ?? [];
-                    $discount_price = $v[ 'discount_price' ] ?? $goods_sku[ 'price' ];
+        $discount_model = (new DiscountGoods());
 
-                    if (( !empty($item[ 'goodsSku' ]) && $item[ 'goodsSku' ][ 'active_discount_price' ] > $discount_price ) || empty($item[ 'goodsSku' ])) {
-                        $item[ 'goodsSku' ] = $goods_sku;
-                        $item[ 'goodsSku' ][ 'active_discount_type' ] = $v[ 'discount_type' ] ?? '';
-                        $item[ 'goodsSku' ][ 'active_discount_rate' ] = $v[ 'discount_rate' ] ?? '10';
-                        $item[ 'goodsSku' ][ 'active_specify_price' ] = $v[ 'specify_price' ] ?? 0;
-                        $item[ 'goodsSku' ][ 'active_discount_price' ] = $discount_price;
-                        $item[ 'goodsSku' ][ 'active_reduce_money' ] = $v[ 'reduce_money' ] ?? 0;
+        if (!empty($list[ 'data' ])){
+            foreach ($list[ 'data' ] as $key => $item) {
+                $sku_list = $item[ 'skuList' ] ?? [];
+                $sku_list = array_column($sku_list, null, 'sku_id');
+                $discount_goods_value = $discount_model->where([['discount_id','=',$item['discount_id']],['goods_id','=',$item['goods_id']]])->column('*','sku_id');
+                foreach ($discount_goods_value as $k => $v) {
+                    if (!empty($v[ 'is_enabled' ])) {
+                        $goods_sku = $sku_list[ $v[ 'sku_id' ] ] ?? [];
+                        $discount_price = $v[ 'discount_price' ] ?? $goods_sku[ 'price' ];
+
+                        if (( !empty($item[ 'goodsSku' ]) && $item[ 'goodsSku' ][ 'discount_price' ] > $discount_price ) || empty($item[ 'goodsSku' ])) {
+                            $item[ 'goodsSku' ] = $goods_sku;
+                            $item[ 'goodsSku' ][ 'discount_type' ] = $v[ 'type' ] ?? '';
+                            $item[ 'goodsSku' ][ 'discount_rate' ] = $v[ 'rate' ] ?? '111';
+                            $item[ 'goodsSku' ][ 'discount_price' ] = $discount_price;
+                            $item[ 'goodsSku' ][ 'reduce_money' ] = $v[ 'reduce_money' ] ?? 0;
+                        }
+
                     }
                 }
-            }
-            if (empty($item[ 'goodsSku' ])) {
-                $item[ 'goodsSku' ] = $item[ 'skuList' ][ 0 ] ?? [];
+                if (empty($item[ 'goodsSku' ])) {
+                    $item[ 'goodsSku' ] = $item[ 'skuList' ][ 0 ] ?? [];
+                    $item[ 'goodsSku' ][ 'discount_type' ] = 'discount';
+                    $item[ 'goodsSku' ][ 'discount_rate' ] = '10';
+                    $item[ 'goodsSku' ][ 'discount_price' ] = $item[ 'goodsSku' ][ 'price' ] ?? '0';
+                    $item[ 'goodsSku' ][ 'reduce_money' ] = 0;
 
-                $item[ 'goodsSku' ][ 'active_discount_type' ] = 'discount';
-                $item[ 'goodsSku' ][ 'active_discount_rate' ] = '10';
-                $item[ 'goodsSku' ][ 'active_specify_price' ] = $item[ 'goodsSku' ][ 'price' ] ?? '0';
-                $item[ 'goodsSku' ][ 'active_discount_price' ] = $item[ 'goodsSku' ][ 'price' ] ?? '0';
-                $item[ 'goodsSku' ][ 'active_reduce_money' ] = 0;
-
+                }
+                $list[ 'data' ][ $key ] = $item;
             }
-            $list[ 'data' ][ $key ] = $item;
         }
 
         return $list;
@@ -146,16 +150,13 @@ class DiscountService extends BaseAdminService
 
     public function getList(array $where)
     {
-        $field = 'active_id,active_name,active_desc,active_type,active_goods_type,active_goods_info,active_class,active_class_category,relate_member,active_value,start_time,end_time,active_status,create_time,update_time,active_order_money,active_order_num,active_member_num,active_success_num';
+        $field = 'discount_id,name,remark,start_time,end_time,status,create_time,update_time';
 
-        $order = Db::raw('FIELD(active_status, "' . ActiveDict::ACTIVE . '","' . ActiveDict::NOT_ACTIVE . '"), start_time asc');
+        $order = Db::raw('FIELD(status, "' . DiscountDict::ACTIVE . '","' . DiscountDict::NOT_ACTIVE . '"), start_time asc');
 
-        $list = $this->model->where([
-            [ 'active_class', '=', ActiveDict::DISCOUNT ],
-            [ 'active_status', 'in', [ ActiveDict::ACTIVE, ActiveDict::NOT_ACTIVE ] ],
-        ])->withSearch([ "active_name" ], $where)->append([ 'active_type_name', 'active_goods_type_name', 'active_status_name' ])->field($field)->limit($where[ 'limit' ])->order($order)->select()->toArray();
-
-        return $list;
+        return $this->model->where([
+            [ 'status', 'in', [ DiscountDict::ACTIVE, DiscountDict::NOT_ACTIVE ] ],
+        ])->withSearch([ "name" ], $where)->append([ 'status_name' ])->field($field)->limit($where[ 'limit' ])->order($order)->select()->toArray();
 
     }
 

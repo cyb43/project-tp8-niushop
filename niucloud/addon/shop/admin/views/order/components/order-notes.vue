@@ -2,7 +2,7 @@
     <el-dialog v-model="showDialog" :title="t('notes')" width="460px" class="diy-dialog-wrap" :destroy-on-close="true">
         <el-form :model="formData" ref="formRef" :rules="formRules" class="page-form notes-form" v-loading="loading">
             <el-form-item class="mb-0">
-				<el-input v-model.trim="formData.shop_remark" :rows="5" type="textarea" maxlength="200" show-word-limit />
+                <el-input v-model.trim="formData.shop_remark" :rows="5" type="textarea" maxlength="200" show-word-limit />
             </el-form-item>
         </el-form>
         <template #footer>

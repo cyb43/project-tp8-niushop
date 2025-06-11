@@ -51,7 +51,7 @@
             </el-table>
             <div class="mt-[16px] flex">
                 <div class="flex items-center flex-1">
-                    <div class="layui-table-bottom-left-container mr-[10px]" v-show="selectCouponNum">
+                    <div class="mr-[10px]" v-show="selectCouponNum">
                         <span>{{ t('已选择') }}</span>
                         <span class="text-primary mx-[2px]">{{ selectCouponNum }}</span>
                         <span>{{ t('张优惠券') }}</span>
@@ -138,9 +138,6 @@ const initData = () => {
 initData()
 
 const couponListTableRef = ref()
-
-// 选中数据
-const multipleSelection: any = ref([])
 
 // 监听表格复选框
 const handleSelectChange = (selection: any, row: any) => {

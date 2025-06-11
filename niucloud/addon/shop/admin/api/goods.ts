@@ -337,6 +337,7 @@ export function modifyLabelGroupSort(params: Record<string, any>) {
 export function copyLabel(params: Record<string, any>) {
     return request.post(`shop/goods/label/copy/${ params.label_id }`, params, { showSuccessMessage: true })
 }
+
 /**
  * 获取商品品牌分页列表
  * @param params
@@ -782,4 +783,20 @@ export function setGoodsConfigUnique(param: any) {
  */
 export function goodsVerify(param: any) {
     return request.post('shop/goods/verify/skuno', param)
+}
+
+/**
+ * 获取商品排序配置
+ * @returns
+ */
+export function getGoodsConfigSort() {
+    return request.get(`shop/goods/config/sort`)
+}
+
+/**
+ * 设置商品排序配置
+ * @returns
+ */
+export function setGoodsConfigSort(param: any) {
+    return request.post('shop/goods/config/sort', param, { showSuccessMessage: true })
 }

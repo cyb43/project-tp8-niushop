@@ -22,11 +22,11 @@
                         <view class="icon nc-iconfont nc-icon-shanchu-yuangaizhiV6xx !text-[24rpx] text-[var(--text-color-light6)]" @click="deleteHistoryList"></view>
                     </view>
                     <view class="history-bottom " id="history-list" :style="{ maxHeight: !isAllHistory ? '100%' : '148rpx' }">
-                        <block v-for="(item, index) in historyList" :key="index">
+                        <template v-for="(item, index) in historyList" :key="index">
                             <view class="history-li" @click="otherSearch(item)" v-if="item">
                                 <view>{{ item }}</view>
                             </view>
-                        </block>
+                        </template>
                         <view class="history-li history_more" v-if="isAllHistory" @click="isAllHistory = false">
                             <view class="content-box">
                                 <text class="text-[30rpx] nc-iconfont nc-icon-xiaV6xx"></text>
@@ -41,18 +41,18 @@
                         <view class="title font-500">热门搜索</view>
                     </view>
                     <view class="history-bottom">
-                        <block v-for="(item, index) in config.search_words" :key="index">
+                        <template v-for="(item, index) in config.search_words" :key="index">
                             <view class="history-li" @click="otherSearch(item)" v-if="item">
                                 <view>{{ item }}</view>
                             </view>
-                        </block>
+                        </template>
                     </view>
                 </view>
             </view>
         </view>
-        <view class="px-[20rpx] pt-[10rpx]">
-            <diy-shop-goods-ranking :component="rankingComponent" />
-        </view>
+<!--        <view class="px-[20rpx] pt-[10rpx]">-->
+<!--            <diy-shop-goods-ranking :component="rankingComponent" />-->
+<!--        </view>-->
     </view>
 </template>
 <script setup lang="ts">
@@ -113,7 +113,7 @@ const getGoodsConfigSearchFn = () => {
 //搜索
 const search = () => {
     // if (inputValue.value.trim() != '') {
-
+	if (config.value.default_word && inputValue.value.trim() == '') inputValue.value = config.value.default_word;
     // 对历史搜索处理,判断有无,最近搜索显示在最前
     let historyList = uni.getStorageSync('goodsSearchHistory');
     let array = [];
@@ -121,13 +121,11 @@ const search = () => {
         array = historyList.filter(v => {
             return v != inputValue.value.trim();
         });
-        array.push(inputValue.value.trim());
-    } else {
+        if(inputValue.value.trim()) array.push(inputValue.value.trim());
+    } else if(inputValue.value.trim()) {
         array.push(inputValue.value.trim());
     }
     uni.setStorageSync('goodsSearchHistory', array);
-
-    if (config.value.default_word && inputValue.value.trim() == '') inputValue.value = config.value.default_word;
 
     redirect({
         url: '/addon/shop/pages/goods/list',

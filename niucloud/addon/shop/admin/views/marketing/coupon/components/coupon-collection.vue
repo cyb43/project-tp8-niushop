@@ -1,5 +1,6 @@
 <template>
-    <el-drawer v-model="showDialog" :title="popTitle" direction="rtl" :before-close="handleClose" class="collection-detail-drawer">
+    <el-drawer v-model="showDialog" :title="popTitle" direction="rtl" :before-close="handleClose"
+        class="collection-detail-drawer">
         <div class="main-container" v-loading="loading">
             <el-card class="box-card !border-none" shadow="never">
                 <el-row class="flex">
@@ -37,7 +38,7 @@
             </el-card>
 
             <el-card class="box-card !border-none mb-[10px] table-search-wrap" shadow="never">
-                <el-form :inline="true" :model="tableData.searchParam" ref="searchFormRef">
+                <el-form :inline="true" :model="tableData.searchParam" @submit.prevent ref="searchFormRef">
                     <el-form-item :label="t('memberInfo')" prop="keywords">
                         <el-input v-model.trim="tableData.searchParam.keywords" class="w-[240px]" :placeholder="t('memberInfoPlaceholder')" />
                     </el-form-item>
@@ -72,22 +73,22 @@
                             {{ row.use_time || '--' }}
                         </template>
                     </el-table-column>
-                    <el-table-column  :label="t('validity')" >
+                    <el-table-column :label="t('validity')">
                         <template #default="{ row }">
                             {{ row.create_time }}至{{ row.expire_time }}
                         </template>
                     </el-table-column>
                     <el-table-column :label="t('operation')" fixed="right" align="right">
                         <template #default="{ row }">
-                            <el-button type="primary" v-if="row.use_time != 0" link @click="showOrder(row)">{{ t('showOrder') }}</el-button>
+                            <el-button type="primary" v-if="row.use_time != 0" link @click="showOrder(row)">{{t('showOrder') }}</el-button>
                         </template>
                     </el-table-column>
                 </el-table>
                 <div class="mt-[16px] flex justify-end">
                     <el-pagination v-model:current-page="tableData.page" v-model:page-size="tableData.limit"
                         layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
-                        :page-sizes="[5,10,20,50,100]"
-                        @size-change="couponCollection()" @current-change="couponCollection" />
+                        :page-sizes="[5,10,20,50,100]" @size-change="couponCollection()"
+                        @current-change="couponCollection" />
                 </div>
             </div>
         </div>
@@ -99,22 +100,15 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getCouponRecords, getCouponInfo } from '@/addon/shop/api/marketing'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { FormInstance } from 'element-plus'
-import { ArrowLeft } from '@element-plus/icons-vue'
 
 const showDialog = ref(false)
 const loading = ref(false)
-const repeat = ref(false)
-let popTitle: string = '优惠券领取记录'
-let couponId = '';
+const popTitle: string = ref('优惠券领取记录')
+let couponId = ''
 
-const route = useRoute()
 const router = useRouter()
-
-const nickname_name_input = ref(true)
-const password_input = ref(true)
-const password_copy_input = ref(true)
 
 const handleClose = (done: () => void) => {
     showDialog.value = false;
@@ -150,7 +144,6 @@ const couponCollection = () => {
         tableData.loading = false
         tableData.data = res.data.data
         tableData.total = res.data.total
-        console.log("tableData",tableData,couponId);
     }).catch(() => {
         tableData.loading = false
     })

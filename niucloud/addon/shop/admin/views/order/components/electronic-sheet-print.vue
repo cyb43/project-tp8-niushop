@@ -1,17 +1,17 @@
 <template>
     <el-dialog v-model="showDialog" :title="t('electronicSheetPrintTitle')" :width="printDialogWidth" class="diy-dialog-wrap" :destroy-on-close="true" :close-on-click-modal="false">
 
-    <el-alert type="warning" :closable="false" class="!mb-[10px]">
-        <template #default>
-            <p>注意事项：</p>
-            <p>* 配送方式为物流配送的订单支持打印电子面单</p>
-            <p>* 无需物流、虚拟发货不支持打印电子面单</p>
-            <p>* 请对应物流公司选择面单模板</p>
-            <p>* 批量打印时，只能选择一种面单模板</p>
-            <p>* 单个打印时，如果有多个包裹，会展示商品信息，支持多包裹打印电子面单</p>
-            <p>* 多包裹打印时，请不要重复选择面单模板</p>
-        </template>
-    </el-alert>
+        <el-alert type="warning" :closable="false" class="!mb-[10px]">
+            <template #default>
+                <p>注意事项：</p>
+                <p>* 配送方式为物流配送的订单支持打印电子面单</p>
+                <p>* 无需物流、虚拟发货不支持打印电子面单</p>
+                <p>* 请对应物流公司选择面单模板</p>
+                <p>* 批量打印时，只能选择一种面单模板</p>
+                <p>* 单个打印时，如果有多个包裹，会展示商品信息，支持多包裹打印电子面单</p>
+                <p>* 多包裹打印时，请不要重复选择面单模板</p>
+            </template>
+        </el-alert>
 
         <el-form :model="formData" ref="formRef" :rules="formRules" class="page-form es-form" v-loading="loading">
 
@@ -25,117 +25,119 @@
                     </el-tabs>
 
                     <el-form-item :label="t('electronicSheetTemplate')">
-                        <el-select v-model="formData.list[currentPackageIndex].electronic_sheet_id" :placeholder="t('electronicSheetTemplatePlaceholder')" clearable class="input-width">
-                            <el-option v-for="(item) in electronicSheetData" :key="item.id" :label="item.template_name" :value="item.id" />
+                        <el-select v-model="formData.list[currentPackageIndex].electronic_sheet_id"
+                                   :placeholder="t('electronicSheetTemplatePlaceholder')" clearable class="input-width">
+                            <el-option v-for="(item) in electronicSheetData" :key="item.id" :label="item.template_name"
+                                       :value="item.id" />
                         </el-select>
                     </el-form-item>
 
                     <el-form-item :label="t('company')">
-					    <div class="truncate">{{ packageList[currentPackageIndex].company.company_name }}</div>
-				    </el-form-item>
+                        <div class="truncate">{{ packageList[currentPackageIndex].company.company_name }}</div>
+                    </el-form-item>
 
-				    <el-form-item :label="t('expressNumber')">
-					    <div class="truncate">{{ packageList[currentPackageIndex].express_number }}</div>
-				    </el-form-item>
+                    <el-form-item :label="t('expressNumber')">
+                        <div class="truncate">{{ packageList[currentPackageIndex].express_number }}</div>
+                    </el-form-item>
 
-				    <el-table :data="packageList[currentPackageIndex].order_goods" size="large">
-					    <el-table-column :label="t('goodsName')" align="left" width="300">
-						    <template #default="{ row }">
-							    <div class="flex">
-								    <div class="flex items-center w-[50px] h-[50px] mr-[10px]">
-									    <img class="w-[50px] h-[50px]" :src="img(row.goods_image_thumb_small)" />
-								    </div>
-								    <div class="flex flex-col flex-1">
-									    <p class="multi-hidden text-[14px]">{{ row.goods_name }}</p>
-									    <span class="text-[12px] text-[#999]">{{ row.sku_name }}</span>
-								    </div>
-							    </div>
-						    </template>
-					    </el-table-column>
-					    <el-table-column prop="price" :label="t('price')" min-width="50" align="left" />
-					    <el-table-column prop="num" :label="t('num')" min-width="50" align="right"/>
-				    </el-table>
+                    <el-table :data="packageList[currentPackageIndex].order_goods" size="large">
+                        <el-table-column :label="t('goodsName')" align="left" width="300">
+                            <template #default="{ row }">
+                                <div class="flex">
+                                    <div class="flex items-center w-[50px] h-[50px] mr-[10px]">
+                                        <img class="w-[50px] h-[50px]" :src="img(row.goods_image_thumb_small)" />
+                                    </div>
+                                    <div class="flex flex-col flex-1">
+                                        <p class="multi-hidden text-[14px]">{{ row.goods_name }}</p>
+                                        <span class="text-[12px] text-[#999]">{{ row.sku_name }}</span>
+                                    </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="price" :label="t('price')" min-width="50" align="left" />
+                        <el-table-column prop="num" :label="t('num')" min-width="50" align="right" />
+                    </el-table>
 
-			    </template>
+                </template>
 
-			    <template v-if="singlePrintData['delivery_id_' + currentPackageId] && singlePrintData['delivery_id_' + currentPackageId].length">
+                <template v-if="singlePrintData['delivery_id_' + currentPackageId] && singlePrintData['delivery_id_' + currentPackageId].length">
 
-				    <h3 class="my-[15px]">{{ t('electronicSheetPrintResult') }}</h3>
+                    <h3 class="my-[15px]">{{ t('electronicSheetPrintResult') }}</h3>
 
-				    <el-table :data="singlePrintData['delivery_id_' + currentPackageId]" size="large" class="table-top">
-					    <el-table-column :label="t('deliveryPackageNo')" min-width="80">
-						    <template #default="{ row }">
-							    <div>{{ row.delivery_id }}</div>
-						    </template>
-					    </el-table-column>
-					    <el-table-column :label="t('printStatus')" min-width="80">
-						    <template #default="{ row }">
-							    <el-tag class="cursor-pointer" :type="row.success ? 'success' : 'danger'">{{ row.success ? '成功' : '失败' }}</el-tag>
-						    </template>
-					    </el-table-column>
-					    <el-table-column :label="t('printResultCode')" min-width="80">
-						    <template #default="{ row }">
-							    <div>{{ row.result_code }}</div>
-						    </template>
-					    </el-table-column>
-					    <el-table-column :label="t('printRemark')" min-width="200">
-						    <template #default="{ row }">
-							    <div>{{ row.reason }}</div>
-						    </template>
-					    </el-table-column>
-					    <el-table-column :label="t('operation')" fixed="right" align="right" min-width="80">
-						    <template #default="{ row }">
-							    <el-button type="primary" link @click="printEvent(row)" v-if="row.success">{{ t('electronicSheetPrintOperation') }}</el-button>
-						    </template>
-					    </el-table-column>
+                    <el-table :data="singlePrintData['delivery_id_' + currentPackageId]" size="large" class="table-top">
+                        <el-table-column :label="t('deliveryPackageNo')" min-width="80">
+                            <template #default="{ row }">
+                                <div>{{ row.delivery_id }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :label="t('printStatus')" min-width="80">
+                            <template #default="{ row }">
+                                <el-tag class="cursor-pointer" :type="row.success ? 'success' : 'danger'">{{ row.success ? '成功' : '失败' }}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :label="t('printResultCode')" min-width="80">
+                            <template #default="{ row }">
+                                <div>{{ row.result_code }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :label="t('printRemark')" min-width="200">
+                            <template #default="{ row }">
+                                <div>{{ row.reason }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column :label="t('operation')" fixed="right" align="right" min-width="80">
+                            <template #default="{ row }">
+                                <el-button type="primary" link @click="printEvent(row)" v-if="row.success">{{ t('electronicSheetPrintOperation') }}</el-button>
+                            </template>
+                        </el-table-column>
 
-				    </el-table>
-			    </template>
+                    </el-table>
+                </template>
 
-		    </template>
+            </template>
 
-		    <!-- 多个订单打印 -->
-		    <template v-if="formData.print_type == 'multiple'">
+            <!-- 多个订单打印 -->
+            <template v-if="formData.print_type == 'multiple'">
 
-			    <el-form-item :label="t('electronicSheetTemplate')" prop="electronic_sheet_id">
-				    <el-select v-model="formData.electronic_sheet_id" :placeholder="t('electronicSheetTemplatePlaceholder')" clearable class="input-width">
-					    <el-option v-for="(item) in electronicSheetData" :key="item.id" :label="item.template_name" :value="item.id" />
-				    </el-select>
-			    </el-form-item>
+                <el-form-item :label="t('electronicSheetTemplate')" prop="electronic_sheet_id">
+                    <el-select v-model="formData.electronic_sheet_id" :placeholder="t('electronicSheetTemplatePlaceholder')" clearable class="input-width">
+                        <el-option v-for="(item) in electronicSheetData" :key="item.id" :label="item.template_name" :value="item.id" />
+                    </el-select>
+                </el-form-item>
 
-			    <el-table :data="multiplePrintData" size="large" class="table-top" v-if="multiplePrintData.length > 1">
-				    <el-table-column prop="order_no" :label="t('orderNo')" min-width="150" />
-				    <el-table-column :label="t('printStatus')" min-width="80">
-					    <template #default="{ row }">
-						    <el-tag class="cursor-pointer" :type="row.success ? 'success' : 'danger'">{{ row.success ? '成功' : '失败' }}</el-tag>
-					    </template>
-				    </el-table-column>
-				    <el-table-column :label="t('printResultCode')" min-width="80">
-					    <template #default="{ row }">
-						    <div>{{ row.result_code }}</div>
-					    </template>
-				    </el-table-column>
-				    <el-table-column :label="t('printRemark')" min-width="160">
-					    <template #default="{ row }">
-						    <div>{{ row.reason }}</div>
-					    </template>
-				    </el-table-column>
-				    <el-table-column :label="t('operation')" fixed="right" align="right" min-width="80">
-					    <template #default="{ row }">
-						    <el-button type="primary" link @click="printEvent(row)" v-if="row.success">{{ t('electronicSheetPrintOperation') }}</el-button>
-					    </template>
-				    </el-table-column>
+                <el-table :data="multiplePrintData" size="large" class="table-top" v-if="multiplePrintData.length > 1">
+                    <el-table-column prop="order_no" :label="t('orderNo')" min-width="150" />
+                    <el-table-column :label="t('printStatus')" min-width="80">
+                        <template #default="{ row }">
+                            <el-tag class="cursor-pointer" :type="row.success ? 'success' : 'danger'">{{ row.success ? '成功' : '失败' }}</el-tag>
+                        </template>
+                    </el-table-column>
+                    <el-table-column :label="t('printResultCode')" min-width="80">
+                        <template #default="{ row }">
+                            <div>{{ row.result_code }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column :label="t('printRemark')" min-width="160">
+                        <template #default="{ row }">
+                            <div>{{ row.reason }}</div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column :label="t('operation')" fixed="right" align="right" min-width="80">
+                        <template #default="{ row }">
+                            <el-button type="primary" link @click="printEvent(row)" v-if="row.success">{{ t('electronicSheetPrintOperation') }}</el-button>
+                        </template>
+                    </el-table-column>
 
-			    </el-table>
-		    </template>
+                </el-table>
+            </template>
         </el-form>
 
-	    <template #footer>
+        <template #footer>
             <span class="dialog-footer">
                 <el-button @click="showDialog = false">{{ t('cancel') }}</el-button>
                 <el-button type="primary" :loading="repeat" @click="confirm(formRef)">{{ t('confirm') }}</el-button>
             </span>
-	    </template>
+        </template>
 
     </el-dialog>
 </template>
@@ -149,7 +151,7 @@ import {
     printElectronicSheet
 } from '@/addon/shop/api/electronic_sheet'
 import { deliveryPackageList } from '@/addon/shop/api/order'
-import { loadCLodop,getLodop } from '@/utils/lodop'
+import { loadCLodop, getLodop } from '@/utils/lodop'
 import { img } from '@/utils/common'
 import { ElMessage, FormInstance } from 'element-plus'
 
@@ -157,15 +159,15 @@ const showDialog = ref(false)
 const loading = ref(false)
 const repeat = ref(false)
 
-getElectronicSheetConfig().then((res:any)=>{
-    if(res.data) {
+getElectronicSheetConfig().then((res: any) => {
+    if (res.data) {
         loadCLodop(res.data)
     }
 })
 
 const electronicSheetData = ref([])
 getElectronicSheetList({
-    status: 1,
+    status: 1
 }).then((res: any) => {
     if (res.data) {
         electronicSheetData.value = res.data;
@@ -196,21 +198,21 @@ const formRules = computed(() => {
 
 const emit = defineEmits(['complete'])
 
-const printDialogWidth:any = ref('460px')
+const printDialogWidth: any = ref('460px')
 
-const packageList:any = ref([]) // 包裹列表
-const currentPackageIndex:any = ref(0) // 当前选中包裹下标
-const currentPackageId:any = ref(0) // 当前选中包裹id
+const packageList: any = ref([]) // 包裹列表
+const currentPackageIndex: any = ref(0) // 当前选中包裹下标
+const currentPackageId: any = ref(0) // 当前选中包裹id
 
-const multiplePrintData:any = ref([]) // 多订单打印数据
-const singlePrintData:any = ref({}) //  单订单打印数据
+const multiplePrintData: any = ref([]) // 多订单打印数据
+const singlePrintData: any = ref({}) //  单订单打印数据
 
-const handleClick = (index:any)=>{
+const handleClick = (index: any) => {
     currentPackageIndex.value = parseInt(index);
     currentPackageId.value = formData.list[index].delivery_id
 }
 
-const setFormData = async (data: any = null) => {
+const setFormData = async(data: any = null) => {
     loading.value = true;
 
     // 初始化数据
@@ -278,7 +280,7 @@ const setFormData = async (data: any = null) => {
  * 确认
  * @param formEl
  */
-const confirm = async (formEl: FormInstance | undefined) => {
+const confirm = async(formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return;
 
     let LODOP = getLodop();
@@ -404,7 +406,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
     })
 }
 
-const printEvent = (data:any)=> {
+const printEvent = (data: any) => {
     let LODOP = getLodop();
     if (!LODOP) return;
 
@@ -430,7 +432,8 @@ defineExpose({
 .diy-dialog-wrap .el-form-item__label {
     height: auto !important;
 }
-.es-form .el-dialog__body .el-form-item{
-	margin-bottom: 0px !important;
+
+.es-form .el-dialog__body .el-form-item {
+    margin-bottom: 0px !important;
 }
 </style>

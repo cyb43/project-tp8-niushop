@@ -1,31 +1,25 @@
 <template>
     <div class="main-container">
         <el-card class="box-card !border-none" shadow="never">
+            <el-page-header :content="pageName" :icon="ArrowLeft" @back="$router.back()" />
+        </el-card>
 
-            <div class="flex justify-between items-center">
-                <div class="detail-head !m-0">
-                    <div class="left" @click="router.push('/shop/order/delivery')">
-                        <span class="iconfont iconxiangzuojiantou !text-xs"></span>
-                        <span class="ml-[1px]">{{ t('returnToPreviousPage') }}</span>
-                    </div>
-                    <span class="adorn">|</span>
-                    <span class="right">{{ pageName }}</span>
+        <el-card class="box-card mt-[15px] !border-none" shadow="never">
+            <el-card class="box-card !border-none my-[10px] pt-0 table-search-wrap" shadow="never">
+                <div class="flex justify-between items-center">
+                    <el-form :inline="true" :model="templateTable.searchParam" ref="searchFormRef">
+                        <el-form-item :label="t('templateName')" prop="template_name">
+                            <el-input v-model.trim="templateTable.searchParam.template_name" :placeholder="t('templateNamePlaceholder')" />
+                        </el-form-item>
+                        <el-form-item>
+                            <el-button type="primary" @click="loadTemplateList()">{{ t('search') }}</el-button>
+                            <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
+                        </el-form-item>
+                    </el-form>
+                    <el-button type="primary" @click="addEvent">
+                        {{ t('addTemplate') }}
+                    </el-button>
                 </div>
-                <el-button type="primary" @click="addEvent">
-                    {{ t('addTemplate') }}
-                </el-button>
-            </div>
-
-            <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
-                <el-form :inline="true" :model="templateTable.searchParam" ref="searchFormRef">
-                    <el-form-item :label="t('templateName')" prop="template_name">
-                        <el-input v-model.trim="templateTable.searchParam.template_name" :placeholder="t('templateNamePlaceholder')" />
-                    </el-form-item>
-                    <el-form-item>
-                        <el-button type="primary" @click="loadTemplateList()">{{ t('search') }}</el-button>
-                        <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
-                    </el-form-item>
-                </el-form>
             </el-card>
 
             <div class="mt-[10px]">
@@ -63,6 +57,7 @@ import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getShippingTemplatePageList, deleteShippingTemplate } from '@/addon/shop/api/delivery'
 import { ElMessageBox, FormInstance } from 'element-plus'
+import { ArrowLeft } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
 import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
 

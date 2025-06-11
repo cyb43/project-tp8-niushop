@@ -9,26 +9,22 @@
 // | Author: Niucloud Team
 // +----------------------------------------------------------------------
 
-namespace addon\shop\app\listener\marketing;
+namespace addon\shop\app\listener\goods;
 
 use addon\shop\app\dict\active\ActiveDict;
-use addon\shop\app\service\admin\marketing\DiscountService;
-use think\facade\Log;
+use addon\shop\app\service\core\goods\CoreGoodsActivePriceService;
 
 /**
- * 限时折扣
- * Class DiscountActiveEndAfter
+ * 获取商品展示价格
+ * Class CouponCheckListener
  * @package addon\shop\app\listener
  */
-class DiscountActiveEndAfter
+class GoodsShowPriceListener
 {
-    public function handle(array $params)
+    public function handle(array $param)
     {
-        $active_info = $params;
-        Log::write('DiscountActiveEndAfter:' . json_encode($active_info));
-        if (!empty($active_info) && $active_info[ 'active_class' ] == ActiveDict::DISCOUNT) {
-            ( new DiscountService() )->discountEndAfter($active_info[ 'active_id' ]);
-        }
-        return true;
+        $sku_info = $param[ 'sku_info' ];
+        $member_id = $param[ 'member_id' ];
+        return (new CoreGoodsActivePriceService())->getShowPrice($sku_info,$member_id);
     }
 }

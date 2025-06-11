@@ -19,7 +19,7 @@
                                     <text class="text-[32rpx] mr-[6rpx] price-font">.{{ parseFloat(goodsPrice).toFixed(2).split('.')[1] }}</text>
                                     <image class="h-[24rpx] ml-[6rpx] max-w-[60rpx]" v-if="priceType() == 'newcomer_price'" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
                                     <image class="h-[24rpx] ml-[6rpx] max-w-[44rpx]" v-if="priceType() == 'member_price'" :src="img('addon/shop/VIP.png')" mode="heightFix" />
-                                    <image class="h-[24rpx] ml-[6rpx] max-w-[72rpx]" v-if="priceType() == 'discount_price'" :src="img('addon/shop/discount.png')" mode="heightFix" />
+                                    <image class="h-[24rpx] ml-[6rpx] max-w-[80rpx]" v-if="priceType() == 'discount_price'" :src="img('addon/shop/discount.png')" mode="heightFix" />
                                 </view>
                                 <view class="text-[26rpx] leading-[32rpx] text-[var(--text-color-light6)] mt-[12rpx]">库存{{ goodsDetail.detail.stock }}{{ goodsDetail.goods.unit }}</view>
                             </view>
@@ -65,7 +65,7 @@
                                 <template #plus>
                                     <view class="relative w-[30rpx] h-[30rpx]" @click="addNumChange">
                                         <text class="text-[30rpx] nc-iconfont nc-icon-jiahaoV6xx font-500 absolute flex items-center justify-center -left-[8rpx] -bottom-[8rpx] -right-[8rpx] -top-[8rpx]"
-                                            :class="{ '!text-[var(--text-color-light9)]': buyNum >= maxBuy }"></text>
+                                            :class="{ '!text-[var(--text-color-light9)]': buyNum >= maxBuy || buyNum == 0 }"></text>
                                     </view>
                                 </template>
                             </u-number-box>
@@ -127,29 +127,22 @@ const minBuyShow = ref(0); // 起售
 // 商品价格
 const goodsPrice = computed(() => {
     let price = "0.00";
-    if (Object.keys(goodsDetail.value).length && goodsDetail.value.type == 'newcomer_discount' && goodsDetail.value.is_newcomer && goodsDetail.value.newcomer_price != goodsDetail.value.price && (Object.keys(cartSkuList.value).length ? parseInt(cartSkuList.value.num) + buyNum.value : buyNum.value) < 2) {
-        // 新人价
-        price = goodsDetail.value.newcomer_price;
-    } else if (Object.keys(goodsDetail.value).length && goodsDetail.value.type == 'discount' && Object.keys(goodsDetail.value.goods).length && goodsDetail.value.goods.is_discount && goodsDetail.value.sale_price != goodsDetail.value.price) {
-        price = goodsDetail.value.sale_price // 折扣价
-    } else if (Object.keys(goodsDetail.value).length && Object.keys(goodsDetail.value.goods).length && goodsDetail.value.goods.member_discount && getToken() && goodsDetail.value.member_price != goodsDetail.value.price) {
-        price = goodsDetail.value.member_price // 会员价
-    } else {
-        price = goodsDetail.value.price
-    }
+	if(goodsDetail.value.type == 'newcomer_discount' &&getToken()&&goodsDetail.value.newcomer_price){
+		price=goodsDetail.value.newcomer_price
+	}else{
+		price = goodsDetail.value.show_price
+	}
     return price;
 })
 
 // 价格类型
 const priceType = () => {
     let type = "";
-    if (goodsDetail.value.type == 'newcomer_discount' && Object.keys(goodsDetail.value).length && goodsDetail.value.is_newcomer && goodsDetail.value.newcomer_price != goodsDetail.value.price && getToken()) {
-        type = 'newcomer_price'// 新人
-    } else if (goodsDetail.value.type == 'discount' && Object.keys(goodsDetail.value).length && Object.keys(goodsDetail.value.goods).length && goodsDetail.value.goods.is_discount && goodsDetail.value.sale_price != goodsDetail.value.price) {
-        type = 'discount_price'// 折扣
-    } else if (Object.keys(goodsDetail.value).length && Object.keys(goodsDetail.value.goods).length && goodsDetail.value.goods.member_discount && getToken() && goodsDetail.value.member_price != goodsDetail.value.price) {
-        type = 'member_price' // 会员价
-    }
+	if(goodsDetail.value.type == 'newcomer_discount' &&getToken()&&goodsDetail.value.newcomer_price){
+		type='newcomer_price'
+	}else{
+		type = goodsDetail.value.show_type
+	}
     return type;
 }
 
@@ -176,6 +169,7 @@ const open = (type = "", fn = "") => {
 
 const goodsSkuInputFn = () => {
     setTimeout(() => {
+        buyNum.value = parseInt(buyNum.value)
         if (!buyNum.value || buyNum.value <= minBuy.value) {
             buyNum.value = minBuy.value || 1;
         }
@@ -191,6 +185,7 @@ const goodsSkuInputFn = () => {
 
 const goodsSkuBlurFn = () => {
     setTimeout(() => {
+        buyNum.value = parseInt(buyNum.value)
         if (!buyNum.value || buyNum.value <= minBuy.value) {
             buyNum.value = minBuy.value || 1;
         }
@@ -433,8 +428,8 @@ const confirm = () => {
                     data
                 ],
                 extend_data: {
-                    relate_id: '',
-                    activity_type: goodsDetail.value.type // 目前营销活动有，新人价、限时折扣
+                    relate_id: goodsDetail.value.show_type == 'discount_price'?goodsDetail.value.discount_info.discount_id:'',
+                    activity_type: goodsDetail.value.show_type == 'discount_price'?'discount':''
                 }
             },
             success: () => {
@@ -466,5 +461,8 @@ defineExpose({
 ::v-deep .u-number-box .u-number-box__slot {
     display: flex;
     align-items: center;
+}
+::v-deep .uni-scroll-view{
+    position:inherit;
 }
 </style>

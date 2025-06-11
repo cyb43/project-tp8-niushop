@@ -49,11 +49,9 @@ export function getCartSum(params: Record<string, any>) {
     return request.get(`shop/cart/sum`, params)
 }
 
-
 /**
  * 购物车计算
  */
 export function getCartCalculate(params: Record<string, any>) {
     return request.get(`shop/cart/calculate`, params)
-
 }

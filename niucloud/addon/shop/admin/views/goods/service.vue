@@ -69,6 +69,7 @@ import { getServePageList, deleteServe } from '@/addon/shop/api/goods'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import ServiceEdit from '@/addon/shop/views/goods/components/service-edit.vue'
 import { useRoute } from 'vue-router'
+import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
 
 const route = useRoute()
 const pageName = route.meta.title
@@ -101,11 +102,12 @@ const loadServeList = (page: number = 1) => {
         serveTable.loading = false
         serveTable.data = res.data.data
         serveTable.total = res.data.total
+        setTablePageStorage(serveTable.page, serveTable.limit, serveTable.searchParam)
     }).catch(() => {
         serveTable.loading = false
     })
 }
-loadServeList()
+loadServeList(getTablePageStorage(serveTable.searchParam).page)
 
 const editServeDialog: Record<string, any> | null = ref(null)
 

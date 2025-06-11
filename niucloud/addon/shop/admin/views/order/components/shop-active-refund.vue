@@ -3,11 +3,11 @@
         <div v-loading="loading">
             <el-alert type="warning" :closable="false" class="!mb-[10px]">
                 <template #default>
-                    <p>商家主动退款功能仅作为退款维权业务的补充功能，请勿过度依赖和使用。此功能支持多次退款操作。</p>
+                    <p>商家主动退款功能仅作为退款售后业务的补充功能，请勿过度依赖和使用。此功能支持多次退款操作。</p>
                     <p>如果订单项全部退款，运费将在最后一次退款时一并退还，同时使用的优惠券也将返还给用户，退款金额将原路返还至用户的支付账户。</p>
                 </template>
             </el-alert>
-            <el-form :model="formData" label-width="100px" ref="formRef" :rules="formRules" class="page-form mb-[30px]">
+            <el-form :model="formData" label-width="100px" ref="formRef" class="page-form mb-[30px]">
                 <el-form-item :label="t('refundMoney')">
                     <div class="text-[red]">
                         <span>￥{{ formData.refund_money }}</span>
@@ -75,12 +75,13 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, computed, nextTick } from 'vue'
+import { ref, reactive, nextTick } from 'vue'
 import { t } from '@/lang'
 import { img } from '@/utils/common'
 import { FormInstance, ElMessage } from 'element-plus'
 import { shopActiveRefund } from '@/addon/shop/api/order'
 import { cloneDeep } from 'lodash-es'
+
 const showDialog = ref(false)
 const loading = ref(false)
 

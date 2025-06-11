@@ -37,7 +37,7 @@
                 <div v-if="formData.rule_type === 'cycle'" class="ml-[120px] mb-[10px] mt-[-10px] text-[12px] text-[#999] leading-[20px]">{{ t('ruleTypeTipsTwo') }}</div>
 
                 <!-- 优惠设置 -->
-                <el-form-item :label="t('ruleJson')" prop="rule_json" class="" required>
+                <el-form-item :label="t('ruleJson')" prop="rule_json" required>
                 <!-- 活动层级 -->
                 <div class="el-form-item__content">
                     <div v-for="(level, index) in (formData.rule_type === 'cycle' ? [formData.rule_json[0]] : formData.rule_json)"  :key="index" class="activity-level">
@@ -257,7 +257,7 @@
                                                                     <el-image v-if="row.sku_image" class="w-[60px] h-[60px]" :src="img(row.sku_image)" fit="contain">
                                                                     <template #error>
                                                                         <div class="image-slot">
-                                                                        <img class="w-[60px] h-[60px]" src="@/addon/shop/assets/goods_default.png" />
+                                                                            <img class="w-[60px] h-[60px]" src="@/addon/shop/assets/goods_default.png" />
                                                                         </div>
                                                                     </template>
                                                                     </el-image>
@@ -423,7 +423,6 @@ import {deepClone, img} from '@/utils/common'
 
 const router = useRouter()
 const route = useRoute()
-const pageName = route.meta.title
 const id = route.query.id;
 const start_time = new Date()
 const end_time = new Date(new Date().setMinutes(new Date().getMinutes() + 10));

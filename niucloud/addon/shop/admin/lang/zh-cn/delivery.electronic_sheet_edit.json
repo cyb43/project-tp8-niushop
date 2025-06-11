@@ -21,7 +21,7 @@
   "isNotice": "快递员上门揽件",
   "yes": "是",
   "no": "否",
-  "isNoticeTips": "是否通知快递员上门揽件，跨越速运，京东快运必填",
+  "isNoticeTips": "是否通知快递员上门揽件，跨越速运，京东快运，电商标快，填舱标快，填舱电标等业务类型必填",
   "printStyle": "模板样式",
   "printStylePlaceholder": "请选择模板样式",
   "printStyleTips": "快递鸟模版规格(常用)",

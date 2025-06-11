@@ -79,7 +79,7 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getBrandPageList, deleteBrand, modifyBrandSort } from '@/addon/shop/api/goods'
-import { img, debounce } from '@/utils/common'
+import { img, debounce,setTablePageStorage,getTablePageStorage  } from '@/utils/common'
 import { ElMessageBox, FormInstance, ElMessage } from 'element-plus'
 import BrandEdit from '@/addon/shop/views/goods/components/brand-edit.vue'
 import { useRoute } from 'vue-router'
@@ -132,11 +132,12 @@ const loadBrandList = (page: number = 1) => {
         brandTable.loading = false
         brandTable.data = res.data.data
         brandTable.total = res.data.total
+        setTablePageStorage(brandTable.page, brandTable.limit, brandTable.searchParam)
     }).catch(() => {
         brandTable.loading = false
     })
 }
-loadBrandList()
+loadBrandList(getTablePageStorage(brandTable.searchParam).page)
 
 const editBrandDialog: Record<string, any> | null = ref(null)
 

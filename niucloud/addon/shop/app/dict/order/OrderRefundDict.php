@@ -37,6 +37,9 @@ class OrderRefundDict
     const FINISH = 8;
     //售后关闭
     const CLOSE = -1;
+
+    //商家主动关闭售后
+    const SHOP_ACTIVE_CLOSE_REFUND = -3;
     //部分退款
     const PARTIAL_REFUND = -2;
 
@@ -77,6 +80,7 @@ class OrderRefundDict
             self::STORE_REFUND_TRANSFERING => get_lang('dict_shop_order_refund_status.store_refund_transfering'),
             self::FINISH => get_lang('dict_shop_order_refund_status.finish'),
             self::CLOSE => get_lang('dict_shop_order_refund_status.close'),
+            self::SHOP_ACTIVE_CLOSE_REFUND => get_lang('dict_shop_order_refund_status.shop_active_close_refund'),
         ];
         if ($status == '') {
             return $data;

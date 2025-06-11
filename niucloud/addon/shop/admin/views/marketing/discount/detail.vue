@@ -121,7 +121,6 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="active_goods_order_money" :label="t('paymentAmount')" min-width="100" />
-                    
                     <el-table-column prop="active_goods_order_num" :label="t('orderCount')" min-width="100" />
                     <el-table-column prop="active_goods_member_num" :label="t('activeMemberNum')" min-width="100" />
                     <el-table-column prop="active_goods_success_num" :label="t('activeSuccessNum')" min-width="100" />
@@ -134,7 +133,6 @@
             </div>
             <div v-if="activeName == 'orderList'">
                 <el-form :inline="true" :model="orderParams.searchParam" ref="orderSearchFormRef">
-
                     <el-form-item :label="t('orderInfo')" prop='search_name'>
                         <el-input class="input-item" v-model.trim="orderParams.searchParam.search_name" />
                     </el-form-item>
@@ -345,7 +343,7 @@ const orderResetForm = (formEl: FormInstance | undefined) => {
     getActiveDiscountOrderPageListFn()
 }
 //活动会员
-const memberParams =  reactive({
+const memberParams = reactive({
     page: 1,
     limit: 10,
     total: 0,

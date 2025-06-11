@@ -5,7 +5,7 @@
             <el-row>
                 <!-- 左侧菜单栏 -->
                 <el-col :span="4" class="menu-column">
-                    <el-menu :default-active="activeMenu"  @select="handleMenuSelect">
+                    <el-menu :default-active="activeMenu" @select="handleMenuSelect">
                         <el-menu-item v-for="([key, value]) in Object.entries(setTypeList)" :key="key" :index="key">{{ value }}</el-menu-item>
                     </el-menu>
                 </el-col>
@@ -15,7 +15,7 @@
                     <!-- 商品标签 -->
                     <el-form-item v-if="activeMenu === 'label'" :label="t('label')">
                         <el-checkbox-group v-model="formData.label_ids">
-                            <el-checkbox :label="item.label_id" v-for="(item, index) in labelOptions" :key="index" >{{ item.label_name }}</el-checkbox>
+                            <el-checkbox :label="item.label_id" v-for="(item, index) in labelOptions" :key="index">{{ item.label_name }}</el-checkbox>
                         </el-checkbox-group>
                         <div class="ml-[10px]">
                             <span class="cursor-pointer text-primary mr-[10px]" @click="refreshGoodsLabel">{{ t('refresh') }}</span>
@@ -25,7 +25,7 @@
                     <!-- 商品服务 -->
                     <el-form-item v-if="activeMenu === 'service'" :label="t('label')">
                         <el-checkbox-group v-model="formData.service_ids">
-                            <el-checkbox :label="item.service_id" v-for="(item, index) in serviceOptions" :key="index" >{{ item.service_name }}</el-checkbox>
+                            <el-checkbox :label="item.service_id" v-for="(item, index) in serviceOptions" :key="index">{{ item.service_name }}</el-checkbox>
                         </el-checkbox-group>
                         <div class="ml-[10px]">
                             <span class="cursor-pointer text-primary mr-[10px]" @click="refreshGoodsService">{{ t('refresh') }}</span>
@@ -35,7 +35,10 @@
                     <!-- 虚拟销量 -->
                     <el-form-item v-if="activeMenu === 'virtual_sale_num'" :label="t('virtualSaleNum')" prop="virtual_sale_num">
                         <div>
-                            <el-input v-model.trim="formData.virtual_sale_num"  :placeholder="t('virtualSaleNumPlaceholder')" class="input-width" show-word-limit maxlength="8" clearable @keyup="filterNumber($event)" @blur="formData.virtual_sale_num = $event.target.value">
+                            <el-input v-model.trim="formData.virtual_sale_num"
+                                :placeholder="t('virtualSaleNumPlaceholder')" class="input-width" show-word-limit
+                                maxlength="8" clearable @keyup="filterNumber($event)"
+                                @blur="formData.virtual_sale_num = $event.target.value">
                                 <template #append>{{ formData.unit ? formData.unit : '件' }}</template>
                             </el-input>
                             <div class="mt-[10px] text-[12px] text-[#999] leading-[20px]">{{ t('virtualSaleNumDesc') }}</div>
@@ -43,11 +46,13 @@
                     </el-form-item>
                     <!-- 商品分类 -->
                     <el-form-item v-if="activeMenu === 'category'" prop="goods_category" :label="t('goodsCategory')">
-                        <el-cascader v-model="formData.goods_category" :options="goodsCategoryOptions" :props="goodsCategoryProps" clearable filterable @change="categoryHandleChange" />
-                            <div class="ml-[10px]">
-                                <span class="cursor-pointer text-primary mr-[10px]" @click="refreshGoodsCategory(true)">{{ t('refresh') }}</span>
-                                <span class="cursor-pointer text-primary" @click="toGoodsCategoryEvent">{{ t('addGoodsCategory') }}</span>
-                            </div>
+                        <el-cascader v-model="formData.goods_category" :options="goodsCategoryOptions"
+                            :placeholder="t('productClassificationPlaceholder')" :props="goodsCategoryProps" clearable
+                            filterable @change="categoryHandleChange" />
+                        <div class="ml-[10px]">
+                            <span class="cursor-pointer text-primary mr-[10px]" @click="refreshGoodsCategory(true)">{{ t('refresh') }}</span>
+                            <span class="cursor-pointer text-primary" @click="toGoodsCategoryEvent">{{ t('addGoodsCategory') }}</span>
+                        </div>
                     </el-form-item>
                     <!-- 商品品牌 -->
                     <el-form-item v-if="activeMenu === 'brand'" :label="t('goodsBrand')">
@@ -73,8 +78,8 @@
                     <el-form-item v-if="activeMenu === 'gift'" :label="t('isGift')">
                         <div>
                             <el-radio-group v-model="formData.is_gift">
-                                <el-radio :label= "1">{{ t('yes') }}</el-radio>
-                                <el-radio :label= "0">{{ t('no') }}</el-radio>
+                                <el-radio :label="1">{{ t('yes') }}</el-radio>
+                                <el-radio :label="0">{{ t('no') }}</el-radio>
                             </el-radio-group>
                             <div class="mt-[10px] text-[12px] text-[#999] leading-[20px]">{{ t('giftTips') }}</div>
                         </div>
@@ -101,12 +106,14 @@
                                 <el-radio label="fixed">{{ t('fixedShipping') }}</el-radio>
                             </el-radio-group>
                         </el-form-item>
-                        <el-form-item :label="t('deliveryMoney')" prop="delivery_money" v-show="formData.delivery_type.indexOf('express') != -1 && formData.is_free_shipping == 0 && formData.fee_type == 'fixed'">
+                        <el-form-item :label="t('deliveryMoney')" prop="delivery_money"
+                            v-show="formData.delivery_type.indexOf('express') != -1 && formData.is_free_shipping == 0 && formData.fee_type == 'fixed'">
                             <el-input v-model.trim="formData.delivery_money" clearable placeholder="0.00" class="input-width-short" maxlength="8">
                                 <template #append>{{ t('yuan') }}</template>
                             </el-input>
                         </el-form-item>
-                        <el-form-item :label="t('deliveryTemplateId')" prop="delivery_template_id" v-show="formData.delivery_type.indexOf('express') != -1 && formData.is_free_shipping == 0 && formData.fee_type == 'template'">
+                        <el-form-item :label="t('deliveryTemplateId')" prop="delivery_template_id"
+                            v-show="formData.delivery_type.indexOf('express') != -1 && formData.is_free_shipping == 0 && formData.fee_type == 'template'">
                             <el-select v-model="formData.delivery_template_id" :placeholder="t('deliveryTemplateIdPlaceholder')" filterable autocomplete="off" clearable>
                                 <el-option v-for="item in deliveryTemplateOptions" :key="item.template_id" :label="item.template_name" :value="item.template_id" />
                             </el-select>
@@ -125,9 +132,12 @@
                             </el-radio-group>
                         </el-form-item>
                         <el-form-item :label="t('stockNum')" prop="">
-                            <el-input v-model.trim="formData.stock" clearable placeholder="0" class="input-width-short" show-word-limit maxlength="8" @keyup="filterNumber($event)" @blur="formData.stock = $event.target.value" />
+                            <el-input v-model.trim="formData.stock" clearable placeholder="0" class="input-width-short"
+                                show-word-limit maxlength="8" @keyup="filterNumber($event)"
+                                @blur="formData.stock = $event.target.value" />
                         </el-form-item>
-                        <div class="mt-[10px] ml-[120px] text-[12px] text-[#999] leading-[20px]">{{ t('stockNumTips') }}</div>
+                        <div class="mt-[10px] ml-[120px] text-[12px] text-[#999] leading-[20px]">{{ t('stockNumTips') }}
+                        </div>
                     </div>
                     <!-- 万能表单 -->
                     <el-form-item v-if="activeMenu === 'diy_form'" :label="t('diyForm')">
@@ -156,7 +166,7 @@
 import { ref, reactive } from 'vue'
 import { t } from '@/lang'
 import { ElMessage, FormInstance } from 'element-plus'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { filterNumber } from '@/utils/common'
 import {
     getBrandList,
@@ -174,7 +184,6 @@ const emit = defineEmits(['load'])
 const showDialog = ref(false)
 const loading = ref(false)
 const activeMenu = ref('label')
-const route = useRoute()
 const router = useRouter()
 
 /**
@@ -343,7 +352,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
 }
 
 const handleMenuSelect = (index: string) => {
-  activeMenu.value = index
+    activeMenu.value = index
 }
 
 const setTypeList = reactive([])
@@ -529,7 +538,6 @@ const refreshGoodsPoster = (bool = false) => {
 
 refreshGoodsPoster()
 /** *****************商品海报-end *************************/
-
 
 // 配送方式复选框
 const deliveryTypeCheckBox = reactive([])

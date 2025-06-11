@@ -25,9 +25,11 @@
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue';
 import { useDiy } from '@/hooks/useDiy'
+import { useShare } from '@/hooks/useShare'
 import diyGroup from '@/addon/components/diy/group/index.vue'
 import useMemberStore from '@/stores/member'
 
+const { setShare } = useShare()
 // 会员信息
 const memberStore = useMemberStore()
 const userInfo = computed(() => memberStore.info)
@@ -45,6 +47,8 @@ diy.onLoad();
 
 // 监听页面显示
 diy.onShow((data: any) => {
+    let share = data.share ? JSON.parse(data.share) : null;
+    setShare(share);
     diyGroupRef.value?.refresh();
     if (userInfo.value) {
         useMemberStore().getMemberInfo()

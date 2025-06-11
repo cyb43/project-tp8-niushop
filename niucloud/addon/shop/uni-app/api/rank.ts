@@ -19,11 +19,3 @@ export function getRankConfig() {
 export function getRankComponentsGoodsList(params: Record<string, any>) {
     return request.get(`shop/rank/components`, params)
 }
-
-
-
-
- 
-
-
-

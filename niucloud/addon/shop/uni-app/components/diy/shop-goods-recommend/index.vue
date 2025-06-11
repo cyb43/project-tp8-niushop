@@ -3,7 +3,7 @@
         <view :style="warpCss" v-if="goodsNum">
             <view class="w-full">
                 <scroll-view :id="'warpStyle-'+diyComponent.id" class="whitespace-nowrap h-[341rpx] w-full" :scroll-x="true">
-                    <block v-for="(item,index) in goodsList" :key="index">
+                    <template v-for="(item,index) in goodsList" :key="index">
                         <view v-if="item.info" :id="'item'+index+diyComponent.id"
                               class="w-[224rpx] h-[341rpx] mr-[20rpx] inline-block bg-[#fff] box-border overflow-hidden"
                               :class="{'!mr-[0rpx]' : index == (goodsList.length-1)}" :style="itemCss+itemStyle"
@@ -29,7 +29,7 @@
                                         <view class="text-[var(--price-text-color)] font-bold price-font flex items-baseline leading-[40rpx] flex-1 justify-center">
                                             <view class="leading-[1] max-w-[105rpx] truncate" :style="{ color : diyComponent.priceStyle.mainColor }">
                                                 <text class="text-[18rpx] font-400 mr-[2rpx]">￥</text>
-                                                <text class="text-[28rpx] font-500">{{ parseFloat(diyGoods.goodsPrice(item.info.goodsSku)).toFixed(2) }}</text>
+                                                <text class="text-[28rpx] font-500">{{ parseFloat(diyGoods.goodsPrice(item.info)).toFixed(2) }}</text>
                                             </view>
                                         </view>
                                         <view class="w-[70rpx] box-border text-right text-[#fff] pr-[8rpx] text-[22rpx] font-500 leading-[44rpx] rounded-tr-[20rpx] rounded-br-[20rpx] rounded-tl-[24rpx] relative"
@@ -41,7 +41,7 @@
                                 </view>
                             </view>
                         </view>
-                    </block>
+                    </template>
                 </scroll-view>
 
             </view>
@@ -197,7 +197,7 @@ const refresh = () => {
                     obj.info = {
                         goods_cover_thumb_mid: '',
                         goodsSku: {
-                            price: '10.00'
+                            show_price: '10.00'
                         }
                     }
                     return obj

@@ -12,7 +12,7 @@
 namespace addon\shop\app\listener\refund_export;
 
 /**
- * 订单退款维权导出数据类型查询
+ * 订单退款售后导出数据类型查询
  * Class MemberExportTypeListener
  * @package app\listener\member
  */
@@ -22,7 +22,7 @@ class ShopOrderRefundExportTypeListener
     {
         return [
             'shop_order_refund' => [
-                'name' => '退款维权',
+                'name' => '退款售后',
                 'column' => [
                     'order_refund_no' => [ 'name' => '退款单号'],
                     'nickname' => [ 'name' => '会员昵称'],

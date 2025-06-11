@@ -26,7 +26,7 @@
                                         </el-icon>
                                     </li>
                                 </ul>
-                                <span class="text-primary text-[14px] cursor-pointer" @click="addSearch" v-if="searchList.length <= 10">{{ t('addSearch') }}</span>
+                                <span class="text-primary text-[14px] cursor-pointer" @click="addSearch" v-if="searchList.length < 10">{{ t('addSearch') }}</span>
                             </div>
                         </el-form-item>
                     </el-form>
@@ -41,9 +41,38 @@
                         </el-form-item>
                     </el-form>
                 </el-tab-pane>
+                <el-tab-pane :label="t('goodSort')" name="sort">
+                    <el-form  label-width="140px" class="page-form" v-loading="sortLoading">
+                        <el-form-item :label="t('sortType')">
+                            <div>
+                                <el-select v-model="sortData.sort_type" :placeholder="t('sortTypePlaceholder')">
+                                    <el-option  v-for="(label, key) in sortData.init.sort_type"  :key="key" :label="label" :value="key"></el-option>
+                                </el-select>
+                                <div class="text-[12px] text-[#999] flex flex-col leading-[20px] mt-1">
+                                    <span>{{ t('sortTypeTips') }}</span>
+                                </div>
+
+                            </div>
+                        </el-form-item>
+                        <el-form-item :label="t('sortColumn')">
+                            <div>
+                                <el-select v-model="sortData.sort_column" :placeholder="t('sortColumnPlaceholder')">
+                                    <el-option  v-for="(label, key) in sortData.init.sort_column"  :key="key"  :label="label" :value="key"></el-option>
+                                </el-select>
+                                <div class="text-[12px] text-[#999]">{{ t('sortColumnTips') }}</div>
+                            </div>
+                        </el-form-item>
+                        <el-form-item :label="t('defaultSort')">
+                            <div>
+                                <el-input v-model.trim="sortData.default_sort" clearable :placeholder="t('defaultSortPlaceholder')" class="input-width-short"  maxlength="8" />
+                                <div class="text-[12px] text-[#999]">{{ t('defaultSortTips') }}</div>
+                            </div>
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
             </el-tabs>
         </el-card>
-        <div class="fixed-footer-wrap" v-if="!loading || !codeLoading">
+        <div class="fixed-footer-wrap" v-if="!loading || !codeLoading || !sortLoading">
             <div class="fixed-footer">
                 <el-button type="primary" @click="onSave(formRef)">{{ t('save') }}</el-button>
             </div>
@@ -58,20 +87,30 @@ import { ElMessage, FormInstance } from 'element-plus'
 import { Rank } from '@element-plus/icons-vue'
 import Sortable from 'sortablejs'
 import { range } from 'lodash-es'
-import { getGoodsConfigSearch, setGoodsConfigSearch, getGoodsConfigUnique, setGoodsConfigUnique } from '@/addon/shop/api/goods'
+import { getGoodsConfigSearch, setGoodsConfigSearch, getGoodsConfigUnique, setGoodsConfigUnique, setGoodsConfigSort, getGoodsConfigSort } from '@/addon/shop/api/goods'
 
 const activeName = ref('search')
 const loading = ref(false)
 const codeLoading = ref(false)
+const sortLoading = ref(false)
 
 const formData = ref({
     default_word: '',
     search_words: []
 })
+
+const sortData = ref({
+    default_sort: '',
+    sort_type: '',
+    sort_column: '0',
+    init: {
+        sort_type: {},
+        sort_column: {}
+    }
+})
+
 const isEnable = ref<any>(-1)
-
 const formRef = ref<FormInstance>()
-
 const searchList = ref<any>([]) // 热门搜索
 
 onMounted(() => {
@@ -109,6 +148,14 @@ const getGoodsConfigUniqueFn = () => {
     })
 }
 getGoodsConfigUniqueFn()
+
+// 排序
+const getGoodsConfigSortFn = () => {
+    getGoodsConfigSort().then((res) => {
+        sortData.value = res.data
+    })
+}
+getGoodsConfigSortFn()
 
 const tabHandleClick = (tab: any) => {
     activeName.value = tab.props.name
@@ -193,10 +240,10 @@ const onSave = async (formEl: any) => {
                     loading.value = false
                     repeat.value = false
                 })
-            } else {
+            } else  if (activeName.value === 'code')  {
                 if (repeat.value) return
                 repeat.value = true
-                
+
                 codeLoading.value = true
                 setGoodsConfigUnique({
                     is_enable: isEnable.value
@@ -208,6 +255,19 @@ const onSave = async (formEl: any) => {
                     repeat.value = false
                     codeLoading.value = false
                 })
+            }else{
+                if (repeat.value) return
+                repeat.value = true
+
+                sortLoading.value = true
+                setGoodsConfigSort(sortData.value).then((res: any) => {
+                    getGoodsConfigSortFn()
+                    repeat.value = false
+                    sortLoading.value = false
+                }).catch(() => {
+                    repeat.value = false
+                    sortLoading.value = false
+                })
             }
         }
     })
@@ -215,6 +275,9 @@ const onSave = async (formEl: any) => {
 </script>
 
 <style  lang="scss" scoped>
+.input-width-short{
+    width: 190px;
+}
 .search-wrap {
     position: relative;
 

@@ -101,7 +101,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { img } from '@/utils/common'
+import { img ,setTablePageStorage,getTablePageStorage} from '@/utils/common'
 import { ElMessageBox, ElMessage, FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { cloneDeep } from 'lodash-es'
@@ -266,12 +266,13 @@ const loadGoodsList = (page: number = 1) => {
         goodsTable.loading = false
         goodsTable.data = res.data.data
         goodsTable.total = res.data.total
+        setTablePageStorage(goodsTable.page, goodsTable.limit, goodsTable.searchParam)
     }).catch(() => {
         goodsTable.loading = false
     })
 }
 
-loadGoodsList()
+loadGoodsList(getTablePageStorage(goodsTable.searchParam).page)
 
 // 恢复商品
 const recycleEvent = (data: any) => {

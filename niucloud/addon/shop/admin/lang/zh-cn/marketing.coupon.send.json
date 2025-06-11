@@ -1,0 +1,23 @@
+{
+  "selectCoupon": "选择的优惠券",
+  "sendNum": "每人发放数量",
+  "sendNumPrompt": "请输入每人发放数量",
+  "num": "张",
+  "sendNumTip": "不受优惠券库存限制",
+  "sendNumTipTwo": "输入框限制不能输入超过10",
+  "rangeType": "发放对象",
+  "memberInfo": "会员信息",
+  "mobile": "手机号",
+  "point": "积分",
+  "balance": "余额",
+  "memberLabel": "会员标签",
+  "memberLabelPlaceholder": "请选择会员标签",
+  "memberLevel": "会员等级",
+  "memberLevelPlaceholder": "请选择会员等级",
+  "memberLevelTip": "会员等级不能为空",
+  "memberTip": "会员不能为空",
+  "memberLabelTip": "会员标签不能为空",
+  "sendNumTipThree": "发放数量不能为空",
+  "sendNumTipFour": "每人发放数量要大于0小于10",
+  "sendNumTipFive": "输入格式不正确"
+}

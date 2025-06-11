@@ -85,6 +85,12 @@
                                     <image v-if="diyGoods.priceType(item) == 'member_price'"
                                            class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')"
                                            mode="heightFix" />
+									<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'"
+									       class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')"
+									       mode="heightFix" />
+									<image v-else-if="diyGoods.priceType(item) == 'discount_price'"
+									       class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')"
+									       mode="heightFix" />
                                 </view>
                                 <text class="text-[22rpx] mt-[20rpx] text-[var(--text-color-light9)]">
                                     已售{{ item.sale_num }}{{ item.unit }}
@@ -125,6 +131,8 @@
                                                 <text class="text-[24rpx] font-500">.{{ diyGoods.goodsPrice(item).toFixed(2).split('.')[1] }}</text>
                                             </view>
                                             <image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+											<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'" class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+											<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	 
                                         </view>
                                         <text class="text-[22rpx] text-[var(--text-color-light9)] mt-[20rpx]">已售{{ item.sale_num }}{{ item.unit }}</text>
                                     </view>
@@ -138,10 +146,10 @@
                                 <image v-if="item.goods_cover_thumb_mid"
                                        class="w-[100%] h-[344rpx] rounded-tl-[var(--rounded-mid)] rounded-tr-[var(--rounded-mid)]"
                                        :src="img(item.goods_cover_thumb_mid)" :mode="'aspectFill'"
-                                       @error="item.goods_cover_thumb_mid='static/resource/images/diy/shop_default.jpg'"></image>
+                                       @error="item.goods_cover_thumb_mid='static/resource/images/diy/shop_default.jpg'" />
                                 <image v-else class="w-[100%] h-[344rpx] rounded-tl-[var(--rounded-mid)] rounded-tr-[var(--rounded-mid)]"
                                        :src="img('static/resource/images/diy/shop_default.jpg')"
-                                       :mode="'aspectFill'"></image>
+                                       :mode="'aspectFill'" />
                                 <view class="px-[20rpx] flex-1 pt-[16rpx] pb-[24rpx] flex flex-col justify-between">
                                     <view class="text-[#303133] leading-[40rpx] text-[28rpx] multi-hidden">
                                         <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">
@@ -165,6 +173,8 @@
                                                 <text class="text-[24rpx] font-500">.{{ diyGoods.goodsPrice(item).toFixed(2).split('.')[1] }}</text>
                                             </view>
                                             <image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+											<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+											<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	 
                                         </view>
                                         <text class="mt-[20rpx] text-[22rpx] text-[var(--text-color-light9)]">已售{{ item.sale_num }}{{ item.unit }}</text>
                                     </view>
@@ -184,7 +194,7 @@
 <script setup lang="ts">
 import { reactive, ref, onMounted } from 'vue'
 import { t } from '@/locale'
-import { redirect, img } from '@/utils/common';
+import { redirect, img, handleOnloadParams } from '@/utils/common';
 import { getGoodsCategoryTree, getGoodsPages } from '@/addon/shop/api/goods';
 import MescrollBody from '@/components/mescroll/mescroll-body/mescroll-body.vue';
 import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.vue';
@@ -209,6 +219,10 @@ const searchType = ref('all');
 //列表类型
 const listType = ref(true)
 onLoad(async(option: any) => {
+    // #ifdef MP-WEIXIN
+    // 处理小程序场景值参数
+    option = handleOnloadParams(option);
+    // #endif
     currGoodsCategory.value = option.curr_goods_category || ''
     goods_name.value = option.goods_name ? decodeURIComponent(option.goods_name) : ''
     coupon_id.value = option.coupon_id || ''

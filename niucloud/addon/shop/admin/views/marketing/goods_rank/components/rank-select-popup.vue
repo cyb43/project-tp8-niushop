@@ -36,7 +36,7 @@
 
         <div class="mt-[16px] flex">
             <div class="flex items-center flex-1">
-                <div class="layui-table-bottom-left-container mr-[10px]" v-show="selectRankNum">
+                <div class="mr-[10px]" v-show="selectRankNum">
                     <span>{{ t('goodsSelectPopupBeforeTip') }}</span>
                     <span class="text-primary mx-[2px]">{{ selectRankNum }}</span>
                     <span>{{ t('rankSelectPopupAfterTip') }}</span>
@@ -114,9 +114,6 @@ const rankTable = reactive({
 const searchFormRef = ref()
 
 const rankListTableRef = ref()
-
-// 选中数据
-const multipleSelection: any = ref([])
 
 // 监听表格复选框
 const handleSelectChange = (selection: any, row: any) => {
@@ -203,7 +200,7 @@ const loadRankList = (page: number = 1, callback: any = null) => {
 
 }
 
-const resetForm = (formEl: FormInstance | undefined) => {
+const resetForm = (formEl: any) => {
     if (!formEl) return
     formEl.resetFields()
     rankTable.searchParam.verify_rank_ids = '';

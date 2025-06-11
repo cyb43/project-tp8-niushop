@@ -13,7 +13,6 @@ namespace addon\shop\app\listener\marketing;
 
 use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\job\marketing\NewcomerSaveAfter;
-use addon\shop\app\service\admin\marketing\DiscountService;
 use think\facade\Log;
 
 /**

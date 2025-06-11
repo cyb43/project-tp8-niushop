@@ -15,7 +15,9 @@
                                 <text class="text-[32rpx] font-bold price-font mr-[4rpx]">￥</text>
                                 <text class="text-[48rpx] price-font">{{ parseFloat(goodsPrice(detail)).toFixed(2).split('.')[0] }}</text>
                                 <text class="text-[32rpx] price-font">.{{ parseFloat(goodsPrice(detail)).toFixed(2).split('.')[1] }}</text>
-                                <image class="h-[24rpx] ml-[6rpx] max-w-[44rpx]" v-if="priceType(detail) == 'member_price'" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+								<image v-if="priceType(detail) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+								<image v-else-if="priceType(detail) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+								<image v-else-if="priceType(detail) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	 
                             </view>
                             <view class="text-[26rpx] leading-[32rpx] text-[#303133] mt-[12rpx]">库存{{ detail.stock }}{{ goodsDetail.goods.unit }}</view>
                         </view>
@@ -208,43 +210,43 @@ const goodsDetail = computed(() => {
                 }
             })
         }
-    }
-    /************************** 限购-start **************************/
-    maxBuy.value = detail.value.stock
-    // 限购 - 是否开启限购
-    if (data.goods.is_limit) {
-        if (data.goods && data.goods.max_buy) {
-            let max_buy = 0;
-            if (data.goods.limit_type == 1) { //单次限购
-                max_buy = data.goods.max_buy;
-            } else { // 单人限购
-                let buyVal = data.goods.max_buy - (data.has_buy || 0);
-                max_buy = buyVal > 0 ? buyVal : 0;
-            }
+        /************************** 限购-start **************************/
+        maxBuy.value = detail.value.stock
+        // 限购 - 是否开启限购
+        if (data.goods.is_limit) {
+            if (data.goods && data.goods.max_buy) {
+                let max_buy = 0;
+                if (data.goods.limit_type == 1) { //单次限购
+                    max_buy = data.goods.max_buy;
+                } else { // 单人限购
+                    let buyVal = data.goods.max_buy - (data.has_buy || 0);
+                    max_buy = buyVal > 0 ? buyVal : 0;
+                }
 
-            if (max_buy > detail.value.stock) {
-                maxBuy.value = detail.value.stock
-            } else if (max_buy <= detail.value.stock) {
-                maxBuy.value = max_buy;
+                if (max_buy > detail.value.stock) {
+                    maxBuy.value = detail.value.stock
+                } else if (max_buy <= detail.value.stock) {
+                    maxBuy.value = max_buy;
+                }
+            }
+            // 仅用于展示
+            maxBuyShow.value = data.goods.max_buy; // 限购
+            // 限购开启且最大购买变为零时，初始值也应该是零
+            if (maxBuy.value == 0) {
+                buyNum.value = 0;
             }
         }
+        // 起售
+        minBuy.value = data.goods.min_buy;
+        buyNum.value = minBuy.value > 0 ? data.goods.min_buy : 1;
         // 仅用于展示
-        maxBuyShow.value = data.goods.max_buy; // 限购
-        // 限购开启且最大购买变为零时，初始值也应该是零
-        if (maxBuy.value == 0) {
+        minBuyShow.value = data.goods.min_buy;
+        // 起售大于库存，初始值也应该是零
+        if (minBuy.value > detail.value.stock) {
             buyNum.value = 0;
         }
+        /************************** 限购-end **************************/
     }
-    // 起售
-    minBuy.value = data.goods.min_buy;
-    buyNum.value = minBuy.value > 0 ? data.goods.min_buy : 1;
-    // 仅用于展示
-    minBuyShow.value = data.goods.min_buy;
-    // 起售大于库存，初始值也应该是零
-    if (minBuy.value > detail.value.stock) {
-        buyNum.value = 0;
-    }
-    /************************** 限购-end **************************/
     return data;
 })
 
@@ -314,18 +316,18 @@ const save = () => {
         cartStore.reduce({
             id: detail.value.cart_id || '',
             goods_id: detail.value.goods_id,
-            sale_price: detail.value.sale_price,
+            sale_price: detail.value.show_price,
             sku_id: detail.value.sku_id
         });
     } else {
 
-        let price = 0
+        // let price = 0
 
-        if (goodsDetail.value.goods.member_discount && getToken() && detail.value.member_price != detail.value.price) {
-            price = detail.value.member_price ? detail.value.member_price : detail.value.price // 会员价
-        } else {
-            price = detail.value.price
-        }
+        // if (goodsDetail.value.goods.member_discount && getToken() && detail.value.member_price != detail.value.price) {
+        //     price = detail.value.member_price ? detail.value.member_price : detail.value.price // 会员价
+        // } else {
+        //     price = detail.value.price
+        // }
 
         // 购物车添加数量
         cartStore.increase({
@@ -333,7 +335,7 @@ const save = () => {
             goods_id: detail.value.goods_id,
             sku_id: detail.value.sku_id,
             stock: detail.value.stock,
-            sale_price: price,
+            sale_price: detail.value.show_price,
             num: buyNum.value
 
         }, 0, () => {
@@ -350,22 +352,14 @@ const save = () => {
 // 商品价格
 const goodsPrice = (data: any) => {
     let price = "0.00";
-    if (goodsDetail.value.goods.member_discount && getToken() && data.member_price != data.price) {
-        price = data.member_price ? data.member_price : data.price // 会员价
-    } else {
-        price = data.price
-    }
+	price = data.show_price
     return price;
 }
 
 // 价格类型
 const priceType = (data: any) => {
     let type = "";
-    if (goodsDetail.value.goods.member_discount && getToken() && data.member_price != data.price) {
-        type = 'member_price' // 会员价
-    } else {
-        type = ""
-    }
+	type = data.show_type
     return type;
 }
 

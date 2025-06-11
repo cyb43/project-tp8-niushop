@@ -17,7 +17,7 @@
                 </view>
                 <ns-goods-recommend></ns-goods-recommend>
             </view>
-            <block v-else>
+            <template v-else>
                 <view class="flex-1 h-0">
                     <scroll-view class="scroll-height " :scroll-y="true">
                         <view class="py-[var(--top-m)] sidebar-margin">
@@ -31,7 +31,7 @@
                                     <text @click="isEdit = !isEdit" class="text-[var(--text-color-light6)] text-[24rpx]">{{ isEdit ? '完成' : '管理' }}</text>
                                 </view>
                                 <u-swipe-action ref="swipeActive">
-                                    <block v-for="(item, index) in cartList">
+                                    <template v-for="(item, index) in cartList">
                                         <view v-if="item.goodsSku" class="py-[20rpx] overflow-hidden w-full">
                                             <u-swipe-action-item :options="cartOptions" @click="swipeClick(index,item)">
                                                 <view class="flex px-[var(--pad-sidebar-m)]" @click.stop="selectOnlyGoods(item)">
@@ -62,7 +62,7 @@
                                                                 <view class="base-tag" v-else-if="tagItem.style_type == 'diy' || !tagItem.icon" :style="diyGoods.baseTagStyle(tagItem)">{{ tagItem.label_name }}</view>
                                                             </template>
                                                         </view>
-                                                        <view v-if="item.manjian_info && Object.keys(item.manjian_info).length && item.manjian_info.is_show"
+                                                        <view v-if="item.manjian_info && Object.keys(item.manjian_info).length && item.manjian_info.is_join"
                                                             class="flex items-center mt-[8rpx] mb-[auto]"
                                                             @click.stop="manjianOpenFn(item.manjian_info)">
                                                             <view class="bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-[6rpx] text-[20rpx] flex items-center justify-center w-[88rpx] h-[36rpx] mr-[6rpx]">满减送</view>
@@ -106,13 +106,12 @@
                                                 </view>
                                             </u-swipe-action-item>
                                         </view>
-                                    </block>
+                                    </template>
 
                                 </u-swipe-action>
                             </view>
                             <view class="bg-[#fff] pb-[10rpx] box-border rounded-[var(--rounded-big)] mt-[var(--top-m)]" v-if="invalidList.length">
-                                <view
-                                    class="flex mx-[var(--pad-sidebar-m)] pt-[var(--pad-top-m)] justify-between items-center box-border font-400 text-[#303133] text-[24rpx] mb-[24rpx] leading-[30rpx]">
+                                <view class="flex mx-[var(--pad-sidebar-m)] pt-[var(--pad-top-m)] justify-between items-center box-border font-400 text-[#303133] text-[24rpx] mb-[24rpx] leading-[30rpx]">
                                     <view class="flex items-center text-[24rpx] text-[#333]">
                                         <text>共</text>
                                         <text class="text-[28rpx] text-[var(--price-text-color)]">{{ invalidList.length }}</text>
@@ -159,7 +158,7 @@
                         <ns-goods-recommend></ns-goods-recommend>
                     </scroll-view>
                 </view>
-            </block>
+            </template>
         </view>
 
         <!-- 优惠明细 -->
@@ -264,7 +263,7 @@ import { ref, computed, nextTick } from 'vue'
 import useMemberStore from '@/stores/member'
 import { useLogin } from '@/hooks/useLogin'
 import { onShow } from '@dcloudio/uni-app'
-import { img, redirect, getToken } from '@/utils/common'
+import { img, redirect } from '@/utils/common'
 import useCartStore from '@/addon/shop/stores/cart'
 import { getCartGoodsList, getCartCalculate } from '@/addon/shop/api/cart'
 import bindMobile from '@/components/bind-mobile/bind-mobile.vue';
@@ -637,11 +636,7 @@ const deleteInvalidList = () => {
 // 商品价格
 const goodsPrice = (data: any) => {
     let price = "0.00";
-    if (data.goods.member_discount && getToken() && data.goodsSku.member_price != data.goodsSku.price) {
-        price = data.goodsSku.member_price ? data.goodsSku.member_price : data.goodsSku.price // 会员价
-    } else {
-        price = data.goodsSku.price
-    }
+	price = data.goodsSku.show_price
     return price;
 }
 </script>

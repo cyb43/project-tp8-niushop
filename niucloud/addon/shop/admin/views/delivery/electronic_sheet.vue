@@ -4,9 +4,7 @@
 
             <div class="flex justify-between items-center mb-[5px]">
                 <span class="text-lg">{{pageName}}</span>
-                <el-button type="primary" @click="addEvent">
-                    {{ t('addElectronicSheet') }}
-                </el-button>
+                <el-button type="primary" @click="addEvent">{{ t('addElectronicSheet') }}</el-button>
             </div>
 
             <el-tabs model-value="/shop/delivery/electronic_sheet" @tab-change="handleClick">
@@ -44,7 +42,7 @@
                             <span class="ml-[8px]">{{row.template_name}}</span>
                        </template>
                     </el-table-column>
-                        
+
                     <el-table-column prop="express_company_id" :label="t('expressCompany')" min-width="120" :show-overflow-tooltip="true">
                         <template #default="{ row }">
                             <div>{{ row.company.company_name }}</div>
@@ -58,7 +56,7 @@
                             <div v-if="row.status == 0">{{ t('statusOff') }}</div>
                         </template>
                     </el-table-column>
-                    
+
                     <el-table-column :label="t('operation')" fixed="right" min-width="80" align="right">
                        <template #default="{ row }">
                            <el-button type="primary" link v-if="!row.is_default" @click="setDefaultEvent(row.id)">{{ t('setDefault') }}</el-button>
@@ -86,6 +84,7 @@ import { getElectronicSheetPageList, deleteElectronicSheet, setDefaultElectronic
 import { ElMessageBox,FormInstance } from 'element-plus'
 import { useRoute,useRouter } from 'vue-router'
 import { getCompanyList } from '@/addon/shop/api/delivery'
+import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
 
 const route = useRoute()
 const router = useRouter()
@@ -124,12 +123,13 @@ const loadList = (page: number = 1) => {
         tableData.loading = false
         tableData.data = res.data.data
         tableData.total = res.data.total
+        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam)
     }).catch(() => {
         tableData.loading = false
     })
 }
 
-loadList()
+loadList(getTablePageStorage(tableData.searchParam).page)
 
 const companyList = ref([])
 

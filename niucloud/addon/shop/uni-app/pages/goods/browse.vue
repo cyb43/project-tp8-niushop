@@ -19,8 +19,7 @@
         </view>
         <mescroll-body ref="mescrollRef" top="76" bottom="168" @init="mescrollInit" :down="{ use: false }" @up="getBrowseListFn">
             <view v-if="browseList.length">
-                <view class="bg-[#fff] mb-[20rpx] pt-[30rpx] px-[20rpx]" v-for="(item,index) in browseList"
-                      :key="index">
+                <view class="bg-[#fff] mb-[20rpx] pt-[30rpx] px-[20rpx]" v-for="(item,index) in browseList" :key="index">
                     <view class="flex items-center h-[34rpx]  mb-[20rpx]">
                         <view class="self-center w-[58rpx]  flex items-center" v-if="isEdit" @click.stop="isSelectGroup(item)">
                             <view class="bg-[#fff] w-[34rpx] h-[34rpx] rounded-[17rpx] flex items-center justify-center">
@@ -51,8 +50,11 @@
                             </view>
                             <view class="text-[var(--price-text-color)] price-font">
                                 <text class="text-[24rpx] font-500">￥</text>
-                                <text class="text-[40rpx] font-500">{{ parseFloat(subItem.price).toFixed(2).split('.')[0] }}</text>
-                                <text class="text-[24rpx] font-500">.{{ parseFloat(subItem.price).toFixed(2).split('.')[1] }}</text>
+                                <text class="text-[40rpx] font-500">{{ parseFloat(subItem.show_price).toFixed(2).split('.')[0] }}</text>
+                                <text class="text-[24rpx] font-500">.{{ parseFloat(subItem.show_price).toFixed(2).split('.')[1] }}</text>
+                                <image v-if="subItem.show_type == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
+                                <image v-else-if="subItem.show_type  == 'newcomer_price'" class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
+                                <image v-else-if="subItem.show_type  == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />
                             </view>
                         </view>
                     </view>
@@ -73,7 +75,7 @@
             <view class="flex h-[100rpx] items-center  justify-between pl-[30rpx] pr-[20rpx]">
                 <view class="flex items-center" @click="allChange">
                     <text class="self-center iconfont text-primary text-[34rpx] mr-[10rpx] w-[34rpx] h-[34rpx] rounded-[17rpx] overflow-hidden flex-shrink-0"
-                        :class="{'iconxuanze1': isSelectAll, 'bg-color': !isSelectAll }  "></text>
+                        :class="{'iconxuanze1': isSelectAll, 'bg-color': !isSelectAll } "></text>
                     <text class="font-400 text-[#303133] text-[26rpx]">全选</text>
                 </view>
                 <button class="w-[180rpx] h-[70rpx] font-500 text-[26rpx] leading-[70rpx] !text-[#fff] m-0 rounded-full primary-btn-bg remove-border"

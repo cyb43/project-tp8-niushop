@@ -3,7 +3,7 @@
         <el-card class="card !border-none mb-[15px]" shadow="never">
             <el-page-header :content="pageName" :icon="ArrowLeft" @back="back" />
         </el-card>
-        
+
         <el-card class="box-card !border-none" shadow="never">
             <el-form label-width="120px" ref="formRef" :rules="formRules" :model="formData" class="page-form" v-loading="loading">
                 <!-- <h3 class="panel-title">{{t('basicSettings')}}</h3> -->
@@ -46,8 +46,7 @@
                             {{ defaultDeliveryAddress ? defaultDeliveryAddress.full_address : t('defaultDeliveryAddressEmpty') }}
                             <el-button type="primary" @click="router.push('/shop/order/address')" link class="ml-[10px]">{{ defaultDeliveryAddress ? t('update') : t('toSetting') }}</el-button>
                         </div>
-                        <div class="text-error leading-none" v-if="formData.center.lat && defaultDeliveryAddress && (formData.center.lat != defaultDeliveryAddress.lat || formData.center.lng != defaultDeliveryAddress.lng)">
-                            {{ t('deliveryAddressChange') }}</div>
+                        <div class="text-error leading-none" v-if="formData.center.lat && defaultDeliveryAddress && (formData.center.lat != defaultDeliveryAddress.lat || formData.center.lng != defaultDeliveryAddress.lng)">{{ t('deliveryAddressChange') }}</div>
                     </div>
                 </el-form-item>
                 <el-form-item :label="t('feeType')">
@@ -126,7 +125,7 @@
                                     <el-button type="primary" link class="absolute z-1 top-[10px] right-[10px]" @click.stop="deleteArea(index)">{{ t('delete') }}</el-button>
                                 </div>
                                 <div class="p-[10px] text-center">
-                                    <el-button type="default" plain @click="addArea">{{ t('addDeliveryArea') }}</el-button>
+                                    <el-button plain @click="addArea">{{ t('addDeliveryArea') }}</el-button>
                                 </div>
                             </el-scrollbar>
                         </div>
@@ -146,6 +145,7 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, onBeforeUnmount,toRaw } from 'vue'
 import { t } from '@/lang'
+import { ArrowLeft } from "@element-plus/icons-vue"
 import { useRoute, useRouter } from 'vue-router'
 import { getMap } from '@/app/api/sys'
 import { guid, filterDigit, deepClone } from '@/utils/common'
@@ -294,7 +294,7 @@ getLocal().then(({ data }) => {
     if (data) Object.assign(formData.value, data)
     formData.value.time_week = formData.value.time_week?formData.value.time_week.split(','):[]
 }).catch(()=>{
-    loading.value = false 
+    loading.value = false
 })
 
 onMounted(() => {
@@ -397,7 +397,7 @@ const onSave = async (formEl: FormInstance | undefined) => {
 
         if (valid) {
             loading.value = true
-            
+
             formData.value.center = {
                 lat: defaultDeliveryAddress.value.lat,
                 lng: defaultDeliveryAddress.value.lng

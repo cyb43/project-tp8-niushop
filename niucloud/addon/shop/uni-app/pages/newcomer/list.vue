@@ -1,6 +1,6 @@
 <template>
     <view class="min-h-[100vh] bg-[#f6f6f6] overflow-hidden" :style="themeColor()">
-        <block v-if="Object.keys(configInfo).length &&configInfo.active_status =='active'">
+        <template v-if="Object.keys(configInfo).length &&configInfo.active_status =='active'">
             <mescroll-body ref="mescrollRef" @init="mescrollInit" :down="{ use: false }" @up="getGoodsListFn">
                 <view class="marketing-head" v-if="!pageLoading">
                     <!-- #ifdef MP-WEIXIN -->
@@ -60,7 +60,7 @@
                         <view class="w-[250rpx] h-[250rpx] flex items-center justify-center">
                             <image v-if="item.goods_cover" class="w-[250rpx] h-[250rpx] rounded-[var(--rounded-mid)]"
                                    :src="img(item.goods_cover_thumb_mid)" :mode="'aspectFill'"
-                                   @error="item.goods_cover_thumb_mid='static/resource/images/diy/shop_default.jpg'"></image>
+                                   @error="item.goods_cover_thumb_mid='static/resource/images/diy/shop_default.jpg'" />
                             <image v-else class="w-[250rpx] h-[250rpx] rounded-[var(--rounded-mid)]"
                                    :src="img('static/resource/images/diy/shop_default.jpg')"
                                    :mode="'aspectFill'"/>
@@ -77,26 +77,26 @@
                                     <text class="text-[36rpx] truncate max-w-[160rpx]">{{ parseFloat(item.goodsSku.newcomer_price).toFixed(2) }}</text>
                                 </view>
                                 <image class="w-[26rpx] h-[54rpx]" :src="img('addon/shop/newcomer/btn_02.png')" mode="heightFix"/>
-                                <image class="w-[84rpx] h-[54rpx] relative ml-[-5rpx] z-2" :src="img('addon/shop/newcomer/btn_03.png')" mode="aspectFit"></image>
+                                <image class="w-[84rpx] h-[54rpx] relative ml-[-5rpx] z-2" :src="img('addon/shop/newcomer/btn_03.png')" mode="aspectFit" />
                             </view>
                         </view>
                     </view>
                 </view>
                 <mescroll-empty v-else-if="!goodsList.length && loading" :option="{tip : '暂无商品，请看看其他商品吧！', btnText:'去逛逛'}" @emptyclick="redirect({ url: '/addon/shop/pages/goods/list' })"></mescroll-empty>
             </mescroll-body>
-        </block>
-        <block v-if="!pageLoading && Object.keys(configInfo).length && configInfo.active_status !='active'">
+        </template>
+        <template v-if="!pageLoading && Object.keys(configInfo).length && configInfo.active_status !='active'">
             <top-tabbar :data="pageNullParam" class="top-header" />
             <mescroll-empty :option="{tip : '活动未开启,请看看其他商品吧！', btnText:'去逛逛'}" @emptyclick="redirect({ url: '/addon/shop/pages/index' })"></mescroll-empty>
-        </block>
+        </template>
         <view @touchmove.prevent.stop>
             <u-popup :show="newcomerPopup" @close="closeFn" mode="center" round="var(--rounded-big)">
                 <view class="w-[570rpx] px-[32rpx] popup-common center">
                     <view class="title">活动规则</view>
                     <scroll-view :scroll-y="true" class="px-[30rpx] box-border max-h-[260rpx]" v-if="configInfo.active_desc">
-                        <block v-for="(item) in configInfo.active_desc.split('\n')">
+                        <template v-for="(item) in configInfo.active_desc.split('\n')">
                             <view class="text-[28rpx] leading-[40rpx] mb-[20rpx]">{{ item }}</view>
-                        </block>
+                        </template>
                     </scroll-view>
                     <view class="btn-wrap !pt-[40rpx]">
                         <button
@@ -178,7 +178,6 @@ interface mescrollStructure {
     num: number,
     size: number,
     endSuccess: Function,
-
     [propName: string]: any
 }
 

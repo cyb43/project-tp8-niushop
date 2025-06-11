@@ -1,6 +1,6 @@
 <template>
     <el-dialog v-model="showDialog" :title="t('detail')" width="800px" :destroy-on-close="true">
-        <el-scrollbar height="400px" v-loading="loading">
+        <el-scrollbar height="400px" v-loading="loading" class="invoice-detail-wrap">
             <el-descriptions :column="2">
                 <el-descriptions-item :label="t('headerName')" label-align="right">{{ logData.header_name || '--' }}</el-descriptions-item>
                 <el-descriptions-item :label="t('headTypeName')" label-align="right">{{ logData.header_type_name || '--' }}</el-descriptions-item>
@@ -11,7 +11,7 @@
                 <el-descriptions-item :label="t('money')" label-align="right">{{ logData.money || '--' }}</el-descriptions-item>
                 <el-descriptions-item :label="t('invoiceTime')" label-align="right">{{ logData.invoice_time === 0 ? '--' : logData.invoice_time }}</el-descriptions-item>
                 <el-descriptions-item :label="t('invoiceVoucher')" label-align="right">
-					<span>
+                    <span>
                         <img class="w-[50px] max-h-[50px] inline-block" v-if="logData.invoice_voucher" :src="img(logData.invoice_voucher)" alt="" @click="previewImage" >
                     </span>
                 </el-descriptions-item>
@@ -100,4 +100,23 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss">
+.invoice-detail-wrap{
+    .el-descriptions .el-descriptions__body .el-descriptions__table{
+        tr{
+            display: flex;
+        }
+        .el-descriptions__cell{
+            display: flex;
+            flex: 1;
+            .el-descriptions__label{
+                white-space: nowrap;
+            }
+            .el-descriptions__content{
+                width: 290px;
+                line-height: 1.4;
+            }
+        }
+    }
+}
+</style>

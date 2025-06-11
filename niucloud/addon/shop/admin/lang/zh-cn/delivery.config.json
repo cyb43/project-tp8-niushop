@@ -1,11 +1,11 @@
 {
-    "store":"启动门店自提后，买家可选择自提点提货。",
-    "express":"启用物流配送后，买家下单可以选择快递发货。",
-    "local_delivery":"启用同城配送后，在配送范围内的买家可以选择同城配送。",
-    "deliveryStaff":"配送员",
-    "deliveryCompany":"物流公司",
-    "deliveryTemplate":"运费模版",
-    "deliverySearch":"物流跟踪",
-    "deliveryStore":"自提点",
-    "localConfig": "同城配送设置"
+  "store": "启动门店自提后，买家可选择自提点提货。",
+  "express": "启用物流配送后，买家下单可以选择快递发货。",
+  "local_delivery": "启用同城配送后，在配送范围内的买家可以选择同城配送。",
+  "deliveryStaff": "配送员",
+  "deliveryCompany": "物流公司",
+  "deliveryTemplate": "运费模版",
+  "deliverySearch": "物流跟踪",
+  "deliveryStore": "自提点",
+  "localConfig": "同城配送设置"
 }

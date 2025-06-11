@@ -52,7 +52,6 @@ const warpCss = computed(() => {
     return style;
 })
 
-
 onMounted(() => {
     refresh();
 });
@@ -112,7 +111,7 @@ const navbarInnerStyle = computed(() => {
 .title {
     width: 240rpx;
     height: 58rpx;
-    font-family: FZLanTingHei-EB-GBK, FZLanTingHei-EB-GBK;
+    font-family: FZLanTingHei-EB-GBK;
     font-weight: 700;
     font-size: 48rpx;
     line-height: 56rpx;

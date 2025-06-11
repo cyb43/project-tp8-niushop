@@ -27,20 +27,30 @@ class Discount extends BaseAdminController
     public function lists()
     {
         $data = $this->request->params([
-            [ "active_name", "" ],
-            [ "active_status", "" ],
+            [ "name", "" ],
+            [ "status", "" ],
         ]);
         return success(( new DiscountService() )->getPage($data));
     }
 
     /**
-     * 详情
-     * @param int $active_id
+     * 详情-基础信息
+     * @param int $discount_id
      * @return \think\Response
      */
-    public function detail(int $active_id)
+    public function info(int $discount_id)
     {
-        return success(( new DiscountService() )->getDetail($active_id));
+        return success(( new DiscountService() )->getInfo($discount_id));
+    }
+
+    /**
+     * 详情
+     * @param int $discount_id
+     * @return \think\Response
+     */
+    public function detail(int $discount_id)
+    {
+        return success(( new DiscountService() )->getDetail($discount_id));
     }
 
     /**
@@ -50,14 +60,11 @@ class Discount extends BaseAdminController
     public function add()
     {
         $data = $this->request->params([
-            [ "active_name", '' ],
-            [ "active_desc", "" ],
-            [ "active_class_category", '' ],
-            [ "relate_member", '' ],
-            [ "active_value", '' ],
+            [ "name", '' ],
+            [ "remark", "" ],
             [ "start_time", '' ],
             [ "end_time", '' ],
-            [ "goods_data", '{}' ],
+            [ "goods_list", [] ],
         ]);
 
         $id = ( new DiscountService() )->add($data);
@@ -66,24 +73,37 @@ class Discount extends BaseAdminController
 
     /**
      * 限时折扣编辑
-     * @param int $active_id
+     * @param int $discount_id
      * @return \think\Response
      */
-    public function edit(int $active_id)
+    public function edit(int $discount_id)
     {
         $data = $this->request->params([
-            [ "active_name", '' ],
-            [ "active_desc", "" ],
-            [ "active_class_category", '' ],
-            [ "relate_member", '' ],
-            [ "active_value", '' ],
+            [ "name", '' ],
+            [ "remark", "" ],
             [ "start_time", '' ],
             [ "end_time", '' ],
-            [ "goods_data", '{}' ],
+            [ "goods_list", [] ],
         ]);
 
-        ( new DiscountService() )->edit($active_id, $data);
+        ( new DiscountService() )->edit($discount_id, $data);
         return success('EDIT_SUCCESS');
+    }
+
+    /**
+     * 限时折扣商品校验
+     * @return \think\Response
+     */
+    public function checkGoods()
+    {
+        $data = $this->request->params([
+            [ "start_time", '' ],//开始时间
+            [ "end_time", '' ],//结束时间
+            [ "goods_ids", [] ],//校验的商品id
+            [ "discount_id", 0 ],//限时折扣活动id
+        ]);
+
+        return success('SUCCESS', data:( new DiscountService() )->checkGoodsData($data));
     }
 
     /**
@@ -97,23 +117,23 @@ class Discount extends BaseAdminController
 
     /**
      * 删除活动
-     * @param int $active_id
+     * @param int $discount_id
      * @return \think\Response
      */
-    public function del(int $active_id)
+    public function del(int $discount_id)
     {
-        ( new DiscountService() )->del($active_id);
+        ( new DiscountService() )->del($discount_id);
         return success('DELETE_SUCCESS');
     }
 
     /**
      * 活动关闭
-     * @param int $active_id
+     * @param int $discount_id
      * @return \think\Response
      */
-    public function close(int $active_id)
+    public function close(int $discount_id)
     {
-        ( new DiscountService() )->discountClose($active_id);
+        ( new DiscountService() )->discountClose($discount_id);
         return success('SUCCESS');
     }
 

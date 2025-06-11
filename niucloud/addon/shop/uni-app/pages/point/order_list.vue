@@ -48,11 +48,11 @@
                                 <view class="text-[var(--price-text-color)] price-font">
                                     <text class="text-[36rpx] mr-[2rpx]">{{ item.point }}</text>
                                     <text class="text-[30rpx]">{{ t('point') }}</text>
-                                    <block v-if="parseFloat(item.order_money)">
+                                    <template v-if="parseFloat(item.order_money)">
                                         <text class="text-[30rpx] mx-[4rpx]">+</text>
                                         <text class="text-[36rpx] price-font">{{ parseFloat(item.order_money) }}</text>
                                         <text class="text-[30rpx] price-font ml-[2rpx]">{{ t('money') }}</text>
-                                    </block>
+                                    </template>
                                 </view>
                             </view>
                         </view>

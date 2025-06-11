@@ -62,8 +62,17 @@ class CouponDict
     //已失效
     const INVALID = 3;
 
+    const SEND_RANGE_ALL = 'all';
+    const SEND_RANGE_MEMBER = 'member';
+    const SEND_RANGE_MEMBER_LEVEL = 'member_level';
+    const SEND_RANGE_MEMBER_LABEL = 'member_label';
+
+    const SEND_STATUS_WAIT= 'wait';
+    const SEND_STATUS_PROGRESS= 'progress';
+    const SEND_STATUS_FINISH= 'finish';
+
     /**
-     * 优惠券活动状态
+     * 状态
      * @param $status
      * @return array|mixed|string
      */
@@ -78,4 +87,56 @@ class CouponDict
         if ($status == '') return $list;
         return $list[ $status ] ?? '';
     }
+
+    /**
+     * 发券范围
+     * @param $status
+     * @return array|mixed|string
+     */
+    public static function getSendCouponRangeType($range = '')
+    {
+        $list = [
+            self::SEND_RANGE_ALL => get_lang('dict_shop_send_coupon_range.all'),
+            self::SEND_RANGE_MEMBER => get_lang('dict_shop_send_coupon_range.member'),
+            self::SEND_RANGE_MEMBER_LEVEL => get_lang('dict_shop_send_coupon_range.member_level'),
+            self::SEND_RANGE_MEMBER_LABEL => get_lang('dict_shop_send_coupon_range.member_label'),
+        ];
+        if ($range == '') return $list;
+        return $list[ $range ] ?? '';
+    }
+
+    /**
+     * 发券范围描述
+     * @param $status
+     * @return array|mixed|string
+     */
+    public static function getSendCouponRangeTypeDesc($range = '')
+    {
+        $list = [
+            self::SEND_RANGE_ALL => get_lang('dict_shop_send_coupon_range_type_desc.all'),
+            self::SEND_RANGE_MEMBER => get_lang('dict_shop_send_coupon_range_type_desc.member'),
+            self::SEND_RANGE_MEMBER_LEVEL => get_lang('dict_shop_send_coupon_range_type_desc.member_level'),
+            self::SEND_RANGE_MEMBER_LABEL => get_lang('dict_shop_send_coupon_range_type_desc.member_label'),
+        ];
+        if ($range == '') return $list;
+        return $list[ $range ] ?? '';
+    }
+
+    /**
+     * 发券状态
+     * @param $status
+     * @return array|mixed|string
+     */
+    public static function getSendCouponStatus($range = '')
+    {
+        $list = [
+            self::SEND_STATUS_WAIT => get_lang('dict_shop_send_coupon_status.wait'),
+            self::SEND_STATUS_PROGRESS => get_lang('dict_shop_send_coupon_status.progress'),
+            self::SEND_STATUS_FINISH => get_lang('dict_shop_send_coupon_status.finish'),
+        ];
+        if ($range == '') return $list;
+        return $list[ $range ] ?? '';
+    }
+
+
 }

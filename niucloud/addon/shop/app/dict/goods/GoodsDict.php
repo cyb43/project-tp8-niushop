@@ -38,6 +38,20 @@ class GoodsDict
     const DELIVERY = 'delivery';
     const STOCK = 'stock';
 
+    const SORT_TYPE_ASC = 'asc';
+    const SORT_TYPE_DESC = 'desc';
+
+    const SORT_COLUMN_PRICE = 'sale_price';
+    const SORT_COLUMN_SORT  = 'sort';
+    const SORT_COLUMN_SALE_NUM  = 'sale_num';
+    const SORT_COLUMN_CREATE_TIME = 'create_time';
+
+    //活动价标识
+    const ORIGINAL_PRICE = 'original_price';
+    const MEMBER_PRICE  = 'member_price';
+    const DISCOUNT_PRICE  = 'discount_price';
+    const NEWCOMER_PRICE = 'newcomer_price';
+
     /**
      * 商品类型
      * @param $type
@@ -86,5 +100,40 @@ class GoodsDict
             return $data;
         }
         return $data[ $type ] ?? '';
+    }
+
+    /**
+     * 商品排序展示配置
+     * @param $sort_type
+     * @return array|mixed|string
+     */
+    public static function getSortTypeConfig($sort_type = '')
+    {
+        $data = [
+            self::SORT_TYPE_ASC => get_lang('dict_shop_goods_sort_config.asc'),
+            self::SORT_TYPE_DESC => get_lang('dict_shop_goods_sort_config.desc'),
+        ];
+        if (!$sort_type) {
+            return $data;
+        }
+        return $data[ $sort_type ] ?? '';
+    }
+    /**
+     * 商品排序展示配置
+     * @param $sort_type
+     * @return array|mixed|string
+     */
+    public static function getSortColumnConfig($sort_type = '')
+    {
+        $data = [
+            self::SORT_COLUMN_SORT => get_lang('dict_shop_goods_sort_config.sort'),
+            self::SORT_COLUMN_PRICE => get_lang('dict_shop_goods_sort_config.price'),
+            self::SORT_COLUMN_SALE_NUM => get_lang('dict_shop_goods_sort_config.sale_num'),
+            self::SORT_COLUMN_CREATE_TIME => get_lang('dict_shop_goods_sort_config.create_time'),
+        ];
+        if (!$sort_type) {
+            return $data;
+        }
+        return $data[ $sort_type ] ?? '';
     }
 }

@@ -5,7 +5,7 @@
             <view v-if="diyComponent.style == 'style-1'" class="coupon-wrap style-1 relative">
                 <scroll-view scroll-x="true" class="coupon-list" :style="{'background-image':'url(' + img('addon/shop/diy/goods_coupon/style1_bg2.png') + ')','background-size':'100%','background-repeat':'no-repeat'}">
                     <view class="coupon-class">
-                        <block v-if="couponList.length > 1">
+                        <template v-if="couponList.length > 1">
                             <view v-for="(item,index) in couponList" :key="index"
                                   class="rounded-[16rpx] box-border pt-[14rpx] inline-flex flex-col items-center relative w-[150rpx] h-[130rpx]"
                                   :class="{'mr-[20rpx]': index != couponList.length-1}"
@@ -19,8 +19,8 @@
                                 <view class="text-[#303133] text-[20rpx] mt-[12rpx]">{{ item.min_condition_money == '0.00' ? '无门槛' : ('满' + parseFloat(item.min_condition_money) + '元可用') }}</view>
                                 <view class="mt-[auto] rounded-b-[12rpx] text-[#f2333c] text-[20rpx] w-[100%] h-[36rpx] flex items-center justify-center bg-[#fff5f2]">{{ item.type_name }}</view>
                             </view>
-                        </block>
-                        <block v-else>
+                        </template>
+                        <template v-else>
                             <view v-for="(item,index) in couponList" :key="index"
                                   class="rounded-[16rpx] box-border pt-[14rpx] pl-[44rpx] pr-[44rpx] inline-flex items-center justify-between relative w-[100%] h-[130rpx]"
                                   :style="{'background-image':'url(' + img('addon/shop/diy/goods_coupon/style1_bg4.png') + ')','background-size':'100%','background-repeat':'no-repeat'}"
@@ -38,7 +38,7 @@
                                     <view class="text-[#f2333c] text-[30rpx] font-500 mt-[10rpx] w-[270rpx] truncate">{{ item.min_condition_money == '0.00' ? '无门槛' : ('消费满' + parseFloat(item.min_condition_money) + '元可用') }}</view>
                                 </view>
                             </view>
-                        </block>
+                        </template>
                     </view>
                 </scroll-view>
                 <view
@@ -150,7 +150,7 @@
 
 <script setup lang="ts">
 // 优惠券组件
-import { ref, reactive, computed, watch, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted } from 'vue';
 import { img, redirect } from '@/utils/common';
 import useDiyStore from '@/app/stores/diy';
 import { useLogin } from '@/hooks/useLogin';

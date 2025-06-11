@@ -68,6 +68,17 @@ return [
         'function' => ''
     ],
     [
+        'key' => 'shop_coupon_send',
+        'name' => '优惠券自动发放',
+        'desc' => '',
+        'time' => [
+            'type' => 'min',
+            'min' => 1
+        ],
+        'class' => 'addon\shop\app\job\marketing\CouponSend',
+        'function' => ''
+    ],
+    [
         'key' => 'shop_active_start',
         'name' => '营销活动自动开启',
         'desc' => '',
@@ -122,6 +133,28 @@ return [
             'hour' => 0
         ],
         'class' => 'addon\shop\app\job\goods\GoodsStatisticalUpdate',
+        'function' => ''
+    ],
+    [
+        'key' => 'shop_discount_start',
+        'name' => '限时折扣自动开启',
+        'desc' => '',
+        'time' => [
+            'type' => 'min',
+            'min' => 1
+        ],
+        'class' => 'addon\shop\app\job\marketing\DiscountStart',
+        'function' => ''
+    ],
+    [
+        'key' => 'shop_discount_end',
+        'name' => '限时折扣自动结束',
+        'desc' => '',
+        'time' => [
+            'type' => 'min',
+            'min' => 1
+        ],
+        'class' => 'addon\shop\app\job\marketing\DiscountEnd',
         'function' => ''
     ],
 

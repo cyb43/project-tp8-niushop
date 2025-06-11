@@ -65,7 +65,7 @@ class AfterShopOrderClose
 //                        if ($order_refund_info['money'] == $v['order_goods_money']) {
                             $point = ($v['extend']['point'] ?? 0) * $v['num'];
                             $from_type = 'account_point_exchange_refund';
-                            $memo = '积分商城订单维权成功积分返还';
+                            $memo = '积分商城订单售后成功积分返还';
 //                        }
                     }
                     if ($point > 0) {

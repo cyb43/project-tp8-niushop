@@ -1,10 +1,14 @@
 <template>
-    <view :style="themeColor()">
-        <view class="bg-[var(--page-bg-color)] min-h-[100vh]" v-if="orderData">
+    <view :style="themeColor()"  class="payment-wrap">
+        <view class="payment-body min-h-[100vh]" v-if="orderData">
+            <!-- #ifdef MP -->
+            <top-tabbar :data="topTabbarData" :scrollBool="topTabarObj.getScrollBool()"/>
+            <!-- #endif -->
             <view class="pt-[30rpx] sidebar-margin payment-bottom">
                 <!-- 配送方式 -->
-                <view class="mb-[var(--top-m)] rounded-[var(--rounded-big)] bg-white" v-if="orderData.basic.has_goods_types.includes('real') && delivery_type_list.length">
-                    <view class="rounded-tl-[var(--rounded-big)] rounded-tr-[var(--rounded-big)] head-tab flex items-center w-full bg-[#f1f1f1]" v-if="delivery_type_list.length > 1">
+                <view class="mb-[var(--top-m)] rounded-[var(--rounded-big)] bg-white" v-if="orderData.basic.has_goods_types.includes('real') && delivery_type_list.length"
+                      :style="{backgroundImage: `url(${img('addon/shop/payment/head_bg.png')})`, backgroundSize: '100%', backgroundRepeat: 'no-repeat', backgroundPosition: 'bottom'}">
+                      <view class="rounded-tl-[var(--rounded-big)] rounded-tr-[var(--rounded-big)] head-tab flex items-center w-full bg-[var(--shop-payment-header-tab-color)]" v-if="delivery_type_list.length > 1">
                         <view v-for="(item, index) in delivery_type_list" :key="index" class="head-tab-item flex-1 relative" :class="{'active': index === activeIndex}">
                             <view class="h-[74rpx] relative z-10 text-center leading-[74rpx] text-[28rpx]" @click="switchDeliveryType(item.key, index)">{{ item.name }}</view>
                             <image v-if="index === activeIndex && delivery_type_list.length == 3" class="tab-image absolute bottom-[-2rpx] h-[94rpx] w-[240rpx]" :src="img(`addon/shop/payment/tab_${index}.png`)" mode="aspectFit"/>
@@ -34,7 +38,7 @@
                         </view>
 
                         <!-- 自提点 -->
-                        <view class="flex items-center w-full flex items-center" v-if="createData.delivery.delivery_type == 'store'" @click="storeRef.open()">
+                        <view class="flex items-center w-full flex items-center" v-if="createData.delivery.delivery_type == 'store'" @click="openSelectStore">
                             <view v-if="!$u.test.isEmpty(orderData.delivery.take_store)" class="pt-[26rpx] pb-[30rpx] w-full flex items-center">
                                 <view class="flex flex-col">
                                     <view class="text-[30rpx] font-500 text-[#303133] mb-[20rpx]">{{ orderData.delivery.take_store.store_name }}</view>
@@ -48,6 +52,30 @@
                                 <image class="w-[26rpx] h-[30rpx] mr-[10rpx]" :src="img('addon/shop/payment/position_02.png')" mode="aspectFit"/>
                                 <text class="text-[28rpx]">请选择自提点</text>
                                 <text class="ml-auto nc-iconfont nc-icon-youV6xx text-[26rpx] text-[var(--text-color-light9)]"></text>
+                            </view>
+                        </view>
+                    </view>
+                    <view v-if="createData.delivery.delivery_type == 'store'">
+                        <!-- 姓名 -->
+                        <view class="px-[20rpx] py-[14rpx]">
+                            <view class="flex justify-between items-center">
+                                <view class="text-color text-[28rpx]" @click="handleTime">姓名</view>
+                                <input class="text-right" maxlength="20" placeholder-style="color:#B1B3B5" placeholder="请输入" v-model="createData.delivery.taker_name" />
+                            </view>
+                        </view>
+                        <!-- 预留手机 -->
+                        <view class="px-[20rpx] py-[14rpx]">
+                            <view class="flex justify-between items-center">
+                                <view class="text-color text-[28rpx]">预留手机</view>
+                                <input class="text-right" maxlength="11" placeholder-style="color:#B1B3B5" placeholder="请输入" v-model="createData.delivery.taker_mobile" />
+                            </view>
+                        </view>
+                        <!-- 提货时间 -->
+                        <view class="flex justify-between items-center box-border pt-[14rpx] pb-[24rpx] px-[20rpx]">
+                            <view class="text-color text-[28rpx]">提货时间</view>
+                            <view class="flex" @click="handleTime">
+                                <view class="text-[28rpx] ml-2 text-right" :class="{'text-[#63676D]': !createData.delivery.buyer_ask_delivery_time }">{{ createData.delivery.buyer_ask_delivery_time ? showGetDate : '选择提货时间' }}</view>
+                                <text class="text-[26rpx] text-[var(--text-color-light6)] nc-iconfont nc-icon-youV6xx"></text>
                             </view>
                         </view>
                     </view>
@@ -80,13 +108,13 @@
                                             <text class="text-[40rpx] font-200">{{ item.exchange_info.point }}</text>
                                             <text class="text-[32rpx]">积分</text>
                                         </view>
-                                        <block v-if="parseFloat(item.price)">
+                                        <template v-if="parseFloat(item.price)">
                                             <text class="mx-[4rpx] text-[32rpx]">+</text>
                                             <view class="flex items-baseline price-font">
                                                 <text class="text-[40rpx] font-200">{{ parseFloat(item.price).toFixed(2) }}</text>
                                                 <text class="text-[32rpx]">元</text>
                                             </view>
-                                        </block>
+                                        </template>
                                     </view>
                                     <view class="font-400 text-[28rpx] text-[#303133]">
                                         <text>x</text>
@@ -127,7 +155,7 @@
                                 <text class="text-[32rpx] mr-[2rpx]">{{ orderData.basic.point_sum }}</text>
                                 <text class="text-[30rpx]">积分</text>
                             </view>
-                            <block v-if="orderData.basic && parseFloat(orderData.basic.goods_money)">
+                            <template v-if="orderData.basic && parseFloat(orderData.basic.goods_money)">
                                 <text class="text-[28rpx] mx-[4rpx]">+</text>
                                 <view class="inline-block">
                                     <text class="text-[32rpx] mr-[2rpx]">
@@ -135,7 +163,7 @@
                                     </text>
                                     <text class="text-[30rpx]">元</text>
                                 </view>
-                            </block>
+                            </template>
                         </view>
                     </view>
                     <view class="card-template-item" v-if="orderData.basic.delivery_money">
@@ -156,13 +184,13 @@
                             <text class="text-[44rpx]">{{ orderData.basic.point_sum }}</text>
                             <text class="text-[38rpx]">积分</text>
                         </text>
-                        <block v-if="orderData.basic && parseFloat(orderData.basic.goods_money)">
+                        <template v-if="orderData.basic && parseFloat(orderData.basic.goods_money)">
                             <text class="text-[38rpx] text-[var(--price-text-color)] price-font mx-[4rpx]">+</text>
                             <view class="inline-block">
                                 <text class="text-[44rpx] text-[var(--price-text-color)] price-font">{{ parseFloat(orderData.basic.order_money).toFixed(2) }}</text>
                                 <text class="text-[38rpx] text-[var(--price-text-color)] price-font">元</text>
                             </view>
-                        </block>
+                        </template>
                     </view>
                     <button
                         class="primary-btn-bg w-[196rpx] h-[70rpx] font-500 text-[26rpx] leading-[70rpx] !text-[#fff] !border-[0] rounded-[100rpx] m-0"
@@ -175,22 +203,27 @@
             <!-- 发票 -->
             <invoice ref="invoiceRef" @confirm="confirmInvoice" />
             <!-- 地址 -->
-            <address-list ref="addressRef" @confirm="confirmAddress" />
+            <address-list ref="addressRef" @confirm="confirmAddress" back="/addon/shop/pages/point/payment" />
 
             <pay ref="payRef" @close="payClose" />
+
+            <ns-select-time ref="selectTime" :rules="service_time" v-if="Object.keys(service_time).length" :isQuantum="true" @change="getTime" @getDate="getDate"></ns-select-time>
         </view>
     </view>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, nextTick } from 'vue'
+import { ref, watch, computed, nextTick } from 'vue'
 import { orderCreateCalculate, orderCreate } from '@/addon/shop/api/point'
 import { redirect, img, mobileHide } from '@/utils/common'
 import { onShow } from '@dcloudio/uni-app'
 import selectStore from './../order/components/select-store/select-store'
 import invoice from './../order/components/invoice/invoice'
-import addressList from './components/address-list/address-list'
+import addressList from './../order/components/address-list/address-list'
 import { useSubscribeMessage } from '@/hooks/useSubscribeMessage'
+import nsSelectTime from '@/addon/shop/components/ns-select-time'
+import { topTabar } from '@/utils/topTabbar'
+import useMemberStore from '@/stores/member'
 
 const createData: any = ref({
     order_key: '',
@@ -202,6 +235,10 @@ const createData: any = ref({
     }
 })
 
+const memberStore = useMemberStore()
+const info = computed(() => memberStore.info)
+const topTabarObj = topTabar()
+let topTabbarData = topTabarObj.setTopTabbarParam({ title: '待付款订单' })
 const orderData = ref(null)
 const storeRef = ref()
 const payRef = ref()
@@ -212,19 +249,43 @@ const delivery_type_list = ref([])
 const addressRef = ref()
 uni.getStorageSync('orderCreateData') && Object.assign(createData.value, uni.getStorageSync('orderCreateData'))
 
+const storeClickNum = ref(0) // 记录门店自提点击次数
+const service_time = ref({}) //获取配置时间
+const selectTime = ref(null)
+const handleTime = () => {
+    if (selectTime.value) {
+        selectTime.value.show = true;
+    } else {
+        uni.showToast({ title: '请选择自提点', icon: 'none' })
+    }
+};
+
+
+// 时间(月日时间段)
+const getTime = (e) => {
+    createData.value.delivery.buyer_ask_delivery_time = e
+}
+
+const showGetDate = ref(null)
+const getDate = (e) => {
+    showGetDate.value = e
+}
+
 onShow(() => {
-    setTimeout(() => {
-        nextTick(() => {
-            if (storeRef.value) {
-                storeRef.value.getData((data: any) => {
-                    if (data.length) {
-                        createData.value.delivery.take_store_id = ((data[0] && data[0].store_id) ? data[0].store_id : 0)
-                    }
-                });
-            }
-        })
-    }, 1500)
 })
+
+const openSelectStore = () => {
+    if (storeRef.value) {
+        if (!createData.value.delivery.take_store_id) {
+            storeRef.value.getData((data: any) => {
+                if (data.length) {
+                    createData.value.delivery.take_store_id = ((data[0] && data[0].store_id) ? data[0].store_id : 0)
+                }
+            });
+        }
+    }
+    storeRef.value.open()
+}
 
 // 选择地址之后跳转回来
 const selectAddress = uni.getStorageSync('selectAddressCallback')
@@ -237,6 +298,16 @@ if (selectAddress) {
 
 // 切换配送方式
 const switchDeliveryType = (type: string, index: number) => {
+    // 第一次进入时，加载门店自提并选中
+    if (type == 'store' && storeClickNum.value == 0) {
+        storeClickNum.value++;
+        storeRef.value.getData((data: any) => {
+            if (data.length) {
+                createData.value.delivery.take_store_id = data[0]?.store_id ?? 0
+                calculate()
+            }
+        });
+    }
     if (createData.value.delivery.delivery_type != type) {
         activeIndex.value = index
         createData.value.order_key = ''
@@ -256,9 +327,36 @@ const calculate = () => {
         if (orderData.value.delivery.delivery_type_list) {
             delivery_type_list.value = Object.values(orderData.value.delivery.delivery_type_list)
         }
+        if (createData.value.delivery.delivery_type == 'store') {
+            createData.value.delivery.taker_name = info.value.nickname
+            createData.value.delivery.taker_mobile = info.value.mobile
+        } else if(orderData.value.delivery && orderData.value.delivery.take_address) {
+            createData.value.delivery.taker_name = orderData.value.delivery.take_address.name
+            createData.value.delivery.taker_mobile = orderData.value.delivery.take_address.mobile
+        }
+
+        if (orderData.value.delivery.take_store) {
+            service_time.value = {
+                time_interval: orderData.value.delivery.take_store.time_interval,
+                time_week: orderData.value.delivery.take_store.time_week,
+                trade_time_json: orderData.value.delivery.take_store.trade_time_json
+            };
+        }
 
         if (selectAddress) activeIndex.value = delivery_type_list.value.findIndex(el => el.key === orderData.value.delivery.delivery_type)
         !createData.value.delivery.delivery_type && data.delivery.delivery_type && (createData.value.delivery.delivery_type = data.delivery.delivery_type)
+        // 用于自提点是第一种配送方式时，第一次进来加载门店自提并选中, 是对于onshow的补充
+        nextTick(() => {
+            setTimeout(() => {
+                if (delivery_type_list.value && Object.keys(delivery_type_list.value).length && delivery_type_list.value[0].key == 'store' && storeRef.value) {
+                    storeRef.value.getData((data: any) => {
+                        if (data.length) {
+                            createData.value.delivery.take_store_id = ((data[0] && data[0].store_id) ? data[0].store_id : 0)
+                        }
+                    });
+                }
+            }, 500);
+        })
     }).catch()
 }
 calculate()
@@ -318,6 +416,25 @@ const verify = () => {
             uni.showToast({ title: '请选择自提点', icon: 'none' })
             return false
         }
+
+        if (data.delivery.delivery_type == 'store') {
+            if (!data.delivery.taker_name) {
+                uni.showToast({ title: '请输入姓名', icon: 'none' })
+                return false
+            }
+            if (!data.delivery.taker_mobile) {
+                uni.showToast({ title: '请输入手机号', icon: 'none' })
+                return false
+            }
+            if (!/^1[3-9]\d{9}$/.test(data.delivery.taker_mobile)) {
+                uni.showToast({ title: '请输入正确的手机号', icon: 'none' })
+                return false
+            }
+            if (!data.delivery.buyer_ask_delivery_time) {
+                uni.showToast({ title: '请选择自提时间', icon: 'none' })
+                return false
+            }
+        }
     }
 
     return verify
@@ -346,6 +463,14 @@ const toSelectAddress = () => {
  */
 const confirmSelectStore = (store: any) => {
     createData.value.delivery.take_store_id = ((store && store.store_id) ? store.store_id : 0)
+    if (store) {
+        service_time.value = {
+            time_interval: store.time_interval,
+            time_week: store.time_week,
+            trade_time_json: store.trade_time_json
+        };
+    }
+
     calculate()
 }
 
@@ -429,5 +554,36 @@ const confirmAddress = (data: object) => {
 .payment-bottom {
     padding-bottom: calc(20rpx + constant(safe-area-inset-bottom));
     padding-bottom: calc(20rpx + env(safe-area-inset-bottom));
+}
+
+.payment-wrap {
+    background: linear-gradient(180deg, transparent 0%, transparent 80%, var(--page-bg-color) 100%);
+}
+
+.payment-body {
+    --shop-payment-header-color: #F42612; // 待支付头部颜色
+    --shop-payment-header-tab-color: #FEEAE9; // 待支付头部颜色
+    /*  #ifdef MP  */
+    background: linear-gradient(180deg, transparent 0%, transparent 10%, var(--page-bg-color) 30%);
+    /*  #endif  */
+    /*  #ifdef H5  */
+    background: linear-gradient(180deg, transparent 0%, var(--page-bg-color) 25%);
+    /*  #endif  */
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        /*  #ifdef MP  */
+        height: 560rpx;
+        background: linear-gradient(180deg, var(--shop-payment-header-color) 20%, var(--page-bg-color) 90%), var(--page-bg-color);
+        /*  #endif  */
+        /*  #ifdef H5  */
+        height: 360rpx;
+        background: linear-gradient(180deg, var(--shop-payment-header-color) 0%, var(--page-bg-color) 90%), var(--page-bg-color);
+        /*  #endif  */
+    }
 }
 </style>

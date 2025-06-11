@@ -11,8 +11,10 @@
 
 namespace addon\shop\app\model\goods;
 
+use addon\shop\app\dict\active\DiscountDict;
 use addon\shop\app\dict\goods\GoodsDict;
 use addon\shop\app\model\active\ActiveGoods;
+use addon\shop\app\model\discount\DiscountGoods;
 use addon\shop\app\service\core\delivery\CoreDeliveryService;
 use app\dict\sys\FileDict;
 use core\base\BaseModel;
@@ -54,7 +56,7 @@ class Goods extends BaseModel
     protected $defaultSoftDelete = 0;
 
     // 设置json类型字段
-    protected $json = [ 'goods_category', 'label_ids', 'service_ids', 'delivery_type' ];
+    protected $json = ['goods_category', 'label_ids', 'service_ids', 'delivery_type'];
 
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
@@ -67,8 +69,8 @@ class Goods extends BaseModel
      */
     public function getGoodsTypeNameAttr($value, $data)
     {
-        if (!empty($data[ 'goods_type' ])) {
-            return GoodsDict::getType($data[ 'goods_type' ])[ 'name' ] ?? '';
+        if (!empty($data['goods_type'])) {
+            return GoodsDict::getType($data['goods_type'])['name'] ?? '';
         }
         return '';
     }
@@ -81,8 +83,8 @@ class Goods extends BaseModel
      */
     public function getGoodsEditPathAttr($value, $data)
     {
-        if (!empty($data[ 'goods_type' ])) {
-            return GoodsDict::getType($data[ 'goods_type' ])[ 'path' ] ?? '';
+        if (!empty($data['goods_type'])) {
+            return GoodsDict::getType($data['goods_type'])['path'] ?? '';
         }
         return '';
     }
@@ -95,17 +97,24 @@ class Goods extends BaseModel
      */
     public function getDeliveryTypeListAttr($value, $data)
     {
-        if (!empty($data[ 'delivery_type' ])) {
-            $deliver_list = ( new CoreDeliveryService() )->getDeliveryConfig();
-            $res = [];
-            foreach ($data[ 'delivery_type' ] as $k => $v) {
-                if (isset($deliver_list[ $v ]) && $deliver_list[ $v ][ 'status' ] == 1) {
-                    $res[ $v ] = $deliver_list[ $v ];
+        if (!empty($data['delivery_type'])) {
+            $deliver_list = (new CoreDeliveryService())->getDeliveryConfig();
+            $configKeys = array_keys($deliver_list); // 缓存配置数组的键
+            $result = [];
+
+            // 筛选可用的配送方式并按配置顺序排序
+            foreach ($data['delivery_type'] as $type) {
+                if (isset($deliver_list[$type]) && $deliver_list[$type]['status'] === 1) {
+                    $position = array_search($type, $configKeys);
+                    $result[$position] = [$type => $deliver_list[$type]];
                 }
             }
-            return $res;
+            // 按键排序（保持配置中的原始顺序）
+            ksort($result);
+            // 转换为一维数组（保持原始代码的输出结构）
+            return array_merge([], ...array_values($result));
         }
-        return '';
+        return [];
     }
 
     /**
@@ -113,8 +122,8 @@ class Goods extends BaseModel
      */
     public function getGoodsCoverThumbSmallAttr($value, $data)
     {
-        if (isset($data[ 'goods_cover' ]) && $data[ 'goods_cover' ] != '') {
-            return get_thumb_images($data[ 'goods_cover' ], FileDict::SMALL);
+        if (isset($data['goods_cover']) && $data['goods_cover'] != '') {
+            return get_thumb_images($data['goods_cover'], FileDict::SMALL);
         }
         return [];
     }
@@ -124,8 +133,8 @@ class Goods extends BaseModel
      */
     public function getGoodsCoverThumbMidAttr($value, $data)
     {
-        if (isset($data[ 'goods_cover' ]) && $data[ 'goods_cover' ] != '') {
-            return get_thumb_images($data[ 'goods_cover' ], FileDict::MID);
+        if (isset($data['goods_cover']) && $data['goods_cover'] != '') {
+            return get_thumb_images($data['goods_cover'], FileDict::MID);
         }
         return [];
     }
@@ -135,8 +144,8 @@ class Goods extends BaseModel
      */
     public function getGoodsCoverThumbBigAttr($value, $data)
     {
-        if (isset($data[ 'goods_cover' ]) && $data[ 'goods_cover' ] != '') {
-            return get_thumb_images($data[ 'goods_cover' ], FileDict::BIG);
+        if (isset($data['goods_cover']) && $data['goods_cover'] != '') {
+            return get_thumb_images($data['goods_cover'], FileDict::BIG);
         }
         return [];
     }
@@ -146,8 +155,8 @@ class Goods extends BaseModel
      */
     public function getGoodsImageThumbSmallAttr($value, $data)
     {
-        if (isset($data[ 'goods_image' ]) && $data[ 'goods_image' ] != '') {
-            $goods_image = explode(',', $data[ 'goods_image' ]);
+        if (isset($data['goods_image']) && $data['goods_image'] != '') {
+            $goods_image = explode(',', $data['goods_image']);
             $img_arr = [];
             foreach ($goods_image as $k => $v) {
                 $img = get_thumb_images($v, FileDict::SMALL);
@@ -165,8 +174,8 @@ class Goods extends BaseModel
      */
     public function getGoodsImageThumbMidAttr($value, $data)
     {
-        if (isset($data[ 'goods_image' ]) && $data[ 'goods_image' ] != '') {
-            $goods_image = explode(',', $data[ 'goods_image' ]);
+        if (isset($data['goods_image']) && $data['goods_image'] != '') {
+            $goods_image = explode(',', $data['goods_image']);
             $img_arr = [];
             foreach ($goods_image as $k => $v) {
                 $img = get_thumb_images($v, FileDict::MID);
@@ -184,8 +193,8 @@ class Goods extends BaseModel
      */
     public function getGoodsImageThumbBigAttr($value, $data)
     {
-        if (isset($data[ 'goods_image' ]) && $data[ 'goods_image' ] != '') {
-            $goods_image = explode(',', $data[ 'goods_image' ]);
+        if (isset($data['goods_image']) && $data['goods_image'] != '') {
+            $goods_image = explode(',', $data['goods_image']);
             $img_arr = [];
             foreach ($goods_image as $k => $v) {
                 $img = get_thumb_images($v, FileDict::BIG);
@@ -207,8 +216,8 @@ class Goods extends BaseModel
             $value = json_decode($value, true);
         }
         if (!empty($value)) {
-            return array_map(function($item) {
-                return (int) $item;
+            return array_map(function ($item) {
+                return (int)$item;
             }, $value);
         }
         return [];
@@ -216,11 +225,11 @@ class Goods extends BaseModel
 
     public function getGoodsLabelNameAttr($value, $data)
     {
-        if (isset($data[ 'label_ids' ]) && !empty($data[ 'label_ids' ])) {
+        if (isset($data['label_ids']) && !empty($data['label_ids'])) {
             $goods_label_model = new Label();
             return $goods_label_model->where([
-                [ 'label_id', 'in', $data[ 'label_ids' ] ],
-                [ 'status', '=', 1 ]
+                ['label_id', 'in', $data['label_ids']],
+                ['status', '=', 1]
             ])->field('label_id, label_name, style_type,color_json,icon')->order('sort desc,label_id desc')->select()->toArray();
         }
 
@@ -228,15 +237,28 @@ class Goods extends BaseModel
 
     public function getGoodsBrandAttr($value, $data)
     {
-        if (isset($data[ 'brand_id' ]) && !empty($data[ 'brand_id' ])) {
+        if (isset($data['brand_id']) && !empty($data['brand_id'])) {
             $goods_brand_model = new Brand();
             $info = $goods_brand_model->where([
-                [ 'brand_id', '=', $data[ 'brand_id' ] ],
+                ['brand_id', '=', $data['brand_id']],
             ])->field('brand_id,brand_name,logo,color_json')
                 ->findOrEmpty()->toArray();
             return $info;
         }
+    }
 
+    /**
+     * 状态字段转化
+     * @param $value
+     * @param $data
+     * @return mixed
+     */
+    public function getDiscountStatusNameAttr($value, $data)
+    {
+        if (!empty($data['discount_status'])) {
+            return DiscountDict::getStatus($data['discount_status']) ?? '';
+        }
+        return '';
     }
 
     /**
@@ -308,9 +330,11 @@ class Goods extends BaseModel
     {
         if ($value) {
             if (is_array($value)) {
-                $temp_where = array_map(function($item) { return '%"' . $item . '"%'; }, $value);
+                $temp_where = array_map(function ($item) {
+                    return '%"' . $item . '"%';
+                }, $value);
             } else {
-                $temp_where = [ '%"' . $value . '"%' ];
+                $temp_where = ['%"' . $value . '"%'];
             }
             $query->where('goods_category', 'like', $temp_where, 'or');
         }
@@ -325,9 +349,11 @@ class Goods extends BaseModel
     {
         if ($value) {
             if (is_array($value)) {
-                $temp_where = array_map(function($item) { return '%"' . $item . '"%'; }, $value);
+                $temp_where = array_map(function ($item) {
+                    return '%"' . $item . '"%';
+                }, $value);
             } else {
-                $temp_where = [ '%"' . $value . '"%' ];
+                $temp_where = ['%"' . $value . '"%'];
             }
             $query->where('label_ids', 'like', $temp_where, 'or');
         }
@@ -342,9 +368,11 @@ class Goods extends BaseModel
     {
         if ($value) {
             if (is_array($value)) {
-                $temp_where = array_map(function($item) { return '%"' . $item . '"%'; }, $value);
+                $temp_where = array_map(function ($item) {
+                    return '%"' . $item . '"%';
+                }, $value);
             } else {
-                $temp_where = [ '%"' . $value . '"%' ];
+                $temp_where = ['%"' . $value . '"%'];
             }
             $query->where('service_ids', 'like', $temp_where, 'or');
         }
@@ -377,14 +405,14 @@ class Goods extends BaseModel
      */
     public function searchSaleNumAttr($query, $value, $data)
     {
-        if (!empty($data[ 'start_sale_num' ]) && !empty($data[ 'end_sale_num' ])) {
-            $money = [ $data[ 'start_sale_num' ], $data[ 'end_sale_num' ] ];
+        if (!empty($data['start_sale_num']) && !empty($data['end_sale_num'])) {
+            $money = [$data['start_sale_num'], $data['end_sale_num']];
             sort($money);
             $query->where('goods.sale_num', 'between', $money);
-        } else if (!empty($data[ 'start_sale_num' ])) {
-            $query->where('goods.sale_num', '>=', $data[ 'start_sale_num' ]);
-        } else if (!empty($data[ 'end_sale_num' ])) {
-            $query->where('goods.sale_num', '<=', $data[ 'end_sale_num' ]);
+        } else if (!empty($data['start_sale_num'])) {
+            $query->where('goods.sale_num', '>=', $data['start_sale_num']);
+        } else if (!empty($data['end_sale_num'])) {
+            $query->where('goods.sale_num', '<=', $data['end_sale_num']);
         }
 
     }
@@ -429,6 +457,15 @@ class Goods extends BaseModel
     public function activeGoods()
     {
         return $this->hasOne(ActiveGoods::class, 'goods_id', 'goods_id');
+    }
+
+    /**
+     * 关联活动
+     * @return \think\model\relation\hasOne
+     */
+    public function discountGoods()
+    {
+        return $this->hasOne(discountGoods::class, 'goods_id', 'goods_id');
     }
 
     /**

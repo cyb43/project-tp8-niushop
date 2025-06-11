@@ -84,5 +84,5 @@
   "limitTipsThree": "必须大于上一层级的优惠门槛",
   "ruleTypeTips": "阶梯优惠根据设定的门槛逐级增加优惠，达到特定层级门槛即可享受对应优惠，最高可设5个层级。",
   "ruleTypeTipsTwo": "循环优惠指每次达到门槛即获赠一次优惠，无次数上限，需合理设置门槛。",
-  "goodsOffTips":"该商品已下架"
+  "goodsOffTips": "该商品已下架"
 }

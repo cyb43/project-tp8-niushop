@@ -50,7 +50,7 @@ class GoodsCollect extends BaseModel
      */
     public function goodsSku()
     {
-        return $this->hasOne(GoodsSku::class, 'goods_id', 'goods_id')->joinType('left')->withField('goods_id,sku_name,price')->bind([ 'sku_name', 'price' ]);
+        return $this->hasOne(GoodsSku::class, 'goods_id', 'goods_id')->joinType('left')->withField('goods_id,sku_id,sku_name,price,member_price,sale_price')->bind([ 'sku_id', 'sku_name', 'price', 'member_price', 'sale_price' ]);
     }
 
 }

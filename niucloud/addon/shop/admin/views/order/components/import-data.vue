@@ -7,12 +7,8 @@
                         <el-radio label="order">{{t('fullOrderDelivery')}}</el-radio>
                         <el-radio label="order_goods">{{t('openOrderDelivery')}}</el-radio>
                     </el-radio-group>
-                    <div @click="examineTemplate" class="form-tip mt-[5px] cursor-pointer !text-[var(--el-color-primary)]" v-show="importData.type == 'order'"> 
-                        {{t('orderTemplate')}}
-                    </div>
-                    <div @click="examineTemplate" class="form-tip mt-[5px] !text-[var(--el-color-primary)] cursor-pointer" v-show="importData.type == 'order_goods'">
-                        {{ t('orderGoodsTemplate') }}
-                    </div>
+                    <div @click="examineTemplate" class="form-tip mt-[5px] cursor-pointer !text-[var(--el-color-primary)]" v-show="importData.type == 'order'">{{t('orderTemplate')}}</div>
+                    <div @click="examineTemplate" class="form-tip mt-[5px] !text-[var(--el-color-primary)] cursor-pointer" v-show="importData.type == 'order_goods'">{{ t('orderGoodsTemplate') }}</div>
                 </el-form-item>
 
                 <el-form-item :label="t('uploadFile')" prop="path">
@@ -34,9 +30,7 @@ import { ref, computed } from 'vue'
 import { t } from '@/lang'
 import { FormInstance } from 'element-plus'
 import { addBatchOrderDelivery } from '@/addon/shop/api/order'
-import { useRouter } from 'vue-router'
 
-const router = useRouter()
 const importDialog = ref(false)
 
 /**

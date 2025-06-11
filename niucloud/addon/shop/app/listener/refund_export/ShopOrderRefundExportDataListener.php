@@ -14,7 +14,7 @@ namespace addon\shop\app\listener\refund_export;
 use addon\shop\app\model\order\OrderRefund;
 
 /**
- * 订单退款维权导出数据源查询
+ * 订单退款售后导出数据源查询
  * Class ShopOrderRefundExportDataListener
  * @package addon\shop\app\listener\refund_export
  */

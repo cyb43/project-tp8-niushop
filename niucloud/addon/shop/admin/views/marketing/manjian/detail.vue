@@ -202,10 +202,9 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import {getManjianInfo, getManjianMemberPageList} from "@/addon/shop/api/marketing";
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
 
-const route = useRoute()
 const router = useRouter()
 const showDialog = ref(false)
 const loading = ref(false)
@@ -234,14 +233,14 @@ const getManjianInfoFn = (id:number)=>{
 }
 
 //活动会员
-const memberParams =  reactive({
+const memberParams = reactive({
     page: 1,
     limit: 10,
     total: 0,
     loading: false,
     data: [],
     searchParam: {
-        id: id
+        id
     }
 })
 const getManjianMemberPageListFn= (page: number = 1)=>{
