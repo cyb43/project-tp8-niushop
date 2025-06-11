@@ -1,7 +1,7 @@
 <template>
     <div class="main-container">
 
-        <el-form class="page-form" :model="formData" :rules="formRules"  label-width="150px" ref="ruleFormRef" v-loading="loading">
+        <el-form class="page-form" :model="formData" :rules="formRules"  label-width="150px" ref="ruleFormRef" v-loading="loading" @submit.prevent>
             <el-card class="box-card !border-none" shadow="never">
                 <h3 class="panel-title !text-sm">{{ t('commonSetting') }}</h3>
 

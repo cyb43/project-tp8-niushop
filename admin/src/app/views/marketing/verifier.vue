@@ -53,7 +53,7 @@
             </div>
         </el-card>
 
-        <el-dialog v-model="showDialog" :title="t('addVerifier')" width="500px" :destroy-on-close="true">
+        <el-dialog v-model="showDialog" :title="formData.id ? t('editVerifier') : t('addVerifier')" width="500px" :destroy-on-close="true">
             <el-form :model="formData" label-width="90px" ref="formRef" :rules="formRules" class="page-form" v-loading="addLoading">
                 <el-form-item :label="t('member')" prop="member_id">
                     <el-select v-model="formData.member_id" filterable remote reserve-keyword clearable @focus="handleSelectFocus" :disabled="isEditMode" :placeholder="t('searchPlaceholder')" :remote-method="searchMember" :loading="searchLoading" class="input-width">

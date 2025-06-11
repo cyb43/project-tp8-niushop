@@ -370,6 +370,7 @@
 <script lang="ts" setup>
 import { ref, reactive, toRaw, watch, inject, computed } from 'vue'
 import { t } from '@/lang'
+import { ArrowLeft } from "@element-plus/icons-vue"
 import { img } from '@/utils/common'
 import { getDiyTemplatePages, addDiyForm, editDiyForm, initPage } from '@/app/api/diy_form'
 import { useRoute, useRouter } from 'vue-router'

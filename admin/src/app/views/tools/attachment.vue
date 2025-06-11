@@ -6,7 +6,7 @@
                 <span class="text-page-title">{{ pageName }}</span>
             </div>
 
-            <el-tabs v-model="type">
+            <el-tabs v-model="type" tab-position="top">
                 <el-tab-pane :label="t(tab)" v-for="(tab, index) in attachmentType" :name="tab" :key="index">
                     <attachment scene="attachment" :type="tab" />
                 </el-tab-pane>
@@ -44,7 +44,7 @@ const type = ref(attachmentType[0])
 
     .el-tabs {
         display: flex;
-        flex-direction: column;
+        flex-direction:  column;
         height: calc(100% - 40px);
     }
 

@@ -23,6 +23,7 @@
   "verifier": "核销员",
   "createTime": "添加时间",
   "addVerifier": "添加核销员",
+  "editVerifier":"编辑核销员",
   "verifierDeleteTips": "确定要删除该核销员吗？",
   "memberInfo": "会员信息",
   "memberIdPlaceholder": "请选择会员",

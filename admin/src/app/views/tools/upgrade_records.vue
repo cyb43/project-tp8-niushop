@@ -19,10 +19,6 @@
                 </el-form>
             </el-card>
 
-            <div class="mb-[10px] flex items-center">
-                <el-button @click="batchDelete" size="small">{{ t('batchDelete') }}</el-button>
-            </div>
-
             <el-table :data="tableData.data" size="large" v-loading="tableData.loading" ref="tableRef" @selection-change="handleSelectionChange">
 
                 <template #empty>
@@ -42,7 +38,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="create_time" :label="t('completeTime')" width="220px" />
-                <el-table-column prop="status_name" :label="t('status')" width="120px" />
+                <el-table-column prop="status_name" :label="t('status')" width="120px"/>
                 <el-table-column :label="t('operation')" align="right" width="160px">
                     <template #default="{ row }">
                         <el-button type="primary" link v-if="row.status == 'fail'" @click="handleFailReason(row)">{{ t('failReason') }}</el-button>
@@ -50,7 +46,9 @@
                     </template>
                 </el-table-column>
             </el-table>
-
+            <div class="mt-[10px] flex items-center">
+                <el-button @click="batchDelete" size="small">{{ t('batchDelete') }}</el-button>
+            </div>
             <div class="mt-[16px] flex justify-end">
                 <el-pagination v-model:current-page="tableData.page"
                     v-model:page-size="tableData.limit" layout="total, sizes, prev, pager, next, jumper"

@@ -98,3 +98,7 @@ export function getInstalledAddonList() {
 export function getShowApp() {
     return request.get('addon/list/showapp')
 }
+
+export function getAddonInit() {
+    return request.get('addon/init')
+}

@@ -10,7 +10,7 @@
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                 <el-form :inline="true" :model="recordsTableData.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('searchReceiver')" prop="receiver">
-                        <el-input v-model.trim="recordsTableData.searchParam.receiver" :placeholder="t('receiverPlaceholder')" />
+                        <el-input class="!w-[200px]" v-model.trim="recordsTableData.searchParam.receiver" :placeholder="t('receiverPlaceholder')" />
                     </el-form-item>
 
                     <el-form-item :label="t('noticeKey')" prop="key">
@@ -75,7 +75,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getNoticeList } from '@/app/api/notice'
+import { getNoticeLog, getNoticeList } from '@/app/api/notice'
 import RecordsInfo from '@/app/views/setting/components/notice-records-info.vue'
 import { FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'
@@ -144,7 +144,7 @@ const loadNoticeLogList = (page: number = 1) => {
     recordsTableData.loading = true
     recordsTableData.page = page
 
-    getNoticeList({
+    getNoticeLog({
         page: recordsTableData.page,
         limit: recordsTableData.limit,
         ...recordsTableData.searchParam
@@ -157,7 +157,6 @@ const loadNoticeLogList = (page: number = 1) => {
     })
 }
 loadNoticeLogList()
-
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()

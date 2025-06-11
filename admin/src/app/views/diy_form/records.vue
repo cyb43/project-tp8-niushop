@@ -1,6 +1,6 @@
 <template>
     <el-drawer v-model="showDialog" :title="t('dataAndStatistics')" direction="rtl" size="70%" :before-close="handleClose" class="member-detail-drawer">
-        <el-tabs v-model="activeName" class="demo-tabs" @tab-click="handleClick">
+        <el-tabs v-model="activeName" class="demo-tabs">
             <el-tab-pane :label="t('detailData')" name="detail_data">
                 <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                     <el-form :inline="true" :model="formData.searchParam" ref="searchFormDiyFormRef">

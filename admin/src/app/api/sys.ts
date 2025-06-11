@@ -259,24 +259,6 @@ export function moveAttachment(params: Record<string, any>) {
 }
 
 /**
- * 获取图标库分类列表
- * @param params
- * @returns
- */
-export function getIconCategoryList(params: Record<string, any>) {
-    return request.get(`sys/attachment/icon_category`, { params })
-}
-
-/**
- * 获取图标库列表
- * @param params
- * @returns
- */
-export function getIconList(params: Record<string, any>) {
-    return request.get(`sys/attachment/icon`, { params })
-}
-
-/**
  * 获取evn
  * @returns
  */

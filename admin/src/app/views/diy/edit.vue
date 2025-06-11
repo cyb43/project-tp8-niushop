@@ -215,6 +215,7 @@
 <script lang="ts" setup>
 import { ref, reactive, toRaw, watch, inject } from 'vue'
 import { t } from '@/lang'
+import { ArrowLeft } from "@element-plus/icons-vue"
 import { img } from '@/utils/common'
 import { getDiyTemplatePages, addDiyPage, editDiyPage, initPage } from '@/app/api/diy'
 import { useRoute, useRouter } from 'vue-router'

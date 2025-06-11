@@ -2,7 +2,7 @@
     <el-dialog v-model="dialogVisible" :title="t('accountSettings')" width="500">
         <el-form :model="saveInfo" label-width="90px" ref="formRef" class="page-form">
             <el-form-item :label="t('headImg')">
-                <upload-image v-model="saveInfo.head_img" :limit="1" :type="'avatar'" imageFit="cover" />
+                <upload-image v-model="saveInfo.head_img" :limit="1" imageFit="cover" />
             </el-form-item>
             <el-form-item :label="t('userName')">
                 <span>{{saveInfo.username}}</span>

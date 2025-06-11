@@ -7,7 +7,7 @@
                 <span class="text-page-title">{{ pageName }}</span>
             </div>
 
-            <div class="flex justify-between items-center mt-[20px]">
+            <div class="flex justify-between items-start mt-[20px]">
                 <el-form :inline="true" :model="sysUserLogTableData.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('ip')" prop="ip">
                         <el-input v-model.trim="sysUserLogTableData.searchParam.ip" :placeholder="t('ipPlaceholder')" />
@@ -25,6 +25,11 @@
                         <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
                     </el-form-item>
                 </el-form>
+                <div class="flex justify-end items-center w-[20%]">
+                    <div>
+                        <el-button type="primary" class="w-[100px]" @click="clearEvent()">{{ t('清空日志') }}</el-button>
+                    </div>
+                </div>
             </div>
 
             <div>
@@ -61,7 +66,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getLogList } from '@/app/api/user'
+import { getLogList ,logDestroy} from '@/app/api/user'
 import UserLogDetail from '@/app/views/auth/components/user-log-detail.vue'
 import { FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'
@@ -117,6 +122,20 @@ const detailEvent = (data: any) => {
     userLogDetailDialog.value.setFormData(data)
     userLogDetailDialog.value.showDialog = true
 }
+
+const clearEvent = () => {
+    ElMessageBox.confirm(t('确定要全部清空操作日志吗?'), t('提示'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
+    }).then(() => {
+        logDestroy().then(() => {
+            loadSysUserLogList()
+        })
+    }).catch(() => {
+    })
+}
+
 </script>
 
 <style lang="scss" scoped></style>

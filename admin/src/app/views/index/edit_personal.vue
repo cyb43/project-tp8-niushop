@@ -28,11 +28,11 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import type { FormInstance } from 'element-plus'
-
 import { getUserInfo, setUserInfo } from '@/app/api/personal'
-import { useRouter } from 'vue-router'
+import { deepClone } from "@/utils/common";
+import useUserStore from '@/stores/modules/user'
 
-const router = useRouter()
+const userStore = useUserStore()
 // 提交信息
 const saveInfo = reactive({
     head_img: '',
@@ -68,6 +68,9 @@ const submitForm = (formEl: FormInstance | undefined) => {
 
             setUserInfo(saveInfo).then((res: any) => {
                 loading.value = false
+                let data: any = deepClone(userStore.userInfo)
+                data.head_img = saveInfo.head_img
+                userStore.setUserInfo(data)
             }).catch(() => {
                 loading.value = false
             })

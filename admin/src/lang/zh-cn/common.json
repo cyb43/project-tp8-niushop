@@ -167,12 +167,15 @@
     "rollback": "回滚",
     "showDialogCloseTips": "升级任务尚未完成，关闭将取消升级，是否要继续关闭？",
     "upgradeCompleteTips": "升级完成后还必须要重新编译admin wap web端，以免影响到程序正常运行。",
-    "upgradeTips": "应用和插件升级时，系统会自动备份当前程序及数据库。升级功能不会造成您当前程序的损坏或者数据的丢失，请放心使用，但是升级过程可能会因为兼容性等各种原因出现意外的升级错误，当出现错误时，请参考链接<a href='https://www.kancloud.cn/niushop/niushop_v6/3228611' target='_blank' class='text-primary'> https://www.kancloud.cn/niushop/niushop_v6/3228611 </a>手动回退上一版本!",
+    "upgradeTips": "应用和插件升级时，系统会自动备份当前程序及数据库。升级功能不会造成您当前程序的损坏或者数据的丢失，请放心使用，但是升级过程可能会因为兼容性等各种原因出现意外的升级错误，当出现错误时，系统将会自动回退上一版本！若回退失败，请参考链接<a href='https://www.kancloud.cn/niushop/niushop_v6/3228611' target='_blank' class='text-primary'> https://www.kancloud.cn/niushop/niushop_v6/3228611 </a>手动回退上一版本!",
     "knownToKnow": "我已知晓，不需要再次提示",
     "cloudBuildErrorTips": "一键云编译队列任务过多，请等待几分钟后重试！",
     "isNeedBackup": "是否需要备份",
     "isNeedBackupTips": "检测到已存在备份，此次升级是否需要备份，不需要备份在升级出现异常时将会恢复最近的一次备份。",
-    "isNeedBackupBtn": "查看备份记录"
+    "isNeedBackupBtn": "查看备份记录",
+    "option": "选项",
+    "isNeedCloudbuild": "是否需要云编译",
+    "cloudbuildTips": "此次升级的同时是否需要进行云编译"
   },
   "cloudbuild": {
     "title": "云编译",

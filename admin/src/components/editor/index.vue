@@ -47,13 +47,12 @@ let editorEl = null
 
 const serverHeaders = {}
 serverHeaders[import.meta.env.VITE_REQUEST_HEADER_TOKEN_KEY] = getToken()
-const baseUrl = import.meta.env.VITE_APP_BASE_URL.substr(-1) == '/' ? import.meta.env.VITE_APP_BASE_URL : `${import.meta.env.VITE_APP_BASE_URL}/`
 
 const editorConfig = ref({
     debug: false,
     UEDITOR_HOME_URL: import.meta.env.MODE == 'development' ? '/public/ueditor/' : '/admin/ueditor/',
     UEDITOR_CORS_URL: import.meta.env.MODE == 'development' ? location.origin + '/ueditor/' : location.origin + '/admin/ueditor/',
-    serverUrl: `${baseUrl}sys/ueditor`,
+    serverUrl: `${import.meta.env.VITE_APP_BASE_URL}sys/ueditor`,
     serverHeaders,
     // 编辑器不自动被内容撑高
     autoHeightEnabled: false,

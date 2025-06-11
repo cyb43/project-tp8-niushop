@@ -62,6 +62,15 @@ export function unlockUser(uid: number) {
     return request.put(`user/unlock/${ uid }`, {}, { showSuccessMessage: true })
 }
 
+/**
+ * 删除用户
+ *
+ * @param uid
+ */
+export function deleteUser(uid: number) {
+    return request.delete(`user/${ uid }`)
+}
+
 /***************************************************** 操作日志 **************************************************/
 
 /**
@@ -79,4 +88,12 @@ export function getLogList(params: Record<string, any>) {
  */
 export function getLogInfo(id: number) {
     return request.get(`user/userlog/${ id }`)
+}
+
+/**
+ * 清空操作日志列表
+ * @returns
+ */
+export function logDestroy() {
+    return request.delete(`user/userlog/destroy`)
 }

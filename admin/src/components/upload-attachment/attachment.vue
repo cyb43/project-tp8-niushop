@@ -48,7 +48,7 @@
                 <el-col :span="10">
                     <div class="flex">
                         <el-upload v-bind="upload" ref="uploadRef" v-if="prop.type != 'icon'">
-                            <el-button type="primary">{{ t('upload.upload' + type) }} {{ isOpen }}</el-button>
+                            <el-button type="primary">{{ t('upload.upload' + type) }}</el-button>
                         </el-upload>
                         <div v-if="scene == 'attachment' && prop.type != 'icon'">
                             <el-button v-if="operate === false" class="ml-[10px]" type="primary" @click="operate = true">{{ t('edit') }}</el-button>
@@ -192,9 +192,7 @@ import {
     editAttachmentCategory as updateCategory,
     deleteAttachmentCategory as deleteCategory,
     deleteAttachment,
-    moveAttachment,
-    getIconCategoryList,
-    getIconList
+    moveAttachment
 } from '@/app/api/sys'
 import { debounce, img, getToken } from '@/utils/common'
 import { ElMessage, UploadFile, UploadFiles, ElMessageBox, MessageParams } from 'element-plus'
@@ -202,7 +200,6 @@ import storage from '@/utils/storage'
 
 const attachmentCategoryName = ref('')
 const operate = ref(false)
-
 const repeat = ref(false)
 
 const prop = defineProps({
@@ -259,6 +256,72 @@ const attachmentParam = reactive({
     real_name: '',
     cate_id: 0
 })
+
+const iconJsonFile = import.meta.glob('../../styles/icon/**/*.json', { eager: true })
+const iconList = {
+    0: []
+}
+
+const getIconCategoryList = (search) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const result = {
+                code: 1,
+                data: []
+            }
+
+            Object.keys(iconJsonFile).reverse().forEach(key => {
+                let item = iconJsonFile[key].default
+                if (search.name && item.name.indexOf(search.name) != -1) {
+                    result.data.push(item)
+                } else if (!search.name) {
+                    result.data.push(item)
+                }
+
+                if (!iconList[item.id]) {
+                    item.glyphs = item.glyphs.map(iconItem => {
+                        iconItem.url = `${ item.font_family } ${ item.css_prefix_text }${ iconItem.font_class }`
+                        iconItem.real_name = iconItem.name
+                        iconItem.att_id = iconItem.icon_id
+                        return iconItem
+                    })
+                    iconList[0].push(...item.glyphs)
+                    iconList[item.id] = item.glyphs
+                }
+            })
+            resolve(result)
+        } catch (e) {
+            console.error(e)
+            reject(e)
+        }
+    })
+}
+
+const getIconList = (search) => {
+    return new Promise((resolve, reject) => {
+        try {
+            const result = {
+                code: 1,
+                data: {
+                    current_page: search.page,
+                    per_page: 1,
+                    total: 0,
+                    data: []
+                }
+            }
+            let icons = JSON.parse(JSON.stringify(iconList[search.cate_id]))
+            if (search.real_name) icons = icons.filter(item => item.real_name.indexOf(search.real_name) != -1)
+
+            result.data.total = icons.length
+            result.data.data = icons.splice((search.page - 1) * search.limit, search.limit)
+            result.data.per_page = Math.ceil(icons.length / search.limit)
+            resolve(result)
+        } catch (e) {
+            console.error(e)
+            reject(e)
+        }
+    })
+}
 
 /**
  * 查询分组

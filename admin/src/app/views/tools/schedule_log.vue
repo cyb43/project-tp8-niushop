@@ -117,6 +117,7 @@
 <script lang="ts" setup>
 import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
+import { ArrowLeft } from "@element-plus/icons-vue"
 import { getCronLogList, getCronTemplate, deleteCronLog, clearCronLog } from '@/app/api/sys'
 import { ElMessageBox, ElMessage, FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'

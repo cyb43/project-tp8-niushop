@@ -1,32 +1,38 @@
 <template>
     <!--授权信息-->
     <div class="main-container">
-        <el-card class="box-card !border-none" shadow="never" v-if="!loading">
-            <div>
-                <div class="text-[#333] text-[18px]">授权信息</div>
-                <div class="ml-[50px] mt-[40px]">
-                    <div class="flex flex-col">
-                        <div class="flex flex-wrap items-center">
-                            <span class="mr-[6px] text-[14px] text-[#666666] w-[70px] text-right">授权公司：</span>
-                            <span class="text-[14px] text-[#333]">{{ authinfo.company_name || "--" }}</span>
+        <el-card class="box-card !border-none min-h-[300px]" shadow="never" v-loading="loading">
+            <div v-if="!loading">
+                <div class="title text-[16px] font-bold text-[#1D1F3A] mb-[30px]">授权信息</div>
+                <div class="">
+                    <div class="flex items-center">
+                        <div class="w-[92px] h-[92px] rounded-[10px] flex justify-center items-center mr-[20px]">
+                            <img src="@/app/assets/images/tools/authorize.png" class="w-[92px] h-[92px]" />
                         </div>
-                        <div class="flex flex-wrap items-center mt-[20px]">
-                            <span class="mr-[6px] text-[14px] text-[#666666] w-[70px] text-right">授权域名：</span>
-                            <span class="text-[14px] text-[#333]">{{ authinfo.site_address || "--" }}</span>
-                        </div>
-                        <div class="flex flex-wrap items-center mt-[20px]">
-                            <span class="mr-[6px] text-[14px] text-[#666666] w-[70px] text-right">授权码：</span>
-                            <span class="text-[14px] text-[#333]">
-                                <span class="mr-[10px]">{{ authinfo.auth_code ? (isCheck ? authinfo.auth_code : hideAuthCode(authinfo.auth_code)) : "--" }}</span>
-                                <el-icon v-if="!isCheck" @click="isCheck = !isCheck" class="text-[12px] cursor-pointer text-[#4383F9]">
-                                    <View />
-                                </el-icon>
-                                <el-icon v-else @click="isCheck = !isCheck" class="text-[12px] cursor-pointer text-[#4383F9]"> <Hide /> </el-icon>
-                            </span>
+                        <div class="flex flex-col justify-between font-500">
+                            <div class="flex flex-wrap items-center mb-[12px]">
+                                <span class="mr-[6px] text-[14px] text-[#666666] w-[70px] text-left">授权公司：</span>
+                                <span class="text-[14px] text-[#333]">{{ authinfo.company_name || "--" }}</span>
+                            </div>
+                            <div class="flex flex-wrap items-center mb-[12px]">
+                                <span class="mr-[6px] text-[14px] text-[#666666] w-[70px] text-left">授权域名：</span>
+                                <span class="text-[14px] text-[#333]">{{ authinfo.site_address || "--" }}</span>
+                            </div>
+                            <div class="flex flex-wrap items-center">
+                                <span class="mr-[6px] text-[14px] text-[#666666] w-[70px] text-left">授权码：</span>
+                                <span class="text-[14px] text-[#333]">
+                                    <span class="mr-[10px]">{{ authinfo.auth_code ? (isCheck ? authinfo.auth_code : hideAuthCode(authinfo.auth_code)) : "--" }}</span>
+                                    <el-icon v-if="!isCheck" @click="isCheck = !isCheck" class="text-[14px] cursor-pointer text-[#9699B6]">
+                                        <View />
+                                    </el-icon>
+                                    <el-icon v-else @click="isCheck = !isCheck" class="text-[14px] cursor-pointer text-[#9699B6]"> <Hide /> </el-icon>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div class="mt-[60px] mb-[50px]">
-                        <el-button class="w-[150px] !h-[46px] mt-[8px]" type="primary" @click="authCodeApproveFn">授权码认证</el-button>
+
+                    <div class="mt-[17px] ml-[110px]">
+                        <el-button class="!w-[140px] !h-[32px] mt-[8px] !rounded-[4px]" type="primary" @click="authCodeApproveFn">授权码认证</el-button>
                         <el-popover ref="getAuthCodeDialog" placement="bottom-start" :width="478" trigger="click" class="mt-[8px]">
                             <div class="px-[18px] py-[8px]">
                                 <p class="leading-[32px] text-[14px]">您在官方应用市场购买任意一款应用，即可获得授权码。输入正确授权码认证通过后，即可支持在线升级和其它相关服务</p>
@@ -36,7 +42,7 @@
                                 </div>
                             </div>
                             <template #reference>
-                                <el-button class="w-[150px] !h-[46px] mt-[8px] !text-[var(--el-color-primary)] hover:!text-[var(--el-color-primary)] !bg-transparent" plain type="primary">如何获取授权码?</el-button>
+                                <el-button class="!w-[140px] !h-[32px] mt-[8px] !rounded-[4px] !text-[var(--el-color-primary)] hover:!text-[var(--el-color-primary)] !bg-transparent" plain type="primary">如何获取授权码?</el-button>
                             </template>
                         </el-popover>
                     </div>
@@ -164,4 +170,8 @@ const getVersionsInfo = () => {
 getVersionsInfo()
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.el-button){
+    border-radius: 4px !important;
+}
+</style>

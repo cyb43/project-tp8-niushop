@@ -26,13 +26,13 @@
                 <div class="flex justify-between">
                     <el-form :inline="true" :model="cronTableData.searchParam" ref="searchFormRef">
                         <el-form-item :label="t('title')" prop="key">
-                            <el-select v-model="cronTableData.searchParam.key" placeholder="全部" filterable remote clearable :remote-method="getAddonDevelopFn">
+                            <el-select v-model="cronTableData.searchParam.key" placeholder="全部" filterable remote clearable :remote-method="loadCronList">
                                 <el-option label="全部" value="all" />
                                 <el-option v-for="item in templateList" :key="item.key" :label="item.name" :value="item.key" />
                             </el-select>
                         </el-form-item>
                         <el-form-item :label="t('status')" prop="status">
-                            <el-select v-model="cronTableData.searchParam.status" placeholder="全部" filterable remote clearable :remote-method="getAddonDevelopFn">
+                            <el-select v-model="cronTableData.searchParam.status" placeholder="全部" filterable remote clearable :remote-method="loadCronList">
                                 <el-option label="全部" value="all" />
                                 <el-option label="启用" value="1" />
                                 <el-option label="关闭" value="0" />
@@ -51,7 +51,7 @@
                     <template #empty>
                         <span>{{ !cronTableData.loading ? t('emptyData') : '' }}</span>
                     </template>
-                    
+
                     <el-table-column prop="key" :label="t('key')" min-width="150" />
                     <el-table-column prop="name" :label="t('title')" min-width="150" />
                     <el-table-column :label="t('crondType')" min-width="150">
@@ -248,22 +248,26 @@ const formRules = computed(() => {
 })
 
 const validatePass = (rule: any, value: any, callback: any) => {
-    if (formData.time.type == 'min' && formData.time.min != '') {
-        return callback()
+    const time = formData.time;
+
+    const isPositiveInt = (v: any) => /^[1-9]\d*$/.test(v);
+
+    const error = () => callback(new Error(t('cronTimeTips')));
+
+    switch (time.type) {
+        case 'min':
+            return isPositiveInt(time.min) ? callback() : error();
+        case 'hour':
+            return isPositiveInt(time.hour) && isPositiveInt(time.min) ? callback() : error();
+        case 'day':
+            return isPositiveInt(time.day) && isPositiveInt(time.hour) && isPositiveInt(time.min) ? callback() : error();
+        case 'week':
+            return time.week !== '' && isPositiveInt(time.hour) && isPositiveInt(time.min) ? callback() : error();
+        case 'month':
+            return isPositiveInt(time.day) && isPositiveInt(time.hour) && isPositiveInt(time.min) ? callback() : error();
+        default:
+            return error();
     }
-    if (formData.time.type == 'week' && formData.time.week != '' && formData.time.hour != '' && formData.time.min != '') {
-        return callback()
-    }
-    if (formData.time.type == 'month' && formData.time.day != '' && formData.time.hour != '' && formData.time.min != '') {
-        return callback()
-    }
-    if (formData.time.type == 'day' && formData.time.day != '' && formData.time.hour != '' && formData.time.min != '') {
-        return callback()
-    }
-    if (formData.time.type == 'hour' && formData.time.hour != '' && formData.time.min != '') {
-        return callback()
-    }
-    return callback(new Error(t('cronTimeTips')))
 }
 const save_type = ref(false)
 const addEvent = async (formEl: FormInstance | undefined) => {

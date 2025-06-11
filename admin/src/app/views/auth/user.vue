@@ -68,6 +68,7 @@
                                 <el-button type="primary" link @click="editEvent(row)">{{ t('edit') }}</el-button>
                                 <el-button type="primary" link @click="lockEvent(row.uid)" v-if="row.status">{{ t('lock') }}</el-button>
                                 <el-button type="primary" link @click="unlockEvent(row.uid)" v-else>{{ t('unlock') }}</el-button>
+                                <el-button type="primary" link @click="deleteEvent(row.uid)">{{ t('delete') }}</el-button>
                             </div>
                             <div v-else>
                                 <el-button link disabled>{{ t('adminDisabled') }}</el-button>
@@ -91,7 +92,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getUserList, lockUser, unlockUser } from '@/app/api/user'
+import { getUserList, lockUser, unlockUser,deleteUser } from '@/app/api/user'
 import EditUser from '@/app/views/auth/components/edit-user.vue'
 import { img } from '@/utils/common'
 import { ElMessageBox } from 'element-plus'
@@ -192,6 +193,21 @@ const unlockEvent = (id: number) => {
         }
     ).then(() => {
         unlockUser(id).then(() => {
+            loadUserList()
+        }).catch(() => {
+        })
+    })
+}
+
+const deleteEvent = (uid: number) => {
+    ElMessageBox.confirm(t('userDeleteTips'), t('warning'),
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
+    ).then(() => {
+        deleteUser(uid).then(() => {
             loadUserList()
         }).catch(() => {
         })

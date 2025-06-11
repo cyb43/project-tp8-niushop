@@ -27,7 +27,7 @@
 	  "min": "分",
 	  "cronDeleteTips": "你确定要删除任务吗",
 	  "addCron": "添加任务",
-	  "cronTimeTips": "任务周期时间不能为空",
+	  "cronTimeTips": "任务周期时间不能为空并且大于0",
 	  "cronTipsOne": "启动计划任务方式：",
 	  "cronTipsTwo": "1、使用命令启动：php think workerman 如果更改了任务周期、状态、删除任务等操作后,需要重新启动下 php think workerman 确保生效",
 	  "doOne": "执行一次",

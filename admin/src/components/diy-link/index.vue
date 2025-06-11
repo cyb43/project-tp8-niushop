@@ -92,7 +92,7 @@
                         </template>
                         <div v-else class="flex flex-wrap">
                             <div v-for="(item, index) in childList" :key="index"
-                                 class="border border-br rounded-[3px] mr-[10px] mb-[10px] px-4 h-[32px] leading-[32px] cursor-pointer hover:bg-primary-light-9 px-[10px] hover:text-primary"
+                                 class="border border-br rounded-[3px] mr-[10px] mb-[10px] h-[32px] leading-[32px] cursor-pointer hover:bg-primary-light-9 px-[10px] hover:text-primary"
                                  :class="{ 'border-primary text-primary': (parentLinkName != 'DIY_PAGE' && item.name == selectLink.name) || (parentLinkName == 'DIY_PAGE' && item.url == selectLink.url) }"
                                  @click="changeChildLink(item)">{{ item.title }}
                             </div>
@@ -194,12 +194,25 @@ const show = () => {
 const getLinkFn = (callback: any = null) => {
     getLink({}).then((res: any) => {
         link.value = res.data
+        if(link.value && link.value.length == 0) return;
+
         if (prop.ignore && prop.ignore.length) {
             for (let key in link.value) {
                 for (let i = 0; i < prop.ignore.length; i++) {
                     if (key == prop.ignore[i]) {
-                        delete link.value[key];
-                        break;
+                        delete link.value[key]
+                        break
+                    }
+                }
+                if (link.value[key] && link.value[key].child_list) {
+                    for (let i = 0; i < link.value[key].child_list.length; i++) {
+                        for (let j = 0; j < prop.ignore.length; j++) {
+                            if (link.value[key].child_list[i].name == prop.ignore[j]) {
+                                console.log(link.value[key].child_list[i])
+                                link.value[key].child_list.splice(i, 1)
+                                break
+                            }
+                        }
                     }
                 }
             }

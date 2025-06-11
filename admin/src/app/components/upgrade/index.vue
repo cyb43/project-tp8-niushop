@@ -35,9 +35,9 @@
                 </template>
             </template>
             <div v-if="step == 2">
-                <el-steps :active="numberOfSteps" align-center class="number-of-steps" finish-status="success" process-status="process">
+                <el-steps :active="numberOfSteps" align-center class="number-of-steps" process-status="process" v-if="!errorDialog && active != 'complete'">
                     <el-step :title="t('testDirectoryPermissions')" />
-                    <el-step :title="t('backupFiles')" />
+                    <el-step :title="t('upgrade.option')" />
                     <el-step :title="t('startUpgrade')" />
                     <el-step :title="t('upgradeEnd')" />
                 </el-steps>
@@ -72,26 +72,26 @@
                                 <div class="bg-[#fff] my-3" v-if="upgradeCheck.dir">
                                     <div class="px-[20px] pt-[10px] text-[14px] el-table">
                                         <el-row class="py-[10px] items table-head-bg pl-[15px] mb-[10px]">
-                                            <el-col :span="12">
+                                            <el-col :span="18">
                                                 <span>{{ t("upgrade.path") }}</span>
                                             </el-col>
-                                            <el-col :span="6">
+                                            <el-col :span="3">
                                                 <span>{{ t("upgrade.demand") }}</span>
                                             </el-col>
-                                            <el-col :span="6">
+                                            <el-col :span="3">
                                                 <span>{{ t("status") }}</span>
                                             </el-col>
                                         </el-row>
 
                                         <div style="height: calc(300px); overflow: auto">
                                             <el-row class="pb-[10px] items pl-[15px]" v-for="item in upgradeCheck.dir.is_readable">
-                                                <el-col :span="12">
+                                                <el-col :span="18">
                                                     <span>{{ item.dir }}</span>
                                                 </el-col>
-                                                <el-col :span="6">
+                                                <el-col :span="3">
                                                     <span>{{ t("upgrade.readable") }}</span>
                                                 </el-col>
-                                                <el-col :span="6">
+                                                <el-col :span="3" >
                                                     <span v-if="item.status">
                                                         <el-icon color="green">
                                                             <Select />
@@ -105,13 +105,13 @@
                                                 </el-col>
                                             </el-row>
                                             <el-row class="pb-[10px] items pl-[15px]" v-for="item in upgradeCheck.dir.is_write">
-                                                <el-col :span="12">
+                                                <el-col :span="18">
                                                     <span>{{ item.dir }}</span>
                                                 </el-col>
-                                                <el-col :span="6">
+                                                <el-col :span="3">
                                                     <span>{{ t("upgrade.write") }}</span>
                                                 </el-col>
-                                                <el-col :span="6">
+                                                <el-col :span="3">
                                                     <span v-if="item.status">
                                                         <el-icon color="green">
                                                             <Select />
@@ -129,7 +129,7 @@
                                 </div>
                             </el-scrollbar>
                         </div>
-                        <div class="h-[370px] mt-[30px]" v-show="upgradeTask">
+                        <div class="h-[370px] mt-[30px]" v-show="showTerminal && upgradeTask && !errorDialog">
                             <terminal ref="terminalRef" :context="upgradeTask ? upgradeTask.upgrade.app_key : ''" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd" />
                         </div>
                     </div>
@@ -137,40 +137,50 @@
                     <div class="flex flex-col" v-show="active == 'backup'">
                         <el-scrollbar>
                             <div class="bg-[#fff] my-3">
-
-                                <div class="px-[20px] pt-[10px] text-[14px] el-table" v-if="!upgradeContent.last_backup">
-                                    <el-row class="py-[10px] items table-head-bg pl-[15px] mb-[10px]">
-                                        <el-col :span="20">
-                                            <span>功能操作</span>
-                                        </el-col>
-                                        <el-col :span="4">
-                                            <span>状态</span>
-                                        </el-col>
-                                    </el-row>
-                                    <el-row class="pb-[10px] items pl-[15px]" v-for="item in excludeSteps">
-                                        <el-col :span="20">
-                                            <span>{{ item.name }}</span>
-                                        </el-col>
-                                        <el-col :span="4">
-                                            <span>
-                                                <el-icon color="green">
-                                                    <Select />
-                                                </el-icon>
-                                            </span>
-                                        </el-col>
-                                    </el-row>
+                                <div class="p-[20px] mt-[50px] mx-[10px] border-[1px] border-[#E6E6E6] rounded-[10px]">
+                                    <div class="flex justify-between items-center mt-[-9px]">
+                                        <el-checkbox v-model="upgradeOption.is_need_cloudbuild" :label="t('upgrade.isNeedCloudbuild')" :true-value="true" :false-value="false" size="large" ></el-checkbox>
+                                    </div>
+                                    <div class="text-[14px] text-[#374151] mb-[10px]">{{ t('upgrade.cloudbuildTips') }}</div>
                                 </div>
-                                <div class="pl-[50px] pt-[50px]" v-else>
-                                    <el-checkbox v-model="isNeedBackup" :label="t('upgrade.isNeedBackup')" :true-value="true" :false-value="false" size="large" >
-                                    </el-checkbox>
-                                    <div class="backup">{{ t('upgrade.isNeedBackupTips') }}<el-button link type="primary" @click="toBackupRecord">{{ t('upgrade.isNeedBackupBtn') }}</el-button></div>
+                                <div class="p-[20px] mt-[20px] mx-[10px] border-[1px] border-[#E6E6E6] rounded-[10px]" v-if="upgradeContent.last_backup">
+                                    <div class="flex justify-between items-center mt-[-9px]">
+                                        <el-checkbox v-model="upgradeOption.is_need_backup" :label="t('upgrade.isNeedBackup')" :true-value="true" :false-value="false" size="large" ></el-checkbox>
+                                        <el-button link type="primary" class="!text-[#9699B6]" @click="toBackupRecord">{{ t('upgrade.isNeedBackupBtn') }}</el-button>
+                                    </div>
+
+                                    <div class="text-[14px] text-[#374151] mb-[10px]">{{ t('upgrade.isNeedBackupTips') }}</div>
+                                    <div class="text-[14px] text-[#9699B6]">{{ t('上次备份时间：') }}{{ upgradeContent.last_backup.complete_time }}</div>
                                 </div>
                             </div>
                         </el-scrollbar>
                     </div>
+                    <div class="mt-[50px]" v-show="errorDialog">
+                        <el-result icon="error" :title="t('升级失败')" :sub-title="errorMsg">
+                            <template #icon>
+                                <img src="@/app/assets/images/error_icon.png" alt="" />
+                            </template>
+                            <template #extra>
+                                <el-button @click="handleBack()" class="!w-[90px]">错误信息</el-button>
+                                <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
+                            </template>
+                        </el-result>
+                    </div>
                     <div class="mt-[50px]" v-show="active == 'complete'">
-                        <el-result icon="success" :title="t('upgrade.upgradeSuccess')"></el-result>
-                        <el-alert :title="t('upgrade.upgradeCompleteTips')" type="error" :closable="false" v-show="upgradeTask && upgradeTask.executed && !upgradeTask.executed.includes('cloudBuild')"/>
+                        <el-result icon="success" :title="t('upgrade.upgradeSuccess')">
+                            <template #icon>
+                                <img src="@/app/assets/images/success_icon.png" alt="">
+                            </template>
+                            <template #extra>
+                                <div class="text-[16px] text-[#4F516D] mt-[-5px]" v-show="upgradeTask && upgradeTask.executed && !upgradeTask.executed.includes('cloudBuild')">{{ t('upgrade.upgradeCompleteTips') }}</div>
+                                <div class="text-[16px] text-[#9699B6] mt-[10px]">本次升级用时{{ formatUpgradeDuration }}</div>
+                                <div class="mt-[20px]">
+                                    <el-button @click="handleBack()" class="!w-[90px]">返回</el-button>
+                                    <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
+                                </div>
+                            </template>
+                        </el-result>
+                        <!-- <el-alert :title="t('upgrade.upgradeCompleteTips')" type="error" :closable="false" v-show="upgradeTask && upgradeTask.executed && !upgradeTask.executed.includes('cloudBuild')"/> -->
                     </div>
                 </div>
             </div>
@@ -180,7 +190,7 @@
                 <!-- 查看升级内容 -->
                 <el-button v-if="step == 1 && upgradeContent.content.length && isAllowUpgrade" @click="step = 2" type="primary">{{ t("upgrade.upgradeButton") }}</el-button>
 
-                <template v-if="step == 2">
+                <template v-if="step == 2 && active != 'complete'">
                 <!--                <el-button v-if="active == 'content'" @click="showDialog = false">{{ t("return") }}</el-button>-->
                     <el-button type="primary" :disabled="!is_pass" v-if="active == 'upgrade' && !upgradeTask" @click="() => { active = 'backup'; numberOfSteps = 1 }">{{ t("nextStep") }}</el-button>
                     <el-button v-if="active == 'backup'" @click="() => { active = 'upgrade'; numberOfSteps = 1 } ">{{ t("prev") }}</el-button>
@@ -215,10 +225,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, h, watch } from 'vue'
-import { t } from '@/lang'
-import { getVersions } from '@/app/api/auth'
-import { getFrameworkNewVersion } from '@/app/api/module'
+import { ref, h, watch ,computed} from "vue"
+import { t } from "@/lang"
+import { getVersions } from "@/app/api/auth"
+import { getFrameworkNewVersion } from "@/app/api/module"
 import {
     getUpgradeContent,
     getUpgradeTask,
@@ -226,12 +236,12 @@ import {
     executeUpgrade,
     preUpgradeCheck,
     clearUpgradeTask, upgradeUserOperate
-} from '@/app/api/upgrade'
-import { Terminal, TerminalFlash } from 'vue-web-terminal'
-import 'vue-web-terminal/lib/theme/dark.css'
-import { AnyObject } from '@/types/global'
-import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
-import Storage from '@/utils/storage'
+} from "@/app/api/upgrade"
+import { Terminal, TerminalFlash } from "vue-web-terminal"
+import "vue-web-terminal/lib/theme/dark.css"
+import { AnyObject } from "@/types/global"
+import { ElNotification, ElMessage, ElMessageBox } from "element-plus"
+import Storage from "@/utils/storage"
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -244,35 +254,49 @@ const step = ref(1)
 const upgradeCheck = ref<null | AnyObject>(null)
 const loading = ref(false)
 const terminalRef: any = ref(null)
-const emits = defineEmits(['complete', 'cloudbuild'])
+const emits = defineEmits(["complete", "cloudbuild"])
 const upgradeTipsShowDialog = ref<boolean>(false)
 let upgradeLog: any = []
 let errorLog: any = []
 const cloudBuildErrorTipsShowDialog = ref<boolean>(false)
 const retrySecond = ref(30)
 let retrySecondInterval: any = null
-const isNeedBackup = ref(true)
+const upgradeOption = ref({
+    is_need_backup: true,
+    is_need_cloudbuild: true
+})
 
 // 升级步骤排除，backupCode 备份代码，backupSql 备份数据库
 const excludeSteps: any = ref([
     {
-        name: '备份源码',
-        code: 'backupCode'
+        name: "备份源码",
+        code: "backupCode"
     },
     {
-        name: '备份数据库',
-        code: 'backupSql'
+        name: "备份数据库",
+        code: "backupSql"
     }
 ])
 /**
  * 查询升级任务
  */
+const showTerminal = ref(false)
+const upgradeStartTime = ref<number | null>(null)
+const upgradeDuration = ref(0) // 单位：秒
+let upgradeTimer: ReturnType<typeof setInterval> | null = null
+const errorDialog = ref(false)
+const errorMsg = ref('')
 const getUpgradeTaskFn = () => {
     getUpgradeTask().then(({ data }) => {
         if (!data) return
 
         if (!upgradeContent.value) {
             upgradeContent.value = data.upgrade_content
+
+            if ( upgradeContent.value || !data.upgrade_content || !Array.isArray(data.upgrade_content.content)) {
+                return
+            }
+
             let upgradeCount = 0
             let failUpgradeCount = 0
             for (let i = 0; i < upgradeContent.value.content.length; i++) {
@@ -295,15 +319,22 @@ const getUpgradeTaskFn = () => {
             return
         }
         if (!upgradeTask.value) {
-            terminalRef.value.execute('clear')
-            terminalRef.value.execute('开始升级')
+            showTerminal.value = true
+            terminalRef.value.execute("clear")
+            terminalRef.value.execute("开始升级")
+            upgradeStartTime.value = Date.now()
+            upgradeDuration.value = 0
+            if (upgradeTimer) clearInterval(upgradeTimer)
+            upgradeTimer = setInterval(() => {
+                upgradeDuration.value++
+            }, 1000)
         }
 
         upgradeTask.value = data
 
         data.log.forEach((item) => {
             if (!upgradeLog.includes(item)) {
-                terminalRef.value.pushMessage({ content: `${item}` })
+                terminalRef.value.pushMessage({ content: `${ item }` })
                 upgradeLog.push(item)
             }
         })
@@ -311,32 +342,64 @@ const getUpgradeTaskFn = () => {
         if (data.error) {
             data.error.forEach((item) => {
                 if (!errorLog.includes(item)) {
-                    terminalRef.value.pushMessage({ content: item, class: 'error' })
+                    terminalRef.value.pushMessage({ content: item, class: "error" })
                     errorLog.push(item)
+                    errorMsg.value = item
                 }
             })
+            errorDialog.value = true
+            showTerminal.value = false
+            if (upgradeTimer) {
+                clearInterval(upgradeTimer)
+                upgradeTimer = null
+            }
         }
         // 恢复完毕
-        if (data.step == 'restoreComplete') {
+        if (data.step == "restoreComplete") {
             flashInterval && clearInterval(flashInterval)
             return
         }
         // 升级完成
-        if (data.step == 'upgradeComplete') {
-            active.value = 'complete'
+        if (data.step == "upgradeComplete") {
+            active.value = "complete"
+            showTerminal.value = false
             numberOfSteps.value = 4
             notificationEl && notificationEl.close()
-            emits('complete')
+            emits("complete")
+            if (upgradeTimer) {
+                clearInterval(upgradeTimer)
+                upgradeTimer = null
+            }
             clearUpgradeTask()
             return
         }
         numberOfSteps.value = 2
-        active.value = 'upgrade'
+        active.value = "upgrade"
         executeUpgradeFn()
     })
 }
 
 getUpgradeTaskFn()
+const isBack = ref(false)
+const handleBack = () => {
+    active.value = "upgrade"
+    isBack.value = true
+    showTerminal.value = true
+    errorDialog.value = false // 隐藏错误弹窗
+}
+
+
+const formatUpgradeDuration = computed(() => {
+    const s = upgradeDuration.value
+    const h = Math.floor(s / 3600)
+    const m = Math.floor((s % 3600) / 60)
+    const sec = s % 60
+    return [
+        h > 0 ? `${h}小时` : '',
+        m > 0 ? `${m}分钟` : '',
+        `${sec}秒`
+    ].filter(Boolean).join('')
+})
 
 const executeUpgradeFn = () => {
     executeUpgrade().then(() => {
@@ -363,12 +426,12 @@ let notificationEl: any = null
  */
 const showElNotification = () => {
     notificationEl = ElNotification.success({
-        title: t('warning'),
+        title: t("warning"),
         dangerouslyUseHTMLString: true,
-        message: h('div', {}, [t('upgrade.upgradingTips'), h('span', {
-            class: 'text-primary cursor-pointer',
+        message: h("div", {}, [t("upgrade.upgradingTips"), h("span", {
+            class: "text-primary cursor-pointer",
             onClick: elNotificationClick
-        }, [t('upgrade.clickView')])]),
+        }, [t("upgrade.clickView")])]),
         duration: 0,
         showClose: false
     })
@@ -379,15 +442,15 @@ const elNotificationClick = () => {
     getUpgradeTaskFn()
     step.value = 2
     numberOfSteps.value = 3
-    active.value = 'upgrade'
+    active.value = "upgrade"
     notificationEl && notificationEl.close()
 }
 
-const frameworkVersion = ref('')
+const frameworkVersion = ref("")
 getVersions().then((res) => {
     frameworkVersion.value = res.data.version.version
 })
-const newFrameworkVersion = ref('')
+const newFrameworkVersion = ref("")
 getFrameworkNewVersion().then(({ data }) => {
     newFrameworkVersion.value = data.last_version
 })
@@ -399,7 +462,7 @@ const is_pass = ref(false)
 const repeat = ref(false)
 const readyLoading = ref(false)
 
-const handleUpgrade = async () => {
+const handleUpgrade = async() => {
     if (repeat.value) return
     repeat.value = true
     readyLoading.value = true
@@ -409,7 +472,7 @@ const handleUpgrade = async () => {
     await preUpgradeCheck(appKey).then(async ({ data }) => {
         upgradeCheck.value = data
         is_pass.value = data.is_pass
-        active.value = 'upgrade'
+        active.value = "upgrade"
         !upgradeTask.value ? (numberOfSteps.value = 0) : numberOfSteps.value
         upgradeTipsShowDialog.value = false
         showDialog.value = true
@@ -428,20 +491,21 @@ const upgradeAddonFn = () => {
 
     const appKey = upgradeContent.value?.upgrade_apps.join(',') != 'niucloud-admin' ? upgradeContent.value?.upgrade_apps.join(',') : ''
 
-    upgradeAddon(appKey, { is_need_backup: isNeedBackup.value }).then(() => {
+    upgradeAddon(appKey, upgradeOption.value).then(() => {
         getUpgradeTaskFn()
     }).catch(() => {
         loading.value = false
     })
 }
 
-const open = (addonKey: string = '', callback = null) => {
+const open = (addonKey: string = "", callback = null) => {
+    errorDialog.value = false // 隐藏错误弹窗
     if (upgradeTask.value) {
-        ElMessage({ message: '已有正在执行中的升级任务', type: 'error' })
+        ElMessage({ message: "已有正在执行中的升级任务", type: "error" })
         showDialog.value = true
         step.value = 2
         numberOfSteps.value = 3
-        active.value = 'upgrade'
+        active.value = "upgrade"
         if (callback) callback()
     } else {
         if (addonKey && frameworkVersion.value != newFrameworkVersion.value) {
@@ -468,8 +532,7 @@ const open = (addonKey: string = '', callback = null) => {
             } else if (upgradeContent.value.content.length == failUpgradeCount) {
                 isAllowUpgrade.value = false
             }
-
-            if (Storage.get('upgradeTipsLock')) {
+            if (Storage.get("upgradeTipsLock")) {
                 handleUpgrade()
             } else {
                 upgradeTipsShowDialog.value = true
@@ -488,19 +551,19 @@ const open = (addonKey: string = '', callback = null) => {
 let flashInterval: any = null
 const terminalFlash = new TerminalFlash()
 const onExecCmd = (key, command, success, failed, name) => {
-    if (command == '开始升级') {
+    if (command == "开始升级") {
         success(terminalFlash)
-        const frames = makeIterator(['/', '——', '\\', '|'])
+        const frames = makeIterator(["/", "——", "\\", "|"])
         flashInterval = setInterval(() => {
-            terminalFlash.flush('> ' + frames.next().value)
+            terminalFlash.flush("> " + frames.next().value)
         }, 150)
     }
 }
 
 const makeIterator = (array: string[]) => {
-    let nextIndex = 0
+    var nextIndex = 0
     return {
-        next () {
+        next() {
             if (nextIndex + 1 == array.length) {
                 nextIndex = 0
             }
@@ -510,11 +573,11 @@ const makeIterator = (array: string[]) => {
 }
 
 const dialogClose = (done: () => {}) => {
-    if (active.value == 'upgrade' && upgradeTask.value && ['upgradeComplete', 'restoreComplete'].includes(upgradeTask.value.step) === false) {
-        ElMessageBox.confirm(t('upgrade.showDialogCloseTips'), t('warning'), {
-            confirmButtonText: t('confirm'),
-            cancelButtonText: t('cancel'),
-            type: 'warning'
+    if (active.value == "upgrade" && upgradeTask.value && ['upgradeComplete', 'restoreComplete'].includes(upgradeTask.value.step) === false && !isBack.value) {
+        ElMessageBox.confirm(t("upgrade.showDialogCloseTips"), t("warning"), {
+            confirmButtonText: t("confirm"),
+            cancelButtonText: t("cancel"),
+            type: "warning"
         }).then(() => {
             done()
         })
@@ -528,20 +591,28 @@ watch(
     () => {
         if (!showDialog.value) {
             clearUpgradeTaskFn()
+
         }
     }
 )
 
 const clearUpgradeTaskFn = () => {
-    active.value = 'upgrade'
+    active.value = "upgrade"
     loading.value = false
     upgradeTask.value = null
+    isBack.value = false
+    errorDialog.value = false
+    errorMsg.value = ''
+    showTerminal.value = false
     upgradeLog = []
     errorLog = []
     numberOfSteps.value = 0
     flashInterval && clearInterval(flashInterval)
     retrySecondInterval && clearInterval(retrySecondInterval)
-    isNeedBackup.value = true
+    upgradeOption.value = {
+        is_need_backup: true,
+        is_need_cloudbuild: true
+    }
     step.value = 1
     clearUpgradeTask().then(() => {
     })
@@ -554,16 +625,16 @@ const clearUpgradeTaskFn = () => {
 const cloudBuildError = (event: string) => {
     cloudBuildErrorTipsShowDialog.value = false
     switch (event) {
-        case 'local':
+        case "local":
             upgradeUserOperate(event).then(() => {
                 getUpgradeTaskFn()
             })
             break
-        case 'retry':
+        case "retry":
             executeUpgradeFn()
             retrySecondInterval && clearInterval(retrySecondInterval)
             break
-        case 'rollback':
+        case "rollback":
             upgradeUserOperate(event).then(() => {
                 getUpgradeTaskFn()
             })
@@ -572,13 +643,13 @@ const cloudBuildError = (event: string) => {
 }
 
 const timeSplit = (str: string) => {
-    const [date, time] = str.split(' ')
-    const [hours, minutes] = time.split(':')
-    return [date, `${hours}:${minutes}`]
+    const [date, time] = str.split(" ")
+    const [hours, minutes] = time.split(":")
+    return [date, `${ hours }:${ minutes }`]
 }
 
 const upgradeTipsConfirm = (isLock: boolean = false) => {
-    isLock && Storage.set({ key: 'upgradeTipsLock', data: isLock })
+    isLock && Storage.set({ key: "upgradeTipsLock", data: isLock })
     upgradeTipsShowDialog.value = false
     !isLock && (showDialog.value = true)
 }
@@ -599,8 +670,14 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
+:deep(.el-button){
+    border-radius: 4px !important;
+}
 .table-head-bg {
     background-color: var(--el-table-header-bg-color);
+}
+:deep(.el-checkbox__label){
+    color: var(--el-color-primary);
 }
 
 :deep(.terminal .t-log-box span) {
@@ -623,8 +700,27 @@ defineExpose({
 
         .el-step__icon {
             background: var(--el-color-primary);
+            color: #fff;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
 
-            box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
+            i {
+                color: #fff;
+            }
+        }
+
+        .el-step__line {
+            margin: 0 25px;
+            background: var(--el-color-primary);
+        }
+    }
+    .is-finish {
+        color: var(--el-color-primary);
+        border-color: var(--el-color-primary);
+
+        .el-step__icon {
+            background: var(--el-color-primary)!important;
+            color: #fff !important;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
 
             i {
                 color: #fff;
@@ -645,13 +741,35 @@ defineExpose({
         .el-step__icon {
             padding: 10px;
             border: 1px solid var(--el-color-primary);
-            box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
+            background: var(--el-color-primary)!important;
+            color: #fff !important;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
         }
     }
 
     .is-wait {
         color: #333;
     }
+}
+:deep(.el-dialog__title){
+    font-size: 20px;
+    font-weight: bold;
+}
+:deep(.el-result__title p){
+    font-size: 25px;
+    color: #1D1F3A;
+    font-weight: 500;
+}
+:deep(.el-result__subtitle p){
+    font-size: 15px;
+    color: #4F516D;
+    font-weight: 500;
+    word-break: break-all;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
 }
 </style>
 

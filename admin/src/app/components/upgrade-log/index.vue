@@ -60,6 +60,12 @@ const getAppVersionListFn = () => {
         })
 
         frameworkVersionList.value = data
+        if(frameworkVersionList.value.length == 0){
+            ElMessage.warning('暂无版本更新信息')
+            return
+        }else{
+            dialogVisible.value = true
+        }
     })
 }
 const getFrameworkVersionListFn = () => {
@@ -73,6 +79,7 @@ const getFrameworkVersionListFn = () => {
             }
         })
         frameworkVersionList.value = data
+        dialogVisible.value = true
     })
 }
 
@@ -90,7 +97,6 @@ const open = async () => {
         } else {
             getFrameworkVersionListFn()
         }
-        dialogVisible.value = true
     })
 
 }

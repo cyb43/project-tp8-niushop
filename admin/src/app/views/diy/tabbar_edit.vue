@@ -48,7 +48,7 @@
                                             <el-input class="!w-[215px]" v-model.trim="item.text" :placeholder="t('titleContent')" maxlength="5" show-word-limit />
                                         </el-form-item>
                                         <el-form-item :label="t('navLinkOne')">
-                                            <diy-link v-model="item.link" @confirm="diyLinkFn" />
+                                            <diy-link v-model="item.link" :ignore="['DIY_JUMP_OTHER_APPLET']" @confirm="diyLinkFn" />
                                         </el-form-item>
                                         <el-icon class="close-icon cursor-pointer -top-[11px] -right-[8px]" @click="deleteNav(index)">
                                             <CircleCloseFilled />

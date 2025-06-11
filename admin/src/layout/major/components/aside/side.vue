@@ -109,7 +109,7 @@ const oneMenuActive = ref(route.matched[1].name)
 
 watch(route, () => {
     if (route.meta.attr != '') {
-        oneMenuActive.value = route.matched[2].name
+        if (route.matched[2]) oneMenuActive.value = route.matched[2].name
         twoMenuData.value = route.matched[1].children ?? []
     } else {
         // 多应用

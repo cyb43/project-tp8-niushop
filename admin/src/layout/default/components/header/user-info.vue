@@ -8,28 +8,37 @@
                 <icon name="element ArrowDown" class="ml-[5px]" />
             </div>
             <template #dropdown>
-                <el-dropdown-menu>
-                    <el-dropdown-item @click="getUserInfoFn">
-                        <!-- <router-link to="/user/center"> -->
+                <div class="p-[10px]">
+                    <div class="userinfo flex h-full items-center pb-[10px] border-b-[1px] border-solid border-[#e5e5e5]">
+                        <el-avatar v-if="userStore.userInfo.head_img" :size="45" :icon="UserFilled" :src="img(userStore.userInfo.head_img)"/>
+                        <img v-else src="@/app/assets/images/member_head.png" class="w-[45px] rounded-full" />
+                        <div>
+                            <div class="user-name pl-[8px] text-[14px]">{{ userStore.userInfo.username }}</div>
+                            <div class="pl-[8px] text-[13px] text-[#9699B6]">个人中心</div>
+                        </div>
+                    </div>
+                    <el-dropdown-menu>
+                        <el-dropdown-item @click="getUserInfoFn">
                             <div class="flex items-center leading-[1] py-[5px]">
                                 <span class="iconfont iconshezhi1 ml-[4px] !text-[14px] mr-[10px]"></span>
                                 <span class="text-[14px]">账号设置</span>
                             </div>
-                        <!-- </router-link> -->
-                    </el-dropdown-item>
-                    <el-dropdown-item @click="changePasswordDialog=true">
-                        <div class="flex items-center leading-[1] py-[5px]">
-                            <span class="iconfont iconxiugai ml-[4px] !text-[14px] mr-[10px]"></span>
-                            <span class="text-[14px]">修改密码</span>
-                        </div>
-                    </el-dropdown-item>
-                    <el-dropdown-item @click="logout">
-                        <div class="flex items-center leading-[1] py-[5px]">
-                            <span class="iconfont icontuichudenglu ml-[4px] !text-[14px] mr-[10px]"></span>
-                            <span class="text-[14px]">退出登录</span>
-                        </div>
-                    </el-dropdown-item>
-                </el-dropdown-menu>
+                        </el-dropdown-item>
+                        <el-dropdown-item @click="changePasswordDialog=true">
+                            <div class="flex items-center leading-[1] py-[5px]">
+                                <span class="iconfont iconxiugai ml-[4px] !text-[14px] mr-[10px]"></span>
+                                <span class="text-[14px]">修改密码</span>
+                            </div>
+                        </el-dropdown-item>
+                        <el-dropdown-item @click="logout">
+                            <div class="flex items-center leading-[1] py-[5px]">
+                                <span class="iconfont icontuichudenglu ml-[4px] !text-[14px] mr-[10px]"></span>
+                                <span class="text-[14px]">退出登录</span>
+                            </div>
+                        </el-dropdown-item>
+                    </el-dropdown-menu>
+                </div>
+
             </template>
         </el-dropdown>
         <el-dialog v-model="changePasswordDialog" width="450px" title="修改密码">
@@ -100,16 +109,17 @@ const saveInfo = reactive({
 });
 // 表单验证规则
 const formRules = reactive<FormRules>({
-  original_password: [
-    { required: true, message: t("originalPasswordPlaceholder"), trigger: "blur" },
-  ],
-  password: [
-    { required: true, message: t("passwordPlaceholder"), trigger: "blur" },
-  ],
-  password_copy: [
-    { required: true, message: t("passwordPlaceholder"), trigger: "blur" },
-  ]
-});
+    original_password: [
+        { required: true, message: t("originalPasswordPlaceholder"), trigger: "blur" },
+    ],
+    password: [
+        { required: true, message: t("passwordPlaceholder"), trigger: "blur" },
+    ],
+    password_copy: [
+        { required: true, message: t("passwordPlaceholder"), trigger: "blur" },
+    ]
+})
+
 const submitForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.validate((valid) => {

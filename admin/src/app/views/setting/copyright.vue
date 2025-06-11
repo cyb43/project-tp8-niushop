@@ -11,7 +11,7 @@
                 <el-form-item :label="t('companyName')" prop="company_name">
                     <el-input v-model.trim="formData.company_name" :placeholder="t('companyNamePlaceholder')" class="input-width" clearable maxlength="30"/>
                 </el-form-item>
-                <el-form-item :label="t('copyrightLink')" >
+                <el-form-item :label="t('copyrightLink')" prop="copyright_link">
                     <el-input v-model.trim="formData.copyright_link" :placeholder="t('copyrightLinkPlaceholder')" class="input-width" clearable />
                 </el-form-item>
                 <el-form-item :label="t('copyrightDesc')" >
@@ -81,7 +81,25 @@ setFormData()
 const formRef = ref<FormInstance>()
 
 // 表单验证规则
-const formRules = reactive<FormRules>({})
+const formRules = reactive<FormRules>({
+    copyright_link: [
+        {
+            validator(rule, value, callback) {
+                // 允许为空，空值直接通过验证
+                if (!value) return callback();
+
+                // 非空时检查是否包含 http/https
+                const reg = /^.*?(http|https).*?$/i;
+                if (!reg.test(value)) {
+                    callback(new Error('链接必须包含 http 或 https'));
+                } else {
+                    callback();
+                }
+            },
+            trigger: 'blur'
+        }
+    ]
+})
 
 /**
  * 保存

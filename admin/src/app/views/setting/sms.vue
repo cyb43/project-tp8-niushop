@@ -39,9 +39,10 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getSmsList } from '@/app/api/notice'
-import { useRoute } from 'vue-router'
+import { getSmsList ,getAccountIsLogin} from '@/app/api/notice'
+import { useRoute, useRouter } from 'vue-router'
 
+const router = useRouter()
 const route = useRoute()
 const pageName = route.meta.title
 const smsTypeRefs = ref([])
@@ -73,10 +74,19 @@ const setSmsTypeRefs = (el, index) => {
 }
 
 loadSmsList()
+const isLogin = ref(false)
 const editEvent = (data: any, index: number) => {
-    smsTypeRefs.value[index].setFormData(data)
-    smsTypeRefs.value[index].showDialog = true
+    if (data.sms_type == 'niuyun') {
+        getAccountIsLogin().then((res: any) => {
+            router.push('/setting/niusms/setting')
+        })
+
+    } else {
+        smsTypeRefs.value[index].setFormData(data)
+        smsTypeRefs.value[index].showDialog = true
+    }
 }
+
 </script>
 
 <style lang="scss" scoped></style>

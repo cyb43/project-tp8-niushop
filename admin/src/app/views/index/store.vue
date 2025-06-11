@@ -4,42 +4,59 @@
         <el-card class="box-card !border-none" shadow="never">
             <div class="flex justify-between items-center">
                 <span class="text-page-title">{{ t("localAppText") }}</span>
-
-                <el-input class="!w-[250px]" :placeholder="t('search')" v-model.trim="search_name" @keyup.enter="query">
-                    <template #suffix>
-                        <el-icon class="el-input__icon cursor-pointer" size="14px" @click="query">
-                            <search />
-                        </el-icon>
-                    </template>
-                </el-input>
             </div>
 
-            <div class="flex justify-between items-center my-[20px]">
-                <div class="flex">
-                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[var(--el-color-info-light-8)] rounded-full px-[20px] mr-[24px] cursor-pointer hover:bg-[var(--el-color-info-light-8)]', { '!text-[#fff] !bg-[#000] !border-[#000]': activeName === 'installed' }]" @click="activeNameTabFn('installed')">{{ t("installLabel") }}</div>
-                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[var(--el-color-info-light-8)] rounded-full px-[20px] mr-[24px] cursor-pointer hover:bg-[var(--el-color-info-light-8)]', { '!text-[#fff] !bg-[#000] !border-[#000]': activeName === 'uninstalled' }]" @click="activeNameTabFn('uninstalled')">{{ t("uninstalledLabel") }}</div>
-                    <div :class="['flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[var(--el-color-info-light-8)] rounded-full px-[20px] mr-[24px] cursor-pointer hover:bg-[var(--el-color-info-light-8)]', { '!text-[#fff] !bg-[#000] !border-[#000]': activeName === 'all' }]" @click="activeNameTabFn('all')">{{ t("buyLabel") }}</div>
-                    <div :class="['relative flex items-center text-[14px] h-[32px] border-[1px] border-solid my-[3px] border-[var(--el-color-info-light-8)] rounded-full px-[20px] mr-[24px] cursor-pointer hover:bg-[var(--el-color-info-light-8)]', { '!text-[#fff] !bg-[#000] !border-[#000]': activeName === 'recentlyUpdated' }]" @click="activeNameTabFn('recentlyUpdated')">
-                        <span v-if="localList['recentlyUpdated'].length > 0" class="w-[9px] h-[9px] bg-[#FF0000]" style="position: absolute; border-radius: 50%; right: 5px; top: -5px"></span>
-                        <span>{{ t('recentlyUpdated') }}</span>
-                    </div>
+            <el-tabs v-model="activeName" class="mt-[10px]">
+                <el-tab-pane :label="t('installLabel')" name="installed"></el-tab-pane>
+                <el-tab-pane :label="t('uninstalledLabel')" name="uninstalled"></el-tab-pane>
+                <el-tab-pane :label="t('buyLabel')" name="all"></el-tab-pane>
+                <el-tab-pane :label="t('recentlyUpdated')" name="recentlyUpdated">
+                    <template #label>
+                        <span class="custom-tabs-label">
+                            <span>{{ t('recentlyUpdated') }}</span>
+                            <span v-if="localList['recentlyUpdated'].length > 0" class="w-[15px] h-[15px] bg-[#DA203E] absolute text-[#fff] text-[11px] flex items-center justify-center rounded-full top-[3px] right-[-12px]">{{ localList['recentlyUpdated'].length }}</span>
+                        </span>
+                    </template>
+                </el-tab-pane>
+            </el-tabs>
+            <div class="flex justify-between my-[10px]">
+                <div class="flex items-center search-form">
+                    <el-input class="!w-[192px] !h-[32px] rounded-[4px]" :placeholder="t('search')" v-model.trim="search_name" @keyup.enter="query">
+                        <template #suffix>
+                            <el-icon class="el-input__icon cursor-pointer" size="14px" @click="query">
+                                <search />
+                            </el-icon>
+                        </template>
+                    </el-input>
+                    <el-select v-model="search_type" placeholder="请选择类型" class="!w-[192px] !h-[32px] rounded-[4px] ml-[20px] " >
+                        <el-option :label="t('全部')" value="" />
+                        <el-option  v-for="(label, value) in typeList"  :key="value"  :label="label" :value="value"></el-option>
+                    </el-select>
+                    <el-button type="primary" @click="query" class="ml-[20px]">{{ t("搜索") }}</el-button>
                 </div>
                 <div>
-                    <el-button type="primary" v-show="activeName === 'recentlyUpdated'" round @click="batchUpgrade" :loading="upgradeRef?.loading" :disabled="authLoading">{{ t("batchUpgrade") }}</el-button>
-                    <el-button type="primary" round @click="handleCloudBuild" :loading="cloudBuildRef?.loading" :disabled="authLoading">{{ t("cloudBuild") }}</el-button>
+                    <el-button type="primary" v-show="activeName === 'recentlyUpdated'" @click="batchUpgrade" :loading="upgradeRef?.loading" :disabled="authLoading">{{ t("batchUpgrade") }}</el-button>
+                    <!-- <el-button type="primary" @click="handleCloudBuild" :loading="cloudBuildRef?.loading" :disabled="authLoading">{{ t("cloudBuild") }}</el-button> -->
                 </div>
-            </div>
 
-            <div>
-                <el-table v-if="localList[activeName].length && !loading" :data="info[activeName]" size="large" class="pt-[5px]" @selection-change="handleSelectionChange">
-                    <el-table-column type="selection" v-if="activeName === 'recentlyUpdated'" />
-                    <el-table-column :label="t('appName')" align="left" width="450">
+            </div>
+            <div class="relative">
+                <el-table v-if="localList[activeName].length && !loading"  :tree-props="{ children: 'children' }" :default-expand-all="true" :data="info[activeName]" row-key="key" size="large"  @selection-change="handleSelectionChange">
+                    <el-table-column width="24">
                         <template #default="{ row }">
-                            <div class="flex items-center cursor-pointer">
+                            <div class="tree-child-cell" :class="{ 'is-tree-parent': row.children?.length, 'is-tree-child': typeof row.support_app === 'string' && row.support_app !== '' && visibleRowKeys.has(row.support_app)}">
+                            <span style="opacity: 0;">.</span>
+                            </div>
+                        </template>
+                    </el-table-column>
+                    <el-table-column type="selection" v-if="activeName === 'recentlyUpdated'" />
+                    <el-table-column :label="t('appName')" align="left" width="500">
+                        <template #default="{ row }">
+                            <div class="flex items-center cursor-pointer relative left-[-10px]">
                                 <el-image class="w-[54px] h-[54px]" :src="row.icon" fit="contain">
                                     <template #error>
                                         <div class="flex items-center w-full h-full">
-                                            <img class="max-w-full max-h-full" src="@/app/assets/images/icon-addon.png" alt="" />
+                                        <img class="max-w-full max-h-full" src="@/app/assets/images/icon-addon.png" alt="" />
                                         </div>
                                     </template>
                                 </el-image>
@@ -49,22 +66,23 @@
                                     <div class="w-[236px] truncate leading-[18px] mt-[6px]" v-else>{{ row.version }}</div>
                                     <div class="mt-[3px] flex flex-nowrap">
                                         <el-tag type="danger" size="small" v-if="activeName == 'recentlyUpdated' && row.install_info && Object.keys(row.install_info)?.length && row.install_info.version != row.version">{{ t("newVersion") }}{{ row.version }}</el-tag>
-                                        <el-tooltip v-if="versionJudge(row)" effect="dark" content="该插件与框架版本不兼容，可能存在未知问题" placement="top-start">
-                                            <el-tag type="info" size="small" class="ml-[3px]">该插件与框架版本不兼容，可能存在未知问题</el-tag>
+                                        <el-tooltip v-if="versionJudge(row)" effect="dark" :content="`该插件适配框架版本为${ row.support_version }，与已安装框架版本${frameworkVersion}不完全兼容`" placement="top-start">
+                                            <el-tag type="warning" size="small" class="ml-[3px]">该插件适配框架版本为{{ row.support_version }}，与已安装框架版本{{frameworkVersion}}不完全兼容</el-tag>
                                         </el-tooltip>
                                     </div>
                                 </div>
                             </div>
                         </template>
                     </el-table-column>
+
                     <el-table-column align="left" min-width="150">
                         <template #header>
                             <div class="flex items-center">
                                 <span class="font-500 text-[13px] mr-[5px]">{{ t("appIdentification") }}</span>
                                 <el-tooltip class="box-item" effect="light" :content="t('tipText')" placement="bottom">
-                                    <el-icon class="cursor-pointer text-[16px] text-[#a9a9a9]">
-                                        <QuestionFilled />
-                                    </el-icon>
+                                <el-icon class="cursor-pointer text-[16px] text-[#a9a9a9]">
+                                    <QuestionFilled />
+                                </el-icon>
                                 </el-tooltip>
                             </div>
                         </template>
@@ -72,21 +90,25 @@
                             <span class="font-500 text-[13px]">{{ row.key }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="" :label="t('introduction')" align="left" min-width="200">
+
+                    <el-table-column :label="t('introduction')" align="left" min-width="250">
                         <template #default="{ row }">
                             <span class="font-500 text-[13px] multi-hidden">{{ row.desc }}</span>
                         </template>
                     </el-table-column>
+
                     <el-table-column :label="t('type')" align="left" min-width="80">
                         <template #default="{ row }">
-                            <span class="font-500 text-[13px]">{{ row.type === "app" ? t("app") : t("addon") }}</span>
+                            <span class="font-500 text-[13px] multi-hidden">{{ row.type === "app" ? t("app") : t("addon") }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="" :label="t('author')" align="left" min-width="80">
+
+                    <el-table-column :label="t('author')" align="left" min-width="80">
                         <template #default="{ row }">
                             <span class="font-500 text-[13px]">{{ row.author }}</span>
                         </template>
                     </el-table-column>
+
                     <el-table-column :label="t('operation')" fixed="right" align="right" width="250">
                         <template #default="{ row }">
                             <el-button class="!text-[13px]" v-if="activeName == 'recentlyUpdated' && row.install_info && Object.keys(row.install_info)?.length && row.install_info.version != row.version" type="primary" link @click="upgradeAddonFn(row.key)">{{ t("upgrade") }}</el-button>
@@ -235,72 +257,80 @@
 
             <!-- 安装弹窗 -->
             <el-dialog v-model="installShowDialog" :title="t('addonInstall')" width="850px" :close-on-click-modal="false" :close-on-press-escape="false" :before-close="installShowDialogClose">
-                <el-steps :space="200" :active="installStep" finish-status="success" align-center>
+                <el-steps :space="200" :active="installStep" class="number-of-steps" process-status="process" align-center v-if="installStep != 2 && !errorDialog ">
                     <el-step :title="t('envCheck')" class="flex-1" />
                     <el-step :title="t('installProgress')" class="flex-1" />
                     <el-step :title="t('installComplete')" class="flex-1" />
                 </el-steps>
-                <div v-show="installStep == 1" v-loading="!installCheckResult.dir">
-                    <el-scrollbar max-height="50vh">
+                <div v-show="installStep == 0" v-loading="!installCheckResult.dir">
+                    <!-- <el-scrollbar max-height="50vh"> -->
                         <div class="min-h-[150px]">
                             <div class="my-3" v-if="installCheckResult.dir">
                                 <p class="pt-[20px] pl-[20px]">{{ t("dirPermission") }}</p>
+                                <div v-if="!installCheckResult.is_pass" class="mt-[10px] mx-[20px] text-[14px] cursor-pointer text-primary flex items-center justify-between bg-[#EFF6FF] rounded-[4px] p-[10px]" @click="cloudBuildCheckDirFn">
+                                    <div class="flex items-center">
+                                        <el-icon :size="17"><QuestionFilled /></el-icon>
+                                        <span class="ml-[5px] leading-[20px]">编译权限错误，查看解决方案</span></div>
+                                    <div class="border-[1px] border-primary rounded-[3px] w-[72px] h-[26px] leading-[25px] text-center">立即查看</div>
+                                </div>
                                 <div class="px-[20px] pt-[10px] text-[14px]">
                                     <el-row class="py-[10px] items table-head-bg pl-[15px] mb-[10px]">
-                                        <el-col :span="12">
+                                        <el-col :span="18">
                                             <span>{{ t("path") }}</span>
                                         </el-col>
-                                        <el-col :span="6">
+                                        <el-col :span="3">
                                             <span>{{ t("demand") }}</span>
                                         </el-col>
-                                        <el-col :span="6">
+                                        <el-col :span="3">
                                             <span>{{ t("status") }}</span>
                                         </el-col>
                                     </el-row>
-                                    <el-row class="pb-[10px] items pl-[15px]" v-for="(item, index) in installCheckResult.dir.is_readable" :key="index">
-                                        <el-col :span="12">
-                                            <span>{{ item.dir }}</span>
-                                        </el-col>
-                                        <el-col :span="6">
-                                            <span>{{ t("readable") }}</span>
-                                        </el-col>
-                                        <el-col :span="6">
-                                            <span v-if="item.status">
-                                                <el-icon color="green">
-                                                    <Select />
-                                                </el-icon>
-                                            </span>
-                                            <span v-else>
-                                                <el-icon color="red">
-                                                    <CloseBold />
-                                                </el-icon>
-                                            </span>
-                                        </el-col>
-                                    </el-row>
-                                    <el-row class="pb-[10px] items pl-[15px]" v-for="(item, index) in installCheckResult.dir.is_write" :key="index">
-                                        <el-col :span="12">
-                                            <span>{{ item.dir }}</span>
-                                        </el-col>
-                                        <el-col :span="6">
-                                            <span>{{ t("write") }}</span>
-                                        </el-col>
-                                        <el-col :span="6">
-                                            <span v-if="item.status">
-                                                <el-icon color="green">
-                                                    <Select />
-                                                </el-icon>
-                                            </span>
-                                            <span v-else>
-                                                <el-icon color="red">
-                                                    <CloseBold />
-                                                </el-icon>
-                                            </span>
-                                        </el-col>
-                                    </el-row>
+                                    <el-scrollbar style="height: calc(300px); overflow: auto">
+                                        <el-row class="pb-[10px] items pl-[15px]" v-for="(item, index) in installCheckResult.dir.is_readable" :key="index">
+                                            <el-col :span="18">
+                                                <span>{{ item.dir }}</span>
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <span>{{ t("readable") }}</span>
+                                            </el-col>
+                                            <el-col :span="3" >
+                                                <span v-if="item.status">
+                                                    <el-icon color="green">
+                                                        <Select />
+                                                    </el-icon>
+                                                </span>
+                                                <span v-else>
+                                                    <el-icon color="red">
+                                                        <CloseBold />
+                                                    </el-icon>
+                                                </span>
+                                            </el-col>
+                                        </el-row>
+                                        <el-row class="pb-[10px] items pl-[15px]" v-for="(item, index) in installCheckResult.dir.is_write" :key="index">
+                                            <el-col :span="18">
+                                                <span>{{ item.dir }}</span>
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <span>{{ t("write") }}</span>
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <span v-if="item.status" class="text-right">
+                                                    <el-icon color="green">
+                                                        <Select />
+                                                    </el-icon>
+                                                </span>
+                                                <span v-else>
+                                                    <el-icon color="red">
+                                                        <CloseBold />
+                                                    </el-icon>
+                                                </span>
+                                            </el-col>
+                                        </el-row>
+                                    </el-scrollbar>
                                 </div>
                             </div>
                         </div>
-                    </el-scrollbar>
+                    <!-- </el-scrollbar> -->
                     <div class="flex justify-end">
                         <el-tooltip effect="dark" :content="t('installTips')" placement="top">
                             <el-button :disabled="!installCheckResult.is_pass || cloudInstalling" :loading="localInstalling" @click="handleInstall">{{ t("localInstall") }}</el-button>
@@ -310,15 +340,41 @@
                         </el-tooltip>
                     </div>
                 </div>
-                <div v-show="installStep == 2" class="h-[50vh] mt-[20px]">
+                <div v-show="installStep == 1 && !errorDialog" class="h-[50vh] mt-[20px]">
                     <terminal ref="terminalRef" :context="currAddon" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd" />
                 </div>
-                <div v-show="installStep == 3" class="h-[50vh] mt-[20px] flex flex-col">
-                    <el-result icon="success" :title="t('addonInstallSuccess')"></el-result>
+                <div v-show="installStep == 2" class="h-[50vh] mt-[20px] flex flex-col">
+                    <!-- <el-result icon="success" :title="t('addonInstallSuccess')"></el-result> -->
                     <!-- 提示信息 -->
-                    <div v-for="(item, index) in installAfterTips" class="mb-[10px]" :key="index">
+                    <!-- <div v-for="(item, index) in installAfterTips" class="mb-[10px]" :key="index">
                         <el-alert :title="item" type="error" :closable="false" />
-                    </div>
+                    </div> -->
+                    <el-result icon="success" :title="t('addonInstallSuccess')">
+                        <template #icon>
+                            <img src="@/app/assets/images/success_icon.png" alt="">
+                        </template>
+                        <template #extra>
+                            <div v-for="(item, index) in installAfterTips" class="mb-[10px]" :key="index">
+                                <div class="text-[16px] text-[#4F516D] mt-[5px]">{{ item }}</div>
+                            </div>
+                            <div class="text-[16px] text-[#9699B6] mt-[10px]" v-if="upgradeDuration>0">本次安装用时{{ formatUpgradeDuration }}</div>
+                            <div class="mt-[20px]">
+                                <el-button @click="handleBack()" v-if="installType=='cloud'" class="!w-[90px]">返回</el-button>
+                                <el-button @click="installShowDialog=false" type="primary" class="!w-[90px]">完成</el-button>
+                            </div>
+                        </template>
+                    </el-result>
+                </div>
+                <div class="mt-[50px]" v-show="errorDialog">
+                    <el-result icon="error" :title="t('安装失败')" :sub-title="errorMsg">
+                        <template #icon>
+                            <img src="@/app/assets/images/error_icon.png" alt="">
+                        </template>
+                        <template #extra>
+                            <el-button @click="handleBack()" v-if="installType=='cloud'" class="!w-[90px]">错误信息</el-button>
+                            <el-button @click="installShowDialog=false" type="primary" class="!w-[90px]">完成</el-button>
+                        </template>
+                    </el-result>
                 </div>
             </el-dialog>
 
@@ -329,24 +385,24 @@
                             <p class="pt-[20px] pl-[20px]">{{ t("dirPermission") }}</p>
                             <div class="px-[20px] pt-[10px] text-[14px]">
                                 <el-row class="py-[10px] items table-head-bg pl-[15px] mb-[10px]">
-                                    <el-col :span="12">
+                                    <el-col :span="18">
                                         <span>{{ t("path") }}</span>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="3">
                                         <span>{{ t("demand") }}</span>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="3">
                                         <span>{{ t("status") }}</span>
                                     </el-col>
                                 </el-row>
                                 <el-row class="pb-[10px] items pl-[15px]" v-for="(item, index) in uninstallCheckResult.dir.is_readable" :key="index">
-                                    <el-col :span="12">
+                                    <el-col :span="18">
                                         <span>{{ item.dir }}</span>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="3">
                                         <span>{{ t("readable") }}</span>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="3">
                                         <span v-if="item.status">
                                             <el-icon color="green">
                                                 <Select />
@@ -360,13 +416,13 @@
                                     </el-col>
                                 </el-row>
                                 <el-row class="pb-[10px] items pl-[15px]" v-for="(item, index) in uninstallCheckResult.dir.is_write" :key="index">
-                                    <el-col :span="12">
+                                    <el-col :span="18">
                                         <span>{{ item.dir }}</span>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="3">
                                         <span>{{ t("write") }}</span>
                                     </el-col>
-                                    <el-col :span="6">
+                                    <el-col :span="3" >
                                         <span v-if="item.status">
                                             <el-icon color="green">
                                                 <Select />
@@ -404,7 +460,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, watch, h } from 'vue'
+import { ref, reactive, watch, h ,computed } from 'vue'
 import { t } from '@/lang'
 import {
     getAddonLocal,
@@ -415,7 +471,8 @@ import {
     getAddonInstalltask,
     getAddonCloudInstallLog,
     preUninstallCheck,
-    cancelInstall
+    cancelInstall,
+    getAddonInit
 } from '@/app/api/addon'
 import { deleteAddonDevelop } from '@/app/api/tools'
 import { downloadVersion, getAuthInfo, setAuthInfo } from '@/app/api/module'
@@ -446,8 +503,20 @@ const frameworkVersion = ref('')
 const upgradeLogRef = ref<any>(null)
 getVersions().then((res) => {
     frameworkVersion.value = res.data.version.version
+    
 })
 
+const treeProps = reactive({
+  checkStrictly: false
+})
+
+const typeList = ref({})
+const getAddonInitFn = () => {
+    getAddonInit().then((res) => {
+        typeList.value = res.data.type_list
+    })
+}
+getAddonInitFn()
 const currDownData = ref()
 const downEventHintFn = () => {
     downEvent(currDownData.value, true)
@@ -491,6 +560,7 @@ getAuthInfo().then((res) => {
  * 本地下载的插件列表
  */
 const search_name = ref('')
+const search_type = ref('')
 // 表格展示数据
 const info = ref({
     installed: [],
@@ -498,19 +568,80 @@ const info = ref({
     all: [],
     recentlyUpdated: []
 })
-const query = () => {
-    if (search_name.value == '' || search_name.value == null) {
-        info.value.installed = localList.value.installed
-        info.value.uninstalled = localList.value.uninstalled
-        info.value.all = localList.value.all
-        info.value.recentlyUpdated = localList.value.recentlyUpdated
-        return false
-    }
-    info.value.installed = localList.value.installed.filter((el: any) => el.title.indexOf(search_name.value) != -1)
-    info.value.uninstalled = localList.value.uninstalled.filter((el: any) => el.title.indexOf(search_name.value) != -1)
-    info.value.all = localList.value.all.filter((el: any) => el.title.indexOf(search_name.value) != -1)
-    info.value.recentlyUpdated = localList.value.recentlyUpdated.filter((el: any) => el.title.indexOf(search_name.value) != -1)
+const buildInfo = (list: any[]) => {
+    const map = new Map()
+    const result: any[] = []
+
+    // 所有插件都先放进 map，初始化 children
+    list.forEach(item => {
+        map.set(item.key, { ...item, children: [] })
+    })
+
+    // 第二次遍历构建父子关系
+    list.forEach(item => {
+        if (item.support_app && map.has(item.support_app)) {
+            const parent = map.get(item.support_app)
+            parent.children.push(map.get(item.key)) // 直接取已经构建好的对象
+        }
+    })
+
+    // 最终收集那些没有作为子插件挂载出去的插件（即顶层插件）
+    map.forEach((item: any) => {
+        if (!item.support_app || !map.has(item.support_app)) {
+            result.push(item)
+        }
+    })
+
+    return result
 }
+// const query = () => {
+//     if (search_name.value == '' || search_name.value == null) {
+//         info.value.installed = buildInfo(localList.value.installed)
+//         info.value.uninstalled = buildInfo(localList.value.uninstalled)
+//         info.value.all = buildInfo(localList.value.all)
+//         info.value.recentlyUpdated = buildInfo(localList.value.recentlyUpdated)
+//         return false
+//     }
+
+//     const filteredInstalled = localList.value.installed.filter((el: any) => el.title.indexOf(search_name.value) != -1)
+//     const filteredUninstalled = localList.value.uninstalled.filter((el: any) => el.title.indexOf(search_name.value) != -1)
+//     const filteredAll = localList.value.all.filter((el: any) => el.title.indexOf(search_name.value) != -1)
+//     const filteredRecentlyUpdated = localList.value.recentlyUpdated.filter((el: any) => el.title.indexOf(search_name.value) != -1)
+    
+//     // 构建父子关系
+//     info.value.installed = buildInfo(filteredInstalled)
+//     info.value.uninstalled = buildInfo(filteredUninstalled)
+//     info.value.all = buildInfo(filteredAll)
+//     info.value.recentlyUpdated = buildInfo(filteredRecentlyUpdated)
+// }
+const query = () => {
+    const name = search_name.value
+    const type = search_type.value
+
+    // 如果没填搜索关键词也没选类型，重置所有列表
+    if ((!name || name === '') && (type === '' || type == null)) {
+        info.value.installed = buildInfo(localList.value.installed)
+        info.value.uninstalled = buildInfo(localList.value.uninstalled)
+        info.value.all = buildInfo(localList.value.all)
+        info.value.recentlyUpdated = buildInfo(localList.value.recentlyUpdated)
+        return
+    }
+
+    // 公共筛选函数
+    const filterList = (list: any[]) => {
+        return list.filter((el: any) => {
+        const matchName = !name || el.title.includes(name)
+        const matchType = !type || el.type === type
+        return matchName && matchType
+        })
+    }
+
+    info.value.installed = buildInfo(filterList(localList.value.installed))
+    info.value.uninstalled = buildInfo(filterList(localList.value.uninstalled))
+    info.value.all = buildInfo(filterList(localList.value.all))
+    info.value.recentlyUpdated = buildInfo(filterList(localList.value.recentlyUpdated))
+}
+
 const localList = ref({
     installed: [],
     uninstalled: [],
@@ -578,7 +709,7 @@ const currAddon = ref('')
 const installShowDialog = ref(false)
 
 // 安装步骤
-const installStep = ref(1)
+const installStep = ref(0)
 
 // 安装检测结果
 const installCheckResult = ref({})
@@ -615,7 +746,10 @@ const installAddonFn = (key: string) => {
     currAddon.value = key
 
     preInstallCheck(key).then((res) => {
-        installStep.value = 1
+        installStep.value = 0
+        isBack.value = false
+        errorDialog.value = false
+        installType.value = ''
         installShowDialog.value = true
         installAfterTips.value = []
         installCheckResult.value = res.data
@@ -626,10 +760,20 @@ const installAddonFn = (key: string) => {
 /**
  * 获取正在进行的安装任务
  */
+const upgradeStartTime = ref<number | null>(null)
+const upgradeDuration = ref(0) // 单位：秒
+let upgradeTimer: ReturnType<typeof setInterval> | null = null 
 let notificationEl = null
+
 const getInstallTask = (first: boolean = true) => {
     getAddonInstalltask().then((res) => {
         if (res.data) {
+            upgradeStartTime.value = Date.now()
+            upgradeDuration.value = 0
+            if (upgradeTimer) clearInterval(upgradeTimer)
+            upgradeTimer = setInterval(() => {
+                upgradeDuration.value++
+            }, 1000)
             if (first) {
                 installLog = []
                 currAddon.value = res.data.addon
@@ -647,7 +791,14 @@ const getInstallTask = (first: boolean = true) => {
                 }
             }
             if (res.data.error) {
-                ElMessage({ message: '插件安装失败', type: 'error', duration: 5000 })
+                terminalRef.value.pushMessage({ content: res.data.error, class: 'error' })
+                errorMsg.value = res.data.error
+                errorDialog.value = true
+                if (upgradeTimer) {
+                    clearInterval(upgradeTimer)
+                    upgradeTimer = null
+                }
+                // ElMessage({ message: '插件安装失败', type: 'error', duration: 5000 })
                 return
             }
             if (res.data.mode == 'cloud') {
@@ -656,9 +807,14 @@ const getInstallTask = (first: boolean = true) => {
             setTimeout(() => {
                 getInstallTask(false)
             }, 2000)
+            
         } else {
             if (!first) {
-                installStep.value = 3
+                installStep.value = 2
+                if (upgradeTimer) {
+                    clearInterval(upgradeTimer)
+                    upgradeTimer = null
+                }
                 localListFn()
                 userStore.clearRouters()
                 notificationEl.close()
@@ -671,21 +827,52 @@ const getInstallTask = (first: boolean = true) => {
 
 getInstallTask()
 
+const isBack = ref(false)
+const handleBack = () => {
+    isBack.value = true
+    installStep.value = 1
+    errorDialog.value = false
+}
+
+const formatUpgradeDuration = computed(() => {
+    const s = upgradeDuration.value
+    const h = Math.floor(s / 3600)
+    const m = Math.floor((s % 3600) / 60)
+    const sec = s % 60
+    return [
+        h > 0 ? `${h}小时` : '',
+        m > 0 ? `${m}分钟` : '',
+        `${sec}秒`
+    ].filter(Boolean).join('')
+})
+
 const checkInstallTask = () => {
     installShowDialog.value = true
-    installStep.value = 2
+    installStep.value = 1
 }
 
 const localInstalling = ref(false)
 /**
  * 安装插件
  */
+const installType = ref('')
 const handleInstall = () => {
     if (!installCheckResult.value.is_pass || localInstalling.value) return
+    installType.value = 'local'
     localInstalling.value = true
+    upgradeStartTime.value = Date.now()
+    upgradeDuration.value = 0
+    if (upgradeTimer) clearInterval(upgradeTimer)
+    upgradeTimer = setInterval(() => {
+        upgradeDuration.value++
+    }, 1000)
 
     installAddon({ addon: currAddon.value }).then((res) => {
-        installStep.value = 3
+        installStep.value = 2
+        if (upgradeTimer) {
+            clearInterval(upgradeTimer)
+            upgradeTimer = null
+        }
         localListFn()
         localInstalling.value = false
         if (res.data.length) installAfterTips.value = res.data
@@ -707,10 +894,11 @@ const handleCloudInstall = () => {
 
     if (!installCheckResult.value.is_pass || cloudInstalling.value) return
     cloudInstalling.value = true
+    installType.value = 'cloud'
 
     cloudInstallAddon({ addon: currAddon.value })
         .then((res) => {
-            installStep.value = 2
+            installStep.value = 1
             terminalRef.value.execute('clear')
             terminalRef.value.execute('开始安装插件')
             getInstallTask()
@@ -734,7 +922,8 @@ const authElMessageBox = () => {
         }
     })
 }
-
+const errorDialog = ref(false)
+const errorMsg = ref('')
 let installLog: string[] = []
 const getCloudInstallLog = () => {
     getAddonCloudInstallLog(currAddon.value).then((res) => {
@@ -835,16 +1024,23 @@ const market = () => {
  * @param done
  */
 const installShowDialogClose = (done: () => {}) => {
-    if (installStep.value == 2) {
+    if (installStep.value == 1 && !isBack.value && !errorDialog.value) {
         ElMessageBox.confirm(t('installShowDialogCloseTips'), t('warning'), {
             confirmButtonText: t('confirm'),
             cancelButtonText: t('cancel'),
             type: 'warning'
         }).then(() => {
             cancelInstall(currAddon.value)
+            if (upgradeTimer) {
+                clearInterval(upgradeTimer)
+                upgradeTimer = null
+            }
+            isBack.value = false
+            installType.value = ''
+            errorDialog.value = false
             done()
         })
-    } else if (installStep.value == 3) {
+    } else if (installStep.value == 2) {
         activeNameTabFn('installed')
         location.reload()
     } else {
@@ -866,7 +1062,6 @@ const getAddonDetailFn = (data: any) => {
 const upgradeKey = ref<string>('')
 const updateInformationFn = (data: any) => {
     // updateInformationDialog.value = true
-
     upgradeKey.value = data.key
     upgradeLogRef.value?.open()
 }
@@ -929,6 +1124,10 @@ const goRouter = () => {
     window.open('https://www.niucloud.com/app')
 }
 
+const cloudBuildCheckDirFn = () => {
+    window.open('https://doc.niucloud.com/v6.html?keywords=/chang-jian-wen-ti-chu-li/er-shi-wu-3001-sheng-7ea7-yun-bian-yi-mu-lu-du-xie-quan-xian-zhuang-tai-bu-tong-guo-ru-he-chu-li')
+}
+
 const deleteAddonFn = (key: string) => {
     ElMessageBox.confirm(t('deleteAddonTips'), t('warning'), {
         confirmButtonText: t('confirm'),
@@ -942,7 +1141,7 @@ const deleteAddonFn = (key: string) => {
 }
 
 const versionJudge = (row: any) => {
-    if (!row.support_version) return true
+    if (!row.support_version) return false
     const supportVersionApp = row.support_version.split('.')
     const frameworkVersionArr = frameworkVersion.value.split('.')
     if (parseFloat(`${ supportVersionApp[0] }.${ supportVersionApp[1] }`) < parseFloat(`${ frameworkVersionArr[0] }.${ frameworkVersionArr[1] }`)) return true
@@ -959,8 +1158,13 @@ const batchUpgrade = () => {
         ElMessage({ message: '请先勾选要升级的插件', type: 'error', duration: 5000 })
         return
     }
+
     upgradeAddonFn(batchUpgradeApp.toString())
 }
+
+const visibleRowKeys = computed(() => {
+  return new Set((info.value[activeName.value] || []).map(row => row.key));
+});
 </script>
 
 <style lang="scss" scoped>
@@ -994,6 +1198,249 @@ html.dark .table-head-bg {
 :deep(.data-loading) {
     .el-table__body-wrapper {
         display: none !important;
+    }
+}
+:deep(.hide-expand .el-table__expand-icon>.el-icon){
+  visibility: hidden;
+  pointer-events: none;
+}
+:deep(.el-input__wrapper){
+    box-shadow: none !important;
+    border-radius: 4px !important;
+    border: 1px solid #D1D5DB !important;
+    height: 32px !important;
+}
+:deep(.el-select__wrapper){
+    box-shadow: none !important;
+    border-radius: 4px !important;
+    border: 1px solid #D1D5DB !important;
+    height: 32px !important;
+}
+:deep(.el-button){
+    border-radius: 4px !important;
+}
+/* 设置 el-select 的 placeholder 颜色 */
+:deep(.search-form .el-select__placeholder.is-transparent) {
+    color: #C4C7DA;
+    font-size: 12px;
+}
+
+/* 设置 el-select 选中后的颜色 */
+:deep(.search-form .el-select__placeholder) {
+    color: #4F516D;
+    font-size: 12px;
+
+}
+/* 设置 el-input 的 placeholder 颜色 */
+:deep(.search-form .el-input__inner::placeholder) {
+    color: #C4C7DA;
+    font-size: 12px;
+
+}
+/* 设置 el-input 输入内容后的颜色 */
+:deep(.search-form .el-input__inner) {
+    color: #4F516D;
+    font-size: 12px;
+
+}
+/* 设置 el-date-picker 的 placeholder 颜色 */
+:deep(.search-form .el-date-editor .el-range-input::placeholder) {
+  color: #C4C7DA;
+  font-size: 12px;
+}
+
+/* 设置 el-date-picker 的输入内容颜色 */
+:deep(.search-form .el-date-editor .el-range-input) {
+  color: #4F516D;
+  font-size: 12px;
+}
+
+
+:deep(.el-table tr td:first-child) {
+    border-bottom: none;
+    // background-color: inherit !important;
+    height: 100px;
+}
+:deep(.el-table__body tr:hover td:first-child) {
+    // border-bottom: 1px solid var(--el-table-border-color); 
+}
+:deep(.el-table__body tr) {
+  position: relative;
+}
+:deep(.el-table__body td:first-child::before) {
+    opacity: 0;
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--el-table-border-color);
+    // transition: opacity 0.2s;
+    z-index: 1;
+}
+:deep(.el-table__body td:first-child) {
+    position: relative;
+}
+
+:deep(.el-table__body tr:hover td:first-child::before) {
+    opacity: 1;
+
+}
+/* 创建伪元素当作 hover 边框线，默认隐藏 */
+:deep(.el-table__body td:first-child::after) {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background-color: var(--el-table-border-color);
+    opacity: 0;
+    // transition: opacity 0.2s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* 悬浮时显示这条伪边框线 */
+:deep(.el-table__body tr:hover td:first-child::after) {
+    opacity: 1;
+}
+
+:deep(.el-table__fixed-body-wrapper .el-table__row .el-table__cell) {
+    overflow: visible;
+}
+:deep(.el-table .el-table__expand-icon){
+    position: relative;
+    top: 12.5px;
+    left: -13px;
+    z-index: 99;
+    margin: 3px;
+    overflow: hidden;
+}
+:deep(.el-table__fixed-body-wrapper .el-table__cell:first-child) {
+  background-color: inherit !important; /* 从行继承背景色 */
+}
+
+:deep(.el-table tr td:nth-child(1)::before){
+    overflow: hidden !important;
+}
+:deep(.tree-child-cell) {
+  position: relative;
+  height: 100%;
+}
+:deep(.el-table .cell){
+    overflow: visible !important;
+}
+:deep(.tree-child-cell.is-tree-child::before) {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: -99px;
+  bottom: 0;
+  width: 1px;
+  height: 100px;
+  background-color: #F5F5F5;
+}
+
+:deep(.tree-child-cell.is-tree-child::after) {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -5px;
+  width: 8px;
+  height: 1px;
+  background-color: #F5F5F5;
+}
+
+:deep(.hidden-selection-column .cell) {
+  display: none;
+}
+:deep(.el-dialog__title){
+    font-size: 20px;
+    font-weight: bold;
+}
+:deep(.el-result__title p){
+    font-size: 25px;
+    color: #1D1F3A;
+    font-weight: 500;
+}
+:deep(.el-result__subtitle p){
+    font-size: 15px;
+    color: #4F516D;
+    font-weight: 500;
+    word-break: break-all;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+::v-deep .number-of-steps {
+    .el-step__line {
+        margin: 0 25px;
+        background: #dddddd;
+    }
+
+    .el-step__head {
+        margin-top: 10px;
+    }
+
+    .is-success {
+        color: var(--el-color-primary);
+        border-color: var(--el-color-primary);
+
+        .el-step__icon {
+            background: var(--el-color-primary);
+            color: #fff;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
+
+            i {
+                color: #fff;
+            }
+        }
+
+        .el-step__line {
+            margin: 0 25px;
+            background: var(--el-color-primary);
+        }
+    }
+    .is-finish {
+        color: var(--el-color-primary);
+        border-color: var(--el-color-primary);
+
+        .el-step__icon {
+            background: var(--el-color-primary)!important;
+            color: #fff !important;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
+
+            i {
+                color: #fff;
+            }
+        }
+
+        .el-step__line {
+            margin: 0 25px;
+            background: var(--el-color-primary);
+        }
+    }
+
+    .is-process {
+        color: var(--el-color-primary);
+        font-weight: inherit;
+
+        // font-size: 18px;
+        .el-step__icon {
+            padding: 10px;
+            border: 1px solid var(--el-color-primary);
+            background: var(--el-color-primary)!important;
+            color: #fff !important;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
+        }
+    }
+
+    .is-wait {
+        color: #333;
     }
 }
 </style>

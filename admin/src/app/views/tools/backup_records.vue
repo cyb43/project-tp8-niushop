@@ -23,9 +23,7 @@
                 </el-form>
             </el-card>
 
-            <div class="mb-[10px] flex items-center">
-                <el-button @click="batchDelete" size="small">{{ t('batchDelete') }}</el-button>
-            </div>
+           
 
             <el-table :data="tableData.data" size="large" v-loading="tableData.loading" ref="tableRef" @selection-change="handleSelectionChange">
 
@@ -35,7 +33,19 @@
 
                 <el-table-column type="selection" width="55" />
                 <el-table-column prop="id" :label="t('id')" width="120" />
-                <el-table-column prop="content" :label="t('content')" width="120" />
+                <el-table-column prop="content" :label="t('操作')" width="120" align="left">
+                    <template #default="{ row }">
+                        <span v-if="row.content=='手动备份'" class="multi-hidden">
+                            <el-tag type="primary">{{ row.content }}</el-tag>
+                        </span>
+                        <span v-else-if="row.content=='自动备份'" class="multi-hidden">
+                            <el-tag type="success">{{ row.content }}</el-tag>
+                        </span>
+                        <span v-else class="multi-hidden">
+                            <el-tag type="warning">{{ row.content }}</el-tag>
+                        </span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="version" :label="t('currentVersion')" width="120" />
                 <el-table-column prop="backup_dir" :label="t('backupDir')" width="220" />
                 <el-table-column prop="complete_time" :label="t('completeTime')" width="220" />
@@ -53,7 +63,9 @@
                     </template>
                 </el-table-column>
             </el-table>
-
+            <div class="mt-[10px] flex items-center">
+                <el-button @click="batchDelete" size="small">{{ t('batchDelete') }}</el-button>
+            </div>
             <div class="mt-[16px] flex justify-end">
                 <el-pagination v-model:current-page="tableData.page"
                     v-model:page-size="tableData.limit" layout="total, sizes, prev, pager, next, jumper"
@@ -64,7 +76,7 @@
 
         <el-dialog v-model="showDialog" :title="iSBackupRecovery == 1 ? t('manualBackupTitle') : t('restoreTitle')" width="850px" :close-on-click-modal="false" :close-on-press-escape="false" :show-close="true" :before-close="dialogClose">
 
-            <el-steps :active="numberOfSteps" align-center class="number-of-steps" finish-status="success" process-status="process">
+            <el-steps :active="numberOfSteps" align-center class="number-of-steps" finish-status="success" process-status="process" v-if="active !='error' && active !='complete'">
                 <template v-if="iSBackupRecovery == 1">
                     <!-- 手动备份 -->
                     <el-step :title="t('testDirectoryPermissions')" />
@@ -149,14 +161,37 @@
                 </div>
 
                 <!-- 执行任务 -->
-                <div class="h-[370px] mt-[30px]" v-if="active == 'execute'">
+                <div class="h-[370px] mt-[30px]" v-show="active == 'execute'">
                     <terminal ref="terminalRef" context="" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd"/>
                 </div>
 
                 <!-- 完成 -->
-                <div class="mt-[50px]" v-if="active == 'complete'">
-                    <el-result icon="success" :title="iSBackupRecovery == 1 ? t('backupCompleteTips') : t('restoreCompleteTips')"></el-result>
+                <div class="mt-[50px]" v-show="active == 'complete'">
+                    <el-result icon="success" :title="iSBackupRecovery == 1 ? t('backupCompleteTips') : t('restoreCompleteTips')" :sub-title="iSBackupRecovery == 1 ?`备份耗时${formattedDuration}，成功备份完成。` : `恢复耗时${formattedDuration}，成功恢复完成。`">
+                        <template #icon>
+                            <img src="@/app/assets/images/success_icon.png" alt="">
+                        </template>
+                        <template #extra>
+                            <el-button @click="handleReturn" class="!w-[90px]">返回</el-button>
+                            <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
+                        </template>
+                    </el-result>
+                
                 </div>
+                <!-- 失败 -->
+                <div class="mt-[50px]" v-show="active == 'error'">
+                    <el-result icon="success" :title="iSBackupRecovery == 1 ? t('备份失败') : t('恢复失败')" :sub-title="backupErrorMessage" >
+                        <template #icon>
+                            <img src="@/app/assets/images/error_icon.png" alt="">
+                        </template>
+                        <template #extra>
+                            <el-button @click="handleReturn" class="!w-[90px]">错误信息</el-button>
+                            <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
+                        </template>
+                    </el-result>
+                
+                </div>
+                
             </div>
 
             <template #footer>
@@ -188,7 +223,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick, watch, h } from 'vue'
+import { ref, reactive, nextTick, watch, h,computed } from 'vue'
 import { t } from '@/lang'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'
@@ -228,7 +263,6 @@ const numberOfSteps = ref(0)
 const currentId: any = ref(0)
 let backupContents = []
 let restoreContents = []
-
 
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
@@ -276,6 +310,7 @@ const manualBackupEvent = () => {
         // if (repeat.value) return
         // repeat.value = true
         backupContents = []
+        numberOfSteps.value = 0
         iSBackupRecovery.value = 1
         showDialog.value = true
         uploading.value = true
@@ -284,7 +319,17 @@ const manualBackupEvent = () => {
         checkPermissionFn()
     })
 }
-
+// 计时器相关
+const buildStartTime = ref<number | null>(null)
+const buildDuration = ref<number>(0)
+let buildTimer: number | null = null
+const formattedDuration = computed(() => {
+    const seconds = buildDuration.value
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return mins > 0 ? `${mins}分${secs}秒` : `${secs}秒`
+})
+const backupErrorMessage = ref('')
 
 // 进入执行备份
 const manualBackupFn = (task: any = '') => {
@@ -300,6 +345,21 @@ const manualBackupFn = (task: any = '') => {
         if (task == '') {
             terminalRef.value.execute('clear')
             terminalRef.value.execute('开始执行')
+            const storedTime = localStorage.getItem('manual_back_start_time')
+            if (storedTime) {
+                buildStartTime.value = Number(storedTime)
+            } else {
+                const now = Date.now()
+                buildStartTime.value = now
+                localStorage.setItem('manual_back_start_time', String(now))
+            }
+            buildDuration.value = Math.floor((Date.now() - buildStartTime.value) / 1000)
+            buildTimer && clearInterval(buildTimer)
+            buildTimer = setInterval(() => {
+                if (buildStartTime.value) {
+                    buildDuration.value = Math.floor((Date.now() - buildStartTime.value) / 1000)
+                }
+            }, 1000)
         }
         if (data.content && !backupContents.includes(data.content)) {
             backupContents.push(data.content)
@@ -310,6 +370,8 @@ const manualBackupFn = (task: any = '') => {
             setTimeout(() => {
                 numberOfSteps.value = 3
                 active.value = 'complete'
+                buildTimer && clearInterval(buildTimer) // 清除计时器
+                localStorage.removeItem('manual_back_start_time')
                 loadList()
                 repeat.value = false
             }, 1500)
@@ -319,6 +381,18 @@ const manualBackupFn = (task: any = '') => {
                 loadList()
                 repeat.value = false
             }, 2000)
+            backupErrorMessage.value = data.content
+            active.value = 'error'
+            // 停止计时器
+            if (buildTimer) {
+                clearInterval(buildTimer)
+                buildTimer = null
+            }
+            // 保证 duration 也被最后更新一次
+            if (buildStartTime.value) {
+                buildDuration.value = Math.floor((Date.now() - buildStartTime.value) / 1000)
+            }
+            localStorage.removeItem('manual_back_start_time')
         } else {
             // 延迟2秒请求，等待恢复数据加载完成
             setTimeout(() => {
@@ -420,6 +494,7 @@ const restoreEvent = (data: any) => {
     ).then(() => {
         // if (repeat.value) return
         // repeat.value = true
+        numberOfSteps.value = 0
         restoreContents = []
         iSBackupRecovery.value = 2
         currentId.value = data.id
@@ -467,6 +542,21 @@ const restoreUpgradeBackupFn = (id: any, task: any = '') => {
             uploading.value = false
             terminalRef.value.execute('clear')
             terminalRef.value.execute('开始执行')
+            const storedTime = localStorage.getItem('manual_back_start_time')
+            if (storedTime) {
+                buildStartTime.value = Number(storedTime)
+            } else {
+                const now = Date.now()
+                buildStartTime.value = now
+                localStorage.setItem('manual_back_start_time', String(now))
+            }
+            buildDuration.value = Math.floor((Date.now() - buildStartTime.value) / 1000)
+            buildTimer && clearInterval(buildTimer)
+            buildTimer = setInterval(() => {
+                if (buildStartTime.value) {
+                    buildDuration.value = Math.floor((Date.now() - buildStartTime.value) / 1000)
+                }
+            }, 1000)
         }
         if (data.content && !restoreContents.includes(data.content)) {
             restoreContents.push(data.content)
@@ -477,6 +567,8 @@ const restoreUpgradeBackupFn = (id: any, task: any = '') => {
             setTimeout(() => {
                 numberOfSteps.value = 3
                 active.value = 'complete'
+                buildTimer && clearInterval(buildTimer) // 清除计时器
+                localStorage.removeItem('manual_back_start_time')
                 loadList()
                 repeat.value = false
             }, 1500)
@@ -486,6 +578,18 @@ const restoreUpgradeBackupFn = (id: any, task: any = '') => {
                 loadList()
                 repeat.value = false
             }, 2000)
+            backupErrorMessage.value = data.content
+            active.value = 'error'
+            // 停止计时器
+            if (buildTimer) {
+                clearInterval(buildTimer)
+                buildTimer = null
+            }
+            // 保证 duration 也被最后更新一次
+            if (buildStartTime.value) {
+                buildDuration.value = Math.floor((Date.now() - buildStartTime.value) / 1000)
+            }
+            localStorage.removeItem('manual_back_start_time')
         } else {
             // 延迟2秒请求，等待恢复数据加载完成
             setTimeout(() => {
@@ -576,9 +680,14 @@ const restoreTaskList = () => {
         }
     })
 }
+const isBack = ref(false)
+const handleReturn = () => {
+    active.value = 'execute'
+    isBack.value = true
+}
 
 const dialogClose = (done: () => {}) => {
-    if (active.value == 'execute') {
+    if (active.value == 'execute' && !isBack.value) {
         ElMessageBox.confirm(
             t('showDialogCloseTips'),
             t('warning'),
@@ -591,6 +700,11 @@ const dialogClose = (done: () => {}) => {
             terminalRef.value.execute('clear')
             interrupt.value = true // 执行一半，中途取消，需要恢复初始状态
             done()
+            localStorage.removeItem('manual_back_start_time')
+            buildTimer && clearInterval(buildTimer)
+            buildTimer = null
+            buildStartTime.value = null
+            buildDuration.value = 0
         }).catch(() => {
         })
     } else {
@@ -754,8 +868,27 @@ const batchDelete = () => {
 
         .el-step__icon {
             background: var(--el-color-primary);
+            color: #fff;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
 
-            box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
+            i {
+                color: #fff;
+            }
+        }
+
+        .el-step__line {
+            margin: 0 25px;
+            background: var(--el-color-primary);
+        }
+    }
+    .is-finish {
+        color: var(--el-color-primary);
+        border-color: var(--el-color-primary);
+
+        .el-step__icon {
+            background: var(--el-color-primary)!important;
+            color: #fff !important;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
 
             i {
                 color: #fff;
@@ -776,13 +909,35 @@ const batchDelete = () => {
         .el-step__icon {
             padding: 10px;
             border: 1px solid var(--el-color-primary);
-            box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
+            background: var(--el-color-primary)!important;
+            color: #fff !important;
+            // box-shadow: 0 0 0 4px var(--el-color-primary-light-9);
         }
     }
 
     .is-wait {
         color: #333;
     }
+}
+
+:deep(.el-result__icon) {
+  color: unset !important; // 清除默认颜色
+}
+:deep(.el-result__title p){
+    font-size: 25px;
+    color: #1D1F3A;
+    font-weight: 500;
+}
+:deep(.el-result__subtitle p){
+    font-size: 15px;
+    color: #4F516D;
+    font-weight: 500;
+    word-break: break-all;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 5;
+	-webkit-box-orient: vertical;
 }
 /* 多行超出隐藏 */
 .multi-hidden {
