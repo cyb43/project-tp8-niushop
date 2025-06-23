@@ -13,7 +13,6 @@ NIUSHOP V6 使用  **NIUCLOUD-ADMIN**  底层框架设计， 国内首家唯一�
 强大的多应用+插件组合设计理念，低耦合，高内聚
 
 全新生态设计，多应用聚合+多插件组合运营模式全新升级 ，支持共同会员体系下商城，会员卡，上门服务等等多种商业模式随机组合，DIY装修出最强的软件系统
-![输入图片说明](https://www.niushop.com/app/web/view/public/img/product/b2cv6/low-play.mp4?v=4)
 
 ### 插件化，完全为开发者二次开发而生
 V6底层采用插件化模式设计，可以做到多种插件共存，组合使用。比如您有一个项目是旅游的项目，这个项目的要求是，既有商城的功能，又有旅游项目的销售，还需要进行会员的管理，甚至于还要客服系统。传统的实现方式是，找多个源码，东拼西凑，二次开发，或者部署多套独立的系统，配合起来。而今天，使用V6，可以通过组装的方式，在一套体系中实现，随着发展，会有越来越多的各行各业的插件和应用上架。您对于项目的定制，可能只需要简单组装，装修页面，就可以最终实现功能交付。
@@ -54,17 +53,18 @@ NIUCLOUD-ADMIN是一款快速开发通用管理后台框架，整体功能架构
 
 
 ### 界面截图  :point_right: 
-![输入图片说明](https://media.niucloud.com/1712132244c781785a8822b281c8d03f10134c9f97_aliyun.png)
+![输入图片说明](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/v6_kj3.png)
 
-![输入图片说明](https://media.niucloud.com/17121362221b4f7f3c15be7077a4fb351a829f1b35_aliyun.png)
+![输入图片说明](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/v6_kj4.png)
 
-![输入图片说明](https://media.niucloud.com/1716457294000dce7b84b5b719b0131e54f8dc38b9_aliyun.webp)
+![输入图片说明](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/v6_kj2.png)
 
-![输入图片说明](https://media.niucloud.com/171645729466dde1cba500222482ef11541cbff589_aliyun.webp)
+|![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/v6_shop1.jpg)| ![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/saas_shop9.jpg) |
+| :---: | :---: |
+| ![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/saas_shop7.jpg) | ![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/saas_shop6.jpg) |
+| ![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/saas_shop10.jpg) | ![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/saas_shop11.jpg) |
+| ![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/saas_shop12.jpg) | ![](https://niucloud-bucket.oss-cn-beijing.aliyuncs.com/gitee_saas/saas_shop13.jpg) |
 
-![输入图片说明](https://media.niucloud.com/1716457294c65849f48ae7274a309f14fa960bb75a_aliyun.webp)
-
-![输入图片说明](https://media.niucloud.com/171645729445f037decf7c4947501391af3a8f4d59_aliyun.webp)
 
 ### 操作指南
  [NIUSHOP官网地址](https://www.niushop.com)
@@ -74,13 +74,13 @@ NIUCLOUD-ADMIN是一款快速开发通用管理后台框架，整体功能架构
  | [二开手册](https://www.niucloud.com/doc)
  | [开发视频](https://www.niucloud.com/doc)
  | [API接口手册](https://api.niucloud.com/apidoc.html?target_id=001)
- | [论坛地址](https://bbs.niucloud.com)
+ | [论坛地址](https://niucloud.com/bbs)
 
 ### V6安装教程
 
- - [安装指引说明](https://www.kancloud.cn/niushop/niushop_v6/3224842)
- - [宝塔安装部署V6](https://www.kancloud.cn/niushop/niushop_v6/3226724)
- - [PHPStudy安装部署V6](https://www.kancloud.cn/niushop/niushop_v6/3226728)
+ - [安装指引说明](https://doc.niucloud.com/v6.html?keywords=/chapter1/er-3001-bao-ta-linux-mian-ban-an-zhuang)
+ - [宝塔安装部署V6](https://doc.niucloud.com/v6.html?keywords=/chapter1/wu-3001-bao-ta-an-zhuang-bu-shu)
+ - [PHPStudy安装部署V6](https://doc.niucloud.com/v6.html?keywords=/ben-di-an-zhuang-bu-shu/san-3001-ben-di-an-zhuang-bu-shu)
 
 
 ### 二次开发视频教程
@@ -96,11 +96,14 @@ NIUCLOUD-ADMIN是一款快速开发通用管理后台框架，整体功能架构
 
 
 ### 演示地址
-- 管理后台演示网址：[<a href='http://v6.site.niucloud.com/' target="_blank"> 查看 </a>]       
-<a href='http://v6.site.niucloud.com/' target="_blank">http://v6.site.niucloud.com     账号：admin  密码：123456
+- 管理后台演示网址：[<a href='https://v6.site.niucloud.com/admin' target="_blank"> 查看 </a>]       
+<a href='https://v6.site.niucloud.com/admin' target="_blank">https://v6.site.niucloud.com/admin  账号：admin  密码：123456
 
-- H5前端演示网址：[<a href='https://v6.site.niucloud.com/wap/addon/shop/pages/index' target="_blank"> 查看 </a>]       
-<a href='https://v6.site.niucloud.com/wap/addon/shop/pages/index' target="_blank">https://v6.site.niucloud.com/wap/addon/shop/pages/index 
+- web端演示网址：[<a href='https://v6.site.niucloud.com' target="_blank"> 查看 </a>]       
+<a href='https://v6.site.niucloud.com' target="_blank">https://v6.site.niucloud.com  账号：admin  密码：123456
+
+- H5前端演示网址：[<a href='https://v6.site.niucloud.com/wap/' target="_blank"> 查看 </a>]       
+<a href='https://v6.site.niucloud.com/wap/' target="_blank">https://v6.site.niucloud.com/wap/  账号：admin  密码：123456
 
 ### 加入开发者生态，一起助力成就程序员创业梦想！！！
 
