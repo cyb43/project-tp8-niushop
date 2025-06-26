@@ -27,8 +27,8 @@ import { ref, nextTick } from 'vue';
 import { useDiy } from '@/hooks/useDiy'
 import { redirect } from '@/utils/common';
 import { useShare } from '@/hooks/useShare'
-
 import diyGroup from '@/addon/components/diy/group/index.vue'
+
 const { setShare } = useShare()
 
 uni.hideTabBar() // 隐藏tabbar

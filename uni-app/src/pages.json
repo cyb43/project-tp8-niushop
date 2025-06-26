@@ -17,12 +17,6 @@
             }
         },
         {
-            "path": "app/pages/index/tabbar",
-            "style": {
-                "navigationStyle": "custom"
-            }
-        },
-        {
             "path": "app/pages/auth/index",
             "style": {
                 // #ifndef H5
@@ -302,6 +296,16 @@
                     "needLogin": true
                 },
                 {
+                    "path": "personal_form",
+                    "style": {
+                        // #ifndef H5
+                        "navigationStyle": "custom",
+                        // #endif
+                        "navigationBarTitleText": "%pages.member.personal_form%"
+                    },
+                    "needLogin": true
+                },
+                {
                     "path": "point",
                     "style": {
                         // #ifndef H5
@@ -379,9 +383,6 @@
             },
             {
                 "pagePath": "app/pages/index/nosite"
-            },
-            {
-                "pagePath": "app/pages/index/tabbar"
             }
         ]
     },

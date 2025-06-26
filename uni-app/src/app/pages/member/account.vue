@@ -1,6 +1,6 @@
 <template>
     <view class="w-screen h-screen bg-[var(--page-bg-color)]" :style="themeColor()">
-        <mescroll-body ref="mescrollRef" @init="mescrollInit" :down="{ use: false }" @up="getCashoutAccountListFn">
+        <mescroll-body ref="mescrollRef" @init="mescrollInit" :down="{ use: false }" @up="getCashOutAccountListFn">
             <!-- 多嵌套一层是为了微信小程序兼容 -->
             <view class="sidebar-margin my-[var(--top-m)] rounded-[var(--rounded-big)] overflow-hidden"
                   v-for="(item, index) in accountList" :key="index">
@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { redirect, img } from '@/utils/common'
-import { getCashoutAccountList, deleteCashoutAccount } from '@/app/api/member'
+import { getCashOutAccountList, deleteCashoutAccount } from '@/app/api/member'
 import MescrollBody from '@/components/mescroll/mescroll-body/mescroll-body.vue'
 import useMescroll from '@/components/mescroll/hooks/useMescroll.js'
 import { onPageScroll, onReachBottom, onLoad } from '@dcloudio/uni-app'
@@ -53,7 +53,7 @@ onLoad((data: any) => {
     data.mode && (mode.value = data.mode)
 })
 
-const getCashoutAccountListFn = (mescroll: any) => {
+const getCashOutAccountListFn = (mescroll: any) => {
     loading.value = false;
     let data: object = {
         page: mescroll.num,
@@ -61,7 +61,7 @@ const getCashoutAccountListFn = (mescroll: any) => {
         account_type: accountType.value
     };
 
-    getCashoutAccountList(data).then((res: any) => {
+    getCashOutAccountList(data).then((res: any) => {
         const newArr = (res.data.data as Array<Object>);
         //设置列表数据
         if (mescroll.num == 1) {

@@ -38,6 +38,15 @@ import { getPayInfo, pay } from '@/app/api/pay'
 import { img, redirect, isWeixinBrowser, moneyFormat } from '@/utils/common'
 import wechat from '@/utils/wechat'
 
+const prop = defineProps({
+    ignorePay: {
+        type: Array,
+        default () {
+            return []
+        }
+    }
+})
+
 // #ifdef H5
 if (isWeixinBrowser()) wechat.init();
 // #endif
@@ -186,7 +195,6 @@ const open = (tradeType: string, tradeId: number, payReturn: string = '', scene:
     getPayInfo(tradeType, tradeId, obj).then((res: any) => {
 
         let { data } = res
-        payInfo.value = data
 
         if (uni.$u.test.isEmpty(data)) {
             uni.showToast({ title: t('pay.notObtainedInfo'), icon: 'none' })
@@ -195,6 +203,12 @@ const open = (tradeType: string, tradeId: number, payReturn: string = '', scene:
         if (data.money == 0) {
             toPayResult()
             return
+        }
+        payInfo.value = data
+        if(prop.ignorePay) {
+            data.pay_type_list = data.pay_type_list.filter((item: any) => {
+                return !prop.ignorePay.includes(item.key)
+            })
         }
         type.value = data.pay_type_list[0] ? data.pay_type_list[0].key : ''
         show.value = true

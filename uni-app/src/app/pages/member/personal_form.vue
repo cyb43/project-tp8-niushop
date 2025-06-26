@@ -41,14 +41,25 @@
 import { ref, nextTick, computed } from 'vue';
 import { useDiyForm } from '@/hooks/useDiyForm'
 import { useShare } from '@/hooks/useShare'
+import { onLoad, onUnload } from '@dcloudio/uni-app'
 import { img, redirect } from '@/utils/common';
 import { t } from '@/locale'
 import diyGroup from '@/addon/components/diy/group/index.vue'
+import { getFormRecord } from '@/app/api/diy_form'
 
 const { setShare } = useShare()
 
 const diy = useDiyForm({
-    needLogin: false // 检测登录
+    needLogin: true // 检测登录
+})
+
+onLoad((data: any) => {
+    if(data.form_record_id) {
+        uni.setStorageSync('personalFormRecordId', data.form_record_id)
+    }
+})
+onUnload(()=>{
+    uni.removeStorageSync('personalFormRecordId')  
 })
 
 const diyGroupRef = ref(null)
@@ -70,6 +81,27 @@ diy.onLoad((data: any) => {
     let share = data.share ? data.share : null;
     setShare(share);
     diyGroupRef.value?.refresh();
+
+    getFormRecord({
+        record_id: data.form_record_id
+    }).then((res: any) => {
+        let formDetailData = {}
+        if(res.data && res.data.recordsFieldList){
+            res.data.recordsFieldList.forEach((item: any) => {
+                formDetailData[item.field_key] = item.field_value;
+            })
+        }
+        diy.data.value.forEach((item: any) => {
+            if(formDetailData[item.id]){
+                try {
+                    item.field.value = JSON.parse(formDetailData[item.id])
+                } catch (e) {
+                    item.field.value = formDetailData[item.id]
+                }
+            }
+        });
+    }).catch(() => {
+    })
     // #ifdef MP
     nextTick(() => {
         if (wxPrivacyPopupRef.value) wxPrivacyPopupRef.value.proactive();

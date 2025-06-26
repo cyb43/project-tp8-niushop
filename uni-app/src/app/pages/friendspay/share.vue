@@ -25,7 +25,7 @@
                 <view class="px-[20rpx] box-border">
                     <button class="bg-[#FFB4B1] !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500" hover-class="none" v-if="friendsInfo.status == 2">{{ t('finish') }}</button>
                     <button class="bg-[#FFB4B1] !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500" hover-class="none" v-else-if="friendsInfo.status == -1">{{ t('close') }}</button>
-                    <button class="botton-color !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500" hover-class="none" v-else :loading="operateLoading" @click="openShareFn">{{ friendsInfo.config.pay_type_name ?  friendsInfo.config.pay_type_name : t('friendPay') }}</button>
+                    <button class="button-color !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500" hover-class="none" v-else :loading="operateLoading" @click="openShareFn">{{ friendsInfo.config.pay_type_name ?  friendsInfo.config.pay_type_name : t('friendPay') }}</button>
                 </view>
                 <view class="mt-[20rpx] flex items-baseline justify-center text-[var(--text-color-light9)]" v-if="friendsInfo.status == 2 && JSON.stringify(friendsInfo.trade_info) !== '[]' && friendsInfo.trade_info.detail_url" @click="redirect({url: friendsInfo.trade_info.detail_url })">
                     <text class="text-[24rpx] mr-[6rpx]">查看订单</text>
@@ -95,7 +95,6 @@ import useMemberStore from '@/stores/member'
 import { topTabar } from '@/utils/topTabbar';
 import sharePoster from '@/components/share-poster/share-poster.vue'
 import Message from '@/app/pages/friendspay/components/message.vue'
-import { onPageScroll } from '@dcloudio/uni-app';
 
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
@@ -270,7 +269,7 @@ const openShareFn = ()=>{
 </script>
 
 <style lang="scss" scoped>
-	.botton-color{
+	.button-color{
 		background: linear-gradient( 94deg, #FB7939 0%, #FE120E 99%), #EF000C;
 	}
 </style>

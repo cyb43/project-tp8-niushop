@@ -20,3 +20,10 @@ export function getTabbarList(params: Record<string, any>) {
 export function getShareInfo(params: Record<string, any>) {
     return request.get('diy/share', params)
 }
+
+/**
+ * 获取个人资料表单
+ */
+export function getMemberFormRecord() {
+    return request.get('diy/form/member_record')
+}

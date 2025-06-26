@@ -13,8 +13,9 @@
             <view class="detail-two-content">
                 <text class="detail-two-content-label">{{ diyComponent.field.name }}</text>
                 <view class="detail-two-content-value">
-                    <text>{{ formattedPhoneNumber }}</text>
-                    <text v-if="diyComponent.field.privacyProtection" class="ml-[20rpx] text-[var(--primary-color)]" @click="viewPrivacy">{{ t('diyForm.view') }}</text>
+                    <text>{{ formattedPhoneNumber || t('notHave') }}</text>
+                    <text v-if="diyComponent.field.privacyProtection && formattedPhoneNumber" class="ml-[20rpx] text-[var(--primary-color)]" @click="viewPrivacy">{{ t('diyForm.view') }}</text>
+                    <text v-if="diyComponent.isShowArrow" class="iconfont iconfanhui1 text-[#888] !text-[20rpx] ml-[10rpx]"></text>
                 </view>
             </view>
         </view>

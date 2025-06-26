@@ -40,6 +40,15 @@
                 </view>
             </view>
         </scroll-view>
+		<u-popup ref="popupRef"  :show="show" mode="center" @close="show = false" :round="30" zIndex="99999" :safeAreaInsetBottom="false">
+		    <view class="bg-[#fff] flex flex-col justify-between w-[610rpx] h-[306rpx] rounded-[30rpx]  box-border px-[40rpx] pt-[70rpx] pb-[40rpx] relative overflow-hidden">
+		        <view class="flex-center mb-[80rpx] text-[#333]">确定要删除该地址吗？</view>
+		       <view class="flex-between-center">
+		            <view class="w-[250rpx] h-[66rpx] rounded-full bg-[#eee] flex-center text-[26rpx] font-500 text-[#333]" @click="show = false">取消</view>
+		            <view class="w-[250rpx] h-[66rpx] rounded-full primary-btn-bg flex-center text-[26rpx] font-500 text-[#fff]" @click="saveDelete">确定</view>
+		        </view>
+		    </view>
+		</u-popup>
     </view>
 </template>
 
@@ -112,14 +121,23 @@ const selectAddress = (data: any) => {
         })
     }
 }
+const show = ref(false)
+const deleteIndex = ref(0)
 
 const deleteAddressFn = (index: any) => {
-    const data: any = addressList.value[index]
-    deleteAddress(data.id).then(() => {
-        addressList.value.splice(index, 1)
-    }).catch()
+    deleteIndex.value = index
+	show.value = true
+    // deleteAddress(data.id).then(() => {
+    //     addressList.value.splice(index, 1)
+    // }).catch()
 }
-
+const saveDelete = ()=>{
+	 const data: any = addressList.value[deleteIndex.value ]
+	deleteAddress(data.id).then(() => {
+	    addressList.value.splice(deleteIndex.value, 1)
+		show.value = false
+	}).catch()
+}
 const setDefault = (index: any) => {
     const data: any = addressList.value[index]
     if (data.is_default) return

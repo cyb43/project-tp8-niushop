@@ -71,23 +71,17 @@ const solve = () => {
 }
 
 const handleWeappAddonComponents = (mode) => {
-    const files = [
-        `./dist/${mode}/mp-weixin/addon/components/diy/group/index.json`,
-        `./dist/${mode}/mp-weixin/app/pages/index/tabbar.json`
-    ]
+    const src = `./dist/${mode}/mp-weixin/addon/components/diy/group/index.json`
+    try {
+        const data = JSON.parse(fs.readFileSync(src, 'utf8'));
+        data.componentPlaceholder = {};
 
-    files.forEach(src => {
-        try {
-            const data = JSON.parse(fs.readFileSync(src, 'utf8'));
-            data.componentPlaceholder = {};
-
-            Object.keys(data.usingComponents).map(key => {
-                data.componentPlaceholder[key] = "view";
-            })
-            fs.writeFileSync(src, JSON.stringify(data))
-        } catch (err) {
-        }
-    })
+        Object.keys(data.usingComponents).map(key => {
+            data.componentPlaceholder[key] = "view";
+        })
+        fs.writeFileSync(src, JSON.stringify(data))
+    } catch (err) {
+    }
 }
 
 const handleWeappLanguage = (mode) => {

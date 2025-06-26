@@ -71,7 +71,7 @@ const props = defineProps({
         type: Object,
         default: {}
     },
-    copyUrl: { // 例 "/wap/addon/shop_fenxiao/pages/goods"
+    copyUrl: { // 例 "/wap/addon/shop/pages/goods"
         type: String,
         default: ''
     },

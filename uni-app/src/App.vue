@@ -193,6 +193,8 @@ onLaunch((data: any) => {
         }
     })
 
+    // 控制弹窗展示
+    uni.setStorageSync('isOnLoad', true); // 存储是页面是否加载完成的状态
 })
 
 onShow(() => {

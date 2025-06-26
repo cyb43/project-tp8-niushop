@@ -16,8 +16,7 @@
                         <text class="text-[#333] w-[200rpx]">{{ t('cashOutNo') }}</text>
                         <text class="text-[#333]">{{ cashOutInfo.cash_out_no }}</text>
                     </view>
-                    <view class="flex justify-between text-[28rpx] mt-[34rpx] leading-[32rpx]"
-                          v-if="Number(cashOutInfo.service_money)">
+                    <view class="flex justify-between text-[28rpx] mt-[34rpx] leading-[32rpx]" v-if="Number(cashOutInfo.service_money)">
                         <text class="text-[#333] w-[200rpx]">{{ t('serviceMoney') }}</text>
                         <text class="text-[#333]">￥{{ cashOutInfo.service_money }}</text>
                     </view>

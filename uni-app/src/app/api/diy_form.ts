@@ -15,6 +15,13 @@ export function addFormRecord(params: Record<string, any>) {
 }
 
 /**
+ * 提交表单数据 【编辑】
+ */
+export function editFormRecord(params: Record<string, any>) {
+    return request.put('diy/form/record', params)
+}
+
+/**
  * 获取表单填写结果信息
  */
 export function getFormResultInfo(params: Record<string, any>) {

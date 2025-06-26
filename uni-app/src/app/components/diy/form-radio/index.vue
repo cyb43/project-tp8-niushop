@@ -9,7 +9,11 @@
         <view class="base-layout-two" v-if="diyGlobal.completeLayout == 'style-2'">
             <view class="detail-two-content">
                 <text class="detail-two-content-label">{{ diyComponent.field.name }}</text>
-                <view class="detail-two-content-value w-[80%]" v-for="(item,index) in diyComponent.field.value" :key="index">{{ item.text }}</view>
+                <view class="flex items-center justify-end">
+                    <view class="detail-two-content-value w-[80%]" v-for="(item,index) in diyComponent.field.value" :key="index">{{ item.text }}</view>
+                    <text v-if="!diyComponent.field.value || !diyComponent.field.value.length">{{ t('notHave') }}</text>
+                    <text v-if="diyComponent.isShowArrow" class="iconfont iconfanhui1 text-[#888] !text-[20rpx] ml-[10rpx]"></text>
+                </view>
             </view>
         </view>
     </view>

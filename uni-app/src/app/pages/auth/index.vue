@@ -198,6 +198,7 @@ const bindMobileFn = () => {
 
 onLoad(async() => {
     await systemStore.getSiteInfoFn()
+	await systemStore.getMemberMobileExistFn()
     await configStore.getLoginConfig()
     let normalLogin = !configStore.login.is_username && !configStore.login.is_mobile && !configStore.login.is_bind_mobile; // 未开启普通登录
 
@@ -229,12 +230,9 @@ onLoad(async() => {
         }, 100)
         return;
     }
-
-    wapMemberMobile.value = uni.getStorageSync('wap_member_mobile');
-    if (!wapMemberMobile.value) {
-        wapMemberMobile.value = uni.getStorageSync('wap_member_not_control_mobile'); // 老用户不控制强制绑定手机号
-    }
-
+	
+	wapMemberMobile.value = uni.getStorageSync('member_mobile_exist');
+	
     nextTick(() => {
         if (wxPrivacyPopupRef.value) wxPrivacyPopupRef.value.proactive();
     })
@@ -313,14 +311,15 @@ const wechatLogin = () => {
             uni.showToast({ title: loginConfig.wechat_error, icon: 'none' })
             return;
         }
-
-        wapMemberMobile.value = uni.getStorageSync('wap_member_mobile');
-        if (!wapMemberMobile.value) {
-            wapMemberMobile.value = uni.getStorageSync('wap_member_not_control_mobile'); // 老用户不控制强制绑定手机号
-        }
+		wapMemberMobile.value = uni.getStorageSync('member_mobile_exist');
+        // wapMemberMobile.value = uni.getStorageSync('wap_member_mobile');
+        // if (!wapMemberMobile.value) {
+        //     wapMemberMobile.value = uni.getStorageSync('wap_member_not_control_mobile'); // 老用户不控制强制绑定手机号
+        // }
+		 let member_exist = uni.getStorageSync('member_exist')
         if (loginConfig.is_auth_register) {
             // 开启强制绑定手机号，必须填写才能注册
-            if (!wapMemberMobile.value && loginConfig.is_bind_mobile) {
+            if (!wapMemberMobile.value && loginConfig.is_bind_mobile && !member_exist) {
                 bindMobileFn();
             } else if (loginConfig.is_force_access_user_info) {
                 // 开启强制获取用户信息
@@ -330,7 +329,7 @@ const wechatLogin = () => {
                 login.getAuthCode({ scopes: 'snsapi_base' }) // 静默获取
             }
         }else{
-            if (!wapMemberMobile.value && loginConfig.is_bind_mobile) {
+            if (!wapMemberMobile.value && loginConfig.is_bind_mobile &&!member_exist) {
                 bindMobileFn();
             }else {
                 login.getAuthCode({ scopes: 'snsapi_base' }) // 静默获取

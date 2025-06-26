@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getInitInfo, getSiteInfo } from '@/app/api/system'
+import { getInitInfo, getSiteInfo,getMemberMobileExist } from '@/app/api/system'
 import useConfigStore from '@/stores/config'
 import useMemberStore from '@/stores/member'
 import { isWeixinBrowser } from '@/utils/common'
@@ -15,7 +15,7 @@ interface System {
     menuButtonInfo: any, // 如果是小程序，获取右上角胶囊的尺寸信息
     shareCallback: any, // 分享回调
     defaultPositionAddress: any,
-    diyAddressInfo: any  // 定位信息
+    diyAddressInfo: any,  // 定位信息
     currTabbar: {
         path: string,
         query: object
@@ -108,6 +108,7 @@ const useSystemStore = defineStore('system', {
 
                     // 如果会员已存在则小程序端快捷登录时不再弹出授权弹框
                     uni.setStorageSync('member_exist', data.member_exist)
+						
 
                     this.initStatus = 'finish'; // 初始化完成
 
@@ -120,6 +121,14 @@ const useSystemStore = defineStore('system', {
 
             this.getMenuButtonInfoFn();
         },
+		// 如果已有手机号，就不弹出绑定手机号弹框
+		getMemberMobileExistFn (){
+			getMemberMobileExist({
+				openid: uni.getStorageSync('openid')
+			}).then((res:any)=>{
+				uni.setStorageSync('member_mobile_exist', res.data.member_mobile_exist)
+			})
+		},
         getMenuButtonInfoFn() {
             // 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
             // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ

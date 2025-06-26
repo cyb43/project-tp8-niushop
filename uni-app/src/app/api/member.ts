@@ -97,14 +97,14 @@ export function getCashoutAccountInfo(data: AnyObject) {
 /**
  * 获取首条提现账户信息
  */
-export function getFirstCashoutAccountInfo(data: AnyObject) {
+export function getFirstCashOutAccountInfo(data: AnyObject) {
     return request.get('member/cashout_account/firstinfo', data)
 }
 
 /**
  * 获取提现账户列表
  */
-export function getCashoutAccountList(data: AnyObject) {
+export function getCashOutAccountList(data: AnyObject) {
     return request.get(`member/cashout_account`, data)
 }
 

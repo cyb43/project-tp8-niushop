@@ -25,7 +25,6 @@
 import { ref, computed, nextTick } from 'vue';
 import { useDiy } from '@/hooks/useDiy'
 import { useShare } from '@/hooks/useShare'
-
 import { redirect } from '@/utils/common';
 import diyGroup from '@/addon/components/diy/group/index.vue'
 import useMemberStore from '@/stores/member'

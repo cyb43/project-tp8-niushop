@@ -192,7 +192,7 @@ defineExpose({
 }
 
 .privacy-desc {
-    font-size: 28rpx;
+    font-size: 24rpx;
     color: #555;
     line-height: 1.5;
     text-align: left;
@@ -210,15 +210,15 @@ defineExpose({
 
 .privacy-button-btn {
     color: #FFF;
-    font-size: 30rpx;
+    font-size: 24rpx;
     font-weight: 500;
-    line-height: 80rpx;
+	width: 180rpx;
+    line-height: 66rpx;
     text-align: center;
-    height: 80rpx;
-    border-radius: 10rpx;
+    height: 66rpx;
+    border-radius: 16rpx;
     border: none;
     background: #07c160;
-    flex: 1;
     margin-right: 30rpx;
     justify-content: center;
 }
@@ -233,7 +233,7 @@ defineExpose({
 }
 
 .bg-agree {
-    margin-right: 0rpx;
+    // margin-right: 0rpx;
 }
 .privacy-popup-wrap {
 	padding-bottom: constant(safe-area-inset-bottom);

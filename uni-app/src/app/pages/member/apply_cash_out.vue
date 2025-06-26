@@ -142,7 +142,7 @@ import { ref, reactive, watch, computed } from 'vue'
 import { t } from '@/locale'
 import { moneyFormat, redirect, getToken, img, deepClone, getWinxinOpenId } from '@/utils/common'
 import useMemberStore from '@/stores/member'
-import { cashOutConfig, cashOutApply, getFirstCashoutAccountInfo, getCashoutAccountInfo } from '@/app/api/member'
+import { cashOutConfig, cashOutApply, getFirstCashOutAccountInfo, getCashoutAccountInfo } from '@/app/api/member'
 import { onLoad, onShow } from '@dcloudio/uni-app'
 
 const pageLoading = ref(true)
@@ -296,7 +296,7 @@ const alipayLoading = ref(false)
 const alipayAccountInfo: any = ref(null)
 const getAlipayAccountInfo = () => {
     const data = { account_type: 'alipay', account_id: 0 }
-    let request = getFirstCashoutAccountInfo
+    let request = getFirstCashOutAccountInfo
 
     if (query.type && query.type == 'alipay' && query.account_id) {
         request = getCashoutAccountInfo
@@ -322,7 +322,7 @@ const bankLoading = ref(false)
 const bankAccountInfo: any = ref(null)
 const getBankAccountInfo = () => {
     const data = { account_type: 'bank', account_id: 0 }
-    let request = getFirstCashoutAccountInfo
+    let request = getFirstCashOutAccountInfo
 
     if (query.type && query.type == 'bank' && query.account_id) {
         request = getCashoutAccountInfo
@@ -349,7 +349,7 @@ const wechatCodeLoading = ref(false)
 const wechatCodeInfo: any = ref(null)
 const getWechatCodeInfo = () => {
     const data = { account_type: 'wechat_code', account_id: 0 }
-    let request = getFirstCashoutAccountInfo
+    let request = getFirstCashOutAccountInfo
 
     if (query.type && query.type == 'wechat_code' && query.account_id) {
         request = getCashoutAccountInfo

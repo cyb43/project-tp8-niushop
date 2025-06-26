@@ -144,11 +144,13 @@
 			}
 		}
 		.detail-two-content{
-			padding: 0rpx 10rpx; 
+			// padding: 0rpx 10rpx; 
+			line-height: 1;
 			font-size: 28rpx;
 			margin-bottom: 34rpx;
 			display: flex;
 			justify-content: space-between;
+			align-items: center;
 			.detail-two-content-label{
 				
 			}
@@ -158,6 +160,7 @@
 			    word-break: break-word; 
 			    white-space: pre-wrap;
 			    text-align: right;
+				align-items: center;
 			}
 		
 		}

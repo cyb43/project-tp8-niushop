@@ -115,6 +115,11 @@ export function useDiy(params: any = {}) {
                         let sources = JSON.parse(requestData.value); // todo diy的结构应该后台处理好，前端就不需要再转换了
 
                         diyData.global = sources.global;
+                        // 用于区分微页面之间弹窗的id
+                        if (diyData.global.popWindow && diyData.global.popWindow.show) {
+                            diyData.global.popWindow.id = requestData.id;
+                        }
+                        
                         diyData.value = sources.value;
                         diyData.value.forEach((item: any, index) => {
                             item.pageStyle = '';

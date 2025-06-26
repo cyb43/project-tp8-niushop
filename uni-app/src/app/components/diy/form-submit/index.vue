@@ -21,8 +21,9 @@
 // 表单提交组件
 import { ref, computed, watch, onMounted, nextTick, getCurrentInstance } from 'vue';
 import useDiyStore from '@/app/stores/diy';
-import { img, redirect, getValidTime, deepClone } from '@/utils/common';
-import { addFormRecord } from '@/app/api/diy_form';
+import { img, redirect, getValidTime, deepClone, getToken } from '@/utils/common';
+import { useLogin } from "@/hooks/useLogin";
+import { addFormRecord, editFormRecord } from '@/app/api/diy_form';
 
 const props = defineProps(['component', 'index', 'global']);
 const diyStore = useDiyStore();
@@ -205,7 +206,7 @@ const getFormComponent = () => {
 }
 
 const repeat = ref(false)
-
+let currPage: any = getCurrentPages()[getCurrentPages().length - 1];
 const submit = () => {
     if (diyStore.mode === 'decorate') return
 
@@ -240,6 +241,17 @@ const submit = () => {
 
     }
 
+    //  填写万能表单需要检测登录
+    if (!getToken()) {
+        useLogin().setLoginBack({
+            url: '/app/pages/index/diy_form',
+            param: {
+                form_id: diyStore.id
+            }
+        })
+        return;
+    }
+
     if (!allPass) return;
 
     if (repeat.value) return
@@ -259,14 +271,31 @@ const submit = () => {
         relate_id: '' // todo 关联业务id，需要考虑如何传入
     }
 
-    addFormRecord(data).then((res: any) => {
+    let api = addFormRecord;
+    if(uni.getStorageSync('personalFormRecordId')){
+        api = editFormRecord;
+        data.record_id = uni.getStorageSync('personalFormRecordId');
+    }else{
+        data.record_id = '';
+    }
+
+    api(data).then((res: any) => {
         uni.removeStorageSync('diyFormStorage_' + diyStore.id)
-        // 跳转到 表单提交结果页面
-        redirect({
-            url: '/app/pages/index/diy_form_result',
-            param: { record_id: res.data, form_id: diyStore.id },
-            mode: 'redirectTo'
-        })
+        uni.removeStorageSync('personalFormRecordId')
+        if (currPage.route == 'app/pages/member/personal_form') {
+            // 个人资料
+            redirect({
+                url: '/app/pages/member/personal',
+                mode: 'redirectTo'
+            })
+        }else {
+            // 跳转到 表单提交结果页面
+            redirect({
+                url: '/app/pages/index/diy_form_result',
+                param: { record_id: res.data, form_id: diyStore.id },
+                mode: 'redirectTo'
+            })
+        }
         repeat.value = false
     }).catch(() => {
         repeat.value = false
@@ -294,7 +323,6 @@ const getFormSComponentsData = (data: any) => {
         validTime: getValidTime(5), // 缓存数据有效期为5分钟
         components: []
     };
-
     data.forEach((item: any) => {
         // 只存表单组件 -- 用于直接保存
         if (item.componentType == 'diy_form' && item.componentName != 'FormSubmit' && item.field.cache) {

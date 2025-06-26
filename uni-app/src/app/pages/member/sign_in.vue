@@ -53,7 +53,7 @@
                                             <view class="w-[14.28%] flex flex-col justify-center items-center">
                                                 <view v-if="filteredDate(item)"
                                                       class="w-[74rpx] h-[92rpx] bg-[#f4f4f4] text-[var(--text-color-light6)] box-border py-[10rpx] rounded-[8rpx] flex flex-col  items-center"
-                                                      :class="{'sigin-bg !text-[#fff]': isVerDate(item),'!bg-[#f9f9f9] border-[1rpx] !text-[var(--text-color-light9)] border-[#f5f5f5] border-solid': !isVerDate(item) && item < state.curDate && (state.curMonth + 1) == (new Date().getMonth() + 1) ,'mb-[20rpx]':isCurrentDate(item),'mb-[30rpx]':!isCurrentDate(item)}"
+                                                      :class="{'sign-bg !text-[#fff]': isVerDate(item),'!bg-[#f9f9f9] border-[1rpx] !text-[var(--text-color-light9)] border-[#f5f5f5] border-solid': !isVerDate(item) && item < state.curDate && (state.curMonth + 1) == (new Date().getMonth() + 1) ,'mb-[20rpx]':isCurrentDate(item),'mb-[30rpx]':!isCurrentDate(item)}"
                                                       @click="getDayPackFn(item)">
                                                     <text class="text-[24rpx] leading-[28rpx] mb-[6rpx]">{{ filteredDate(item) }}</text>
                                                     <view v-if="filteredDate(item)" class="flex items-center justufy-center">
@@ -76,7 +76,7 @@
                                             <view class="w-[14.28%] flex flex-col justify-center items-center mb-[30rpx]">
                                                 <view v-if="filteredDate(item)"
                                                       class="w-[74rpx] h-[92rpx] bg-[#F6FAFF] text-[var(--text-color-light6)] box-border py-[10rpx] rounded-[8rpx] flex flex-col  items-center"
-                                                      :class="{'sigin-bg !text-[#fff]': isVerDate(item) && active ,'!bg-[#FDFDFD] border-[1rpx] border-[#F0F4FA] border-solid': !isVerDate(item) && item < state.curDate && (state.curMonth + 1) == (new Date().getMonth() + 1) && state.curYear == new Date().getFullYear() ,'mb-[20rpx]':isCurrentDate(item),'mb-[30rpx]':!isCurrentDate(item)}"
+                                                      :class="{'sign-bg !text-[#fff]': isVerDate(item) && active ,'!bg-[#FDFDFD] border-[1rpx] border-[#F0F4FA] border-solid': !isVerDate(item) && item < state.curDate && (state.curMonth + 1) == (new Date().getMonth() + 1) && state.curYear == new Date().getFullYear() ,'mb-[20rpx]':isCurrentDate(item),'mb-[30rpx]':!isCurrentDate(item)}"
                                                       @click="getDayPackFn(item)">
                                                     <text class="text-[24rpx] leading-[28rpx] mb-[6rpx]">{{ filteredDate(item) }}</text>
                                                     <view v-if="filteredDate(item)" class="flex items-center justufy-center">
@@ -488,7 +488,7 @@ const topStyle = computed(() => {
     background-color: rgba(102, 102, 102, 0.4);
 }
 
-.sigin-bg {
+.sign-bg {
     background: linear-gradient(90deg, #FFA359 0%, #FF5426 100%), #F2F2F2;
 }
 

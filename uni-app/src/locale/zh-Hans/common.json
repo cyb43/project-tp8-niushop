@@ -142,5 +142,6 @@
     "o2o.soldOut": "已售",
     "o2o.orderNo": "订单号",
     "o2o.actualPayment": "实付款",
-    "o2o.orderDetail": "详情"
+    "o2o.orderDetail": "详情",
+    "notHave": "无"
 }

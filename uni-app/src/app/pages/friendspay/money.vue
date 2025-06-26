@@ -98,7 +98,6 @@ import { topTabar } from '@/utils/topTabbar';
 import { getFriendspayInfo } from '@/app/api/friendspay'
 import Message from '@/app/pages/friendspay/components/message.vue'
 import { useLogin } from '@/hooks/useLogin'
-import { onPageScroll } from '@dcloudio/uni-app';
 
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()

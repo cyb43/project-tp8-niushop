@@ -323,8 +323,8 @@ export function useLogin() {
             scopes: params.scopes
         }).then((res: any) => {
             uni.setStorageSync('wechat_login_back', true) // 微信公众号手动授权登录回调标识
-			location.replace(res.data.url);
-            // location.href = res.data.url
+			// location.replace(res.data.url);
+            location.href = res.data.url
         })
 
         // #endif

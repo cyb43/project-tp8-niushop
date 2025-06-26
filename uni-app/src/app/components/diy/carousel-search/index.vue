@@ -251,7 +251,6 @@ const fixedStyle = computed(() => {
             // #endif
         }
 
-
         fixedStyleBg.value = false;
         if (props.scrollBool == 1) {
             let str = diyComponent.value.fixedBgColor || "";

@@ -68,6 +68,10 @@ watch(() => prop.areaId, (nval, oval) => {
             data.province && (selected.province = data.province)
             data.city && (selected.city = data.city)
             data.district && (selected.district = data.district)
+			if (data.city == undefined && data.province && data.district) {
+			    selected.city = data.district
+				selected.district=null
+			}
         })
     }
 }, {
@@ -81,7 +85,7 @@ watch(() => selected.province, () => {
     getAreaListByPid(selected.province.id).then(({ data }) => {
         areaList.city = data
         currSelect.value = 'city'
-
+		
         if (selected.city) {
             let isExist = false
             for (let i = 0; i < data.length; i++) {

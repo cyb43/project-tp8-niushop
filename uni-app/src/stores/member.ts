@@ -61,24 +61,25 @@ const useMemberStore = defineStore('member', {
             // if (useConfigStore().login.is_auth_register) {
             uni.setStorageSync('autoLoginLock', true) // todo 普通账号退出登录,在进行三方账号登录不会自动登录
             // }
+            let clearStorage = () =>{
+                removeToken()
+                uni.removeStorageSync('wap_member_info');
+                // uni.removeStorageSync('openid');
+                uni.removeStorageSync('unionid');
+                uni.removeStorageSync('isBindMobile');
+                uni.removeStorageSync('nickname');
+                uni.removeStorageSync('avatar');
+				// 可能重复请求微信获取手机号接口
+				uni.removeStorageSync('wap_member_mobile');
+				uni.removeStorageSync('wap_member_id');
+				uni.removeStorageSync('wap_member_not_control_mobile');
+                isRedirect && redirect({ url: '/app/pages/index/index', mode: 'switchTab' })
+
+            }
             logout().then(() => {
-                removeToken()
-                uni.removeStorageSync('wap_member_info');
-                // uni.removeStorageSync('openid');
-                uni.removeStorageSync('unionid');
-                uni.removeStorageSync('isBindMobile');
-                uni.removeStorageSync('nickname');
-                uni.removeStorageSync('avatar');
-                isRedirect && redirect({ url: '/app/pages/index/index', mode: 'switchTab' })
+                clearStorage()
             }).catch(() => {
-                removeToken()
-                uni.removeStorageSync('wap_member_info');
-                // uni.removeStorageSync('openid');
-                uni.removeStorageSync('unionid');
-                uni.removeStorageSync('isBindMobile');
-                uni.removeStorageSync('nickname');
-                uni.removeStorageSync('avatar');
-                isRedirect && redirect({ url: '/app/pages/index/index', mode: 'switchTab' })
+                clearStorage()
             })
         },
         // 一键绑定手机号

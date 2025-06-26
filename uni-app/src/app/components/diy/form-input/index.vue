@@ -9,7 +9,8 @@
         <view class="base-layout-two" v-if="diyGlobal.completeLayout == 'style-2'">
             <view class="detail-two-content">
                 <view>{{ diyComponent.field.name }}</view>
-                <view class="detail-two-content-value w-[80%]">{{ diyComponent.field.value }}</view>
+                <view class="detail-two-content-value w-[80%]">{{ diyComponent.field.value || t('notHave') }}</view>
+                <text v-if="diyComponent.isShowArrow" class="iconfont iconfanhui1 text-[#888] !text-[20rpx] ml-[10rpx]"></text>
             </view>
         </view>
     </view>

@@ -79,6 +79,9 @@ export function useDiyForm(params: any = {}) {
                 loading.value = false;
             }
             // #endif
+            if (option.form_record_id) {
+                requestData.form_record_id = option.form_record_id;
+            }
 
             form_id.value = option.form_id || '';
             // if (name.value == '') name.value = option.name || '';
@@ -117,15 +120,15 @@ export function useDiyForm(params: any = {}) {
             if (!form_id.value) return; // 空值情况下不调用接口
 
             //  填写万能表单需要检测登录
-            if (needLogin.value && !getToken()) {
-                useLogin().setLoginBack({
-                    url: '/app/pages/index/diy_form',
-                    param: {
-                        form_id: form_id.value
-                    }
-                })
-                return;
-            }
+            // if (needLogin.value && !getToken()) {
+            //     useLogin().setLoginBack({
+            //         url: '/app/pages/index/diy_form',
+            //         param: {
+            //             form_id: form_id.value
+            //         }
+            //     })
+            //     return;
+            // }
 
             getDiyFormInfo({
                 form_id: form_id.value,

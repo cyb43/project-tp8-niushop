@@ -17,6 +17,7 @@
                     <text>{{ diyComponent.field.value.start.date }}</text>
                     <text v-if="diyComponent.field.value.start.date && diyComponent.field.value.end.date">-</text>
                     <text>{{ diyComponent.field.value.end.date }}</text>
+                    <text v-if="diyComponent.isShowArrow" class="iconfont iconfanhui1 text-[#888] !text-[20rpx] ml-[10rpx]"></text>
                 </view>
             </view>
         </view>

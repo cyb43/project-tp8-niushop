@@ -151,3 +151,10 @@ export function getMsgJumpPath(params: Record<string, any>) {
 export function getInitInfo(params: Record<string, any>) {
     return request.get('init', params)
 }
+
+/**
+ * 获取是否绑定手机号
+ */
+export function getMemberMobileExist(params: Record<string, any>) {
+    return request.get('member_mobile_exist', params)
+}

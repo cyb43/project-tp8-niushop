@@ -31,11 +31,10 @@
     import { cloneDeep } from 'lodash-es'
     import useSystemStore from '@/stores/system'
     import tabbarJson from '@/tabbar.json'
-    import pagesJson from '@/pages.json'
     import zh from '@/locale/zh-Hans.json'
     import en from '@/locale/en.json'
-    import {onPageScroll} from "@dcloudio/uni-app";
     import TopTabbar from "@/components/top-tabbar/top-tabbar.vue";
+
     import { language } from '@/locale'
 
     uni.hideTabBar()

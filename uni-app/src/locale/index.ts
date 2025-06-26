@@ -9,9 +9,6 @@ const t = (message: string) => {
     // #endif
     // #ifdef MP
     route = '/' + (getCurrentInstance()?.root.ctx.$scope.__route__ || useSystemStore().currRoute)
-    if (route == '/app/pages/index/tabbar' && useSystemStore().currTabbar && useSystemStore().currTabbar.path) {
-        route = useSystemStore().currTabbar.path
-    }
     // #endif
     const file = language.getFileKey(route)
     const key = `${ file.fileKey }.${ message }`

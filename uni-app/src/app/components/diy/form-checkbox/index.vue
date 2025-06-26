@@ -14,9 +14,12 @@
             <view class="detail-two-content">
                 <view class="detail-two-content-label">{{ diyComponent.field.name }}</view>
                 <view class="detail-two-content-value flex w-[80%] justify-end">
-                    <view v-for="(item,index) in diyComponent.field.value" :key="index">{{ item.text }}
+                    <view v-for="(item,index) in diyComponent.field.value" :key="index">
+                        <text>{{ item.text }}</text>
                         <text v-if="index !== diyComponent.field.value.length - 1">、</text>
                     </view>
+                    <text v-if="!diyComponent.field.value || !diyComponent.field.value.length">{{ t('notHave') }}</text>
+                    <text v-if="diyComponent.isShowArrow" class="iconfont iconfanhui1 text-[#888] !text-[20rpx] ml-[10rpx]"></text>
                 </view>
             </view>
         </view>

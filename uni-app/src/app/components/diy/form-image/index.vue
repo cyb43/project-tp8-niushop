@@ -13,10 +13,13 @@
         <view class="base-layout-two" v-if="diyGlobal.completeLayout == 'style-2'">
             <view class="detail-two-content">
                 <text class="detail-two-content-label">{{ diyComponent.field.name }}</text>
-                <view class="flex flex-wrap w-[80%] justify-end">
-                    <view class="relative w-[180rpx] !h-[180rpx] mr-[16rpx] mb-[16rpx] " v-for="(item,index) in diyComponent.field.value" :key="index">
-                        <image class="w-[100%] h-[100%]" :src="img(item)" @click="handleImg(item,index)" mode="aspectFill"/>
-                    </view>
+                <view class="flex items-center w-[80%] justify-end">
+                    <div class="flex flex-wrap justify-end gap-[10rpx]">
+                        <view class="relative image-item w-[180rpx] !h-[180rpx] gap-[16rpx]" v-for="(item,index) in diyComponent.field.value" :key="index">
+                            <image class="w-[100%] h-[100%]" :src="img(item)" @click.stop="handleImg(item,index)" mode="aspectFill"/>
+                        </view>
+                    </div>
+                    <text v-if="diyComponent.isShowArrow" class="iconfont iconfanhui1 text-[#888] !text-[20rpx] ml-[10rpx]"></text>
                 </view>
             </view>
         </view>

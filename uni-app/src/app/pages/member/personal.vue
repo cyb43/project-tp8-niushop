@@ -1,6 +1,5 @@
 <template>
-    <view class="w-full h-screen bg-page personal-wrap overflow-hidden" v-if="info" :style="themeColor()">
-
+    <view class="w-full min-h-screen bg-page personal-wrap !pb-[20rpx]" v-if="info" :style="themeColor()">
         <view class="my-[var(--top-m)] sidebar-margin overflow-hidden card-template py-[20rpx]">
             <u-cell-group :border="false" class="cell-group">
                 <u-cell :title="t('headimg')" :titleStyle="{'font-size': '28rpx'}" :is-link="true">
@@ -40,6 +39,11 @@
             </u-cell-group>
         </view>
 
+        <!-- 商品的万能表单信息 -->
+        <view @click="redirect({ url: '/app/pages/member/personal_form', param: { form_id: info.form_id, form_record_id: info.form_record_id} })" >
+            <personal-form-detail class="personal-form" :data="personalFormData" completeLayout="style-2" v-if="personalFormData && Object.keys(personalFormData).length"/>
+        </view>
+
         <!-- 修改昵称 -->
         <u-popup class="popup-type" :safeAreaInsetBottom="false" round="var(--rounded-big)" :show="updateNickname.modal" mode="center" @close="updateNickname.modal = false">
             <view class="w-[620rpx] popup-common pb-[40rpx]" @touchmove.prevent.stop>
@@ -77,6 +81,8 @@ import { img, redirect, mobileConceal } from '@/utils/common'
 import { modifyMember } from '@/app/api/member'
 import { fetchBase64Image, uploadImage } from '@/app/api/system'
 import { onLoad } from '@dcloudio/uni-app'
+import { getMemberFormRecord } from '@/app/api/diy'
+import personalFormDetail from '@/app/pages/member/components/personal_form_detail.vue'
 
 const memberStore = useMemberStore()
 const info = computed(() => memberStore.info)
@@ -102,6 +108,14 @@ const updateNickname = reactive({
 const bindNickname = (e: any) => {
     updateNickname.value = e.detail.value
 }
+
+let personalFormData = ref(null)
+const getMemberFormRecordFn = () => {
+    getMemberFormRecord().then((res: any) => {
+        personalFormData.value = res.data
+    }) 
+}
+getMemberFormRecordFn()
 
 const updateNicknameConfirm = () => {
     if (uni.$u.test.isEmpty(updateNickname.value)) {
@@ -264,5 +278,26 @@ page {
 <style lang="scss">
 .personal-wrap .u-cell--clickable {
     background-color: transparent !important;
+}
+.personal-form{
+    ::v-deep .draggable-element {
+        &:last-of-type{
+            .detail-two-content{
+                margin-bottom: 0 !important;
+            }    
+        }
+    	.detail-two-content{
+            padding-top: 32rpx !important;
+            padding-bottom: 32rpx !important;
+            margin-bottom: 0 !important;
+            & > view{
+                width: 72% !important;
+                .image-item{
+                    width: 136rpx !important;
+                    height: 136rpx !important;
+                }
+            }
+        }
+    }
 }
 </style>

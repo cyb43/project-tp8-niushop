@@ -1,11 +1,17 @@
 <template>
     <view class="diy-group" id="componentList">
-        <top-tabbar v-if="data.global && Object.keys(data.global).length && data.global.topStatusBar && data.global.topStatusBar.isShow" :scrollBool="diyGroup.componentsScrollBool.TopTabbar"  ref="topTabbarRef" :data="data.global" />
-        <view v-for="(component, index) in data.value" :key="component.id" @click="diyStore.changeCurrentIndex(index, component)" :class="diyGroup.getComponentClass(index,component)" :style="component.pageStyle">
+        <top-tabbar v-if="data.global && Object.keys(data.global).length && data.global.topStatusBar && data.global.topStatusBar.isShow"
+            :scrollBool="diyGroup.componentsScrollBool.TopTabbar" ref="topTabbarRef" :data="data.global" />
+        <pop-ads v-if="data.global && Object.keys(data.global).length && data.global.popWindow && data.global.popWindow.show" ref="popAbsRef" :data="data.global" />
+        <view v-for="(component, index) in data.value" :key="component.id"
+              @click="diyStore.changeCurrentIndex(index, component)"
+              :class="diyGroup.getComponentClass(index,component)" :style="component.pageStyle">
             <view class="relative" :style="{ marginTop : component.margin.top < 0 ? (component.margin.top * 2) + 'rpx' : '0' }">
 
                 <!-- 装修模式下，设置负上边距后超出的内容，禁止选中设置 -->
-                <view v-if="diyGroup.isShowPlaceHolder(index,component)" class="absolute w-full z-1" :style="{ height : (component.margin.top * 2 * -1) + 'rpx' }" @click.stop="diyGroup.placeholderEvent"></view>
+                <view v-if="diyGroup.isShowPlaceHolder(index,component)" class="absolute w-full z-1"
+                      :style="{ height : (component.margin.top * 2 * -1) + 'rpx' }"
+                      @click.stop="diyGroup.placeholderEvent"></view>
 
                 <template v-if="component.componentName == 'GraphicNav'">
                     <diy-graphic-nav :component="component" :global="data.global" :index="index" />
@@ -38,13 +44,13 @@
                     <diy-text :component="component" :global="data.global" :index="index" />
                 </template>
                 <template v-if="component.componentName == 'RichText'">
-                    <diy-rich-text :component="component" :global="data.global" :index="index"/>
+                    <diy-rich-text :component="component" :global="data.global" :index="index" />
                 </template>
                 <template v-if="component.componentName == 'ActiveCube'">
-                    <diy-active-cube :component="component" :global="data.global" :index="index"/>
+                    <diy-active-cube :component="component" :global="data.global" :index="index" />
                 </template>
                 <template v-if="component.componentName == 'FloatBtn'">
-                    <diy-float-btn :component="component" :global="data.global" :index="index"/>
+                    <diy-float-btn :component="component" :global="data.global" :index="index" />
                 </template>
                 <template v-if="component.componentName == 'CarouselSearch'">
                     <diy-carousel-search :scrollBool="diyGroup.componentsScrollBool.CarouselSearch" :component="component" :global="data.global" :index="index" />
@@ -112,6 +118,7 @@
                 <template v-if="component.componentName == 'FormFile'">
                     <diy-form-file ref="diyFormFileRef" :component="component" :global="data.global" :index="index" />
                 </template>
+
             </view>
         </view>
         <template v-if="diyStore.mode == '' && data.global && data.global.bottomTabBarSwitch">
@@ -121,41 +128,41 @@
     </view>
 </template>
 <script lang="ts" setup>
-    import topTabbar from '@/components/top-tabbar/top-tabbar.vue'
+import topTabbar from '@/components/top-tabbar/top-tabbar.vue'
+import popAds from '@/components/pop-ads/pop-ads.vue'
 
-    import { useDiyGroup } from './useDiyGroup'
-    import useDiyStore from '@/app/stores/diy';
-    import { ref,getCurrentInstance } from 'vue';
+import { useDiyGroup } from './useDiyGroup'
+import useDiyStore from '@/app/stores/diy';
+import { ref, getCurrentInstance } from 'vue';
 
-    const props = defineProps(['data']);
-
-    const instance: any = getCurrentInstance();
-    const getFormRef = () => {
-        return {
-            componentRefs: instance.refs
-        }
+const props = defineProps(['data']);
+const instance: any = getCurrentInstance();
+const getFormRef = () => {
+    return {
+        componentRefs: instance.refs
     }
+}
 
-    const diyStore = useDiyStore();
+const diyStore = useDiyStore();
 
-    const diyGroup = useDiyGroup({
-        ...props,
-        getFormRef
-    });
+const diyGroup = useDiyGroup({
+    ...props,
+    getFormRef
+});
 
-    const data = ref(diyGroup.data)
+const data = ref(diyGroup.data)
 
-    // 监听页面加载完成
-    diyGroup.onMounted()
+// 监听页面加载完成
+diyGroup.onMounted()
 
-    // 监听滚动事件
-    diyGroup.onPageScroll()
+// 监听滚动事件
+diyGroup.onPageScroll()
 
-    defineExpose({
-        refresh: diyGroup.refresh,
-        getFormRef
-    })
+defineExpose({
+    refresh: diyGroup.refresh,
+    getFormRef
+})
 </script>
 <style lang="scss" scoped>
-   @import './index.scss';
+@import './index.scss';
 </style>
