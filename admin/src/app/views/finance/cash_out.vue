@@ -177,7 +177,7 @@
                                         </template>
                                     </el-table-column>
 
-                                    <el-table-column  align="right" fixed="right" width="120">
+                                    <el-table-column align="right" fixed="right" width="120">
                                         <template #default="{ row }">
                                             <el-button  type="primary" link @click="successfulAuditFn(row)" v-if="row.status == 1"> {{ t('successfulAudit') }}</el-button>
                                             <el-button  type="primary" link @click="auditFailureFn(row)" v-if="row.status == 1"> {{ t('auditFailure') }}</el-button>

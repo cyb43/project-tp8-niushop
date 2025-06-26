@@ -1,6 +1,7 @@
 {
     "ip":"登录IP",
     "username":"管理员姓名",
+    "operationLog": "操作日志",
     "url":"链接",
     "detail": "详情",
     "params":"参数",
@@ -14,6 +15,5 @@
     "typePlaceholder":"请输入请求方式",
     "createTimePlaceholder":"请输入操作时间",
     "addSysUserLog":"添加管理员操作记录表",
-    "updateSysUserLog":"编辑管理员操作记录表",
-    "sys_user_logDeleteTips":"确定要删除该管理员操作记录表吗？"
+    "updateSysUserLog":"编辑管理员操作记录表"
 }

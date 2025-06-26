@@ -7,5 +7,9 @@
 	"prefixTips": "编码格式如：",
 	"length": "编码长度",
 	"lengthPlaceholder": "请输入编码长度",
-	"lengthTips": "编码长度包含前缀，去除前缀最少不能低于4位,最多不能超过30位"
+	"lengthTips": "编码长度包含前缀，去除前缀最少不能低于4位,最多不能超过30位",
+    "diyForm": "万能表单",
+    "diyFormPlaceholder": "请选择万能表单",
+    "addDiyForm": "添加表单",
+    "personalForm": "个人资料"
 }

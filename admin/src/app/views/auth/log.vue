@@ -39,6 +39,7 @@
                     </template>
                     <el-table-column prop="username" :label="t('username')" min-width="120" />
                     <el-table-column prop="ip" :label="t('ip')" min-width="100" align="left"/>
+                    <el-table-column prop="operation" :label="t('operationLog')" min-width="200" align="left"/>
                     <el-table-column prop="url" :label="t('url')" min-width="180" />
                     <el-table-column prop="type" :label="t('type')" min-width="100" align="center"/>
                      <el-table-column :label="t('createTime')" min-width="180" align="center">

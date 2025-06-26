@@ -125,6 +125,14 @@ export function editMemberDetail(params: Record<string, any>) {
     return request.put(`member/member/modify/${params.member_id}/${params.field}`, params, { showSuccessMessage: true })
 }
 
+/**
+ * 会员批量操作
+ * @param params
+ */
+export function memberBatchModify(params: Record<string, any>) {
+    return request.post(`member/member/batch_modify`, params, { showSuccessMessage: true })
+}
+
 /***************************************************** 会员零钱 ****************************************************/
 
 

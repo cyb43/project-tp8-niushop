@@ -7,10 +7,10 @@
             </el-form-item>
 
             <el-form-item :label="t('smsType')">
-                <div class="input-width"> 
+                <div class="input-width">
                     <div v-if="formData.notice_type == 'sms'">{{ t('sms') }}</div>
                     <div v-if="formData.notice_type == 'wechat'">{{ t('wechat') }}</div>
-                    <div v-if="formData.notice_type == 'weapp'">{{ t('weapp') }}</div>    
+                    <div v-if="formData.notice_type == 'weapp'">{{ t('weapp') }}</div>
                 </div>
             </el-form-item>
 

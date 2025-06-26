@@ -10,8 +10,7 @@
             <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                 <el-form :inline="true" :model="payRefundTable.searchParam" ref="searchFormRef">
                     <el-form-item :label="t('refundNo')" prop="refund_no">
-                        <el-input v-model.trim="payRefundTable.searchParam.refund_no"
-                            :placeholder="t('refundNoPlaceholder')" />
+                        <el-input v-model.trim="payRefundTable.searchParam.refund_no" :placeholder="t('refundNoPlaceholder')" />
                     </el-form-item>
                     <el-form-item :label="t('status')" prop="status">
                         <el-select v-model="payRefundTable.searchParam.status" clearable class="input-width">

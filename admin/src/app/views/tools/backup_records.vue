@@ -23,8 +23,6 @@
                 </el-form>
             </el-card>
 
-           
-
             <el-table :data="tableData.data" size="large" v-loading="tableData.loading" ref="tableRef" @selection-change="handleSelectionChange">
 
                 <template #empty>
@@ -176,7 +174,6 @@
                             <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
                         </template>
                     </el-result>
-                
                 </div>
                 <!-- 失败 -->
                 <div class="mt-[50px]" v-show="active == 'error'">
@@ -189,9 +186,7 @@
                             <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
                         </template>
                     </el-result>
-                
                 </div>
-                
             </div>
 
             <template #footer>
@@ -261,8 +256,8 @@ const isPass: any = ref(false)
 const uploading: any = ref(false)
 const numberOfSteps = ref(0)
 const currentId: any = ref(0)
-let backupContents = []
-let restoreContents = []
+let backupContents: any = []
+let restoreContents: any = []
 
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return

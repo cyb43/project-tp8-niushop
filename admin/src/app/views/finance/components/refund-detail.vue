@@ -52,7 +52,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed,defineEmits  } from 'vue'
+import { reactive, ref, computed,defineEmits } from 'vue'
 import { t } from '@/lang'
 import { getPayRefundInfo, getRefundType, getRefundTransfer } from '@/app/api/pay'
 import { FormInstance } from 'element-plus'

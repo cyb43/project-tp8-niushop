@@ -4,6 +4,7 @@
             <el-descriptions :column="1">
                 <el-descriptions-item :label="t('username')" label-align="right">{{logData.username}}</el-descriptions-item>
                 <el-descriptions-item :label="t('ip')" label-align="right">{{logData.ip}}</el-descriptions-item>
+                <el-descriptions-item :label="t('operation')" label-align="right">{{logData.operation}}</el-descriptions-item>
                 <el-descriptions-item :label="t('url')" label-align="right"><span class="break-all">{{logData.url}}</span></el-descriptions-item>
                 <el-descriptions-item :label="t('type')" label-align="right">{{logData.type}}</el-descriptions-item>
                 <el-descriptions-item :label="t('params')" label-align="right">

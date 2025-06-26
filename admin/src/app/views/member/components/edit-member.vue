@@ -8,6 +8,15 @@
             <el-form-item :label="t('nickname')" v-if="type == 'nickname'">
                 <el-input v-model.trim="saveData.nickname" clearable :placeholder="t('nickNamePlaceholder')" class="input-width" />
             </el-form-item>
+            <el-form-item :label="t('mobile')" v-if="type == 'mobile'" prop="mobile">
+                <el-input v-model.trim="saveData.mobile" clearable :placeholder="t('mobilePlaceholder')" maxlength="11" class="input-width" />
+            </el-form-item>
+            <el-form-item :label="t('idCard')" v-if="type == 'id_card'" prop="id_card">
+                <el-input v-model.trim="saveData.id_card" clearable :placeholder="t('idCardPlaceholder')" maxlength="18" class="input-width" />
+            </el-form-item>
+            <el-form-item :label="t('remark')" v-if="type == 'remark'" prop="remark">
+                <el-input v-model.trim="saveData.remark"  type="textarea" clearable :placeholder="t('remarkPlaceholder')" maxlength="100" :rows="5" class="input-width" />
+            </el-form-item>
             <el-form-item :label="t('birthday')" v-if="type == 'birthday'">
                 <el-date-picker v-model="saveData.birthday" value-format="YYYY-MM-DD" type="date" :placeholder="t('birthdayTip')" />
             </el-form-item>
@@ -23,7 +32,7 @@
             </el-form-item>
             <div v-if="type == 'member_level'">
                 <el-form-item :label="t('memberLevelUpdate')" prop="member_level">
-                    <el-select v-model="saveData.member_level" :placeholder="t('memberLevelPlaceholder')" class="input-width">
+                    <el-select v-model="saveData.member_level" :placeholder="t('memberLevelPlaceholder')"  clearable class="input-width">
                         <el-option :label="t('memberLevelPlaceholder')" :value="0" />
                         <el-option :label="item['level_name']" :value="item['level_id']" v-for="(item,index) in levelSelectData"  :key="index"/>
                     </el-select>
@@ -35,7 +44,8 @@
         <template #footer>
             <span class="dialog-footer">
                 <el-button @click="showDialog = false">{{ t('cancel') }}</el-button>
-                <el-button type="primary" :loading="loading" @click="confirm(formRef)">{{t('confirm')}}</el-button>
+                <el-button type="primary" :loading="loading" v-if="method=='batchSet'" @click="batchSetConfirm(formRef)">{{t('confirm')}}</el-button>
+                <el-button type="primary" :loading="loading" v-else @click="confirm(formRef)">{{t('confirm')}}</el-button>
             </span>
         </template>
     </el-dialog>
@@ -46,7 +56,7 @@ import { ref, reactive, computed } from 'vue'
 import { t } from '@/lang'
 import { deepClone } from '@/utils/common'
 import type { FormInstance } from 'element-plus'
-import { editMemberDetail, getMemberLabelAll, getMemberLevelAll } from '@/app/api/member'
+import { editMemberDetail, getMemberLabelAll, getMemberLevelAll,memberBatchModify } from '@/app/api/member'
 import Test from '@/utils/test'
 
 // 修改类型
@@ -87,16 +97,50 @@ getMemberLevelAll().then(({ data }) => {
 
 const formRules = computed(() => {
     return {
-        member_level: [
+        mobile: [
             {
-                validator: (rule: any, value: any, callback: Function) => {
-                    if (Test.empty(saveData.member_level)) {
-                        callback(t('memberLevelPlaceholder'))
-                    }
-                    callback()
+                validator(rule, value, callback) {
+                // 允许为空，直接通过验证
+                if (!value) return callback();
+                
+                // 非空值时，验证手机号格式 
+                const reg = /^1[3-9]\d{9}$/;
+                if (!reg.test(value)) {
+                    callback(new Error('请输入正确的手机号'));
+                } else {
+                    callback();
                 }
+                },
+                trigger: 'blur'
+            }
+        ],
+        id_card:[
+            {
+                validator(rule, value, callback) {
+                // 允许为空，直接通过验证
+                if (!value) return callback();
+
+                // 非空值时，验证身份证号格式 
+                const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+                if (!reg.test(value)) {
+                    callback(new Error('请输入正确的身份证号'));
+                } else {
+                    callback();
+                }
+                },
+                trigger: 'blur'
             }
         ]
+        // member_level: [
+        //     {
+        //         validator: (rule: any, value: any, callback: Function) => {
+        //             if (Test.empty(saveData.member_level)) {
+        //                 callback(t('memberLevelPlaceholder'))
+        //             }
+        //             callback()
+        //         }
+        //     }
+        // ]
     }
 })
 
@@ -151,7 +195,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
         }
     })
 }
-
+// 修改
 const setDialogType = async (row: any = null) => {
     loading.value = true
     type.value = row.type
@@ -178,9 +222,63 @@ const setDialogType = async (row: any = null) => {
     loading.value = false
 }
 
+// 批量设置
+const method = ref(null)
+const batchInfo = ref({
+    is_all: 0,
+    ids: [],
+    where: {}
+})
+const batchSetDialogType = (data)=>{
+    loading.value = true
+    type.value =data.type
+    method.value = data.method
+    batchInfo.value.is_all = data.data.is_all
+    batchInfo.value.ids = data.data.ids
+    batchInfo.value.where = data.data.where
+    title.value = data.title
+    saveData[type.value] = null
+    loading.value = false
+}
+
+const batchSetConfirm = async (formEl: FormInstance | undefined) => {
+    await formRef.value?.validate((valid) => {
+        if (valid) {
+            loading.value = true
+
+            if (repeat.value) return
+            repeat.value = true
+
+            let val = saveData[type.value];
+            if(type.value == 'member_label'){
+                val = saveData[type.value] && saveData[type.value].length  ? deepClone(saveData[type.value]).join(',').split(',') : '';
+            }
+
+            const data = ref({
+                is_all: batchInfo.value.is_all,
+                member_ids:batchInfo.value.ids,
+                where: batchInfo.value.where,
+                field: type.value,
+                value: val
+            })
+            console.log(data.value)
+            memberBatchModify(data.value).then(res => {
+                loading.value = false
+                repeat.value = false
+                showDialog.value = false
+                emit('complete')
+            }).catch(() => {
+                loading.value = false
+                repeat.value = false
+            })
+        }
+    })
+}
+
 defineExpose({
     showDialog,
-    setDialogType
+    setDialogType,
+    batchSetDialogType
 })
 </script>
 

@@ -2,38 +2,38 @@
     <el-dialog v-model="showDialog" :title="t('balanceInfo')" width="550px" :destroy-on-close="true">
         <el-form :model="formData" label-width="110px" ref="formRef" :rules="formRules" class="page-form" v-loading="loading">
 
-            <el-form-item :label="t('headimg')" >
+            <el-form-item :label="t('headimg')">
                 <div class="flex items-center">
                     <img class="w-[50px] h-[50px] mr-[10px]" v-if="formData.member.headimg" :src="img(formData.member.headimg)" alt="" >
                     <img class="w-[50px] h-[50px] mr-[10px] rounded-full" v-else src="@/app/assets/images/member_head.png" alt="">
                 </div>
             </el-form-item>
 
-            <el-form-item :label="t('memberId')" >
+            <el-form-item :label="t('memberId')">
                 <div class="input-width"> {{ formData.member.member_no }} </div>
             </el-form-item>
 
-            <el-form-item :label="t('nickName')" >
+            <el-form-item :label="t('nickName')">
                 <div class="input-width"> {{ formData.member.nickname }} </div>
             </el-form-item>
 
-            <el-form-item :label="t('mobile')" >
+            <el-form-item :label="t('mobile')">
                 <div class="input-width"> {{ formData.member.mobile }} </div>
             </el-form-item>
 
-            <el-form-item :label="t('accountData')" >
+            <el-form-item :label="t('accountData')">
                 <div class="input-width"> {{ formData.account_data }} </div>
             </el-form-item>
 
-            <el-form-item :label="t('fromType')" >
+            <el-form-item :label="t('fromType')">
                 <div class="input-width"> {{ formData.from_type_name }} </div>
             </el-form-item>
 
-            <el-form-item :label="t('memo')" >
+            <el-form-item :label="t('memo')">
                 <div class="input-width"> {{ formData.memo }} </div>
             </el-form-item>
 
-            <el-form-item :label="t('createTime')" >
+            <el-form-item :label="t('createTime')">
                 <div class="input-width"> {{ formData.create_time }} </div>
             </el-form-item>
 

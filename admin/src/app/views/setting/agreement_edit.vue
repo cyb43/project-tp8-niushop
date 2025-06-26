@@ -75,21 +75,21 @@ const formRules = computed(() => {
             { required: true, message: t('titlePlaceholder'), trigger: 'blur' }
         ],
         content: [
-                {
-                    required: true,
-                    trigger: ['blur', 'change'],
-                    validator: (rule: any, value: any, callback: any) => {
-                        if (value === '') {
-                            callback(new Error(t('contentPlaceholder')))
-                        } else if (value.length < 5 || value.length > 100000) {
-                            callback(new Error(t('contentMaxTips')))
-                            return false
-                        } else {
-                            callback()
-                        }
+            {
+                required: true,
+                trigger: ['blur', 'change'],
+                validator: (rule: any, value: any, callback: any) => {
+                    if (value === '') {
+                        callback(new Error(t('contentPlaceholder')))
+                    } else if (value.length < 5 || value.length > 100000) {
+                        callback(new Error(t('contentMaxTips')))
+                        return false
+                    } else {
+                        callback()
                     }
                 }
-            ]
+            }
+        ]
     }
 })
 

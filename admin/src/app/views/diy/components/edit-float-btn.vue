@@ -3,31 +3,6 @@
     <div class="content-wrap float-btn" v-show="diyStore.editTab == 'content'">
 
         <div class="edit-attr-item-wrap">
-            <!-- <h3 class="mb-[10px]">{{ t('selectStyle') }}</h3>
-			<el-form label-width="80px" class="px-[10px]">
-				<el-form-item :label="t('selectStyle')" class="flex">
-					<span class="text-primary flex-1 cursor-pointer" @click="showCouponStyle">{{ diyStore.editComponent.styleName }}</span>
-					<el-icon>
-						<ArrowRight />
-					</el-icon>
-				</el-form-item>
-			</el-form>
-            <el-dialog v-model="showCouponDialog" :title="t('selectStyle')" width="500px">
-                <div class="flex flex-wrap">
-                    <template v-for="(item,index) in couponStyleList" :key="index">
-                        <div :class="{ 'border-primary': selectCouponStyle.value == item.value }" @click="changeCouponStyle(item)" class="flex items-center justify-center overflow-hidden w-[200px] h-[100px] mr-[12px] cursor-pointer border bg-gray-50">
-                            <img :src="img(item.url)" />
-                        </div>
-                    </template>
-                </div>
-                <template #footer>
-                    <span class="dialog-footer">
-                        <el-button @click="showCouponDialog = false">{{ t('cancel') }}</el-button>
-                        <el-button type="primary" @click="confirmCouponStyle">{{ t('confirm') }}</el-button>
-                    </span>
-                </template>
-
-            </el-dialog> -->
             <h3 class="mb-[10px]">{{ t('floatBtnButton') }}</h3>
             <el-form label-width="80px" class="px-[10px]">
                 <el-form-item :label="t('floatBtnButton')">
@@ -98,7 +73,6 @@ import { ref, reactive, onMounted, nextTick } from 'vue'
 import { t } from '@/lang'
 import Sortable from 'sortablejs'
 import useDiyStore from '@/stores/modules/diy'
-import { img } from '@/utils/common'
 import { range } from 'lodash-es'
 
 const diyStore = useDiyStore()
@@ -117,48 +91,6 @@ diyStore.editComponent.verify = (index: number) => {
     return res
 }
 
-/*********** 风格样式 **********/
-
-const showCouponDialog = ref(false)
-const selectCouponStyle = reactive({
-    title: diyStore.editComponent.styleName,
-    value: diyStore.editComponent.style
-})
-const showCouponStyle = () => {
-    showCouponDialog.value = true
-    selectCouponStyle.title = diyStore.editComponent.styleName;
-    selectCouponStyle.value = diyStore.editComponent.style;
-}
-// const couponStyleList = reactive([
-//     {
-//         url: 'addon/shop/diy/goods_coupon/style-1.png',
-//         title: '风格1',
-//         value: 'style-1'
-//     },
-//     {
-//         url: 'addon/shop/diy/goods_coupon/style-2.png',
-//         title: '风格2',
-//         value: 'style-2'
-//     }
-// ])
-//风格点击
-const changeCouponStyle = (item: any) => {
-    selectCouponStyle.title = item.title;
-    selectCouponStyle.value = item.value;
-}
-//确认风格
-const confirmCouponStyle = () => {
-    diyStore.editComponent.styleName = selectCouponStyle.title;
-    diyStore.editComponent.style = selectCouponStyle.value;
-    showCouponDialog.value = false
-    selectTemplate.value = {
-        name: '右下',
-        src: 'iconyouxiajiao',
-        className: 'lowerRight'
-    };
-    diyStore.editComponent.bottomPosition = 'lowerRight'
-}
-/******** end *******/
 const templateList = ref([
     {
         name: '左上',

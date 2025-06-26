@@ -62,6 +62,14 @@ export function deleteRole(roleId: number) {
 }
 
 /**
+ * 修改角色状态
+ * @param params
+ */
+export function modifyRoleStatus(params: Record<string, any>) {
+    return request.put(`sys/role/status`, params, { showSuccessMessage: true })
+}
+
+/**
  * 全部分组
  * @returns
  */

@@ -93,10 +93,6 @@ import { getVerifyDetail } from '@/app/api/verify'
 import { ElMessage } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { img } from '@/utils/common'
-import PointEdit from '@/app/views/member/components/member-point-edit.vue'
-import BalanceEdit from '@/app/views/member/components/member-balance-edit.vue'
-import EditMember from '@/app/views/member/components/edit-member.vue'
-import useAppStore from '@/stores/modules/app'
 
 const route = useRoute()
 const router = useRouter()
@@ -105,7 +101,6 @@ const back = () => {
     router.push('/marketing/verify')
 }
 
-const appStore = useAppStore()
 const loading = ref(true)
 
 // 获取核销信息

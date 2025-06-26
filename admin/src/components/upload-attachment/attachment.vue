@@ -455,17 +455,16 @@ const upload = computed(() => {
                 getAttachmentList()
                 uploadRef.value?.handleRemove(uploadFile)
             } else {
-                if(time.value==null) {
+                if (time.value == null) {
                     time.value = setTimeout(() => {
                         uploadFile.status = 'fail'
                         showElMessage({ message: response.msg, type: 'error' })
                         clearTimeout(time.value)
-                        time.value=null
-                    },500)
-
-                }else{
+                        time.value = null
+                    }, 500)
+                } else {
                     clearTimeout(time.value)
-                    time.value=null
+                    time.value = null
                 }
             }
         }

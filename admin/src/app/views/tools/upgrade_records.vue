@@ -72,7 +72,6 @@ import { t } from '@/lang'
 import {ElMessage, ElMessageBox, FormInstance} from 'element-plus'
 import { useRoute } from 'vue-router'
 import { getUpgradeRecords, delUpgradeRecords } from '@/app/api/upgrade'
-import 'vue-web-terminal/lib/theme/dark.css'
 
 const route = useRoute()
 const pageName = route.meta.title
@@ -146,7 +145,7 @@ const deleteEvent = (ids: any) => {
         }
     ).then(() => {
         delUpgradeRecords({
-            ids: ids
+            ids
         }).then(() => {
             loadList()
         }).catch(() => {

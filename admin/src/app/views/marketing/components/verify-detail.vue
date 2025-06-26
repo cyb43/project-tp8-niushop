@@ -98,22 +98,18 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getVerifyDetail } from '@/app/api/verify'
-import { FormInstance, ElMessage } from 'element-plus'
-import { ArrowLeft } from '@element-plus/icons-vue'
-import { useRouter, useRoute } from 'vue-router'
-import { img, filterNumber } from '@/utils/common'
-import useAppStore from '@/stores/modules/app'
+import { ElMessage } from 'element-plus'
+import { useRouter } from 'vue-router'
+import { img } from '@/utils/common'
 
 const showDialog = ref(false)
 const loading = ref(true)
 const router = useRouter()
 
-const appStore = useAppStore()
 const activeName = ref('verifyInfo')
-const formData:Record<string, any> = ref({})
 
 const handleClick = (data:string) => {
     activeName.value = data

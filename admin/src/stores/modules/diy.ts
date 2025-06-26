@@ -79,7 +79,7 @@ const useDiyStore = defineStore('diy', {
                     imgUrl: "",
                     imgWidth: '',
                     imgHeight: '',
-                    count: -1,
+                    count: 'once', // 'once'（仅一次） | 'always'（每次）
                     show: 0,
                     link: {
                         name: ""
@@ -168,7 +168,7 @@ const useDiyStore = defineStore('diy', {
                     imgUrl: "",
                     imgWidth: '',
                     imgHeight: '',
-                    count: -1,
+                    count: 'once', // 'once'（仅一次） | 'always'（每次）
                     show: 0,
                     link: {
                         name: ""
@@ -510,6 +510,14 @@ const useDiyStore = defineStore('diy', {
             //     this.changeCurrentIndex(-99);
             //     return false;
             // }
+            
+            if (this.global.popWindow.show && !this.global.popWindow.imgUrl) {
+                ElMessage({
+                    message: '请上传弹窗图片',
+                    type: 'warning'
+                })
+                return false;
+            }
 
             for (var i = 0; i < this.value.length; i++) {
                 try {

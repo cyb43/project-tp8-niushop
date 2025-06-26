@@ -332,10 +332,20 @@
                         </div>
                     <!-- </el-scrollbar> -->
                     <div class="flex justify-end">
-                        <el-tooltip effect="dark" :content="t('installTips')" placement="top">
+                        <el-tooltip effect="dark" placement="top">
+                            <template #content>
+                                <div class="w-[400px]">
+                                    {{t("installTips")}}
+                                </div>    
+                            </template>
                             <el-button :disabled="!installCheckResult.is_pass || cloudInstalling" :loading="localInstalling" @click="handleInstall">{{ t("localInstall") }}</el-button>
                         </el-tooltip>
-                        <el-tooltip effect="dark" :content="t('cloudInstallTips')" placement="top">
+                        <el-tooltip effect="dark" placement="top">
+                            <template #content>
+                                <div class="w-[400px]">
+                                    {{t("cloudInstallTips")}}
+                                </div>    
+                            </template>
                             <el-button type="primary" :disabled="!installCheckResult.is_pass || localInstalling" :loading="cloudInstalling" @click="handleCloudInstall">{{ t("cloudInstall") }}</el-button>
                         </el-tooltip>
                     </div>
@@ -503,11 +513,6 @@ const frameworkVersion = ref('')
 const upgradeLogRef = ref<any>(null)
 getVersions().then((res) => {
     frameworkVersion.value = res.data.version.version
-    
-})
-
-const treeProps = reactive({
-  checkStrictly: false
 })
 
 const typeList = ref({})
@@ -607,7 +612,7 @@ const buildInfo = (list: any[]) => {
 //     const filteredUninstalled = localList.value.uninstalled.filter((el: any) => el.title.indexOf(search_name.value) != -1)
 //     const filteredAll = localList.value.all.filter((el: any) => el.title.indexOf(search_name.value) != -1)
 //     const filteredRecentlyUpdated = localList.value.recentlyUpdated.filter((el: any) => el.title.indexOf(search_name.value) != -1)
-    
+
 //     // 构建父子关系
 //     info.value.installed = buildInfo(filteredInstalled)
 //     info.value.uninstalled = buildInfo(filteredUninstalled)
@@ -896,17 +901,15 @@ const handleCloudInstall = () => {
     cloudInstalling.value = true
     installType.value = 'cloud'
 
-    cloudInstallAddon({ addon: currAddon.value })
-        .then((res) => {
-            installStep.value = 1
-            terminalRef.value.execute('clear')
-            terminalRef.value.execute('开始安装插件')
-            getInstallTask()
-            cloudInstalling.value = false
-        })
-        .catch((res) => {
-            cloudInstalling.value = false
-        })
+    cloudInstallAddon({ addon: currAddon.value }).then((res) => {
+        installStep.value = 1
+        terminalRef.value.execute('clear')
+        terminalRef.value.execute('开始安装插件')
+        getInstallTask()
+        cloudInstalling.value = false
+    }).catch((res) => {
+        cloudInstalling.value = false
+    })
 }
 
 const authElMessageBox = () => {
@@ -1163,7 +1166,7 @@ const batchUpgrade = () => {
 }
 
 const visibleRowKeys = computed(() => {
-  return new Set((info.value[activeName.value] || []).map(row => row.key));
+    return new Set((info.value[activeName.value] || []).map(row => row.key));
 });
 </script>
 
@@ -1443,6 +1446,7 @@ html.dark .table-head-bg {
         color: #333;
     }
 }
+
 </style>
 
 <style>

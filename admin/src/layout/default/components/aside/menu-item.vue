@@ -8,7 +8,7 @@
                 <span class="ml-[10px]">{{ meta.title }}</span>
             </template>
             <menu-item v-for="(route, index) in routes.children" :routes="route" :key="index" :level="props.level + 1" />
-            <template v-if="routes.name == 'addon_list'">
+            <template v-if="routes.name == 'addon_list' || routes.name == 'marketing_list'">
                 <template v-if="addonsMenus">
                     <menu-item :routes="addonsMenus" :key="index" :level="props.level + 1"/>
                 </template>
@@ -43,6 +43,7 @@ import { ref, computed, watch } from 'vue'
 import menuItem from './menu-item.vue'
 import useSystemStore from '@/stores/modules/system'
 import useUserStore from '@/stores/modules/user'
+import storage from '@/utils/storage'
 
 const router = useRouter()
 const route = useRoute()
@@ -85,14 +86,25 @@ routers.forEach(item => {
 const addonsMenus = ref(null)
 
 watch(route, () => {
-    if (props.routes.name != 'addon_list') return
+    if (props.routes.name == 'addon_list') {
+        if (systemAddonKeys.value.includes(route.meta.addon) && addonRouters[route.meta.addon]) {
+            addonsMenus.value = addonRouters[route.meta.addon]
+        } else if (route.meta.attr && addonRouters[route.meta.attr]) {
+            addonsMenus.value = addonRouters[route.meta.attr]
+        } else {
+            addonsMenus.value = null
+        }
+    }
 
-    if (systemAddonKeys.value.includes(route.meta.addon) && addonRouters[route.meta.addon]) {
-        addonsMenus.value = addonRouters[route.meta.addon]
-    } else if (route.meta.attr && addonRouters[route.meta.attr]) {
-        addonsMenus.value = addonRouters[route.meta.attr]
-    } else {
-        addonsMenus.value = null
+    const marketingKeys = storage.get('defaultMarketingKeys')
+    const matchedName = route.matched[1]?.name
+    if (props.routes.name == 'marketing_list') {
+        if (marketingKeys && marketingKeys.includes(matchedName)) {
+            addonsMenus.value = route.matched[1] ?? []
+            addonsMenus.value.meta.show = 1
+        } else {
+            addonsMenus.value = null
+        }
     }
 }, { immediate: true })
 </script>

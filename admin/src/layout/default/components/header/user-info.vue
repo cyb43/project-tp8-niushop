@@ -38,21 +38,20 @@
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </div>
-
             </template>
         </el-dropdown>
         <el-dialog v-model="changePasswordDialog" width="450px" title="修改密码">
             <div>
                 <el-form :model="saveInfo" label-width="90px" ref="formRef" :rules="formRules" class="page-form">
                     <el-form-item :label="t('originalPassword')" prop="original_password">
-                        <el-input v-model="saveInfo.original_password" type="password" :placeholder="t('originalPasswordPlaceholder')" clearable class="input-width" />
+                        <el-input v-model="saveInfo.original_password" type="password" :placeholder="t('originalPasswordPlaceholder')" clearable class="input-width" maxlength="40" />
                     </el-form-item>
                     <el-form-item :label="t('newPassword')" prop="password">
-                        <el-input v-model="saveInfo.password" type="password" :placeholder="t('passwordPlaceholder')" clearable class="input-width" />
+                        <el-input v-model="saveInfo.password" type="password" :placeholder="t('passwordPlaceholder')" clearable class="input-width" maxlength="40" />
                         <div class="form-tip">{{t('passwordTip')}}</div>
                     </el-form-item>
                     <el-form-item :label="t('passwordCopy')" prop="password_copy">
-                        <el-input v-model="saveInfo.password_copy" type="password" :placeholder="t('passwordPlaceholder')" clearable class="input-width" />
+                        <el-input v-model="saveInfo.password_copy" type="password" :placeholder="t('passwordPlaceholder')" clearable class="input-width" maxlength="40" />
                     </el-form-item>
                 </el-form>
             </div>

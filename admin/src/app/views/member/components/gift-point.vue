@@ -14,7 +14,6 @@
 <script lang="ts" setup>
 import { computed, reactive, ref, watch } from 'vue'
 import { FormRules } from 'element-plus'
-import Test from '@/utils/test'
 
 const props = defineProps({
     modelValue: {

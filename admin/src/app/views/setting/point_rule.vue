@@ -84,7 +84,10 @@ getPointRuleDict().then(({ data }) => {
 
 const ruleConfigFn = () => {
     getPointRuleConfig().then(({ data }) => {
-        !Test.empty(data) && (formData.value = data)
+        if (!Test.empty(data)) {
+            Object.assign(formData.value.grant, data.grant || {})
+            Object.assign(formData.value.consume, data.consume || {})
+        }
         loading.value = false
     }).catch(() => {
         loading.value = false
@@ -97,7 +100,7 @@ const onSave = async () => {
     if (await ruleRefs.value[0].verify()) {
         if (saveLoading.value) return
         saveLoading.value = true
-
+      
         setPointRuleConfig(formData.value).then(() => {
             ruleDialog.value = false
             saveLoading.value = false

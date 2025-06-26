@@ -33,6 +33,7 @@
                         <el-form-item>
                             <el-button type="primary" @click="loadCronLogList()">{{ t('search') }}</el-button>
                             <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
+                            <el-button @click="clearAll" :loading="clearLoading">{{ t('clearAll') }}</el-button>
                         </el-form-item>
                     </el-form>
                 </div>
@@ -42,7 +43,6 @@
                 <div class="mb-[10px] flex items-center">
                     <el-checkbox v-model="toggleCheckbox" size="large" class="px-[14px]" @change="toggleChange" :indeterminate="isIndeterminate" />
                     <el-button @click="batchDelete" size="small" :loading="deleteLoading">{{ t('batchDelete') }}</el-button>
-                    <el-button @click="clearAll" size="small" :loading="clearLoading">{{ t('clearAll') }}</el-button>
                 </div>
 
                 <el-table :data="cronTableData.data" size="large" v-loading="cronTableData.loading" ref="cronLogListTableRef" @selection-change="handleSelectionChange">
@@ -115,7 +115,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { ArrowLeft } from "@element-plus/icons-vue"
 import { getCronLogList, getCronTemplate, deleteCronLog, clearCronLog } from '@/app/api/sys'
@@ -186,7 +186,7 @@ const clearLoading = ref(false)
 /**
  * 表单数据
  */
- const initialFormData = {
+const initialFormData = {
     id: '',
     name: '',
     key: '',
@@ -301,7 +301,7 @@ const batchDelete = () => {
         })
 
         deleteCronLog({
-            ids: ids
+            ids
         }).then(() => {
             loadCronLogList()
             toggleCheckbox.value = false
@@ -316,7 +316,6 @@ const batchDelete = () => {
 
 // 清空日志
 const clearAll = () => {
-    
     ElMessageBox.confirm(t('clearAllTips'), t('warning'),
         {
             confirmButtonText: t('confirm'),
@@ -328,10 +327,10 @@ const clearAll = () => {
         repeat.value = true
         clearLoading.value = true
 
-        const schedule_id = route.query.id ?? ''
+        let schedule_id: any = route.query.id ?? ''
 
         clearCronLog({
-            schedule_id: schedule_id
+            schedule_id
         }).then(() => {
             loadCronLogList()
             toggleCheckbox.value = false

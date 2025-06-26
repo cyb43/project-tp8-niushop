@@ -1,7 +1,7 @@
 <template>
     <el-card class="box-card !border-none p-[10px]" shadow="never" v-loading="loadingPackage">
         <div class="panel-title">选择套餐</div>
-        <div class="flex flex-wrap mb-[30px]">  
+        <div class="flex flex-wrap mb-[30px]">
             <div v-for="(item,index) in smsPackages" :key="index" :span="4">
                 <div class="package-card mr-[10px] mb-[10px]" :class="{ active: selectedPackage?.id === item.id }" @click="selectPackage(item)">
                     <div class="text-[14px] mb-1 using-hidden">{{ item.package_name }}</div>
@@ -40,11 +40,12 @@ const props = defineProps({
         type: String,
         default: ''
     },
-    isRecharge:{
+    isRecharge: {
         type: Boolean,
         default: false
     }
 })
+
 const emit = defineEmits(['back', 'complete'])
 
 const smsPackages = ref<any[]>([])
@@ -117,7 +118,7 @@ const goBack = () => {
 const showRecharge = ref(false);
 watch(() => props.isRecharge, (newVal) => {
     showRecharge.value = newVal;
-    if (newVal) { 
+    if (newVal) {
         getSmsPackagesListFn();
     }
 });

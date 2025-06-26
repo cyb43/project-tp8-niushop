@@ -362,7 +362,7 @@
   "imageLimitErrorTips":"限制数量格式输入错误",
   "imageLimitErrorTipsTwo":"限制数量不能小于0",
   "imageLimitErrorTipsThree":"限制数量必须大于0",
-  "imafeLimitErrorTipsFour":"限制数量最大不能超过9",
+  "imageLimitErrorTipsFour":"限制数量最大不能超过9",
 
   "defaultValueTips":"设置后，默认值会自动填充到输入框，填表人可在此基础上进行修改。",
   "defaultErrorTips":"默认值格式输入错误",

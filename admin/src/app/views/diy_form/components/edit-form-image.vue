@@ -67,7 +67,7 @@ diyStore.editComponent.verify = (index: number) => {
     }
     if (diyStore.value[index].limit > 9) {
         res.code = false
-        res.message = t('imafeLimitErrorTipsFour')
+        res.message = t('imageLimitErrorTipsFour')
         return res
     }
     return res

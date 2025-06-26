@@ -17,7 +17,6 @@
                     <el-button @click="editPass()">忘记密码</el-button>
                     <el-button @click="back()" v-if="props.isLogin">返回</el-button>
                 </el-form-item>
-
             </el-form>
         </div>
         <div v-if="type=='register'" >
@@ -63,7 +62,6 @@
                 <el-form-item label="备注" prop="remark">
                     <el-input placeholder="请输入备注" class="input-width" type="textarea" maxlength="50"  show-word-limit v-model="registerFormData.remark" clearable />
                 </el-form-item>
-                
                 <h3 class="panel-title !text-[14px">{{ t('实名信息') }}</h3>
                 <el-form-item :label="t('短信示例内容')" prop="contentExample">
                     <el-input v-model="registerFormData.contentExample" placeholder="请输入短信示例内容" clearable  maxlength="50"  show-word-limit class="input-width" />
@@ -88,12 +86,12 @@
                 </el-form-item>
                 <el-form-item :label="t('签名来源')">
                     <el-radio-group v-model="registerFormData.signSource" >
-                        <el-radio v-for="item in signCofig.signsourceList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
+                        <el-radio v-for="item in signConfig.signSourceList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="t('签名类型')">
                     <el-radio-group v-model="registerFormData.signType">
-                        <el-radio v-for="item in signCofig.signTypeList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
+                        <el-radio v-for="item in signConfig.signTypeList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="t('上传图片')" prop="imgUrl">
@@ -138,13 +136,13 @@
             </el-form>
         </div>
     </el-card>
-  
 </template>
 
 <script lang="ts" setup>
 import { ref ,computed,reactive} from 'vue'
 import { loginAccount,getSmsCaptcha,getSmsSend,resetPassword,registerAccount ,getSmsSignConfig} from '@/app/api/notice'
 import { t } from "@/lang";
+
 const props = defineProps({
     info:{
         type: Object,
@@ -166,7 +164,7 @@ const formData = ref({
 })
 
 const isBack = computed(() => {
-  return !!props.info && Object.keys(props.info).length > 0;
+    return !!props.info && Object.keys(props.info).length > 0;
 })
 
 const formRules = computed(() => {
@@ -194,14 +192,14 @@ const back = () => {
 }
 
 // 注册
-const signCofig = reactive({
+const signConfig = reactive({
     signTypeList: [],
-    signsourceList:[]
+    signSourceList:[]
 })
 const getSmsSignConfigFn = ()=> {
     getSmsSignConfig().then(res => {
-        signCofig.signTypeList = res.data.sign_type_list
-        signCofig.signsourceList = res.data.sign_source_list
+        signConfig.signTypeList = res.data.sign_type_list
+        signConfig.signSourceList = res.data.sign_source_list
         registerFormData.value.signSource = res.data.sign_source_list[0].type
         registerFormData.value.signType = res.data.sign_type_list[0].type
     })
@@ -216,7 +214,7 @@ const registerFormData = ref({
     password: '',
     company: '',
     mobile: '',
-    captcha_key : '',
+    captcha_key: '',
     captcha_code: '',
     captcha_img: '',
     imgUrl: '',
@@ -240,10 +238,8 @@ const toRegister = async () => {
         registerFormData.value.username = ''
         registerFormData.value.password = ''
         type.value = 'register'
-        loading.value = false
-    }else {
-        loading.value = false
     }
+    loading.value = false
 }
 
 const registerFormRef = ref()
@@ -275,36 +271,36 @@ const registerFormRules = computed(() => {
         code: [
             { required: true, message: '请输入动态码', trigger: 'blur' },
         ],
-        company:[
+        company: [
             { required: true, message: '请输入公司名称', trigger: 'blur' },
         ],
         signature: [
             { required: true, message: '请输入短信签名', trigger: 'blur' },
             {
                 validator: (rule, value, callback) => {
-                const singleBracketValid = /^【[^【】]*】$/.test(value);
-                if (!singleBracketValid) {
-                    return callback(new Error('短信签名必须被【】包裹'));
-                }
+                    const singleBracketValid = /^【[^【】]*】$/.test(value);
+                    if (!singleBracketValid) {
+                        return callback(new Error('短信签名必须被【】包裹'));
+                    }
 
-                const content = value.slice(1, -1);
-                
-                const lengthValid = content.length >= 2 && content.length <= 20;
-                if (!lengthValid) {
-                    return callback(new Error('短信签名内容需在 2-20 个字符之间'));
-                }
-                
-                const invalidChars = /[\s\-+=*&%#@~;]/;
-                if (invalidChars.test(content)) {
-                    return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'));
-                }
-                
-                callback();
+                    const content = value.slice(1, -1);
+
+                    const lengthValid = content.length >= 2 && content.length <= 20;
+                    if (!lengthValid) {
+                        return callback(new Error('短信签名内容需在 2-20 个字符之间'));
+                    }
+
+                    const invalidChars = /[\s\-+=*&%#@~;]/;
+                    if (invalidChars.test(content)) {
+                        return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'));
+                    }
+
+                    callback();
                 },
                 trigger: 'blur'
             }
         ],
-        principalMobile:[
+        principalMobile: [
             { required: true, message: '请输入经办人手机号', trigger: 'blur' },
             { validator: phoneVerify, trigger: 'blur' }
         ],
@@ -389,11 +385,11 @@ const getSmsCaptchaFn = async () => {
     try {
         const res = await getSmsCaptcha()
         if (captchaType.value === 'register') {
-        registerFormData.value.captcha_key = res.data.captcha_key
-        registerFormData.value.captcha_img = res.data.img
+            registerFormData.value.captcha_key = res.data.captcha_key
+            registerFormData.value.captcha_img = res.data.img
         } else if (captchaType.value === 'password') {
-        changeFormData.value.captcha_key = res.data.captcha_key
-        changeFormData.value.captcha_img = res.data.img
+            changeFormData.value.captcha_key = res.data.captcha_key
+            changeFormData.value.captcha_img = res.data.img
         }
         return true // 表示成功
     } catch (error) {
@@ -409,8 +405,8 @@ const getSmsSendFn = () => {
     if (countdown.value > 0 || sending.value) return; // 正在倒计时或发送中，直接返回
     if (type.value === 'register') {
         registerFormRef.value.validateField(['mobile', 'captcha_code'], (valid) => {
-            if (!valid) return;
-            sending.value = true; // 标记为发送中   
+            if (!valid) return
+            sending.value = true // 标记为发送中
             const params = {
                 mobile: registerFormData.value.mobile,
                 captcha_key: registerFormData.value.captcha_key,
@@ -424,13 +420,12 @@ const getSmsSendFn = () => {
                 sending.value = false;
             }).finally(() => {
                 sending.value = false; // 无论成功失败都重置发送状态
-            });
-        });
-
+            })
+        })
     } else if (type.value === 'password') {
         changeFormRef.value.validateField(['mobile', 'captcha_code'], (valid) => {
-            if (!valid) return;
-            sending.value = true; // 标记为发送中 
+            if (!valid) return
+            sending.value = true // 标记为发送中
 
             const params = {
                 mobile: changeFormData.value.mobile,
@@ -456,11 +451,12 @@ const startCountdown = (seconds) => {
     const timer = setInterval(() => {
         countdown.value--;
         if (countdown.value <= 0) {
-        clearInterval(timer);
-        sending.value = false; // 发送状态重置
+            clearInterval(timer);
+            sending.value = false; // 发送状态重置
         }
     }, 1000);
-};
+}
+
 const changeFormRules = computed(() => {
     return {
         mobile: [
@@ -484,12 +480,11 @@ const editPass = async () => {
     captchaType.value = 'password'
     const success = await getSmsCaptchaFn()
     if (success) {
-        loading.value = false
         type.value = 'password'
-    }else{
-        loading.value = false
     }
+    loading.value = false
 }
+
 const reset = async () => {
     await changeFormRef.value?.validate(async (valid) => {
         if (valid) {
@@ -498,25 +493,24 @@ const reset = async () => {
                 code: changeFormData.value.code,
                 mobile: changeFormData.value.mobile
             }
-            resetPassword(props.info.username,{...params}).then((res) => {
+            resetPassword(props.info.username, { ...params }).then((res) => {
                 let newPassword = res.data.password
-                ElMessageBox.confirm(`新密码为：${newPassword}`, '请保存好新密码', {
+                ElMessageBox.confirm(`新密码为：${ newPassword }`, '请保存好新密码', {
                     confirmButtonText: '确定',
                     showCancelButton: false,
                 }).then(() => {
-                    type.value='login'
+                    type.value = 'login'
                     emit('complete')
                 }).catch(() => {
-                    type.value='login'
+                    type.value = 'login'
                     emit('complete')
                 })
             })
         }
-    });
+    })
 }
 
 </script>
 
 <style lang="scss" scoped>
-
 </style>

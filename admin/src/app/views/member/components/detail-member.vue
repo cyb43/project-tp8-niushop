@@ -164,7 +164,9 @@
                 <div class="flex mt-[15px] w-[33.3%] break-all leading-[21px]">
                     <span class="text-[14px] w-[130px] text-right flex-shrink-0 mr-[20px]">{{ t('mobile') }}</span>
                     <span class="text-[14px] text-[#666666]">
-                        {{ formData.mobile || t('notAvailable') }}
+                        {{ formData.mobile || t('notAvailable') }}<el-icon @click="editMemberInfo('mobile')" class="-bottom-[2px] -right-[4px] cursor-pointer">
+                            <EditPen color="#273CE2" />
+                        </el-icon>
                     </span>
                 </div>
                 <div class="flex mt-[15px] w-[33.3%] break-all leading-[21px]">
@@ -195,6 +197,22 @@
                     <span class="text-[14px] w-[130px] text-right flex-shrink-0 mr-[20px]">{{ t('sex') }}</span>
                     <span class="text-[14px] text-[#666666]">
                         {{ formData.sex == 1 && t('manSex') || formData.sex == 2 && t('girlSex') || t('secrecySex') }}<el-icon @click="editMemberInfo('sex')" class="-bottom-[2px] -right-[4px] cursor-pointer">
+                            <EditPen color="#273CE2" />
+                        </el-icon>
+                    </span>
+                </div>
+                <div class="flex mt-[15px] w-[33.3%] break-all leading-[21px]">
+                    <span class="text-[14px] w-[130px] text-right flex-shrink-0 mr-[20px]">{{ t('身份证') }}</span>
+                    <span class="text-[14px] text-[#666666]">
+                        {{ formData.id_card || t('notAvailable') }}<el-icon @click="editMemberInfo('id_card')" class="-bottom-[2px] -right-[4px] cursor-pointer">
+                            <EditPen color="#273CE2" />
+                        </el-icon>
+                    </span>
+                </div>
+                <div class="flex mt-[15px] w-[33.3%] break-all leading-[21px]">
+                    <span class="text-[14px] w-[130px] text-right flex-shrink-0 mr-[20px]">{{ t('备注') }}</span>
+                    <span class="text-[14px] text-[#666666]">
+                        {{ formData.remark || t('notAvailable') }}<el-icon @click="editMemberInfo('remark')" class="-bottom-[2px] -right-[4px] cursor-pointer">
                             <EditPen color="#273CE2" />
                         </el-icon>
                     </span>
@@ -248,7 +266,7 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getMemberInfo } from '@/app/api/member'
-import { FormInstance, ElMessage } from 'element-plus'
+import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
 import PointEdit from '@/app/views/member/components/member-point-edit.vue'

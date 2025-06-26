@@ -49,11 +49,11 @@ const formRules = reactive<FormRules>({
                     if (!Test.decimal(formData.value.discount, 1)) {
                         callback('折扣格式错误')
                     }
-                    if (parseFloat(formData.value.discount) < 0.1 || parseFloat(formData.value.discount) > 9.9) {
-                        callback('折扣只能输入0.1~9.9之间的值')
+                    if (parseFloat(formData.value.discount) < 0 || parseFloat(formData.value.discount) > 9.9) {
+                        callback('折扣只能输入0~9.9之间的值')
                     }
-                    if (formData.value.discount <= 0) {
-                        callback('折扣不能小于等于0')
+                    if (formData.value.discount < 0) {
+                        callback('折扣不能小于0')
                     }
                     callback()
                 } else {

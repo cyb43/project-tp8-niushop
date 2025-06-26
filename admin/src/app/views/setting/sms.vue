@@ -74,13 +74,11 @@ const setSmsTypeRefs = (el, index) => {
 }
 
 loadSmsList()
-const isLogin = ref(false)
 const editEvent = (data: any, index: number) => {
     if (data.sms_type == 'niuyun') {
         getAccountIsLogin().then((res: any) => {
             router.push('/setting/niusms/setting')
         })
-
     } else {
         smsTypeRefs.value[index].setFormData(data)
         smsTypeRefs.value[index].showDialog = true

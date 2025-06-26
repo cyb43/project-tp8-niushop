@@ -15,6 +15,17 @@
                 <el-form-item >
                     <div class="text-lg">{{ memberNo }}</div>
                 </el-form-item>
+
+                <h3 class="panel-title">{{ t('diyForm') }}</h3>
+                <el-form-item :label="t('personalForm')">
+                    <el-select v-model="formData.form_id" :placeholder="t('diyFormPlaceholder')" clearable>
+                        <el-option v-for="item in diyFormOptions" :key="item.form_id" :label="item.page_title" :value="item.form_id" />
+                    </el-select>
+                    <div class="ml-[10px]">
+                        <span class="cursor-pointer text-primary mr-[10px]" @click="refreshDiyForm(true)">{{ t('refresh') }}</span>
+                        <span class="cursor-pointer text-primary" @click="toDiyFormEvent">{{ t('addDiyForm') }}</span>
+                    </div>
+                </el-form-item>
             </el-form>
         </el-card>
 
@@ -32,7 +43,10 @@ import { t } from '@/lang'
 import { getMemberConfig, setMemberConfig } from '@/app/api/member'
 import { FormInstance, FormRules } from 'element-plus'
 import { filterNumber } from '@/utils/common'
+import { useRouter } from 'vue-router'
+import { getDiyFormList } from '@/app/api/diy_form'
 
+const router = useRouter()
 const loading = ref(true)
 const ruleFormRef = ref<FormInstance>({})
 const memberNo = ref('')
@@ -68,7 +82,8 @@ const formRules = reactive<FormRules>({
 
 const formData = reactive<Record<string, number | string>>({
     prefix: '',
-    length: 10
+    length: 10,
+    form_id: ''
 })
 
 const setFormData = async () => {
@@ -91,6 +106,39 @@ const getMemberNo = async (formEl: FormInstance | undefined) => {
         }
     })
 }
+
+/** ***************** 万能表单-start *************************/
+// 万能表单列表下拉框
+const diyFormOptions = reactive([])
+// 跳转到万能表单列表，添加表单
+const toDiyFormEvent = () => {
+    const url = router.resolve({
+        path: '/diy_form/list'
+    })
+    window.open(url.href)
+}
+
+// 刷新万能表单
+const refreshDiyForm = (bool = false) => {
+    getDiyFormList({
+        type: 'DIY_FORM_MEMBER_INFO',
+        status: 1
+    }).then((res) => {
+        const data = res.data
+        if (data) {
+            diyFormOptions.splice(0, diyFormOptions.length, ...data)
+            if (bool) {
+                ElMessage({
+                    message: t('refreshSuccess'),
+                    type: 'success'
+                })
+            }
+        }
+    })
+}
+
+refreshDiyForm()
+/** *****************万能表单-end *************************/
 
 const onSave = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return

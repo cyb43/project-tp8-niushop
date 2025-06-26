@@ -58,7 +58,7 @@ const prop = defineProps({
         type: String,
         default: 'image'
     },
-    imageFit : {
+    imageFit: {
         type: String,
         default: 'contain'
     },
@@ -106,9 +106,9 @@ const setValue = () => {
 }
 
 watch(() => value.value, () => {
-    if(value.value.indexOf('data:image') != -1){
+    if (value.value.indexOf('data:image') != -1) {
         images.data = [value.value]
-    }else {
+    } else {
         images.data = [
             ...value.value.split(',').filter((item: string) => {
                 return item
@@ -141,7 +141,7 @@ const confirmSelect = (data: Record<string, any>) => {
         })
     }
     setValue()
-     
+
     nextTick(() => {
         emit('change', value.value)
     })
@@ -172,13 +172,11 @@ const previewImage = (index: number = 0) => {
  * 拖拽
  */
 const imgListRef:any = ref(null)
-onMounted(()=>{
+onMounted(()=> {
     nextTick(() => {
         rowDrop()
     })
 })
-
-const activeRows = ref<any[]>([])
 
 // 拖拽排序
 const rowDrop = () => {

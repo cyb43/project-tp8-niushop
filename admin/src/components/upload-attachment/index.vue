@@ -47,19 +47,17 @@ const emit = defineEmits(['confirm'])
  */
 const confirm = () => {
     showDialog.value = false
-
     let filesObj = attachmentRef?.value.selectedFile || {};
     let filesIndexObj = attachmentRef?.value.selectedFileIndex || {};
     // 整理图片顺序
     let arr = [];
-    Object.values(filesIndexObj).forEach((item,index)=>{
-        for(let key in filesObj){
-            if(item == key){
+    Object.values(filesIndexObj).forEach((item, index) => {
+        for (let key in filesObj) {
+            if (item == key) {
                 arr.push(deepClone(filesObj[key]))
             }
         }
     })
-    
     emit('confirm', prop.limit == 1 ? arr[0] ?? null : arr)
 }
 

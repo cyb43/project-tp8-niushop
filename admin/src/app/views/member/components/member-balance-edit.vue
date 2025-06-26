@@ -107,7 +107,6 @@ const confirm = async (formEl: FormInstance | undefined) => {
             }).catch(() => {
                 loading.value = false
                 repeat.value = false
-                // showDialog.value = false
             })
         }
     })

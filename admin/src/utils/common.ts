@@ -247,7 +247,6 @@ export function moneyFormat(money: string): string {
     return isNaN(parseFloat(money)) ? money : parseFloat(money).toFixed(2)
 }
 
-
 /**
  * 时间戳转日期格式
  */
@@ -338,50 +337,6 @@ export function filterSpecial(event: any) {
 export function filterBlank(event: any) {
     event.target.value = event.target.value.replace(/\s/g, '');
 }
-export function importIconFontCss() {
-    // const modulesFiles = {}; // import.meta.glob('@/styles/icon/official-iconfont.css', { eager: true })
-    // const modulesFiles = import.meta.glob('@/addon/**/assets/icon/*.css', { eager: true })
-    // // console.log('modulesFiles',modulesFiles)
-    //
-    // const modules:any = {}
-    // for (const [key, value] of Object.entries(modulesFiles)) {
-    //     const moduleName:any = key.split('/').pop()
-    //     const name = moduleName.split('.')[0]
-    //     modules[name] = value.default
-    // }
-    //
-    // // console.log('modules',modules)
-    //
-    // for(let key in modules) {
-    //     // console.log('modules[key]',modules[key])
-    //     import(modules[key]).then((module) => {
-    //         // console.log('module', module.default);
-    //     }).catch((e) => {
-    //         // console.log('caca', e)
-    //     });
-    // }
-}
-
-export function getIcon() {
-    // const modulesFiles = import.meta.glob('@/styles/icon/*.json', { eager: true })
-    // const addonModulesFiles = import.meta.glob('@/addon/**/assets/icon/*.json', { eager: true })
-    // addonModulesFiles && Object.assign(modulesFiles, addonModulesFiles)
-    //
-    // // const modulesFiles = {}; // import.meta.glob('@/styles/icon/official-iconfont.css', { eager: true })
-    // // const modulesFiles = import.meta.glob('@/styles/icon/*.json', { eager: true })
-    // console.log('modulesFiles', modulesFiles)
-    //
-    // const modules = {}
-    // for (const [key, value] of Object.entries(modulesFiles)) {
-    //     const moduleName = key.split('/').pop()
-    //     console.log('moduleName',moduleName)
-    //     const name = moduleName.split('.')[0]
-    //     modules[name] = value.default
-    // }
-    // console.log('modules', modules)
-    // // const addonModulesFiles = import.meta.glob('@/addon/**/assets/icon/*.json', { eager: true })
-}
-
 /**
  * 设置表格分页数据的本地存储
  * @param page

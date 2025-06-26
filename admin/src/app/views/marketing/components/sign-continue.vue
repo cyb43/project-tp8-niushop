@@ -92,15 +92,15 @@ const regExp = {
 const formRules = reactive<FormRules>({
     continue_sign: [
         { required: true, message: t('continueSignPlaceholder'), trigger: 'blur' },
-        {            
+        {
             validator: (rule: any, value: any, callback: any) => {
-               if (isNaN(value) || !regExp.number.test(value)) {
+                if (isNaN(value) || !regExp.number.test(value)) {
                     callback(t('continueSignFormatError'))
                 } else if (value < 2 || value > 365) {
                     callback(t('continueSignBerweenDays'))
-                } else if (Number(value) > Number(props.sign_period)) { 
+                } else if (Number(value) > Number(props.sign_period)) {
                     callback(t('continueSignMustLessThanSignPeriod')) // 添加这个校验
-                } else{
+                } else {
                     callback();
                 }
             },

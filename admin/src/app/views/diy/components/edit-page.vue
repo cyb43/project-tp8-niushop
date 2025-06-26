@@ -65,6 +65,29 @@
                 </el-form-item>
             </el-form>
         </div>
+        <div class="edit-attr-item-wrap">
+            <h3 class="mb-[10px]">{{ t('popWindowAds') }}</h3>
+            <el-form label-width="80px" class="px-[10px]">
+                <el-form-item :label="t('popAdsIsEnabled')" class="display-block">
+                    <el-switch v-model="diyStore.global.popWindow.show" />
+                </el-form-item>
+                <div v-show="diyStore.global.popWindow.show">
+                    <el-form-item :label="t('popAdsType')">
+                        <el-radio-group v-model="diyStore.global.popWindow.count">
+                            <el-radio label="once">{{ t('firstPop') }}</el-radio>
+                            <el-radio label="always">{{ t('everyTimePops') }}</el-radio>
+                        </el-radio-group>
+                        <div class="text-sm text-gray-400">{{ t('popWindowCountTips') }}</div>
+                    </el-form-item>
+                    <el-form-item :label="t('popAdsImage')">
+                        <upload-image v-model="diyStore.global.popWindow.imgUrl" :limit="1" @change="selectImg" />
+                    </el-form-item>
+                    <el-form-item :label="t('popAdsLink')">
+                        <diy-link v-model="diyStore.global.popWindow.link" />
+                    </el-form-item>
+                </div>
+            </el-form>
+        </div>
 
         <el-dialog v-model="showDialog" :title="t('selectStyle')" width="800px">
 
@@ -180,7 +203,6 @@ const inputBoth = (value: any) => {
     diyStore.value.forEach((item, index) => {
         item.margin.both = value;
     })
-
 }
 
 watch(
@@ -213,6 +235,15 @@ const changeStyle = () => {
     }
     diyStore.global.topStatusBar.style = selectStyle.value
     showDialog.value = false
+}
+
+const selectImg = (url: any) => {
+    const image = new Image()
+    image.src = img(url)
+    image.onload = async() => {
+        diyStore.global.popWindow.imgWidth = image.width
+        diyStore.global.popWindow.imgHeight = image.height
+    }
 }
 
 defineExpose({})

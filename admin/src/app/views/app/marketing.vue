@@ -1,16 +1,16 @@
 <template>
-    <!--应用管理-->
+    <!--营销管理-->
     <div class="main-container" v-loading="loading">
         <el-card class="box-card !border-none" shadow="never">
 
-            <template v-if="Object.keys(appList).length">
+            <template v-if="Object.keys(marketingList).length">
 
-                <template v-for="(item, index) in appList" :key="index + 'b'">
-                    <div class="flex justify-between items-center" v-if="item.list.length">
+                <template v-for="(item, index) in marketingList" :key="index + 'b'">
+                    <div class="flex justify-between items-center">
                         <span class="text-page-title">{{ item.title }}</span>
                     </div>
 
-                    <div class="flex flex-wrap plug-list pb-10 plug-large" v-if="item.list.length">
+                    <div class="flex flex-wrap plug-list pb-10 plug-large">
                         <div class="cursor-pointer mt-[20px] mr-4 bg-[#f7f7f7]" v-for="(childItem,childIndex) in item.list" :key="childIndex" @click="toLink(childItem)">
                             <div class="w-[264px] flex py-[20px] px-[17px] app-item relative">
                                 <el-image class="w-[40px] h-[40px] mr-[10px]" :src="img(childItem.icon)" fit="contain">
@@ -36,7 +36,7 @@
                 </template>
             </template>
 
-            <div class="empty flex items-center justify-center" v-if="!loading && !Object.keys(appList).length">
+            <div class="empty flex items-center justify-center" v-if="!loading && !Object.keys(marketingList).length">
                 <el-empty :description="t('emptyAppData')" />
             </div>
         </el-card>
@@ -45,7 +45,7 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue'
-import { getShowApp } from '@/app/api/addon'
+import { getShowMarketing } from '@/app/api/addon'
 import { img } from '@/utils/common'
 import useUserStore from '@/stores/modules/user'
 import { useRouter } from 'vue-router'
@@ -53,15 +53,15 @@ import { t } from '@/lang'
 
 const addonIndexRoute = useUserStore().addonIndexRoute
 const router = useRouter()
-const appList = ref<Record<string, any>[]>([])
+const marketingList = ref<Record<string, any>[]>([])
 
 const loading = ref(true)
-const getAppList = async () => {
-    const res = await getShowApp()
-    appList.value = res.data
+const getMarketingList = async () => {
+    const res = await getShowMarketing()
+    marketingList.value = res.data
     loading.value = false
 }
-getAppList()
+getMarketingList()
 
 const toLink = (item: any) => {
     if (item.url) {

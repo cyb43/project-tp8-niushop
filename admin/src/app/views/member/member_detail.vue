@@ -200,6 +200,22 @@
                 </span>
             </div>
             <div class="flex items-center mt-[15px]">
+                <span class="text-[14px] w-[130px] text-right flex-shrink-0 mr-[20px]">{{ t('身份证') }}</span>
+                <span class="text-[14px] text-[#666666]">
+                    {{ formData.id_card || t('notAvailable') }}<el-icon @click="editMemberInfo('id_card')" class="-bottom-[2px] -right-[4px] cursor-pointer">
+                        <EditPen color="#273CE2" />
+                    </el-icon>
+                </span>
+            </div>
+            <div class="flex items-center mt-[15px]">
+                <span class="text-[14px] w-[130px] text-right flex-shrink-0 mr-[20px]">{{ t('备注') }}</span>
+                <span class="text-[14px] text-[#666666]">
+                    {{ formData.remark || t('notAvailable') }}<el-icon @click="editMemberInfo('remark')" class="-bottom-[2px] -right-[4px] cursor-pointer">
+                        <EditPen color="#273CE2" />
+                    </el-icon>
+                </span>
+            </div>
+            <div class="flex items-center mt-[15px]">
                 <span class="text-[14px] w-[130px] text-right mr-[20px]">{{ t('wxUnionid') }}</span>
                 <span class="text-[14px] text-[#666666]">
                     {{ formData.wx_unionid || t('notAvailable') }}
@@ -360,12 +376,12 @@ const infoCommission = () => {
 }
 
 const back = () => {
-    if (window.history.length > 1){
+    if (window.history.length > 1) {
         router.go(-1)
-    }else{
+    } else {
         router.push(`/member/member`)
     }
-        }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -11,12 +11,8 @@
                 <template #default>
                     <div class="flex items-center">
                         <div>
-                            <p>
-                                {{ t('cronTipsOne') }}
-                            </p>
-                            <p class="mt-2">
-                                {{ t('cronTipsTwo') }}
-                            </p>
+                            <p>{{ t('cronTipsOne') }}</p>
+                            <p class="mt-2">{{ t('cronTipsTwo') }}</p>
                         </div>
                     </div>
                 </template>

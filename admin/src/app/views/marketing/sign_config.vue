@@ -141,7 +141,7 @@ const regExp: any = {
 // 表单验证规则
 const formRules = reactive<FormRules>({
     day_award: [
-        { 
+        {
             required: true,
             trigger: 'change',
             validator: (rule: any, value: any, callback: any) => {
@@ -157,15 +157,15 @@ const formRules = reactive<FormRules>({
             }
         }
     ],
-    sign_period:[{
+    sign_period: [{
         required: true,
         trigger: 'blur',
         validator: (rule: any, value: any, callback: any) => {
             if (value === null || value === '') {
                 callback(t('signPeriodTip'))
-            }else if (isNaN(value) || !regExp.number.test(value)) {
+            } else if (isNaN(value) || !regExp.number.test(value)) {
                 callback(t('signPeriodLimitTips'))
-            }else if (value < 2 || value > 365) {
+            } else if (value < 2 || value > 365) {
                 callback(t('signPeriodMustZeroTips'))
             } else {
                 callback()

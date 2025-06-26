@@ -22,7 +22,8 @@ import { ref } from 'vue'
 import { t } from '@/lang'
 import { clearCache } from '@/app/api/sys'
 import { ElMessageBox } from 'element-plus'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
+
 const loading = ref<Boolean>(false)
 const route = useRoute()
 const pageName = route.meta.title

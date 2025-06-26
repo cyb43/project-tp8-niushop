@@ -92,11 +92,11 @@ const handleEditorReady = (editor) => {
     // 方案二：原型链扩展（如果编辑器版本支持）
     const originalCount = editor.getContentLength; // 原生统计方法
 
-  // 覆盖方法：去除空格后统计
-  editor.getContentLength = function () {
-    const rawContent = editor.getContent();
-    return rawContent.replace(/[\s\u3000]+/g, '').length;
-  };
+    // 覆盖方法：去除空格后统计
+    editor.getContentLength = function () {
+        const rawContent = editor.getContent();
+        return rawContent.replace(/[\s\u3000]+/g, '').length;
+    };
 }
 
 const imageSelect = (data: Record<string, any>) => {

@@ -111,12 +111,12 @@
                 </el-form-item>
                 <el-form-item :label="t('签名来源')">
                     <el-radio-group v-model="formData.signSource" >
-                        <el-radio v-for="item in signCofig.signsourceList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
+                        <el-radio v-for="item in signConfig.signSourceList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="t('签名类型')">
                     <el-radio-group v-model="formData.signType">
-                        <el-radio v-for="item in signCofig.signTypeList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
+                        <el-radio v-for="item in signConfig.signTypeList" :key="item.type" :label="item.type" >{{item.name}}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="t('上传图片')" prop="imgUrl">
@@ -169,15 +169,14 @@ const initialFormData = {
 }
 const formData = reactive({ ...initialFormData })
 
-
-const signCofig = reactive({
+const signConfig = reactive({
     signTypeList: [],
-    signsourceList:[]
+    signSourceList:[]
 })
 const getSmsSignConfigFn = ()=> {
     getSmsSignConfig().then(res => {
-        signCofig.signTypeList = res.data.sign_type_list
-        signCofig.signsourceList = res.data.sign_source_list
+        signConfig.signTypeList = res.data.sign_type_list
+        signConfig.signSourceList = res.data.sign_source_list
         formData.signSource = res.data.sign_source_list[0].type
         formData.signType = res.data.sign_type_list[0].type
     })
@@ -192,29 +191,29 @@ const formRules = computed(() => {
             { required: true, message: '请输入短信签名', trigger: 'blur' },
             {
                 validator: (rule, value, callback) => {
-                const singleBracketValid = /^【[^【】]*】$/.test(value);
-                if (!singleBracketValid) {
-                    return callback(new Error('短信签名必须被【】包裹'));
-                }
+                    const singleBracketValid = /^【[^【】]*】$/.test(value);
+                    if (!singleBracketValid) {
+                        return callback(new Error('短信签名必须被【】包裹'));
+                    }
 
-                const content = value.slice(1, -1);
-                
-                const lengthValid = content.length >= 2 && content.length <= 20;
-                if (!lengthValid) {
-                    return callback(new Error('短信签名内容需在 2-20 个字符之间'));
-                }
-                
-                const invalidChars = /[\s\-+=*&%#@~;]/;
-                if (invalidChars.test(content)) {
-                    return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'));
-                }
-                
-                callback();
+                    const content = value.slice(1, -1);
+
+                    const lengthValid = content.length >= 2 && content.length <= 20;
+                    if (!lengthValid) {
+                        return callback(new Error('短信签名内容需在 2-20 个字符之间'));
+                    }
+
+                    const invalidChars = /[\s\-+=*&%#@~;]/;
+                    if (invalidChars.test(content)) {
+                        return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'));
+                    }
+
+                    callback();
                 },
                 trigger: 'blur'
             }
         ],
-        principalMobile:[
+        principalMobile: [
             { required: true, message: '请输入经办人手机号', trigger: 'blur' },
             { validator: phoneVerify, trigger: 'blur' }
         ],
@@ -320,8 +319,8 @@ const loadSignList = () => {
 
 const addEvent = () => {
     Object.assign(formData, initialFormData)
-    formData.signSource = signCofig.signsourceList[0].type
-    formData.signType = signCofig.signTypeList[0].type
+    formData.signSource = signConfig.signSourceList[0].type
+    formData.signType = signConfig.signTypeList[0].type
     visibleAdd.value = true
 }
 
@@ -397,14 +396,13 @@ const batchDeleteEvent = () => {
             signatures.push(item.sign)
         })
 
-        deleteSign(props.username,{
-            signatures: signatures
+        deleteSign(props.username, {
+            signatures
         }).then(() => {
             tableData.loading = true;
             setTimeout(() => {
                 loadSignList()
-            },1000)
-            // loadSignList()
+            }, 1000)
         }).catch(() => {
         })
     })

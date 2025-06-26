@@ -3,9 +3,9 @@
     <div class="main-container">
         <el-card class="box-card !border-none" shadow="never">
 
-            <div class="flex justify-between items-center">
+            <!-- <div class="flex justify-between items-center">
                 <span class="text-page-title">{{ pageName }}</span>
-            </div>
+            </div> -->
 
             <div class="flex justify-between items-center mt-[20px]">
                 <el-form :inline="true" :model="roleTableData.searchParam" ref="searchFormRef">
@@ -28,8 +28,8 @@
                     <el-table-column prop="role_name" :label="t('roleName')" />
                     <el-table-column :label="t('status')">
                         <template #default="{ row }">
-                            <el-tag type="success" v-if="row.status == 1">{{ row.status_name }}</el-tag>
-                            <el-tag type="error" v-if="row.status == 0">{{ row.status_name }}</el-tag>
+                            <el-tag type="success" v-if="row.status == 1" @click="modifyRoleStatusEvent(row.role_id, 0)" class="cursor-pointer">{{ row.status_name }}</el-tag>
+                            <el-tag type="error" v-else @click="modifyRoleStatusEvent(row.role_id, 1)" class="cursor-pointer">{{ row.status_name }}</el-tag>
                         </template>
                     </el-table-column>
                     <el-table-column prop="create_time" :label="t('createTime')"></el-table-column>
@@ -54,7 +54,7 @@
 <script lang="ts" setup>
 import { ref, reactive } from 'vue'
 import { t } from '@/lang'
-import { getRoleList, deleteRole } from '@/app/api/sys'
+import { getRoleList, deleteRole, modifyRoleStatus } from '@/app/api/sys'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import EditRole from '@/app/views/auth/components/edit-role.vue'
 import { useRoute } from 'vue-router'
@@ -136,6 +136,25 @@ const deleteEvent = (id: number) => {
         })
     })
 }
+
+const isRepeat = ref(false)
+
+// 修改状态
+const modifyRoleStatusEvent = (role_id: any, status: any) => {
+    if (isRepeat.value) return
+    isRepeat.value = true
+
+    modifyRoleStatus({
+        role_id,
+        status
+    }).then((res) => {
+        loadRoleList()
+        isRepeat.value = false
+    }).catch(() => {
+        isRepeat.value = false
+    })
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

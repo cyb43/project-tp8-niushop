@@ -99,6 +99,15 @@ export function getShowApp() {
     return request.get('addon/list/showapp')
 }
 
+/**
+ * 获取营销列表
+ * @returns
+ */
+export function getShowMarketing() {
+    return request.get('showMarketing')
+}
+
+
 export function getAddonInit() {
     return request.get('addon/init')
 }
