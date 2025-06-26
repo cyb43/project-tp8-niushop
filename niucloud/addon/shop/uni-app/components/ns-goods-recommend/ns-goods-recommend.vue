@@ -60,7 +60,8 @@ const goodsData = ref({
         startBgColor: '#FF4142',
         endBgColor: '#FF4142',
         style: 'nc-icon-gouwuche1',
-        control: true
+        control: true,
+        cartEvent: 'cart'
     }
 });
 </script>

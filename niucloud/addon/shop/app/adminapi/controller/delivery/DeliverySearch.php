@@ -24,6 +24,7 @@ class DeliverySearch extends BaseAdminController
 {
     /**
      * 设置配置
+     * @description 设置物流查询配置
      * @return \think\Response
      */
     public function setConfig()
@@ -42,6 +43,7 @@ class DeliverySearch extends BaseAdminController
 
     /**
      * 获取配置
+     * @description 查看物流查询配置
      * @return \think\Response
      */
     public function getConfig()

@@ -14,6 +14,7 @@ namespace app\service\admin\auth;
 use app\dict\sys\AppTypeDict;
 use app\model\sys\SysUser;
 use app\service\admin\captcha\CaptchaService;
+use app\service\admin\sys\RoleService;
 use app\service\admin\user\UserService;
 use app\service\core\sys\CoreConfigService;
 use core\base\BaseAdminService;
@@ -45,10 +46,10 @@ class LoginService extends BaseAdminService
      */
     public function login(string $username, string $password)
     {
-        $config = (new ConfigService())->getConfig();
-        $is_captcha = $config['is_captcha'];
-        if($is_captcha == 1){
-            (new CaptchaService())->verification();
+        $config = ( new ConfigService() )->getConfig();
+        $is_captcha = $config[ 'is_captcha' ];
+        if ($is_captcha == 1) {
+            ( new CaptchaService() )->verification();
         }
 
         $user_service = new UserService();
@@ -58,6 +59,23 @@ class LoginService extends BaseAdminService
         if (!check_password($password, $userinfo->password)) return false;
         if (!$userinfo->status) {
             throw new AuthException('USER_LOCK');
+        }
+
+        if(!$userinfo->is_admin) {
+            $role_service = new RoleService();
+            $userrole = $role_service->getUserRoles($userinfo->role_ids);
+
+            if (!empty($userrole)) {
+                $role_count = 0;
+                foreach ($userrole as $k => $v) {
+                    if ($v[ 'status' ] == 0) {
+                        $role_count++;
+                    }
+                }
+                if ($role_count == count($userrole)) {
+                    throw new AuthException('USER_LOCK');
+                }
+            }
         }
 
         //修改用户登录信息
@@ -70,8 +88,8 @@ class LoginService extends BaseAdminService
 
         //查询权限以及菜单
         $data = [
-            'token' => $token_info['token'],
-            'expires_time' => $token_info['params']['exp'],
+            'token' => $token_info[ 'token' ],
+            'expires_time' => $token_info[ 'params' ][ 'exp' ],
             'userinfo' => [
                 'uid' => $userinfo->uid,
                 'username' => $userinfo->username,
@@ -80,8 +98,8 @@ class LoginService extends BaseAdminService
         ];
 
         // 获取站点布局
-        $layout_config = (new CoreConfigService())->getConfig('SITE_LAYOUT');
-        $data['layout'] = empty($layout_config) ? 'default' : $layout_config['value']['key'];
+        $layout_config = ( new CoreConfigService() )->getConfig('SITE_LAYOUT');
+        $data[ 'layout' ] = empty($layout_config) ? 'default' : $layout_config[ 'value' ][ 'key' ];
         return $data;
     }
 
@@ -103,7 +121,7 @@ class LoginService extends BaseAdminService
     public function createToken(SysUser $userinfo)
     {
         $expire_time = env('system.admin_token_expire_time') ?? 3600;
-        return TokenAuth::createToken($userinfo->uid, AppTypeDict::ADMIN, ['uid' => $userinfo->uid, 'username' => $userinfo->username], $expire_time);
+        return TokenAuth::createToken($userinfo->uid, AppTypeDict::ADMIN, [ 'uid' => $userinfo->uid, 'username' => $userinfo->username ], $expire_time);
     }
 
     /**
@@ -131,7 +149,7 @@ class LoginService extends BaseAdminService
         //暴力操作,截停所有异常覆盖为token失效
         try {
             $token_info = TokenAuth::parseToken($token, AppTypeDict::ADMIN);
-        } catch ( Throwable $e ) {
+        } catch (Throwable $e) {
             throw new AuthException('LOGIN_EXPIRE', 401);
 
         }

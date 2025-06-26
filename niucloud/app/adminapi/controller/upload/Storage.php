@@ -17,11 +17,18 @@ use core\base\BaseAdminController;
 use core\exception\AdminException;
 use think\Response;
 
+/**
+ * 存储管理
+ * Class Storage
+ * @description 存储管理
+ * @package app\adminapi\controller\upload
+ */
 class Storage extends BaseAdminController
 {
 
     /**
      * 云存储配置列表
+     * @description 云存储配置列表
      */
     public function storageList()
     {
@@ -31,6 +38,7 @@ class Storage extends BaseAdminController
 
     /**
      * 存储配置详情
+     * @description 存储配置详情
      * @param $storage_type  存储驱动类型
      * @return Response
      */
@@ -42,6 +50,7 @@ class Storage extends BaseAdminController
 
     /**
      * 存储设置修改
+     * @description 存储设置修改
      * @return Response
      */
     public function editStorage($storage_type)

@@ -16,11 +16,18 @@ use core\base\BaseAdminController;
 use think\Response;
 
 
+/**
+ * 用户管理
+ * Class Auth
+ * @description 用户管理
+ * @package app\adminapi\controller\auth
+ */
 class Auth extends BaseAdminController
 {
 
     /**
      * 登录用户菜单列表的接口
+     * @description 登录用户菜单列表
      */
     public function authMenuList()
     {
@@ -34,6 +41,7 @@ class Auth extends BaseAdminController
 
     /**
      * 获取登录用户信息
+     * @description 获取登录用户信息
      * @return Response
      */
     public function get()
@@ -43,6 +51,7 @@ class Auth extends BaseAdminController
 
     /**
      * 修改登录用户信息
+     * @description 修改登录用户信息
      * @param $field
      * @return Response
      */
@@ -59,6 +68,7 @@ class Auth extends BaseAdminController
 
     /**
      * 更新用户
+     * @description 更新用户
      */
     public function edit()
     {

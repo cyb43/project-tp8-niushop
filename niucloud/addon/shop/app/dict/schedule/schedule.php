@@ -76,7 +76,8 @@ return [
             'min' => 1
         ],
         'class' => 'addon\shop\app\job\marketing\CouponSend',
-        'function' => ''
+        'function' => '',
+        'params'=>['record_id'=>'']
     ],
     [
         'key' => 'shop_active_start',

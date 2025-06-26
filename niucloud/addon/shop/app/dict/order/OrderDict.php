@@ -66,7 +66,7 @@ class OrderDict
 
     const ORDER_EDIT_PRICE_ACTION = 'order_edit';//订单改价
     const ORDER_CLOSE_ALLOW_REFUND_ACTION = 'order_close_allow_refund';//订单完成
-    const SHOP_CLOSE = 'shop_close';//订单商家备注
+    const SHOP_CLOSE = 'shop_close';//商家关闭
     const BUYER_CLOSE = 'buyer_close';//订单关闭允许售后
     const AUTO_CLOSE = 'auto_close';
     const REFUND_CLOSE = 'refund_close';//商家主动关闭

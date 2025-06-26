@@ -418,8 +418,11 @@ class NiuSmsService extends BaseAdminService
     public function checkTemplateAudit($template_key, $template_id)
     {
         $config = $this->niu_service->getNiuLoginConfig(true);
+        if (empty($config)) {
+            throw new AdminException('SMS_TYPE_NOT_OPEN');
+        }
         //当前使用短信功能提供商非牛云短信无需校验模版ID是否正常
-        if ($config['default'] != SmsDict::NIUSMS) {
+        if (isset($config['default']) && $config['default'] != SmsDict::NIUSMS) {
             return true;
         }
         $config = $config[SmsDict::NIUSMS];

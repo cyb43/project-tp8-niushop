@@ -260,7 +260,7 @@ trait CoreOrderCreateTrait
                         'money' => $v[ 'money' ],
                         'discount_type' => $v[ 'discount_type' ],
                         'discount_type_id' => $v[ 'discount_type_id' ],
-                        'content' => $v[ 'content' ],
+                        'content' => $v[ 'content' ] ?? $v[ 'title' ] ?? "",
                         'order_id' => $this->order_id,
                     ];
                 } else {
@@ -271,7 +271,7 @@ trait CoreOrderCreateTrait
                             'money' => $vv[ 'money' ],
                             'discount_type' => $vv[ 'discount_type' ],
                             'discount_type_id' => $vv[ 'discount_type_id' ],
-                            'content' => $vv[ 'content' ],
+                            'content' => $vv[ 'content' ] ?? $vv[ 'title' ] ?? "",
                             'order_id' => $this->order_id,
                         ];
                     }
@@ -655,13 +655,13 @@ trait CoreOrderCreateTrait
             $this->selectTakeAddress();
 
             switch ($delivery_type) {
-                case OrderDeliveryDict::EXPRESS://快递
+                case OrderDeliveryDict::EXPRESS://物流
                     CoreExpressService::calculate($this);
                     break;
-                case OrderDeliveryDict::LOCAL_DELIVERY://配送
+                case OrderDeliveryDict::LOCAL_DELIVERY://同城配送
                     CoreLocalDeliveryService::calculate($this);
                     break;
-                case OrderDeliveryDict::STORE://自提
+                case OrderDeliveryDict::STORE://门店自提
                     CoreStoreService::calculate($this);
                     break;
             }

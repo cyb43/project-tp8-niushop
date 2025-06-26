@@ -311,7 +311,7 @@ class DiscountService extends BaseAdminService
             $this->model->where([ [ 'discount_id', '=', $discount_id]])->update($data);
 
             foreach ($discount_goods as $v){
-                $discount_goods_info = $discount_goods_model->where([ [ 'discount_id', '=', $v['discount_id']], [ 'goods_id', '=', $v['goods_id']], [ 'sku_id', '=', $v['sku_id']]])->findOrEmpty();
+                $discount_goods_info = $discount_goods_model->where([[ 'discount_id', '=', $v['discount_id']], [ 'goods_id', '=', $v['goods_id']], [ 'sku_id', '=', $v['sku_id']]])->findOrEmpty();
                 if($discount_goods_info->isEmpty()){
                     $discount_goods_model->create($v);
                 }else{
@@ -406,9 +406,9 @@ class DiscountService extends BaseAdminService
                 if ($value[ 'is_enabled' ]) {
                     if (empty($value[ 'discount_type' ])) throw new AdminException('DISCOUNT_GOODS_DISCOUNT_TYPE_NOT_EMPTY');
                     if (!in_array($value[ 'discount_type' ], [ 'discount', 'reduce', 'specify' ])) throw new AdminException('DISCOUNT_GOODS_DISCOUNT_TYPE_ERROR');
-                    if (empty($value[ 'discount_price' ])) throw new AdminException('DISCOUNT_GOODS_DISCOUNT_PRICE_NOT_EMPTY');
-                    if (empty($value[ 'discount_rate' ])) throw new AdminException('DISCOUNT_GOODS_DISCOUNT_RATE_NOT_EMPTY');
-                    if (empty($value[ 'reduce_money' ])) throw new AdminException('DISCOUNT_GOODS_REDUCE_MONEY_NOT_EMPTY');
+                    if (empty($value[ 'discount_price' ]) && $value[ 'discount_price' ] != 0) throw new AdminException('DISCOUNT_GOODS_DISCOUNT_PRICE_NOT_EMPTY');
+                    if (empty($value[ 'discount_rate' ]) && $value[ 'discount_price' ] != 0) throw new AdminException('DISCOUNT_GOODS_DISCOUNT_RATE_NOT_EMPTY');
+                    if (empty($value[ 'reduce_money' ]) && $value[ 'discount_price' ] != 0) throw new AdminException('DISCOUNT_GOODS_REDUCE_MONEY_NOT_EMPTY');
                 }
             }
         }
@@ -427,6 +427,64 @@ class DiscountService extends BaseAdminService
         $this->model->where([ [ 'discount_id', '=', $discount_id ] ])->delete();
         (new DiscountGoods())->where([ [ 'discount_id', '=', $discount_id ] ])->delete();
         return true;
+    }
+
+    /**
+     * 批量删除限时折扣
+     * @param array $ids
+     * @return bool
+     */
+    public function batchDel($ids)
+    {
+        $discount_list = $this->model->where([ [ 'discount_id', 'in', $ids ] ])->select()->toArray();
+        foreach ($discount_list as $value){
+            if ($value[ 'status' ] == DiscountDict::ACTIVE) throw new AdminException('ACTIVE_NOT_DELETE');
+        }
+
+        Db::startTrans();
+        try {
+            $this->model->where([ [ 'discount_id', 'in', $ids ] ])->delete();
+            (new DiscountGoods())->where([ [ 'discount_id', 'in', $ids ] ])->delete();
+
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw new CommonException($e->getMessage());
+        }
+    }
+
+    /**
+     * 批量关闭限时折扣
+     * @param array $ids
+     * @return bool
+     */
+    public function batchClose($ids)
+    {
+        $discount_goods_model = new DiscountGoods();
+        $shop_goods_model = new Goods();
+        $shop_goods_sku_model = new GoodsSku();
+
+        $discount_list = $this->model->where([ [ 'discount_id', 'in', $ids ] ])->select()->toArray();
+        if (empty($discount_list)) throw new AdminException('ACTIVE_NOT_FOUND');
+
+        $discount_goods_ids = $discount_goods_model->where([ [ 'discount_id', 'in', $ids ] ])->column('goods_id');
+
+        Db::startTrans();
+        try {
+            $this->model->where([ ['discount_id', 'in', $ids], ['status', '=', DiscountDict::ACTIVE] ])->update([ 'status' => DiscountDict::CLOSE ]);
+            $discount_goods_model->where([ ['discount_id', 'in', $ids]])->update([ 'status' => DiscountDict::CLOSE ]);
+            $shop_goods_model->where([ [ 'goods_id', 'in', $discount_goods_ids ] ])->update([ 'is_discount' => 0 ]);
+            $shop_goods_sku_model->where([ [ 'goods_id', 'in', $discount_goods_ids ] ])->update([ 'sale_price' => Db::raw('price') ]);
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw new CommonException($e->getMessage());
+        }
+
+
+
     }
 
     /**

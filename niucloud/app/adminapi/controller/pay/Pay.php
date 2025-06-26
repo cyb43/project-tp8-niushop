@@ -14,11 +14,17 @@ namespace app\adminapi\controller\pay;
 use app\service\admin\pay\PayService;
 use core\base\BaseAdminController;
 
+/**
+ * 支付管理
+ * Class Pay
+ * @description 支付管理
+ * @package app\adminapi\controller\pay
+ */
 class Pay extends BaseAdminController
 {
     /**
      * 待审核支付记录
-     * @param array $where
+     * @description 待审核支付记录
      * @return mixed
      */
     public function audit(){
@@ -32,7 +38,8 @@ class Pay extends BaseAdminController
 
     /**
      * 查询详情
-     * @param string $out_trade_no
+     * @description 查询详情
+     * @param int $id
      * @return \think\Response
      */
     public function detail(int $id){
@@ -41,6 +48,7 @@ class Pay extends BaseAdminController
 
     /**
      * 支付审核通过
+     * @description 支付审核通过
      * @param string $out_trade_no
      * @return \think\Response
      */
@@ -50,6 +58,7 @@ class Pay extends BaseAdminController
 
     /**
      * 审核拒绝
+     * @description 审核拒绝
      * @param string $out_trade_no
      */
     public function refuse(string $out_trade_no){
@@ -59,11 +68,11 @@ class Pay extends BaseAdminController
 
     /**
      *  去支付
+     * @description 去支付
      * @return \think\Response
      */
     public function pay()
     {
-
         $data = $this->request->params([
             ['type', ''],
             ['trade_type', ''],//业务类型
@@ -80,6 +89,7 @@ class Pay extends BaseAdminController
 
     /**
      * 支付信息
+     * @description 支付信息
      * @param $trade_type
      * @param $trade_id
      * @return \think\Response
@@ -91,6 +101,7 @@ class Pay extends BaseAdminController
 
     /**
      * 找朋友帮忙付支付信息
+     * @description 找朋友帮忙付支付信息
      * @param $trade_type
      * @param $trade_id
      * @param $channel
@@ -103,6 +114,7 @@ class Pay extends BaseAdminController
 
     /**
      * 支付方式列表
+     * @description 支付方式列表
      * @return \think\Response
      */
     public function payTypeList()

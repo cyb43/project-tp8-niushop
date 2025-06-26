@@ -24,6 +24,7 @@ class Rank extends BaseAdminController
 
     /**
      * 设置商品排行榜配置
+     * @description 设置商品排行榜配置
      * @return \think\Response
      */
     public function setRankConfig()
@@ -43,6 +44,7 @@ class Rank extends BaseAdminController
 
     /**
      * 获取商品排行配置
+     * @description 查看商品排行配置
      * @return \think\Response
      */
     public function getRankConfig()
@@ -52,6 +54,7 @@ class Rank extends BaseAdminController
 
     /**
      * 获取商品排行榜分页列表
+     * @description 查看商品排行榜列表-分页
      * @return \think\Response
      */
     public function pages()
@@ -67,6 +70,7 @@ class Rank extends BaseAdminController
 
     /**
      * 添加商品排行榜
+     * @description 添加商品排行榜
      * @return \think\Response
      */
     public function add()
@@ -90,6 +94,7 @@ class Rank extends BaseAdminController
 
     /**
      * 编辑商品排行榜
+     * @description 编辑商品排行榜
      * @param int $id 排行榜id
      * @return \think\Response
      */
@@ -114,6 +119,7 @@ class Rank extends BaseAdminController
 
     /**
      * 商品排行榜详情
+     * @description 查看商品排行榜详情
      * @param int $id
      * @return \think\Response
      */
@@ -124,6 +130,7 @@ class Rank extends BaseAdminController
 
     /**
      * 删除
+     * @description 删除商品排行榜
      * @param int $id 排行榜id
      * @return \think\Response
      */
@@ -135,6 +142,7 @@ class Rank extends BaseAdminController
 
     /**
      * 商品排行榜选项列表
+     * @description 商品排行榜选项列表
      * @param int $id
      * @return \think\Response
      */
@@ -145,6 +153,7 @@ class Rank extends BaseAdminController
 
     /**
      * 修改榜单排序号
+     * @description 修改榜单排序号
      * @return \think\Response
      */
     public function editSort()
@@ -159,6 +168,7 @@ class Rank extends BaseAdminController
 
     /**
      * 批量删除
+     * @description 批量删除商品排行榜
      * @param int $id
      * @return \think\Response
      */
@@ -173,6 +183,7 @@ class Rank extends BaseAdminController
 
     /**
      * 获取排行榜分页列表（用于弹框选择）
+     * @description 获取排行榜分页列表
      * @return \think\Response
      */
     public function select()
@@ -187,6 +198,7 @@ class Rank extends BaseAdminController
 
     /**
      * 修改状态
+     * @description 修改商品排行榜状态
      * @return \think\Response
      */
     public function modifyStatus()

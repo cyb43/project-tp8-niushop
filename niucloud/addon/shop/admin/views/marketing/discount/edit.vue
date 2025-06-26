@@ -103,7 +103,7 @@
                                                 callback(t('discountsPlaceholder'))
                                             } else if (isNaN(value) || !regExp.number.test(value)) {
                                                 callback(t('discountsTips'))
-                                            } else if (value <= 0) {
+                                            } else if (value < 0) {
                                                 callback(t('discountsTipsTwo'))
                                             } else if (value>9.9) {
                                                 callback(t('discountsTipsThree'))
@@ -119,7 +119,7 @@
                                         validator: (rule: any, value: any, callback: any) => {
                                             if (!(row.min_discount_rate != Infinity && row.max_discount_rate != -Infinity)){
                                                 callback();
-                                            }else if (!value) {
+                                            }else if (value === '' || value === null || value === undefined) {
                                                     callback(t('skuDiscountSettingsPlaceholder'))
                                                 } else if (row.min_discount_rate < 0 || row.max_discount_rate < 0) {
                                                     callback(t('discountsTips'));
@@ -145,9 +145,9 @@
                                                     callback(t('reduceMoneyPlaceholder'))
                                                 } else if (isNaN(value) || !regExp.digit.test(value)) {
                                                     callback(t('reduceMoneyTips'))
-                                                } else if (value <=0) {
+                                                } else if (value <0) {
                                                     callback(t('reduceMoneyTipsTwo'))
-                                                } else if (value >= parseFloat(row.goodsSku.price) ) {
+                                                } else if (value > parseFloat(row.goodsSku.price) ) {
                                                     callback(t('reduceMoneyTipsThree'))
                                                 } else {
                                                     callback();
@@ -172,9 +172,9 @@
                                                     callback(t('promotionalPlaceholder'))
                                                 } else if (isNaN(value) || !regExp.digit.test(value)) {
                                                     callback(t('promotionalTips'))
-                                                } else if (value <=0 ) {
+                                                } else if (value <0 ) {
                                                     callback(t('promotionalTipsTwo'))
-                                                }else if (value >= parseFloat(row.goodsSku.price) ) {
+                                                }else if (value > parseFloat(row.goodsSku.price) ) {
                                                     callback(t('promotionalTipsThree'))
                                                 } else {
                                                     callback();
@@ -357,7 +357,6 @@ const getActiveDiscountInfoFn = (id: number) => {
             el.skuList = el.goods_sku_list
             el.sku_list = el.goods_sku_list
             el.discount_rate = el.rate
-            el.reduce_money = el.discount_price
             el.specify_price = el.discount_price
             el.min_discount_rate = el.min_rate
             el.max_discount_rate = el.max_rate
@@ -382,7 +381,7 @@ const validFn = (row: any) => {
         return false
     } else if (isNaN(row.discount_rate) || !regExp.number.test(row.discount_rate)) {
         return false
-    } else if (row.discount_rate <= 0) {
+    } else if (row.discount_rate < 0) {
         return false
     } else if (row.discount_rate > 9.9) {
         return false
@@ -390,17 +389,17 @@ const validFn = (row: any) => {
         return false
     } else if (isNaN(row.reduce_money) || !regExp.digit.test(row.reduce_money)) {
         return false
-    } else if (row.reduce_money <= 0) {
+    } else if (row.reduce_money < 0) {
         return false
-    } else if (row.reduce_money >= parseFloat(row.goodsSku.price)) {
+    } else if (row.reduce_money > parseFloat(row.goodsSku.price)) {
         return false
     } else if (row.specify_price.length == 0) {
         return false
     } else if (isNaN(row.specify_price) || !regExp.digit.test(row.specify_price)) {
         return false
-    } else if (row.specify_price <= 0) {
+    } else if (row.specify_price < 0) {
         return false
-    } else if (row.specify_price >= parseFloat(row.goodsSku.price)) {
+    } else if (row.specify_price > parseFloat(row.goodsSku.price)) {
         return false
     } else {
         return true
@@ -640,11 +639,11 @@ const handleSelectionChange = (val: []) => {
     }
 }
 const saveBatch = () => {
-     
+
     if (!multipleSelection.value.length) {
         ElMessage({
             type: 'warning',
-            message: `${t('batchEmptySelectedGoodsTips')}`
+            message: `${ t('batchEmptySelectedGoodsTips') }`
         })
         return
     }
@@ -652,25 +651,25 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsPlaceholder')}`
+                message: `${ t('discountsPlaceholder') }`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.number.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsTips')}`
+                message: `${ t('discountsTips') }`
             })
             return
-        } else if (batchOperation.value.discountNumber <= 0) {
+        } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsTipsTwo')}`
+                message: `${ t('discountsTipsTwo') }`
             })
             return
         } else if (batchOperation.value.discountNumber > 9.9) {
             ElMessage({
                 type: 'warning',
-                message: `${t('discountsTipsThree')}`
+                message: `${ t('discountsTipsThree') }`
             })
             return
         }
@@ -678,19 +677,19 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('reduceMoneyPlaceholder')}`
+                message: `${ t('reduceMoneyPlaceholder') }`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.digit.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${t('reduceMoneyTips')}`
+                message: `${ t('reduceMoneyTips') }`
             })
             return
-        } else if (batchOperation.value.discountNumber <= 0) {
+        } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('reduceMoneyTipsTwo')}`
+                message: `${ t('reduceMoneyTipsTwo') }`
             })
             return
         }
@@ -699,19 +698,19 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('promotionalPlaceholder')}`
+                message: `${ t('promotionalPlaceholder') }`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.digit.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${t('promotionalTips')}`
+                message: `${ t('promotionalTips') }`
             })
             return
-        } else if (batchOperation.value.discountNumber <= 0) {
+        } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
-                message: `${t('promotionalTipsTwo')}`
+                message: `${ t('promotionalTipsTwo') }`
             })
             return
         }
@@ -749,38 +748,38 @@ const saveBatch = () => {
                     }
                 } else {
                     el.skuList.forEach((sku: any) => {
-                        if(sku.is_enabled===1){
+                        if (sku.is_enabled === 1) {
                             if (batchOperation.value.discount_type == 'discount') {
-                            //折扣
-                            sku.discount_rate = batchOperation.value.discountNumber + ''
-                            //实际
-                            sku.specify_price = (sku.price * (batchOperation.value.discountNumber / 10)).toFixed(2)
-                            sku.discount_price = (sku.price * (batchOperation.value.discountNumber / 10)).toFixed(2)
-                            //减价
-                            sku.reduce_money = (sku.price - sku.specify_price).toFixed(2)
-                        } else if (batchOperation.value.discount_type == 'reduce') {//减价
-                            sku.reduce_money = batchOperation.value.discountNumber + ''
-                            sku.specify_price = (sku.price - sku.reduce_money).toFixed(2)
-                            sku.discount_price = (sku.price - sku.reduce_money).toFixed(2)
-                            sku.discount_rate = (sku.specify_price / sku.price * 10).toFixed(1)
+                                //折扣
+                                sku.discount_rate = batchOperation.value.discountNumber + ''
+                                //实际
+                                sku.specify_price = (sku.price * (batchOperation.value.discountNumber / 10)).toFixed(2)
+                                sku.discount_price = (sku.price * (batchOperation.value.discountNumber / 10)).toFixed(2)
+                                //减价
+                                sku.reduce_money = (sku.price - sku.specify_price).toFixed(2)
+                            } else if (batchOperation.value.discount_type == 'reduce') {//减价
+                                sku.reduce_money = batchOperation.value.discountNumber + ''
+                                sku.specify_price = (sku.price - sku.reduce_money).toFixed(2)
+                                sku.discount_price = (sku.price - sku.reduce_money).toFixed(2)
+                                sku.discount_rate = (sku.specify_price / sku.price * 10).toFixed(1)
 
-                        } else {//实际
-                            sku.specify_price = batchOperation.value.discountNumber + ''
-                            sku.discount_price = batchOperation.value.discountNumber + ''
-                            sku.reduce_money = (sku.price - sku.specify_price).toFixed(2)
-                            sku.discount_rate = (sku.specify_price / sku.price * 10).toFixed(1)
-                        }
-                        sku.discount_type = batchOperation.value.discount_type + ''
-                        if (formRef.value) {
-                            formRef.value.validateField('goods_list.' + index + '.discount_rate')
-                            formRef.value.validateField('goods_list.' + index + '.specify_price')
-                            formRef.value.validateField('goods_list.' + index + '.reduce_money')
-                        }
+                            } else {//实际
+                                sku.specify_price = batchOperation.value.discountNumber + ''
+                                sku.discount_price = batchOperation.value.discountNumber + ''
+                                sku.reduce_money = (sku.price - sku.specify_price).toFixed(2)
+                                sku.discount_rate = (sku.specify_price / sku.price * 10).toFixed(1)
+                            }
+                            sku.discount_type = batchOperation.value.discount_type + ''
+                            if (formRef.value) {
+                                formRef.value.validateField('goods_list.' + index + '.discount_rate')
+                                formRef.value.validateField('goods_list.' + index + '.specify_price')
+                                formRef.value.validateField('goods_list.' + index + '.reduce_money')
+                            }
                         }
                     })
-                    let discount_rate_list = el.skuList.filter((sku:any)=>sku.is_enabled===1).map((sku:any)=>Number(sku.discount_rate))
-                    let reduce_money_list = el.skuList.filter((sku:any)=>sku.is_enabled===1).map((sku:any)=>Number(sku.reduce_money))
-                    let specify_price_list = el.skuList.filter((sku:any)=>sku.is_enabled===1).map((sku:any)=>Number(sku.specify_price))
+                    let discount_rate_list = el.skuList.filter((sku: any) => sku.is_enabled === 1).map((sku: any) => Number(sku.discount_rate))
+                    let reduce_money_list = el.skuList.filter((sku: any) => sku.is_enabled === 1).map((sku: any) => Number(sku.reduce_money))
+                    let specify_price_list = el.skuList.filter((sku: any) => sku.is_enabled === 1).map((sku: any) => Number(sku.specify_price))
                     el.max_discount_rate = Math.max(...discount_rate_list)
                     el.min_discount_rate = Math.min(...discount_rate_list)
                     el.max_reduce_money = Math.max(...reduce_money_list)
@@ -791,13 +790,13 @@ const saveBatch = () => {
                 el.valid = true
             }
         })
-        
+
     })
     // if(!el.sku_list){
     //     alert('sku_list为空')
     // }
     // sku_list
-    formRef.value.validateField().catch(()=>{})
+    formRef.value.validateField().catch(() => {})
     // isIndeterminate.value = false
     // toggleCheckbox.value = false
     // batchOperation.value.discountNumber = ''
@@ -814,8 +813,10 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
             //减价
             row.reduce_money = (row.goodsSku.price - row.specify_price).toFixed(2)
             if (formRef.value) {
-                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {})
-                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {})
+                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {
+                })
+                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {
+                })
             }
         }
     } else if (discount_type == 'reduce') {//减价
@@ -824,8 +825,10 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
             row.discount_price = (row.goodsSku.price - row.reduce_money).toFixed(2)
             row.discount_rate = (row.specify_price / row.goodsSku.price * 10).toFixed(1)
             if (formRef.value) {
-                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {})
-                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {})
+                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {
+                })
+                formRef.value.validateField('goods_list.' + index + '.specify_price').catch(() => {
+                })
             }
         }
 
@@ -835,8 +838,10 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
             row.reduce_money = (row.goodsSku.price - row.specify_price).toFixed(2)
             row.discount_rate = (row.specify_price / row.goodsSku.price * 10).toFixed(1)
             if (formRef.value) {
-                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {})
-                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {})
+                formRef.value.validateField('goods_list.' + index + '.discount_rate').catch(() => {
+                })
+                formRef.value.validateField('goods_list.' + index + '.reduce_money').catch(() => {
+                })
             }
         }
     }

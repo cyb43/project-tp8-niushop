@@ -29,6 +29,7 @@ class Media extends BaseAdminController
 
     /**
      * 上传图片素材
+     * @description 上传图片素材
      * @return \think\Response
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
@@ -42,6 +43,7 @@ class Media extends BaseAdminController
 
     /**
      * 上传视频素材
+     * @description 上传视频素材
      * @return \think\Response
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
@@ -55,6 +57,7 @@ class Media extends BaseAdminController
 
     /**
      * 同步草稿箱
+     * @description 同步草稿箱
      * @return \think\Response
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface

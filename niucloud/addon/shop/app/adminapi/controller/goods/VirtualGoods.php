@@ -24,6 +24,7 @@ class VirtualGoods extends BaseAdminController
 {
     /**
      * 获取商品添加/编辑数据
+     * @description 获取商品添加/编辑数据
      * @return \think\Response
      */
     public function init()
@@ -36,6 +37,7 @@ class VirtualGoods extends BaseAdminController
 
     /**
      * 添加商品
+     * @description 添加虚拟商品
      * @return \think\Response
      */
     public function add()
@@ -53,7 +55,7 @@ class VirtualGoods extends BaseAdminController
             [ 'supplier_id', 0 ],
             [ "status", 0 ],
             [ "sort", 0 ],
-            [ 'attr_id', 0 ],
+            [ 'attr_ids', 0 ],
             [ 'attr_format', '' ],
             [ 'is_gift', 0 ],
 
@@ -99,6 +101,7 @@ class VirtualGoods extends BaseAdminController
 
     /**
      * 商品编辑
+     * @description 编辑虚拟商品
      * @param $id  商品id
      * @return \think\Response
      */
@@ -117,7 +120,7 @@ class VirtualGoods extends BaseAdminController
             [ 'supplier_id', 0 ],
             [ "status", 0 ],
             [ "sort", 0 ],
-            [ 'attr_id', 0 ],
+            [ 'attr_ids', 0 ],
             [ 'attr_format', '' ],
             [ 'is_gift', 0 ],
 

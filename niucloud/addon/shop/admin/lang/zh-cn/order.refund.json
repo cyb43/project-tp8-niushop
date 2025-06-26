@@ -99,8 +99,10 @@
   "refundRemark": "退款描述",
   "agreeMoney": "退款金额",
   "moneyPlaceholder": "请输入退款金额",
-  "refundaddressPlaceholder": "请输入退货地址",
+  "refundAddressPlaceholder": "请输入退货地址",
   "expressCompany": "物流公司",
   "expressRemark": "物流说明",
-  "orderInfoEmpty": "暂无数据"
+  "orderInfoEmpty": "暂无数据",
+  "closeRefund": "关闭售后",
+  "closeRefundTips": "建议先与用户沟通协商，确认后再关闭售后流程。请谨慎操作，确定要关闭售后吗？"
 }

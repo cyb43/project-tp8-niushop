@@ -219,7 +219,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
 </script>
 
 <style lang="scss" scoped>
-    .input-item {
-    	width: 150px !important;
-    }
+.input-item {
+    width: 150px !important;
+}
 </style>

@@ -26,6 +26,8 @@ use addon\shop\app\model\manjian\ManjianGiveRecords;
 use addon\shop\app\model\order\Order;
 use addon\shop\app\model\order\OrderDelivery;
 use addon\shop\app\model\order\OrderRefund;
+use addon\shop\app\service\core\delivery\CoreLocalDeliveryService;
+use addon\shop\app\service\core\delivery\third_delivery\ThirdDeliveryLoader;
 use addon\shop\app\service\core\marketing\CoreManjianService;
 use addon\shop\app\service\core\order\CoreOrderCloseService;
 use addon\shop\app\service\core\order\CoreOrderConfigService;
@@ -59,7 +61,7 @@ class OrderService extends BaseApiService
      */
     public function getPage(array $where)
     {
-        $field = 'point,activity_type,order_id,order_no,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,create_time,pay_time,delivery_type,taker_name,taker_mobile,taker_full_address,take_store_id,is_enable_refund,member_remark,shop_remark,close_remark,pay_money,is_evaluate';
+        $field = 'point,activity_type,order_id,order_no,close_type,order_type,order_from,out_trade_no,status,member_id,ip,goods_money,delivery_money,order_money,create_time,pay_time,delivery_type,taker_name,taker_mobile,taker_full_address,take_store_id,is_enable_refund,member_remark,shop_remark,close_remark,pay_money,is_evaluate';
         $order = 'create_time desc';
         $search_model = $this->model
             ->where([ [ 'member_id', '=', $this->member_id ] ])
@@ -67,22 +69,24 @@ class OrderService extends BaseApiService
             ->field($field)
             ->with(
                 [
-                    'order_goods' => function($query) {
+                    'order_goods' => function ($query) {
                         $query->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, is_enable_refund, delivery_id,is_enable_refund, status, is_gift')
                             ->with([
-                                'order_delivery' => function($query) {
+                                'order_delivery' => function ($query) {
                                     $query->field('id, express_company_id, express_number')->with('company');
                                 }
                             ])
                             ->append([ 'goods_image_thumb_small' ]);
                     },
-                    'store' => function($query) {
+                    'store' => function ($query) {
                         $query->field('store_id, store_name, store_mobile');
                     }
                 ]
             )->order($order)->append([ 'order_from_name', 'order_type_name', 'status_name', 'delivery_type_name' ]);
         $order_status_list = OrderDict::getStatus();
-        $list = $this->pageQuery($search_model, function($item, $key) use ($order_status_list) {
+        $order_close_list = OrderDict::getCloseType();
+        $list = $this->pageQuery($search_model, function ($item, $key) use ($order_status_list, $order_close_list) {
+            $item[ 'close_type_name' ] = $order_close_list[ $item[ 'close_type' ] ] ?? "";
             $item[ 'order_status_data' ] = $order_status_list[ $item[ 'status' ] ] ?? [];
         });
         $config = ( new CoreOrderConfigService() )->getConfig();
@@ -147,10 +151,10 @@ class OrderService extends BaseApiService
         $info = $this->model->where([ [ 'order_id|out_trade_no', '=', $order_id ], [ 'member_id', '=', $this->member_id ] ])->field($field)
             ->with(
                 [
-                    'order_goods' => function($query) {
+                    'order_goods' => function ($query) {
                         $query->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, discount_money, is_enable_refund, status, order_refund_no, delivery_status, verify_count, verify_expire_time, is_verify, goods_type, is_gift,form_record_id')->append([ 'goods_image_thumb_small' ]);
                     },
-                    'order_discount' => function($query) {
+                    'order_discount' => function ($query) {
                         $query->field('order_id,discount_type,money');
                     }
                 ]
@@ -172,18 +176,31 @@ class OrderService extends BaseApiService
                     if ($info[ 'member_id' ] != $info[ 'pay' ][ 'main_id' ]) {
                         $member_info = ( new Member() )->field('nickname,headimg')->where([ [ 'member_id', '=', $info[ 'pay' ][ 'main_id' ] ] ])->findOrEmpty()->toArray();
                         if (!empty($member_info)) {
-                            $info[ 'pay' ][ 'pay_member' ] = $member_info['nickname'];
-                            $info[ 'pay' ][ 'pay_member_headimg' ] = $member_info['headimg'];
+                            $info[ 'pay' ][ 'pay_member' ] = $member_info[ 'nickname' ];
+                            $info[ 'pay' ][ 'pay_member_headimg' ] = $member_info[ 'headimg' ];
                         }
                     }
                 }
             }
 
-            if ($info[ 'delivery_type' ] == DeliveryDict::EXPRESS) {
+            if ($info[ 'delivery_type' ] == DeliveryDict::EXPRESS || $info[ 'delivery_type' ] == DeliveryDict::LOCAL_DELIVERY) {
                 $info[ 'order_delivery' ] = ( new OrderDelivery() )
                     ->where([ [ 'order_id', '=', $info[ 'order_id' ] ] ])
-                    ->field('id, order_id, name, delivery_type, express_company_id, sub_delivery_type, express_number, create_time')
+                    ->field('id, order_id, name, delivery_type, sub_delivery_type,express_company_id, express_number, create_time,third_delivery')
+                    ->append([ 'third_delivery_name' ])
                     ->select()->toArray();
+                if ($info[ 'delivery_type' ] == DeliveryDict::LOCAL_DELIVERY) {
+                    $third_party_config = ( new CoreLocalDeliveryService() )->getConfig();
+                    foreach ($info[ 'order_delivery' ] as $k => $item) {
+                        if (!empty($item[ 'third_delivery' ])) {
+                            $third_delivery = $item[ 'third_delivery' ];
+                            $loader = new ThirdDeliveryLoader($third_delivery, $third_party_config[ $third_delivery ]);
+                            //三方配送下单
+                            $info[ 'order_delivery' ][ $k ][ 'third_delivery_info' ] = $loader->queryOrderInfo([ 'order_no' => $info[ 'order_no' ] ]);
+                        }
+                    }
+                }
+
             }
 
             if ($info[ 'order_goods' ]) {
@@ -194,28 +211,28 @@ class OrderService extends BaseApiService
                     } else {
                         $v[ 'unit' ] = '件';
                     }
-                    if(isset($v['extend']['is_impulse_buy']) == 1){
-                        $impulse_buy_num = $v['extend']['impulse_buy_goods_num'] ?? 0;//5
-                        $impulse_buy_price_total = $v['extend']['impulse_buy_price'] ?? 0;
-                        if($impulse_buy_num > 0){
-                            $impulse_buy_price = $impulse_buy_price_total/$impulse_buy_num;
-                            if ($impulse_buy_num == 1){
-                                $impulse_buy_tips = '第1'.$v[ 'unit' ].$impulse_buy_price.'元';
-                            }else{
-                                $impulse_buy_tips = '第1-'.$impulse_buy_num. $v[ 'unit' ].$impulse_buy_price.'元';
-                                if ($v['num'] > $impulse_buy_num){
-                                    if ($impulse_buy_num+1 == $v['num']){
-                                        $impulse_buy_tips .= ' 第'.($impulse_buy_num+1). $v[ 'unit' ].$v['price'].'元';
-                                    }else{
-                                        $impulse_buy_tips .= ' 第'.($impulse_buy_num+1).'-'.$v['num']. $v[ 'unit' ].$v['price'].'元';
+                    if (isset($v[ 'extend' ][ 'is_impulse_buy' ]) == 1) {
+                        $impulse_buy_num = $v[ 'extend' ][ 'impulse_buy_goods_num' ] ?? 0;//5
+                        $impulse_buy_price_total = $v[ 'extend' ][ 'impulse_buy_price' ] ?? 0;
+                        if ($impulse_buy_num > 0) {
+                            $impulse_buy_price = $impulse_buy_price_total / $impulse_buy_num;
+                            if ($impulse_buy_num == 1) {
+                                $impulse_buy_tips = '第1' . $v[ 'unit' ] . $impulse_buy_price . '元';
+                            } else {
+                                $impulse_buy_tips = '第1-' . $impulse_buy_num . $v[ 'unit' ] . $impulse_buy_price . '元';
+                                if ($v[ 'num' ] > $impulse_buy_num) {
+                                    if ($impulse_buy_num + 1 == $v[ 'num' ]) {
+                                        $impulse_buy_tips .= ' 第' . ( $impulse_buy_num + 1 ) . $v[ 'unit' ] . $v[ 'price' ] . '元';
+                                    } else {
+                                        $impulse_buy_tips .= ' 第' . ( $impulse_buy_num + 1 ) . '-' . $v[ 'num' ] . $v[ 'unit' ] . $v[ 'price' ] . '元';
                                     }
                                 }
                             }
-                        }else{//全原价
-                            $impulse_buy_tips = '第1-'.$v['num']. $v[ 'unit' ].$v['price'].'元';
+                        } else {//全原价
+                            $impulse_buy_tips = '第1-' . $v[ 'num' ] . $v[ 'unit' ] . $v[ 'price' ] . '元';
                         }
                     }
-                    $v['impulse_buy_tips'] = $impulse_buy_tips ?? "";
+                    $v[ 'impulse_buy_tips' ] = $impulse_buy_tips ?? "";
                     ( new CoreManjianService() )->getOrderGoodsGiveInfo($v, $info[ 'order_goods' ], $this->member_id);
                 }
             }
@@ -281,7 +298,7 @@ class OrderService extends BaseApiService
     {
         $data[ 'main_type' ] = OrderLogDict::MEMBER;
         $data[ 'main_id' ] = $this->member_id;
-        $data[ 'close_type' ] = OrderDict::SHOP_CLOSE;
+        $data[ 'close_type' ] = OrderDict::BUYER_CLOSE;
         $data[ 'order_id' ] = $order_id;
         ( new CoreOrderCloseService() )->close($data);
         return true;
@@ -301,7 +318,7 @@ class OrderService extends BaseApiService
         $data[ 'main_id' ] = $this->member_id;
         //查询订单
         $where = array(
-            [ 'order_id', '=', $order_id ]
+            [ 'order_id', '=', $order_id ],
         );
         $order = $this->model->where($where)->findOrEmpty()->toArray();
         if (empty($order)) throw new ApiException('SHOP_ORDER_NOT_FOUND');//订单不存在
@@ -319,10 +336,10 @@ class OrderService extends BaseApiService
     {
         $field = 'id, order_id, name, delivery_type, sub_delivery_type, express_company_id, express_number, local_deliver_id, status, create_time';
         $info = ( new OrderDelivery() )->where([ [ 'id', '=', $data[ 'id' ] ] ])->with([
-            'company' => function($query) {
+            'company' => function ($query) {
                 $query->field('company_id, company_name, express_no');
             },
-            'order_goods' => function($query) {
+            'order_goods' => function ($query) {
                 $query->field('goods_name, sku_name, goods_image, delivery_id, num, price')->append([ 'goods_image_thumb_small' ]);
             }
         ])->field($field)->findOrEmpty()->toArray();
@@ -339,38 +356,38 @@ class OrderService extends BaseApiService
     {
 
         $data[ 'wait_pay' ] = $this->model->where([
-                [ 'member_id', '=', $this->member_id ],
-                [ 'status', '=', OrderDict::WAIT_PAY ],
-            ])->count() ?? 0;
+            [ 'member_id', '=', $this->member_id ],
+            [ 'status', '=', OrderDict::WAIT_PAY ],
+        ])->count() ?? 0;
 
         $data[ 'wait_shipping' ] = $this->model->where([
-                [ 'member_id', '=', $this->member_id ],
-                [ 'status', '=', OrderDict::WAIT_DELIVERY ],
-            ])->count() ?? 0;
+            [ 'member_id', '=', $this->member_id ],
+            [ 'status', '=', OrderDict::WAIT_DELIVERY ],
+        ])->count() ?? 0;
 
         $data[ 'wait_take' ] = $this->model->where([
-                [ 'member_id', '=', $this->member_id ],
-                [ 'status', '=', OrderDict::WAIT_TAKE ],
-            ])->count() ?? 0;
+            [ 'member_id', '=', $this->member_id ],
+            [ 'status', '=', OrderDict::WAIT_TAKE ],
+        ])->count() ?? 0;
 
         $data[ 'evaluate' ] = $this->model->where([
-                [ 'member_id', '=', $this->member_id ],
-                [ 'status', '=', OrderDict::FINISH ],
-                [ 'is_evaluate', '=', 0 ],
-            ])->count() ?? 0;
+            [ 'member_id', '=', $this->member_id ],
+            [ 'status', '=', OrderDict::FINISH ],
+            [ 'is_evaluate', '=', 0 ],
+        ])->count() ?? 0;
 
         $data[ 'refund' ] = ( new OrderRefund() )->where([
-                [ 'member_id', '=', $this->member_id ],
-                [ 'status', 'in', [
-                    OrderRefundDict::BUYER_APPLY_WAIT_STORE,
-                    OrderRefundDict::STORE_AGREE_REFUND_GOODS_APPLY_WAIT_BUYER,
-                    OrderRefundDict::STORE_REFUSE_REFUND_GOODS_APPLY_WAIT_BUYER,
-                    OrderRefundDict::BUYER_REFUND_GOODS_WAIT_STORE,
-                    OrderRefundDict::STORE_REFUSE_TAKE_REFUND_GOODS_WAIT_BUYER,
-                    OrderRefundDict::STORE_AGREE_REFUND_WAIT_TRANSFER,
-                    OrderRefundDict::STORE_REFUND_TRANSFERING
-                ] ]
-            ])->count() ?? 0;
+            [ 'member_id', '=', $this->member_id ],
+            [ 'status', 'in', [
+                OrderRefundDict::BUYER_APPLY_WAIT_STORE,
+                OrderRefundDict::STORE_AGREE_REFUND_GOODS_APPLY_WAIT_BUYER,
+                OrderRefundDict::STORE_REFUSE_REFUND_GOODS_APPLY_WAIT_BUYER,
+                OrderRefundDict::BUYER_REFUND_GOODS_WAIT_STORE,
+                OrderRefundDict::STORE_REFUSE_TAKE_REFUND_GOODS_WAIT_BUYER,
+                OrderRefundDict::STORE_AGREE_REFUND_WAIT_TRANSFER,
+                OrderRefundDict::STORE_REFUND_TRANSFERING
+            ] ]
+        ])->count() ?? 0;
 
         return $data;
     }

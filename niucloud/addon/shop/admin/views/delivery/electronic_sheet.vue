@@ -135,7 +135,7 @@ const companyList = ref([])
 
 getCompanyList({
     electronic_sheet_switch: 1
-}).then((res:any)=>{
+}).then((res:any)=> {
     companyList.value = res.data;
 })
 

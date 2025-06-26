@@ -936,8 +936,8 @@ function poster($id, $type, array $param = [], string $channel = '', bool $is_th
 
 /**
  * 是否是url链接
- * @param unknown $string
- * @return boolean
+ * @param $string
+ * @return bool
  */
 function is_url($string)
 {

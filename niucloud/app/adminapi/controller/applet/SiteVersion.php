@@ -17,23 +17,25 @@ use think\Response;
 
 /**
  * 站点小程序版本升级下载控制器
+ * @description 站点小程序版本升级下载
  */
 class SiteVersion extends BaseAdminController
 {
     /**
      * 列表
+     * @description 列表
      * @return Response
      */
     public function lists()
     {
         $data = $this->request->params([
-
         ]);
         return success((new AppletVersionSiteService())->getPage($data));
     }
 
     /**
      * 详情
+     * @description 详情
      * @param int $id
      * @return Response
      */
@@ -44,6 +46,7 @@ class SiteVersion extends BaseAdminController
 
     /**
      * 查询最后一个下载或升级的版本
+     * @description 查询最后一个下载或升级的版本
      * @param string $type
      * @return Response
      */
@@ -54,6 +57,7 @@ class SiteVersion extends BaseAdminController
 
     /**
      * 查看可升级的最高版本
+     * @description 查看可升级的最高版本
      * @param string $type
      * @return Response
      */

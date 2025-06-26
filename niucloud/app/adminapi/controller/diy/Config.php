@@ -19,12 +19,14 @@ use think\Response;
 /**
  * 自定义配置相关
  * Class Config
+ * @description 自定义配置
  * @package app\adminapi\controller\diy
  */
 class Config extends BaseAdminController
 {
     /**
      * 获取底部导航列表
+     * @description 获取底部导航列表
      * @return Response
      */
     public function getBottomList()
@@ -34,6 +36,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取底部导航
+     * @description 获取底部导航
      * @return Response
      */
     public function getBottomConfig()
@@ -46,6 +49,7 @@ class Config extends BaseAdminController
 
     /**
      * 设置底部导航
+     * @description 设置底部导航
      * @return Response
      */
     public function setBottomConfig()

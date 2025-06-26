@@ -18,12 +18,14 @@ use think\Response;
 /**
  * 系统信息查询
  * Class System
+ * @description 系统信息查询
  * @package app\adminapi\controller\sys
  */
 class System extends BaseAdminController
 {
     /**
      * 获取当前系统信息
+     * @description 获取当前系统信息
      * @return Response
      */
     public function info()
@@ -33,6 +35,7 @@ class System extends BaseAdminController
 
     /**
      * 获取当前url配置
+     * @description 获取当前url配置
      * @return Response
      */
     public function url()
@@ -42,6 +45,7 @@ class System extends BaseAdminController
 
     /**
      * 获取系统环境配置
+     * @description 获取系统环境配置
      * @return Response
      */
     public function getSystemInfo()
@@ -51,6 +55,7 @@ class System extends BaseAdminController
 
     /**
      * 清理表缓存
+     * @description 清理表缓存
      */
     public function schemaCache()
     {
@@ -59,6 +64,7 @@ class System extends BaseAdminController
 
     /**
      * 清理缓存
+     * @description 清理缓存
      */
     public function clearCache()
     {
@@ -67,6 +73,7 @@ class System extends BaseAdminController
 
     /**
      * 校验消息队列是否正常运行
+     * @description 校验消息队列是否正常运行
      * @return Response
      */
     public function checkJob()
@@ -76,6 +83,7 @@ class System extends BaseAdminController
 
     /**
      * 校验计划任务是否正常运行
+     * @description 校验计划任务是否正常运行
      * @return Response
      */
     public function checkSchedule()
@@ -85,6 +93,7 @@ class System extends BaseAdminController
 
     /**
      * 环境变量查询
+     * @description 环境变量查询
      * @return Response
      */
     public function getEnvInfo()
@@ -94,6 +103,7 @@ class System extends BaseAdminController
 
     /**
      * 获取推广二维码
+     * @description 获取推广二维码
      * @return Response
      */
     public function getSpreadQrcode()

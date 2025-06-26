@@ -22,7 +22,8 @@ class Template extends BaseAdminController
 {
 
     /**
-     * 菜单信息
+     * 同步微信公众号消息模板
+     * @description 同步微信公众号消息模板
      * @return Response
      */
     public function sync()
@@ -36,6 +37,7 @@ class Template extends BaseAdminController
 
     /**
      * 模板消息
+     * @description 获取模板消息
      * @return Response
      */
     public function lists()

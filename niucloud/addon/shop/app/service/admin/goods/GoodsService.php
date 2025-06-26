@@ -62,12 +62,13 @@ class GoodsService extends BaseAdminService
 
         if (!empty($params[ 'goods_id' ])) {
             // 查询商品信息，用于编辑
-            $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,attr_id,attr_format,member_discount,poster_id,is_gift,form_id';
+            $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,attr_ids,attr_format,member_discount,poster_id,is_gift,form_id';
             $goods_info = $this->model->field($field)->where([ [ 'goods_id', '=', $params[ 'goods_id' ] ] ])->findOrEmpty()->toArray();
             if (!empty($goods_info)) {
 
                 if (!empty($goods_info[ 'goods_category' ])) {
                     $category_service = new CategoryService();
+                    // todo 可以优化
                     foreach ($goods_info[ 'goods_category' ] as $k => $v) {
                         $category = $category_service->getInfo($v);
                         if (empty($category)) {
@@ -108,8 +109,12 @@ class GoodsService extends BaseAdminService
                 }
 
                 // 商品参数，处理数据类型
-                if (empty($goods_info[ 'attr_id' ])) {
-                    $goods_info[ 'attr_id' ] = '';
+                if (empty($goods_info[ 'attr_ids' ])) {
+                    $goods_info[ 'attr_ids' ] = [];
+                } else {
+                    $goods_info[ 'attr_ids' ] = array_map(function ($item) {
+                        return (int) $item;
+                    }, $goods_info[ 'attr_ids' ]);
                 }
 
                 // 商品海报id，处理数据类型
@@ -183,7 +188,7 @@ class GoodsService extends BaseAdminService
         $field = 'goods_id,goods_name,goods_type,goods_cover,stock,sale_num,status,sort,create_time,member_discount,is_gift';
         $order = 'create_time desc';
         $sku_where = [
-            [ 'goodsSku.is_default', '=', 1 ]
+            [ 'goodsSku.is_default', '=', 1 ],
         ];
 
         if (!empty($where[ 'start_price' ]) && !empty($where[ 'end_price' ])) {
@@ -235,8 +240,26 @@ class GoodsService extends BaseAdminService
             }
         }
         if (!empty($goods_join)) {
+            $active_tips = [];
+            foreach ($goods_join as $goods_id => $join_active) {
+                foreach ($join_active as $k => $v) {
+                    $join_type = $v[ 'join_type' ];
+                    if (!isset($active_tips[ $goods_id ][ $join_type ][ 'name' ])) {
+                        $active_tips[ $goods_id ][ $join_type ][ 'name' ] = '';
+                    }
+                    if (!isset($v[ 'short' ])) {
+                        $active_tips[ $goods_id ][ $join_type ][ 'short' ] = $v[ 'short' ];
+                        unset($v[ 'short' ]);
+                        $active_tips[ $goods_id ][ $join_type ][ 'list' ][] = $v;
+                        $active_tips[ $goods_id ][ $join_type ][ 'name' ] .= $v[ 'name' ] . PHP_EOL;
+                    } else {
+                        // 防止未知数据
+                        unset($active_tips[ $goods_id ][ $join_type ]);
+                    }
+                }
+            }
             foreach ($goods_data as &$item) {
-                $item[ 'active' ] = $goods_join[ $item[ 'goods_id' ] ] ?? [];
+                $item[ 'active' ] = $active_tips[ $item[ 'goods_id' ] ] ?? [];
             }
         }
         return $goods_data;
@@ -298,7 +321,7 @@ class GoodsService extends BaseAdminService
                 'is_gift' => $data[ 'is_gift' ],
                 'status' => $data[ 'status' ],
                 'sort' => $data[ 'sort' ],
-                'attr_id' => $data[ 'attr_id' ],
+                'attr_ids' => $data[ 'attr_ids' ],
                 'attr_format' => $data[ 'attr_format' ],
                 'delivery_type' => $data[ 'delivery_type' ],
                 'is_free_shipping' => $data[ 'is_free_shipping' ],
@@ -464,7 +487,7 @@ class GoodsService extends BaseAdminService
                 'is_gift' => $data[ 'is_gift' ],
                 'status' => $data[ 'status' ],
                 'sort' => $data[ 'sort' ],
-                'attr_id' => $data[ 'attr_id' ],
+                'attr_ids' => $data[ 'attr_ids' ],
                 'attr_format' => $data[ 'attr_format' ],
                 'delivery_type' => $data[ 'delivery_type' ],
                 'is_free_shipping' => $data[ 'is_free_shipping' ],
@@ -740,25 +763,33 @@ class GoodsService extends BaseAdminService
      * @param $goods_ids
      * @return bool
      */
-    public function del($goods_ids)
+    public function del($data)
     {
+        $is_all = $data[ 'is_all' ];
+        $goods_ids = $data[ 'goods_ids' ];
+        $where = $data[ 'where' ];
         // 查询商品参与营销活动的数量
-        $active_goods_count = $this->getActiveGoodsCount($goods_ids);
+        $active_goods_count = $this->getActiveGoodsCount($goods_ids, $is_all);
         if ($active_goods_count > 0) {
             throw new AdminException('SHOP_GOODS_PARTICIPATE_IN_ACTIVE_DISABLED_EDIT');
         }
         // 查询商品是否参与礼品卡活动
-        $is_connected = event('GoodsIsConnectedCard', [ 'goods_ids' => $goods_ids ]);
+        $is_connected = event('GoodsIsConnectedCard', [ 'is_all' => $is_all, 'where' => $where, 'goods_ids' => $goods_ids ]);
         if (!empty($is_connected) && isset($is_connected[ 0 ]) && $is_connected[ 0 ]) {
             throw new AdminException('GOODS_PARTICIPATE_IN_ACTIVE_DISABLED_DELETE');
         }
 
         // 删除之前下架商品
-        $this->model->where([ [ 'goods_id', 'in', $goods_ids ] ])->update([ 'status' => 0 ]);
-        $res = $this->model::destroy(function ($query) use ($goods_ids) {
-            $query->where([ [ 'goods_id', 'in', $goods_ids ] ]);
-        });
-        return $res;
+        if (!$is_all) {
+            $query = $this->model->where([
+                [ 'goods_id', 'in', $goods_ids ]
+            ]);
+            $update = [ 'status' => 0, 'delete_time' => time() ];
+        } else {
+            $query = $this->getBatchAllQuery($data[ 'where' ], $goods_ids);
+            $update = [ 'goods.status' => 0, 'goods.delete_time' => time() ];
+        }
+        return $query->update($update);
     }
 
     /**
@@ -798,14 +829,22 @@ class GoodsService extends BaseAdminService
      */
     public function editStatus($data)
     {
+        $is_all = $data[ 'is_all' ];
         if ($data[ 'status' ] == 0) {
             // 查询商品参与营销活动的数量
-            $active_goods_count = $this->getActiveGoodsCount($data[ 'goods_ids' ]);
+            $active_goods_count = $this->getActiveGoodsCount($data[ 'goods_ids' ], $is_all, $data[ 'where' ]);
             if ($active_goods_count > 0) {
                 throw new AdminException('SHOP_GOODS_PARTICIPATE_IN_ACTIVE_DISABLED_EDIT');
             }
         }
-        return $this->model->where([ [ 'goods_id', 'in', $data[ 'goods_ids' ] ] ])->update([ 'status' => $data[ 'status' ] ]);
+        if (!$is_all) {
+            $res = $this->model->where([
+                [ 'goods_id', 'in', $data[ 'goods_ids' ] ]
+            ])->update([ 'status' => $data[ 'status' ] ]);
+        } else {
+            $res = $this->getBatchAllQuery($data[ 'where' ], $data[ 'goods_ids' ])->update([ 'goods.status' => $data[ 'status' ] ]);
+        }
+        return $res;
     }
 
     /**
@@ -821,7 +860,7 @@ class GoodsService extends BaseAdminService
             $goods_spec_model = new GoodsSpec();
 
             // 查询商品信息
-            $field = 'goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,attr_id,attr_format,virtual_auto_delivery,virtual_receive_type,virtual_verify_type,virtual_indate,poster_id,form_id';
+            $field = 'goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,attr_ids,attr_format,virtual_auto_delivery,virtual_receive_type,virtual_verify_type,virtual_indate,poster_id,form_id';
 
             $goods_data = $this->model->field($field)->where([ [ 'goods_id', '=', $goods_id ] ])->findOrEmpty()->toArray();
             if (empty($goods_data)) {
@@ -885,7 +924,7 @@ class GoodsService extends BaseAdminService
         $field = 'goods_id,goods_name,goods_type,goods_cover,goods_category,unit,stock,sale_num,virtual_sale_num,status,create_time,update_time';
         $order = 'create_time desc';
         $sku_where = [
-            [ 'goodsSku.is_default', '=', 1 ]
+            [ 'goodsSku.is_default', '=', 1 ],
         ];
         if (!empty($where[ 'order' ])) {
             $order = $where[ 'order' ] . ' ' . $where[ 'sort' ];
@@ -910,7 +949,7 @@ class GoodsService extends BaseAdminService
         $order = 'sort desc,create_time desc';
 
         $sku_where = [
-            [ 'goodsSku.is_default', '=', 1 ]
+            [ 'goodsSku.is_default', '=', 1 ],
         ];
         if (!empty($where[ 'start_price' ]) && !empty($where[ 'end_price' ])) {
             $money = [ $where[ 'start_price' ], $where[ 'end_price' ] ];
@@ -1253,7 +1292,7 @@ class GoodsService extends BaseAdminService
             Db::startTrans();
 
             $goods_info = $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ]
+                [ 'goods_id', '=', $params[ 'goods_id' ] ],
             ])->field('goods_type')->findOrEmpty()->toArray();
 
             if (empty($goods_info)) {
@@ -1301,7 +1340,7 @@ class GoodsService extends BaseAdminService
             Db::startTrans();
 
             $goods_info = $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ]
+                [ 'goods_id', '=', $params[ 'goods_id' ] ],
             ])->field('goods_id,goods_type')->findOrEmpty()->toArray();
 
             if (empty($goods_info)) {
@@ -1350,7 +1389,7 @@ class GoodsService extends BaseAdminService
             Db::startTrans();
 
             $goods_info = $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ]
+                [ 'goods_id', '=', $params[ 'goods_id' ] ],
             ])->field('goods_type')->findOrEmpty()->toArray();
 
             if (empty($goods_info)) {
@@ -1359,7 +1398,7 @@ class GoodsService extends BaseAdminService
 
             // 修改商品的会员等级折扣
             $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ]
+                [ 'goods_id', '=', $params[ 'goods_id' ] ],
             ])->update([
                 'member_discount' => $params[ 'member_discount' ]
             ]);
@@ -1391,7 +1430,7 @@ class GoodsService extends BaseAdminService
      * @param $goods_id
      * @return mixed
      */
-    public function getActiveGoodsCount($goods_id)
+    public function getActiveGoodsCount($goods_id, $is_all = 0, $where = [])
     {
         // 判断 $goods_id 类型
         if (!is_array($goods_id)) {
@@ -1400,7 +1439,9 @@ class GoodsService extends BaseAdminService
 
         $join_list = event('GetGoodsJoinInfo', [
             'goods_ids' => $goods_id,
-            'is_get_count' => 1
+            'is_get_count' => 1,
+            'is_all' => $is_all,
+            'where' => $where,
         ]);
         return array_sum($join_list);
     }
@@ -1541,8 +1582,10 @@ class GoodsService extends BaseAdminService
      */
     public function batchSet($data)
     {
+        $is_all = $data[ 'is_all' ];
+        $goods_ids = $data[ 'goods_ids' ];
         if (empty($data[ 'set_type' ])) throw new AdminException('NOT_GET_SET_TYPE');
-        if (empty($data[ 'goods_ids' ])) throw new AdminException('NOT_GET_SHOP_INFO');
+        if (!$is_all && empty($goods_ids)) throw new AdminException('NOT_GET_SHOP_INFO');
         $save_data = $filed_data = $sku_save_data = [];
         switch ($data[ 'set_type' ]) {
             case GoodsDict::LABEL :
@@ -1589,58 +1632,59 @@ class GoodsService extends BaseAdminService
                 break;
             case GoodsDict::STOCK :
                 if (!isset($data[ 'set_value' ][ 'stock_type' ]) || empty($data[ 'set_value' ][ 'stock_type' ]) || !isset($data[ 'set_value' ][ 'stock' ]) || $data[ 'set_value' ][ 'stock' ] <= 0) break;
+                $update_stock = (int) $data[ 'set_value' ][ 'stock' ];
 
-                $sku_list = ( new GoodsSku() )->where([ [ 'goods_id', 'in', $data[ 'goods_ids' ] ] ])->column('sku_id,stock,goods_id');
-                $goods_stock_list = ( new Goods() )->where([ [ 'goods_id', 'in', $data[ 'goods_ids' ] ] ])->column('stock,goods_id');
-                $sku_save_data = $goods_stock = [];
-                foreach ($sku_list as $v) {
-//                    $active_goods_count = $this->getActiveGoodsCount($v[ 'goods_id' ]);
-//                    if ($active_goods_count > 0) {
-//                        continue;
-//                    }
-                    if (!isset($goods_stock[ $v[ 'goods_id' ] ])) {
-                        $goods_stock[ $v[ 'goods_id' ] ] = 0;
-                    }
-                    if ($data[ 'set_value' ][ 'stock_type' ] == 'inc') {
-                        $item_stock = $v[ 'stock' ] + $data[ 'set_value' ][ 'stock' ];
-                        $goods_stock[ $v[ 'goods_id' ] ] += $data[ 'set_value' ][ 'stock' ];
+                if ($data[ 'set_value' ][ 'stock_type' ] == 'inc') {
+                    if ($is_all) {
+                        $query = $this->getBatchAllQuery($data[ 'where' ], $goods_ids);
                     } else {
-                        if ($data[ 'set_value' ][ 'stock' ] > $v[ 'stock' ]) {
-                            $goods_stock[ $v[ 'goods_id' ] ] -= $v[ 'stock' ];
-                        } else {
-                            $goods_stock[ $v[ 'goods_id' ] ] -= $data[ 'set_value' ][ 'stock' ];
-                        }
-                        $item_stock = $v[ 'stock' ] - $data[ 'set_value' ][ 'stock' ];
-                        $item_stock = max($item_stock, 0);
+                        $query = GoodsSku::alias('goodsSku')
+                            ->join(( new Goods() )->getTable() . ' goods', 'goods.goods_id = goodsSku.goods_id')
+                            ->whereIn('goods.goods_id', $goods_ids);
                     }
-                    $sku_save_data[] = [ 'sku_id' => $v[ 'sku_id' ], 'stock' => $item_stock ];
-                }
-                foreach ($goods_stock_list as $k => $v) {
-                    if (isset($goods_stock[ $v[ 'goods_id' ] ])) {
-                        $save_data[ $k ][ 'goods_id' ] = $v[ 'goods_id' ];
-                        $save_data[ $k ][ 'stock' ] = $v[ 'stock' ] + $goods_stock[ $v[ 'goods_id' ] ];
+                    $query->update([
+                        'goodsSku.stock' => Db::raw("goodsSku.stock + {$update_stock}"),
+                    ]);
+                } else {
+                    if ($is_all) {
+                        $query = $this->getBatchAllQuery($data[ 'where' ], $goods_ids);
+                    } else {
+                        $query = GoodsSku::alias('goodsSku')
+                            ->join(( new Goods() )->getTable() . ' goods', 'goods.goods_id = goodsSku.goods_id') // 使用INNER JOIN更安全
+                            ->whereIn('goods.goods_id', $goods_ids);
                     }
+                    $query->update([
+                        'goodsSku.stock' => Db::raw("CASE WHEN goodsSku.stock >= $update_stock THEN goodsSku.stock - $update_stock ELSE 0 END"),
+                    ]);
                 }
-                break;
+
+                if ($is_all) {
+                    $query = $this->getBatchAllQuery($data[ 'where' ], $goods_ids);
+                    $query->update([
+                        'goods.stock' => Db::raw("(SELECT COALESCE(SUM(stock), 0)  FROM " . ( new GoodsSku() )->getTable() . "  WHERE goods_id = goods.goods_id)")
+                    ]);
+                } else {
+                    $query = Goods::alias('goods')->whereIn('goods.goods_id', $goods_ids);
+                    $query->update([
+                        'stock' => Db::raw("(SELECT COALESCE(SUM(stock), 0)  FROM " . ( new GoodsSku() )->getTable() . "  WHERE goods_id = goods.goods_id)")
+                    ]);
+                }
+
+                return true;
         }
 
-        if ($data[ 'set_type' ] == GoodsDict::STOCK) {
-            if (!empty($sku_save_data) && !empty($save_data)) {
-                Db::startTrans();
-                try {
-                    $this->model->saveAll($save_data);
-                    ( new GoodsSku() )->saveAll($sku_save_data);
-                    Db::commit();
-                    return true;
-                } catch (\Exception $e) {
-                    Db::rollback();
-                    throw new CommonException($e->getMessage());
+        if (!empty($filed_data)) {
+            $field = array_keys($filed_data)[ 0 ];
+            if ($is_all) {
+                $update = $filed_data[ $field ];
+
+                $update_data = [];
+                foreach ($update as $column => $value) {
+                    $update_data[ 'goods.' . $column ] = is_array($value) ? json_encode($value) : $value;
                 }
-            }
-        } else {
-            if (!empty($filed_data)) {
-                $field = array_keys($filed_data)[ 0 ];
-                foreach ($data[ 'goods_ids' ] as $k => $v) {
+                $res = $this->getBatchAllQuery($data[ 'where' ], $goods_ids)->update($update_data);
+            } else {
+                foreach ($goods_ids as $k => $v) {
                     $save_data[ $k ] = $filed_data[ $field ];
                     $save_data[ $k ][ 'goods_id' ] = $v;
                 }
@@ -1649,6 +1693,26 @@ class GoodsService extends BaseAdminService
         }
 
         return true;
+    }
+
+    public function getBatchAllQuery($where, $example_goods_ids = [])
+    {
+        $sku_where = [
+            [ 'goodsSku.is_default', '=', 1 ],
+        ];
+
+        if (!empty($where[ 'start_price' ]) && !empty($where[ 'end_price' ])) {
+            $money = [ $where[ 'start_price' ], $where[ 'end_price' ] ];
+            sort($money);
+            $sku_where[] = [ 'goodsSku.price', 'between', $money ];
+        } else if (!empty($where[ 'start_price' ])) {
+            $sku_where[] = [ 'goodsSku.price', '>=', $where[ 'start_price' ] ];
+        } else if (!empty($where[ 'end_price' ])) {
+            $sku_where[] = [ 'goodsSku.price', '<=', $where[ 'end_price' ] ];
+        }
+
+        return Goods::alias('goods')->where([ [ 'goods.goods_id', '>', 0 ] ])->withSearch([ "goods_name", "goods_type", "brand_id", "goods_category", "label_ids", 'service_ids', "sale_num", "status" ], $where)
+            ->withJoin([ 'goodsSku' ])->where($sku_where)->whereNotIn('goods.goods_id', $example_goods_ids);
     }
 
     /**

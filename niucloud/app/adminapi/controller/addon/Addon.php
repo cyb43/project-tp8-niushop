@@ -18,15 +18,28 @@ use core\base\BaseAdminController;
 use think\Response;
 
 
+/**
+ * 插件管理
+ * Class Addon
+ * @description 插件管理
+ * @package app\adminapi\controller\addon
+ */
 class Addon extends BaseAdminController
 {
 
+    /**
+     * 插件初始化
+     * @description 插件初始化
+     * @return Response
+     */
     public function init()
     {
         return success((new CoreAddonService())->getInitList());
     }
+
     /**
      * 获取已下载插架
+     * @description 获取已下载插架
      */
     public function getLocalAddonList()
     {
@@ -35,6 +48,7 @@ class Addon extends BaseAdminController
 
     /**
      * 安装插件
+     * @description 安装插件
      * @param string $addon
      */
     public function install($addon)
@@ -44,6 +58,7 @@ class Addon extends BaseAdminController
 
     /**
      * 云安装插件
+     * @description 云安装插件
      * @param $addon
      * @return Response
      */
@@ -54,6 +69,7 @@ class Addon extends BaseAdminController
 
     /**
      * 获取安装任务
+     * @description 获取安装任务
      * @return Response
      */
     public function getInstallTask() {
@@ -62,6 +78,7 @@ class Addon extends BaseAdminController
 
     /**
      * 获取云安装日志
+     * @description 获取云安装日志
      * @param $addon
      * @return mixed
      */
@@ -71,6 +88,7 @@ class Addon extends BaseAdminController
 
     /**
      * 插件安装环境检测
+     * @description 插件安装环境检测
      * @param $addon
      * @return Response
      */
@@ -81,6 +99,7 @@ class Addon extends BaseAdminController
 
     /**
      * 取消安装
+     * @description 取消安装
      * @param $addon
      * @return mixed
      */
@@ -91,6 +110,7 @@ class Addon extends BaseAdminController
 
     /**
      * 卸载插件
+     * @description 卸载插件
      * @param string $addon
      */
     public function uninstall($addon)
@@ -101,6 +121,7 @@ class Addon extends BaseAdminController
 
     /**
      * 插件安装环境检测
+     * @description 插件安装环境检测
      * @param $addon
      * @return Response
      */
@@ -111,6 +132,7 @@ class Addon extends BaseAdminController
 
     /**
      * 插件列表
+     * @description 插件列表
      * @return Response
      */
     public function lists()
@@ -123,6 +145,7 @@ class Addon extends BaseAdminController
 
     /**
      * 插件详情
+     * @description 插件详情
      * @param int $id
      * @return Response
      */
@@ -133,6 +156,7 @@ class Addon extends BaseAdminController
 
     /**
      * 设置插件状态
+     * @description 设置插件状态
      * @param int $id
      * @param int $status
      * @return Response
@@ -145,7 +169,8 @@ class Addon extends BaseAdminController
 
     /**
      * 下载插件
-     * @param $app_key
+     * @description 下载插件
+     * @param $addon
      * @return Response
      */
     public function download($addon){
@@ -158,6 +183,7 @@ class Addon extends BaseAdminController
 
     /**
      * 查询已安装插件
+     * @description 查询已安装插件
      * @return Response
      */
     public function getInstallList(){
@@ -166,6 +192,7 @@ class Addon extends BaseAdminController
 
     /**
      * 查询已安装有效应用
+     * @description 查询已安装有效应用
      */
     public function getAddonList()
     {
@@ -174,6 +201,7 @@ class Addon extends BaseAdminController
 
     /**
      * 插件类型
+     * @description 插件类型
      * @return Response
      */
     public function getType(){
@@ -182,7 +210,8 @@ class Addon extends BaseAdminController
 
     /**
      * 更新插件
-     * @param $app_key
+     * @description 更新插件
+     * @param $addon
      * @return Response
      */
     public function upgrade($addon = ''){
@@ -194,8 +223,14 @@ class Addon extends BaseAdminController
         return success(data:(new AddonService())->getShowAppTools());
     }
 
+    public function showMarketing()
+    {
+        return success(( new AddonService() )->getShowMarketingTools());
+    }
+
     /**
      * 获取首页应用标签
+     * @description 获取首页应用标签
      */
     public function getIndexAddonLabelList()
     {
@@ -204,6 +239,7 @@ class Addon extends BaseAdminController
 
     /**
      * 获取首页应用
+     * @description 获取首页应用
      * @return Response
      */
     public function getIndexAddonList()

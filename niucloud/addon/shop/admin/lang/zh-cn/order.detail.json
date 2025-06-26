@@ -136,5 +136,10 @@
   "buyers": "买家",
   "buyersReserveMobile": "预留手机",
   "storeTakerName": "提货人",
-  "verifierMember": "核销人"
+  "verifierMember": "核销人",
+  "buyerAskDeliveryTime2":"预约配送时间",
+  "deliveryTransporterMobile": "配送员手机号",
+  "deliveryTransporterName": "配送员",
+  "deliveryTransporterStatus":"配送状态",
+  "deliveryTransporterInfo":"配送信息"
 }

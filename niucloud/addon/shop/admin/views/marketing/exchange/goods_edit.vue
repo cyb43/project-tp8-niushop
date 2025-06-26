@@ -471,18 +471,18 @@ const goodsType = reactive([
 const initialFormData = {
     type: 'goods', // 名称
     names: '', // 标题
-    title:'',
-    image:'',
-    goods_info:{},
-    coupon_ids:[],
-    product_list:[],
-    stock:'',
-    limit_num:'',
-    point:'',
-    price:'',
-    balance:'',
-    isBalance:1,
-    content:''
+    title: '',
+    image: '',
+    goods_info: {},
+    coupon_ids: [],
+    product_list: [],
+    stock: '',
+    limit_num: '',
+    point: '',
+    price: '',
+    balance: '',
+    isBalance: 1,
+    content: ''
 }
 const formData: Record<string, any> = ref({ ...initialFormData })
 const formRef = ref<FormInstance>()
@@ -511,21 +511,21 @@ const formRules = computed(() => {
     }
 })
 //获取详情
-const getActiveExchangeInfoFn=(id:number)=>{
+const getActiveExchangeInfoFn=(id:number)=> {
     loading.value = true
-    getActiveExchangeInfo(id).then((res:any)=>{
-        formData.value = Object.assign(formData.value,res.data)
-        if(formData.value.type=='goods'){
+    getActiveExchangeInfo(id).then((res: any) => {
+        formData.value = Object.assign(formData.value, res.data)
+        if (formData.value.type == 'goods') {
             formData.value.product_list = res.data.goods_list
-        }else if(formData.value.type=='coupon'){
-            formData.value.product_list =[]
+        } else if (formData.value.type == 'coupon') {
+            formData.value.product_list = []
             formData.value.product_list.push(deepClone(formData.value.coupon_info))
-        }else{
-            formData.value.balance = formData.value.product_detail[0].balance?formData.value.product_detail[0].balance: formData.value.product_detail[0].money
-            formData.value.isBalance = formData.value.product_detail[0].balance?1: 0
+        } else {
+            formData.value.balance = formData.value.product_detail[0].balance ? formData.value.product_detail[0].balance : formData.value.product_detail[0].money
+            formData.value.isBalance = formData.value.product_detail[0].balance ? 1 : 0
         }
         loading.value = false
-    }).catch(()=>{
+    }).catch(() => {
         loading.value = false
     })
 }
@@ -533,15 +533,14 @@ onMounted(() => {
     if(route.query.id) getActiveExchangeInfoFn(Number(route.query.id))
 })
 /********* 商品 **********/
-const goodsSkuSelectRef = ref()
 //设置商品sku是否参与
-const enabledEvent =  (row:any)=>{
+const enabledEvent = (row:any) => {
     row.is_enabled = row.is_enabled ? 0 : 1
-    if(formData.value.product_list.every((el:any)=>el.is_enabled===0)){
+    if (formData.value.product_list.every((el: any) => el.is_enabled === 0)) {
         row.is_enabled = 1
         ElMessage({
-             type: 'warning',
-            message: `${t('noEnabledTip')}`
+            type: 'warning',
+            message: `${ t('noEnabledTip') }`
         })
         return
     }
@@ -696,29 +695,29 @@ const onSave = async (formEl: FormInstance | undefined) => {
     await formEl.validate(async (valid) => {
         if (valid) {
             loading.value = true
-            if(formData.value.type == 'goods'){
-                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el:any)=>{
+            if (formData.value.type == 'goods') {
+                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el: any) => {
                     return {
-                        goods_id:el.goods_id,
-                        sku_id:el.sku_id,
-                        point:el.point,
-                        price:el.price,
-                        limit_num:el.limit_num,
-                        stock:el.stock,
-                        is_enabled:el.is_enabled
+                        goods_id: el.goods_id,
+                        sku_id: el.sku_id,
+                        point: el.point,
+                        price: el.price,
+                        limit_num: el.limit_num,
+                        stock: el.stock,
+                        is_enabled: el.is_enabled
                     }
-                }).filter((el:any)=>el.is_enabled===1))
-            } else if(formData.value.type == 'coupon'){
-                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el:any)=>{
+                }).filter((el: any) => el.is_enabled === 1))
+            } else if (formData.value.type == 'coupon') {
+                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el: any) => {
                     return {
-                        coupon_id:el.id,
+                        coupon_id: el.id,
                     }
                 }))
-            }else{
-                if(formData.value.isBalance){
-                    formData.value.product_detail=JSON.stringify([{balance:formData.value.balance}])
-                }else{
-                    formData.value.product_detail=JSON.stringify([{money:formData.value.balance}])
+            } else {
+                if (formData.value.isBalance) {
+                    formData.value.product_detail = JSON.stringify([{ balance: formData.value.balance }])
+                } else {
+                    formData.value.product_detail = JSON.stringify([{ money: formData.value.balance }])
                 }
             }
             // formData.value.goods_data = JSON.stringify(formData.value.product_list)
@@ -731,6 +730,7 @@ const onSave = async (formEl: FormInstance | undefined) => {
         }
     })
 }
+
 const back = () => {
     router.push('/shop/marketing/exchange/goods_list')
 }

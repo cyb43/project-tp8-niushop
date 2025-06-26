@@ -26,6 +26,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 配送信息设置
+     * @description 设置物流配置
      * @return \think\Response
      */
     public function setDeliveryConfig()
@@ -40,6 +41,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 配送页信息
+     * @description 获取配送页信息
      * @return void
      */
     public function getDelivery()
@@ -49,6 +51,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 配送页信息
+     * @description 获取配送页信息配置
      * @return void
      */
     public function getDeliveryList()
@@ -58,6 +61,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 获取配送员列表
+     * @description 查看配送员列表
      * @return \think\Response
      */
     public function lists()
@@ -71,6 +75,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 配送员详情
+     * @description 查看配送员详情
      * @param int $id
      * @return \think\Response
      */
@@ -81,6 +86,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 添加配送员
+     * @description 添加配送员
      * @return \think\Response
      */
     public function add()
@@ -95,6 +101,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 配送员编辑
+     * @description 编辑配送员
      * @param $id  自提门店id
      * @return \think\Response
      */
@@ -110,6 +117,7 @@ class Delivery extends BaseAdminController
 
     /**
      * 配送员删除
+     * @description 删除配送员
      * @param $id
      * @return \think\Response
      */

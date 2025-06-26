@@ -37,8 +37,8 @@ Route::group('sys', function() {
     Route::put('role/:role_id', 'sys.Role/edit');
     //删除用户组
     Route::delete('role/:role_id', 'sys.Role/del');
-    //设置用户组状态
-    Route::put('role/status/:role_id', 'sys.Role/setStatus');
+    // 修改用户组状态
+    Route::put('role/status', 'sys.Role/modifyStatus');
     /***************************************************** 菜单 ****************************************************/
     //菜单新增
     Route::post('menu', 'sys.Menu/add');

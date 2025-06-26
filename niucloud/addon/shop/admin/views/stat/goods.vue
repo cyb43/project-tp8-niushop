@@ -410,7 +410,7 @@ const initIncomeChart = () => {
                     '加购件数': false,
                     '下单件数': false,
                     '支付件数': false,
-                    '退款件数': false,
+                    '退款件数': false
                 }
             },
             xAxis: {

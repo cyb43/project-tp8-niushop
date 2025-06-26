@@ -22,6 +22,8 @@ use addon\shop\app\model\order\Order;
 use addon\shop\app\model\order\OrderDelivery;
 use addon\shop\app\model\order\OrderGoods;
 use addon\shop\app\service\admin\delivery\DeliveryService;
+use addon\shop\app\service\core\delivery\CoreLocalDeliveryService;
+use addon\shop\app\service\core\delivery\third_delivery\ThirdDeliveryLoader;
 use addon\shop\app\service\core\order\CoreOrderEventService;
 use addon\shop\app\service\core\order\CoreOrderPayService;
 use app\dict\common\ChannelDict;
@@ -90,10 +92,15 @@ class OrderService extends BaseAdminService
                 'member' => function (Query $query) use ($member_where) {
                     $query->where($member_where);
                 },
+
             ], 'left')
             ->with([
                 'order_goods' => function ($query) {
-                    $query->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, is_enable_refund, goods_type, delivery_status, status,discount_money,delivery_id,is_gift')->append([ 'delivery_status_name', 'status_name', 'goods_image_thumb_small', 'impulse_buy_info' ]);
+                    $query->with([ 'deliveryInfo' => function ($query) {
+                        $query->field('*');
+                    } ])
+                        ->field('extend,order_goods_id, order_id, member_id, goods_id, sku_id, goods_name, sku_name, goods_image, sku_image, price, num, goods_money, is_enable_refund, goods_type, delivery_status, status,discount_money,delivery_id,is_gift')
+                        ->append([ 'delivery_status_name', 'status_name', 'goods_image_thumb_small', 'impulse_buy_info', 'delivery_info' ]);
                 }
             ])->order($order)->append([ 'order_from_name', 'order_type_name', 'status_name', 'delivery_type_name' ]);
         $order_status_list = OrderDict::getStatus();
@@ -131,7 +138,7 @@ class OrderService extends BaseAdminService
                         $query->field('order_id, content, main_type, create_time, main_id, type')->order("create_time desc, id desc")->append([ 'main_type_name', 'type_name', 'main_name' ]);
                     },
                     'order_discount' => function ($query) {
-                        $query->field('order_id,discount_type,money');
+                        $query->field('order_id,discount_type,money,content');
                     }
                 ])->append([ 'order_from_name', 'order_type_name', 'status_name', 'delivery_type_name' ])->findOrEmpty()->toArray();
         $info[ 'verify_code' ] = ''; // 核销码
@@ -154,12 +161,27 @@ class OrderService extends BaseAdminService
             }
         }
 
-        if ($info[ 'delivery_type' ] == DeliveryDict::EXPRESS) {
+        if ($info[ 'delivery_type' ] == DeliveryDict::EXPRESS || $info[ 'delivery_type' ] == DeliveryDict::LOCAL_DELIVERY) {
             $info[ 'order_delivery' ] = ( new OrderDelivery() )
                 ->where([ [ 'order_id', '=', $info[ 'order_id' ] ] ])
-                ->field('id, order_id, name, delivery_type, sub_delivery_type,express_company_id, express_number, create_time')
+                ->field('id, order_id, name, delivery_type, sub_delivery_type,express_company_id, express_number, create_time,third_delivery')
+                ->append([ 'third_delivery_name' ])
                 ->select()->toArray();
+            if ($info[ 'delivery_type' ] == DeliveryDict::LOCAL_DELIVERY) {
+                $third_party_config = ( new CoreLocalDeliveryService() )->getConfig();
+                foreach ($info[ 'order_delivery' ] as $k => $item) {
+                    if (!empty($item[ 'third_delivery' ])) {
+                        $third_delivery = $item[ 'third_delivery' ];
+                        $loader = new ThirdDeliveryLoader($third_delivery, $third_party_config[ $third_delivery ]);
+                        //三方配送下单
+                        $info[ 'order_delivery' ][ $k ][ 'third_delivery_info' ] = $loader->queryOrderInfo([
+                            'order_no' => $info[ 'order_no' ]
+                        ]);
+                    }
+                }
+            }
         }
+
 
         if ($info[ 'out_trade_no' ]) {
             $info[ 'pay' ] = ( new Pay() )->where([ [ 'out_trade_no', '=', $info[ 'out_trade_no' ] ] ])

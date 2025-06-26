@@ -45,6 +45,7 @@ class AfterShopOrderFinish
             } else {
                 if ($order_config[ 'refund_length' ] > 0) {
                     ( new Order() )->where([ [ 'order_id', '=', $order_data[ 'order_id' ] ] ])->update([
+                        'is_enable_refund' => 1,
                         'timeout' => $order_data[ 'finish_time' ] + $order_config[ 'refund_length' ] * 86400  //确认收货后售后，单位为天
                     ]);
 //                OrderCloseAllowRefund::dispatch(['order_id' => $order_data['order_id'] ], secs: $order_config['refund_length'] * 86400);

@@ -17,11 +17,13 @@ use core\base\BaseAdminController;
 
 /**
  * 会员收货地址控制器
+ * @description 会员收货地址
  */
 class Address extends BaseAdminController
 {
    /**
     * 获取会员收货地址列表
+    * @description 获取会员收货地址列表
     * @return \think\Response
     */
     public function lists(){
@@ -33,6 +35,7 @@ class Address extends BaseAdminController
 
     /**
      * 会员收货地址详情
+     * @description 会员收货地址详情
      * @param $id  会员收货地址id
      * @return \think\Response
      */
@@ -45,6 +48,7 @@ class Address extends BaseAdminController
 
     /**
      * 添加会员收货地址
+     * @description 添加会员收货地址
      * @return \think\Response
      */
     public function add(){
@@ -68,6 +72,7 @@ class Address extends BaseAdminController
 
     /**
      * 会员收货地址编辑
+     * @description 会员收货地址编辑
      * @param $id  会员收货地址id
      * @return \think\Response
      */

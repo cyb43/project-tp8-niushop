@@ -16,10 +16,17 @@ use app\service\admin\verify\VerifierService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 核销人员
+ * Class Verifier
+ * @description 核销人员
+ * @package app\adminapi\controller\verify
+ */
 class Verifier extends BaseAdminController
 {
     /**
      * 核销人员列表
+     * @description 核销人员列表
      * @return Response
      */
     public function lists()
@@ -29,6 +36,7 @@ class Verifier extends BaseAdminController
 
     /**
      * 核销人员列表
+     * @description 核销人员列表
      * @return Response
      */
     public function select()
@@ -38,7 +46,8 @@ class Verifier extends BaseAdminController
 
     /**
      * 获取核销员信息
-     * @param int $order_id
+     * @description 获取核销员信息
+     * @param int $id
      * @return Response
      */
     public function detail($id)
@@ -48,7 +57,7 @@ class Verifier extends BaseAdminController
 
     /**
      * 添加核销员
-     * @param int $order_id
+     * @description 添加核销员
      * @return Response
      */
     public function add()
@@ -62,7 +71,8 @@ class Verifier extends BaseAdminController
 
     /**
      * 添加核销员
-     * @param int $order_id
+     * @description 添加核销员
+     * @param int $id
      * @return Response
      */
     public function edit($id)
@@ -76,6 +86,7 @@ class Verifier extends BaseAdminController
 
     /**
      * 删除核销员
+     * @description 删除核销员
      */
     public function del(int $id)
     {
@@ -84,6 +95,7 @@ class Verifier extends BaseAdminController
 
     /**
      * 获取核销类型
+     * @description 获取核销类型
      * @return Response
      */
     public function getVerifyType()

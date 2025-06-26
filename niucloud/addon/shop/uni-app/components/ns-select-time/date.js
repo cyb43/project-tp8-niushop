@@ -74,6 +74,62 @@ export function initData() {
     }
     return time
 }
+// 预约
+export function initAppointmentData(advanceDay, mostDay) {
+    const time = [];
+    const date = new Date()
+    let timeStr = 3600 * 24 * 1000 //一天的时间戳
+
+    // 加上今天
+    const now = date.getTime() //获取当前日期的时间戳
+    // time.push({
+    //     date: timeStamp(now).date, //保存日期(年月日)
+    //     mdTime: timeStamp(now).md,
+    //     md: '今天',
+    //     timeStamp: now , //保存时间戳
+    //     week: timeStamp(now).day,
+    //     dayNum: timeStamp(now).dayNum,
+    //     disable: false
+    // });
+
+    // 正常预约范围
+    for (let i = advanceDay; i <= mostDay; i++) {
+        time.push({
+            date: timeStamp(now + timeStr * i).date, //保存日期(年月日)
+            mdTime: timeStamp(now + timeStr * i).md,
+            md: i === 0 ? '今天' : i === 1 ? '明天' : i === 2 ? '后天' : timeStamp(now + timeStr * i).md,
+            timeStamp: now + timeStr * i, //保存时间戳
+            week: timeStamp(now + timeStr * i).day,
+            dayNum: timeStamp(now + timeStr * i).dayNum,
+            disable: false
+        });
+    }
+
+    return time;
+}
+/**
+ * 仅返回“今天”这一项，用于只展示今天场景
+ */
+export function initTodayData() {
+  const time = [];
+  const date = new Date()
+  let timeStr = 3600 * 24 * 1000 //一天的时间戳
+  
+  // 加上今天
+  const now = date.getTime() //获取当前日期的时间戳
+  time.push({
+      date: timeStamp(now).date, //保存日期(年月日)
+      mdTime: timeStamp(now).md,
+      md: '今天',
+      timeStamp: now , //保存时间戳
+      week: timeStamp(now).day,
+      dayNum: timeStamp(now).dayNum,
+      disable: false
+  });
+  
+   return time;
+}
+
 
 //时间数组
 export function initTime(trade_time_json, timeInterval = 0.5, isQuantum = true) {
@@ -104,6 +160,46 @@ export function initTime(trade_time_json, timeInterval = 0.5, isQuantum = true) 
 
     return time;
 }
+
+// 带“立即送出”的时间数组，仅用于预约
+export function initTimeWithImmediate(trade_time_json, timeInterval = 0.5, isQuantum = true) {
+    const time = [];
+
+    // 先插入立即送出
+    time.push({
+        begin: '立即',
+        end: '送出',
+        value: 'immediate',
+        disable: false
+    });
+
+    const timeStr = 3600 * timeInterval; // 间隔时间转秒
+
+    trade_time_json.forEach(slot => {
+        let start = slot.start_time;
+        let end = slot.end_time;
+
+        for (let i = start; i < end; i += timeStr) {
+            let nextTime = i + timeStr > end ? end : i + timeStr;
+
+            if (isQuantum) {
+                time.push({
+                    begin: timestampTransition(i),
+                    end: timestampTransition(nextTime),
+                    disable: false
+                });
+            } else {
+                time.push({
+                    time: timestampTransition(i),
+                    disable: false
+                });
+            }
+        }
+    });
+
+    return time;
+}
+
 
 // 时间戳转时间
 export function timestampTransition(timeStamp) {

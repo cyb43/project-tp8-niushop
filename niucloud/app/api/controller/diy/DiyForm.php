@@ -44,6 +44,20 @@ class DiyForm extends BaseApiController
     }
 
     /**
+     * 编辑填表记录
+     * @return Response
+     */
+    public function editRecord()
+    {
+        $data = $this->request->params([
+            [ 'record_id', '' ],
+            [ 'value', [] ],
+            [ 'relate_id', '' ],
+        ]);
+        return success('SUCCESS', ( new DiyFormService() )->editRecord($data));
+    }
+
+    /**
      * 获取表单填写结果信息
      * @return Response
      */
@@ -65,5 +79,14 @@ class DiyForm extends BaseApiController
             [ 'record_id', '' ],
         ]);
         return success('SUCCESS', ( new DiyFormService() )->getFormRecordInfo($data));
+    }
+
+    /**
+     * 获取个人资料表单填写记录
+     * @return Response
+     */
+    public function getMemberInfoRecord()
+    {
+        return success('SUCCESS', ( new DiyFormService() )->getMemberInfoFormRecordInfo());
     }
 }

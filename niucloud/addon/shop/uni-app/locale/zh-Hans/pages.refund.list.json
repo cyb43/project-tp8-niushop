@@ -1,6 +1,7 @@
 {
-	"refundMoney":"退款金额",
-	"refundApply":"取消退款",
-	"refund":"退款进度",
-	"cancelRefundContent": "撤销之后本次申请将会关闭,如后续仍有问题可再次发起申请。"
+  "refundNo": "退款编号",
+  "refundMoney": "退款金额",
+  "refundApply": "取消退款",
+  "refund": "退款进度",
+  "cancelRefundContent": "撤销之后本次申请将会关闭,如后续仍有问题可再次发起申请。"
 }

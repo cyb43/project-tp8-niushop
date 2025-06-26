@@ -52,7 +52,7 @@
                     </el-col>
                     <el-col :span="8">
                         <el-form-item :label="t('deliveryType')">
-                            <div class="input-width">{{ formData.delivery_type_name }}</div>
+                            <div class="input-width">{{ formData.delivery_type_name }} <span v-if="formData.order_delivery&&formData.order_delivery.length>0 && formData.order_delivery[0].third_delivery_name &&formData.delivery_type == 'local_delivery'&& formData.status_name.status!=2 && formData.status_name.status!=1 " class="text-primary">({{ formData.order_delivery[0].third_delivery_name }})</span> </div>
                         </el-form-item>
                         <div v-if="formData.delivery_type == 'express' || formData.delivery_type == 'local_delivery'">
                             <el-form-item :label="t('takerName')">
@@ -63,6 +63,11 @@
                             </el-form-item>
                             <el-form-item :label="t('takerFullAddress')">
                                 <div class="input-width">{{ formData.taker_full_address }}</div>
+                            </el-form-item>
+                        </div>
+                        <div v-if="formData.delivery_type == 'local_delivery' && formData.buyer_ask_delivery_time">
+                            <el-form-item :label="t('buyerAskDeliveryTime2')">
+                                <div class="input-width">{{ formData.buyer_ask_delivery_time }}</div>
                             </el-form-item>
                         </div>
                         <div v-if="formData.delivery_type == 'store'">
@@ -89,6 +94,29 @@
                         </el-form-item>
                         <el-form-item :label="t('notes')">
                             <div class="input-width line-feed">{{ formData.shop_remark ?? '--' }}</div>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <h3 v-if="formData.order_delivery&&formData.order_delivery.length>0 && formData.order_delivery[0].third_delivery_info &&formData.delivery_type == 'local_delivery' && formData.status_name.status!=2 && formData.status_name.status!=1" class="panel-title">{{ t('deliveryTransporterInfo') }}</h3>
+                <el-row v-if="formData.order_delivery&&formData.order_delivery.length>0 && formData.order_delivery[0].third_delivery_info &&formData.delivery_type == 'local_delivery' && formData.status_name.status!=2 && formData.status_name.status!=1" class="row-bg px-[30px] mb-[20px]">
+                    <el-col :span="8" v-if="formData.order_delivery[0].third_delivery_name">
+                        <el-form-item :label="t('deliveryType')">
+                            <div class="input-width">{{ formData.order_delivery[0].third_delivery_name}}</div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" v-if="formData.order_delivery[0].third_delivery_info?.transporter_name">
+                        <el-form-item :label="t('deliveryTransporterName')">
+                            <div class="input-width">{{ formData.order_delivery[0].third_delivery_info.transporter_name }}</div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" v-if="formData.order_delivery[0].third_delivery_info?.transporter_phone">
+                        <el-form-item :label="t('deliveryTransporterMobile')">
+                            <div class="input-width">{{ formData.order_delivery[0].third_delivery_info.transporter_phone }}</div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="8" v-if="formData.order_delivery[0].third_delivery_info?.status_name">
+                        <el-form-item :label="t('deliveryTransporterStatus')">
+                            <div class="input-width">{{ formData.order_delivery[0].third_delivery_info.status_name }}</div>
                         </el-form-item>
                     </el-col>
                 </el-row>

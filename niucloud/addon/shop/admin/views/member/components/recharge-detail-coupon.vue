@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="formRef" label-width="120px" :model="formData" :rules="formRules" label-position="left">
+    <el-form ref="formRef" label-width="120px" :model="formData" label-position="left">
         <el-form-item class="mt-[15px]" :label="t('coupon')" >
             <div class="coupon_list">
                 <el-table :data="formData.value " size="large" max-height="600" >
@@ -43,11 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, reactive, ref, watch } from 'vue'
-import couponSelectPopup from '@/addon/shop/views/goods/components/coupon-select-popup.vue'
-import { FormRules } from 'element-plus'
-import {deepClone } from '@/utils/common'
-import Test from '@/utils/test'
+import { computed, ref, watch } from 'vue'
 import { t } from "@/lang";
 
 const props = defineProps({
@@ -62,62 +58,10 @@ const emits = defineEmits(['update:modelValue'])
 
 const formData = ref({
     coupon_id: [],
-    value: [],
+    value: []
 })
 
 const formRef = ref(null)
-// 正则表达式
-const regExp: any = {
-    required: /[\S]+/,
-    number: /^\d{0,10}$/,
-    digit: /^\d{0,10}(.?\d{0,2})$/,
-    special: /^\d{0,10}(.?\d{0,3})$/
-}
-
-const formRules = reactive<FormRules>({
-})
-
-// 选择优惠券
-const couponSelect = (selectedCoupons: any, levelIndex: number) => {
-    let arr = [];
-    for (let key in selectedCoupons) {
-        let coupons: any = selectedCoupons[key];
-        let coupon: any = {
-            price: coupons.price,
-            title: coupons.title,
-            type_name: coupons.type_name,
-            coupon_id: coupons.id,
-            min_condition_money: coupons.min_condition_money,
-            valid_type: coupons.valid_type,
-            valid_end_time: coupons.valid_end_time,
-            length: coupons.length,
-            num:1
-        };
-
-        if (formData.value.value.length) {
-            formData.value.value.forEach((el: any) => {
-            if (el.coupon_id == coupon.coupon_id) {
-                coupon = Object.assign(coupon, el)
-            }
-        })
-        }
-        arr.push(deepClone(coupon))
-    }
-    formData.value.value = arr;
-}
-
-// 删除优惠券
-const deleteCouponEvents = (row: any, levelIndex: number) => {
-    const couponsIndex = formData.value.value.findIndex((el: any) => el.coupon_id === row.coupon_id);
-    if (couponsIndex !== -1) {
-        formData.value.value.splice(couponsIndex, 1);
-    }
-
-    const couponsIdIndex = formData.value.coupon_id.indexOf(row.coupon_id);
-    if (couponsIndex !== -1) {
-        formData.value.coupon_id.splice(couponsIdIndex, 1);
-    }
-};
 
 const value = computed({
     get () {
@@ -137,18 +81,6 @@ watch(() => value.value, (nval, oval) => {
 watch(() => formData.value, () => {
     value.value = formData.value
 }, { deep: true })
-
-const verify = async () => {
-    let verify = true
-    await formRef.value?.validate((valid) => {
-        verify = valid
-    })
-    return verify
-}
-
-defineExpose({
-    verify
-})
 </script>
 
 <style lang="scss" scoped>

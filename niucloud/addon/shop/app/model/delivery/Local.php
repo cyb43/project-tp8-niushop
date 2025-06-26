@@ -36,6 +36,7 @@ class Local extends BaseModel
     protected $type = [
         'center' => 'json',
         'area' => 'json',
-        'delivery_type' => 'json'
+        'delivery_type' => 'json',
+        'delivery_time' => 'json'
     ];
 }

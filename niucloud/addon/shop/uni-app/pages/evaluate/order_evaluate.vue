@@ -37,7 +37,7 @@
             </template>
         </view>
         <u-tabbar :fixed="true" :placeholder="true" :safeAreaInsetBottom="true" zIndex="9999">
-            <view class="flex items-center pl-[30rpx] pr-[20rpx] box-border  justify-between w-[100%]">
+            <view class="flex items-center pl-[30rpx] pr-[20rpx] box-border justify-between w-[100%]">
                 <view class="flex items-center" @click="selectCheck">
                     <text class="iconfont text-color text-[30rpx] mr-[12rpx] text-[var(--text-color-light9)]"
                           :class="{'iconxuanze1 text-[var(--primary-color)]' : is_anonymous === '1' ,'nc-iconfont nc-icon-yuanquanV6xx':is_anonymous !== '1'}"></text>

@@ -18,12 +18,14 @@ use app\service\admin\dict\DictService;
 /**
  * 数据字典控制器
  * Class Dict
+ * @description 数据字典
  * @package app\adminapi\controller\dict
  */
 class Dict extends BaseAdminController
 {
    /**
     * 获取数据字典列表
+    * @description 获取数据字典列表
     * @return \think\Response
     */
     public function lists(){
@@ -36,6 +38,7 @@ class Dict extends BaseAdminController
 
     /**
      * 数据字典详情
+     * @description 数据字典详情
      * @param int $id
      * @return \think\Response
      */
@@ -45,6 +48,7 @@ class Dict extends BaseAdminController
 
     /**
      * 添加数据字典
+     * @description 添加数据字典
      * @return \think\Response
      */
     public function add(){
@@ -61,6 +65,7 @@ class Dict extends BaseAdminController
 
     /**
      * 数据字典编辑
+     * @description 数据字典编辑
      * @param $id  数据字典id
      * @return \think\Response
      */
@@ -77,6 +82,7 @@ class Dict extends BaseAdminController
 
     /**
      * 数据字典删除
+     * @description 数据字典删除
      * @param $id  数据字典id
      * @return \think\Response
      */
@@ -87,6 +93,7 @@ class Dict extends BaseAdminController
 
     /**
      * 添加数据字典内容
+     * @description 添加数据字典内容
      */
     public function addDictData($id)
     {
@@ -101,6 +108,7 @@ class Dict extends BaseAdminController
 
     /**
      * 获取全部数据字典
+     * @description 获取全部数据字典
      * @return \think\Response
      */
     public function getAll(){
@@ -109,6 +117,7 @@ class Dict extends BaseAdminController
 
     /**
      * 数据字典详情
+     * @description 数据字典详情
      * @param key 数据字典关键字
      * @return \think\Response
      */

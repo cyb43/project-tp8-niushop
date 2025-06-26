@@ -46,5 +46,9 @@
   "participationMemberCount": "参与会员数",
   "payOrderCount": "支付订单数",
   "startDate": "开始时间",
-  "endDate": "结束时间"
+  "endDate": "结束时间",
+  "batchCloseTips": "是否确认批量关闭当前活动？",
+  "batchDeleteTips": "是否确认批量删除当前活动？",
+  "batchClose":"批量关闭",
+  "batchDelete":"批量删除"
 }

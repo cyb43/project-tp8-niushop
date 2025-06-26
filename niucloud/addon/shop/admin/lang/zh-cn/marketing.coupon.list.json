@@ -48,6 +48,7 @@
   "couponInfo": "优惠券基本信息",
   "receiveCount": "已领取",
   "receiveExpireCount": "已过期",
+  "receiveInvalidCount": "已失效",
   "showOrder": "查看订单",
   "send": "发券",
   "sendRecord": "发放记录",

@@ -16,6 +16,7 @@ use core\base\BaseAdminController;
 use think\Response;
 
 /**
+ * Ueditor
  */
 class Ueditor extends BaseAdminController
 {

@@ -21,10 +21,17 @@ use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\Response;
 
+/**
+ * 会员管理
+ * Class Member
+ * @description 会员管理
+ * @package app\adminapi\controller\member
+ */
 class Member extends BaseAdminController
 {
     /**
      * 会员列表
+     * @description 会员列表
      * @return Response
      */
     public function lists()
@@ -42,6 +49,7 @@ class Member extends BaseAdminController
 
     /**
      * 会员详情
+     * @description 会员详情
      * @param int $id
      * @return Response
      */
@@ -52,6 +60,7 @@ class Member extends BaseAdminController
 
     /**
      * 添加会员
+     * @description 添加会员
      * @return Response
      */
     public function add()
@@ -76,6 +85,7 @@ class Member extends BaseAdminController
 
     /**
      * 修改会员
+     * @description 修改会员
      * @param $member_id
      * @param $field
      * @return Response
@@ -95,6 +105,7 @@ class Member extends BaseAdminController
 
     /**
      * 更新
+     * @description 更新
      * @return Response
      */
     public function edit($member_id)
@@ -112,6 +123,12 @@ class Member extends BaseAdminController
         return success('EDIT_SUCCESS');
     }
 
+    /**
+     * 删除会员
+     * @description 删除会员
+     * @param $member_id
+     * @return Response
+     */
     public function del($member_id)
     {
         $res = (new MemberService())->deleteMember($member_id);
@@ -120,6 +137,7 @@ class Member extends BaseAdminController
 
     /**
      * 导出会员列表
+     * @description 导出会员列表
      * @return Response
      */
     public function export()
@@ -137,6 +155,7 @@ class Member extends BaseAdminController
 
     /**
      * 会员使用场景
+     * @description 会员使用场景
      * @return Response
      */
     public function getMemberRegisterType()
@@ -146,6 +165,7 @@ class Member extends BaseAdminController
 
     /**
      * 会员列表
+     * @description 会员列表
      * @return Response
      * @throws DataNotFoundException
      * @throws DbException
@@ -162,6 +182,7 @@ class Member extends BaseAdminController
 
     /**
      * 获取会员注册渠道
+     * @description 获取会员注册渠道
      * @return Response
      */
     public function getMemberRegisterChannelType()
@@ -171,6 +192,7 @@ class Member extends BaseAdminController
 
     /**
      * 设置会员的状态
+     * @description 设置会员的状态
      * @param $status
      * @return Response
      */
@@ -187,6 +209,7 @@ class Member extends BaseAdminController
 
     /**
      * 获取状态枚举
+     * @description 获取状态枚举
      * @return Response
      */
     public function getStatusList()
@@ -196,6 +219,7 @@ class Member extends BaseAdminController
 
     /**
      * 获取会员编码
+     * @description 获取会员编码
      * @return Response
      */
     public function getMemberNo()
@@ -206,55 +230,85 @@ class Member extends BaseAdminController
 
     /**
      * 获取会员权益字典
+     * @description 获取会员权益字典
      * @return mixed
      */
-    public function getMemberBenefitsDict() {
+    public function getMemberBenefitsDict()
+    {
         return success((new MemberService())->getMemberBenefitsDict());
     }
 
     /**
      * 获取会员礼包字典
+     * @description 获取会员礼包字典
      * @return array|null
      */
-    public function getMemberGiftDict() {
+    public function getMemberGiftDict()
+    {
         return success((new MemberService())->getMemberGiftDict());
     }
 
     /**
      * 获取成长值规则字典
+     * @description 获取成长值规则字典
      * @return array|null
      */
-    public function getGrowthRuleDict() {
+    public function getGrowthRuleDict()
+    {
         return success((new MemberService())->getGrowthRuleDict());
     }
 
     /**
      * 获取积分规则字典
+     * @description 获取积分规则字典
      * @return array|null
      */
-    public function getPointRuleDict() {
+    public function getPointRuleDict()
+    {
         return success((new MemberService())->getPointRuleDict());
     }
 
     /**
      * 获取会员权益内容
+     * @description 获取会员权益内容
      * @return Response
      */
-    public function getMemberBenefitsContent() {
+    public function getMemberBenefitsContent()
+    {
         $data = $this->request->params([
-            [ 'benefits', [] ],
+            ['benefits', []],
         ]);
         return success((new MemberService())->getMemberBenefitsContent($data['benefits']));
     }
 
     /**
      * 获取会员礼包内容
+     * @description 获取会员礼包内容
      * @return Response
      */
-    public function getMemberGiftsContent() {
+    public function getMemberGiftsContent()
+    {
         $data = $this->request->params([
-            [ 'gifts', [] ],
+            ['gifts', []],
         ]);
         return success((new MemberService())->getMemberGiftsContent($data['gifts']));
+    }
+
+    /**
+     * 批量操作
+     * @description 批量操作
+     * @return Response
+     */
+    public function batchModify()
+    {
+        $data = $this->request->params([
+            ['is_all', 0],
+            ['where', []],
+            ['member_ids', []],
+            ['value', ''],
+            ['field', ''],
+        ]);
+        (new MemberService())->batchModify($data);
+        return success('MODIFY_SUCCESS');
     }
 }

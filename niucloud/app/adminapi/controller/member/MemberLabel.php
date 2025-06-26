@@ -18,10 +18,17 @@ use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\Response;
 
+/**
+ * 会员标签
+ * Class MemberLabel
+ * @description 会员标签
+ * @package app\adminapi\controller\member
+ */
 class MemberLabel extends BaseAdminController
 {
     /**
      * 会员标签列表
+     * @description 会员标签列表
      * @return Response
      */
     public function lists()
@@ -34,6 +41,7 @@ class MemberLabel extends BaseAdminController
 
     /**
      * 会员标签详情
+     * @description 会员标签详情
      * @param int $id
      * @return Response
      */
@@ -44,6 +52,7 @@ class MemberLabel extends BaseAdminController
 
     /**
      * 添加会员标签
+     * @description 添加会员标签
      * @return Response
      */
     public function add()
@@ -61,6 +70,7 @@ class MemberLabel extends BaseAdminController
 
     /**
      * 编辑会员标签
+     * @description 编辑会员标签
      */
     public function edit($id)
     {
@@ -76,6 +86,7 @@ class MemberLabel extends BaseAdminController
 
     /**
      * 会员标签删除
+     * @description 会员标签删除
      * @param int $id
      * @return Response
      */
@@ -87,6 +98,7 @@ class MemberLabel extends BaseAdminController
 
     /**
      * 获取标签
+     * @description 获取标签
      * @return Response
      * @throws DataNotFoundException
      * @throws DbException

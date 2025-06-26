@@ -67,6 +67,9 @@
                                 <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
                                 {{ item.goods_name }}
                             </view>
+							<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden mb-[8rrpx]">
+							    {{ item.sub_title }}
+							</view>
                             <view v-if="item.goods_label_name && item.goods_label_name.length" class="flex flex-wrap">
                                 <template v-for="(tagItem, tagIndex) in item.goods_label_name">
                                     <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')"/>
@@ -117,6 +120,9 @@
                                         <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
                                         {{ item.goods_name }}
                                     </view>
+									<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden my-[5rpx]">
+									    {{ item.sub_title }}
+									</view>
                                     <view v-if="item.goods_label_name && item.goods_label_name.length" class="flex flex-wrap">
                                         <template v-for="(tagItem, tagIndex) in item.goods_label_name">
                                             <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')"/>
@@ -157,6 +163,9 @@
                                         </view>
                                         {{ item.goods_name }}
                                     </view>
+									<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden my-[5rpx]">
+									    {{ item.sub_title }}
+									</view>
                                     <view v-if="item.goods_label_name && item.goods_label_name.length" class="flex flex-wrap">
                                         <template v-for="(tagItem, tagIndex) in item.goods_label_name">
                                             <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')" />

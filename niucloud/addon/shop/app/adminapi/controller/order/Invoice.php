@@ -19,6 +19,7 @@ class Invoice extends BaseAdminController
 {
     /**
      * 发票列表
+     * @description  查看发票列表-分页
      * @return Response
      */
     public function lists()
@@ -35,6 +36,7 @@ class Invoice extends BaseAdminController
 
     /**
      * 发票信息
+     * @description 查看订单发票信息
      * @param int $order_id
      * @return Response
      */
@@ -43,6 +45,11 @@ class Invoice extends BaseAdminController
         return success((new InvoiceService())->getInfo($id));
     }
 
+    /**
+     * @description 开具发表
+     * @param int $id
+     * @return Response
+     */
     public function invoicing(int $id) {
         $data = $this->request->params([
             ['remark', ''],

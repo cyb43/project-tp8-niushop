@@ -117,6 +117,9 @@ class CoreCloudBuildService extends BaseCoreService
      */
     public function cloudBuild()
     {
+        if (empty($this->auth_code)) {
+            throw new CommonException('CLOUD_BUILD_AUTH_CODE_NOT_FOUND');
+        }
         if ($this->build_task) throw new CommonException('CLOUD_BUILD_TASK_EXIST');
 
         $action_token = ( new CoreModuleService() )->getActionToken('cloudbuild', [ 'data' => [ 'product_key' => BaseNiucloudClient::PRODUCT ] ]);

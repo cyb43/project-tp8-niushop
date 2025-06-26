@@ -25,7 +25,7 @@
                         <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
                     </el-form-item>
                 </el-form>
-            </el-card> 
+            </el-card>
 
             <div class="mt-[10px]">
                 <el-table :data="labelTable.data" size="large" v-loading="labelTable.loading" @sort-change="sortChange">

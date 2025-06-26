@@ -3,12 +3,7 @@
         <view class="mescroll-box bg-[var(--page-bg-color)]"
               :class="{ 'cart': config.cart.control && config.cart.event === 'cart', 'detail': !(config.cart.control && config.cart.event === 'cart') }" v-if="tabsData.length">
             <mescroll-body ref="mescrollRef" :down="{ use: false }" @init="mescrollInit" @up="getListFn">
-                <!--  #ifdef H5 -->
                 <view v-if="config.search.control" class="search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[100rpx] box-border">
-                <!--  #endif -->
-                <!--  #ifndef H5 -->
-                <view v-if="config.search.control" class="search-box z-10 bg-[#fff] fixed top-[156rpx] left-0 right-0 h-[100rpx] box-border">
-                <!--  #endif -->
                     <view class="flex-1 search-input">
                         <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                         <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" @confirm="searchNameFn" placeholderClass="text-[var(--text-color-light9)]">
@@ -31,7 +26,7 @@
                 </view>
                 <!--  #endif -->
                 <!--  #ifndef  H5 -->
-                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0" :class="{ 'top-[258rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
+                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0" :class="{ 'top-[98rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
                     <scroll-view :scroll-y="true" class="scroll-height">
                         <view class="bg-[var(--temp-bg)]">
                             <view class="tab-item" :class="{ 'tab-item-active': index == tabActive,'rounded-br-[12rpx]':tabActive-1===index,'rounded-tr-[12rpx]':tabActive+1===index}"
@@ -76,7 +71,7 @@
                                             </view>
                                         </view>
                                         <template
-                                            v-else-if="(item.goods_type == 'virtual' && config.cart.event !== 'cart') || item.goods_type == 'real'">
+                                            v-else-if="(item.goods_type == 'virtual' && item.virtual_receive_type != 'verify') || item.goods_type == 'real'">
                                             <view v-if="config.cart.control && config.cart.style === 'style-1'" class="h-[44rpx] relative">
                                                 <view :id="'itemCart' + index"
                                                       class="w-[102rpx] box-border text-center text-[#fff] primary-btn-bg h-[46rpx] text-[22rpx] leading-[46rpx] rounded-[100rpx]"
@@ -184,7 +179,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, getCurrentInstance } from 'vue';
 import { t } from '@/locale';
-import { img, redirect, getToken } from '@/utils/common';
+import { img, redirect } from '@/utils/common';
 import { getGoodsCategoryTree, getGoodsPages } from '@/addon/shop/api/goods';
 import MescrollBody from '@/components/mescroll/mescroll-body/mescroll-body.vue';
 import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.vue';

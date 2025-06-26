@@ -13,7 +13,7 @@
                         </el-radio-group>
                         <p class="text-[12px] text-[#b2b2b2]" v-if="formData.interface_type == 1">
                             {{ t('promptTips1-1') }}
-                            <el-button class="button-size" type="primary" link @click="openEvent('https://www.kdniao.com')">https://www.kdniao.com</el-button>
+                            <el-button class="button-size" type="primary" link @click="openEvent('https://www.kdniao.com/reg?from=niucloud')">https://www.kdniao.com</el-button>
                         </p>
                         <!--<p class="text-[12px] text-[#b2b2b2]" v-if="formData.interface_type == 2">-->
                         <!--{{ t('promptTips2') }}<el-button class="button-size" type="primary" link @click="openEvent('https://www.kuaidi100.com')">https://www.kuaidi100.com</el-button>-->

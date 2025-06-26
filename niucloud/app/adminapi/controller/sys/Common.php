@@ -17,11 +17,15 @@ use think\Response;
 
 /**
  * 公共数据字典
+ * Class Common
+ * @description 公共数据字典
+ * @package app\adminapi\controller\sys
  */
 class Common extends BaseAdminController
 {
     /**
      * 月份
+     * @description 月份
      * @return Response
      */
     public function getMonth()
@@ -31,12 +35,12 @@ class Common extends BaseAdminController
 
     /**
      * 星期
+     * @description 星期
      * @return Response
      */
     public function getWeek()
     {
         return success((new DateDict())->getWeek());
     }
-
 
 }

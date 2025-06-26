@@ -98,6 +98,7 @@
                 <el-form-item :label="t('goodsCartIncident')" v-if="diyStore.editComponent.btnStyle.control">
                     <el-radio-group v-model="diyStore.editComponent.btnStyle.cartEvent">
                         <el-radio label="detail">{{ t('goodsDetail') }}</el-radio>
+                        <el-radio v-if="diyStore.editComponent.style != 'style-3'" label="cart">{{ t('goodsAddCart') }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="t('goodsBtnStyle')" class="!items-center" v-if="diyStore.editComponent.btnStyle.control">
@@ -122,7 +123,6 @@
                 </el-form-item>
             </el-form>
         </div>
-
 
         <div class="edit-attr-item-wrap">
             <h3 class="mb-[10px]">{{ t("goodsShowContent") }}</h3>
@@ -242,7 +242,6 @@ onMounted(() => {
     loadCategoryList()
 })
 
-
 const styleChangeFn = (style) => {
     btnStyleList.forEach((item, index, arr) => {
         if (item.type == "button") {
@@ -254,20 +253,18 @@ const styleChangeFn = (style) => {
         }
     })
 
-    if (style == "style-3") {
+    if (style == 'style-3') {
         diyStore.editComponent.btnStyle.style = btnStyleList[1].value
+        diyStore.editComponent.btnStyle.cartEvent = 'detail'
+
+        diyStore.editComponent.saleStyle.isShow = false
+        diyStore.editComponent.labelStyle.isShow = false
     } else {
         diyStore.editComponent.btnStyle.style = btnStyleList[0].value
-    }
 
-    if (style == "style-3") {
-        diyStore.editComponent.saleStyle.isShow = false;
-        diyStore.editComponent.labelStyle.isShow = false;
-    } else {
-        diyStore.editComponent.saleStyle.isShow = true;
-        diyStore.editComponent.labelStyle.isShow = true;
+        diyStore.editComponent.saleStyle.isShow = true
+        diyStore.editComponent.labelStyle.isShow = true
     }
-
     diyStore.editComponent.style = style;
 }
 

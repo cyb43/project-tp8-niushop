@@ -18,11 +18,14 @@ use think\Response;
 
 /**
  * 自动任务
+ * @description 自动任务
+ * @package app\adminapi\controller\sys
  */
 class Schedule extends BaseAdminController
 {
     /**
      * 任务列表
+     * @description 任务列表
      * @return Response
      */
     public function lists()
@@ -32,11 +35,11 @@ class Schedule extends BaseAdminController
             ['status', 'all'],
         ]);
         return success(data: (new ScheduleService())->getPage($data));
-
     }
 
     /**
      * 计划任务模板
+     * @description 计划任务模板
      * @return Response
      */
     public function template()
@@ -46,6 +49,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 获取任务模式
+     * @description 获取任务模式
      * @return Response
      */
     public function getType()
@@ -55,6 +59,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 详情
+     * @description 详情
      * @param int $id
      * @return Response
      */
@@ -65,6 +70,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 添加
+     * @description 添加
      * @return Response
      */
     public function add()
@@ -81,6 +87,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 编辑
+     * @description 编辑
      * @param int $id
      * @return Response
      */
@@ -97,6 +104,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 启用或关闭
+     * @description 启用或关闭
      * @param int $id
      * @return Response
      */
@@ -111,6 +119,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 删除
+     * @description 删除
      * @param int $id
      * @return Response
      */
@@ -122,6 +131,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 时间间隔类型
+     * @description 时间间隔类型
      * @return Response
      */
     public function getDateType()
@@ -131,6 +141,7 @@ class Schedule extends BaseAdminController
 
     /**
      * 执行一次任务
+     * @description 执行一次任务
      * @param int $id
      * @return Response
      */

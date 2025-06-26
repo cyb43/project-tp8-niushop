@@ -55,7 +55,7 @@ class Member extends Validate
         'edit' => ['sex', 'birthday','mobile'],
         'modify' => ['sex', 'birthday','mobile'],
         'account_register' => ['username', 'password', 'mobile'],
-        'reset_password' => ['password', 'mobile'],
+        'reset_password' => ['password'],
         'set_status' => ['status']
     ];
 

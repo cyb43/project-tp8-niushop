@@ -15,9 +15,17 @@ use app\dict\pay\RefundDict;
 use app\service\admin\pay\RefundService;
 use core\base\BaseAdminController;
 
+/**
+ * 退款管理
+ * Class PayRefund
+ * @description 退款管理
+ * @package app\adminapi\controller\pay
+ */
 class PayRefund extends BaseAdminController
 {
     /**
+     * 退款状态
+     * @description 退款状态
      * @return \think\Response
      */
     public function getStatus()
@@ -26,6 +34,7 @@ class PayRefund extends BaseAdminController
     }
     /**
      * 退款列表
+     * @description 退款列表
      * @return \think\Response
      */
     public function pages()
@@ -40,6 +49,7 @@ class PayRefund extends BaseAdminController
 
     /**
      * 退款详情
+     * @description 退款详情
      * @param $refund_no
      * @return \think\Response
      */
@@ -50,6 +60,7 @@ class PayRefund extends BaseAdminController
 
     /**
      * 获取退款方式
+     * @description 获取退款方式
      */
     public function getRefundType()
     {
@@ -58,6 +69,7 @@ class PayRefund extends BaseAdminController
 
     /**
      * 转账
+     * @description 转账
      * @return \think\Response
      */
     public function transfer()

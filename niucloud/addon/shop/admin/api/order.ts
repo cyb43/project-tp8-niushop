@@ -248,3 +248,11 @@ export function getOrderBatchDeliveryState() {
 export function getOrderBatchDeliveryType() {
     return request.get(`shop/order_batch_delivery/get_type`)
 }
+
+/**
+ * 关闭售后
+ * @return
+ */
+export function closeRefund(order_refund_no: number) {
+    return request.put(`shop/order/refund/close/${order_refund_no}`)
+}

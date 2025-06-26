@@ -178,7 +178,7 @@ const selectStore = (data:any) => {
     formData.take_store_id = data
 }
 
-const addressChange=()=>{
+const addressChange = () => {
     formData.taker_address = ''
 }
 

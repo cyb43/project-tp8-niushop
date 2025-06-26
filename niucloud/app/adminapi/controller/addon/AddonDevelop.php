@@ -16,11 +16,18 @@ use app\service\admin\addon\AddonDevelopService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 开发插件
+ * Class AddonDevelop
+ * @description 开发插件
+ * @package app\adminapi\controller\addon
+ */
 class AddonDevelop extends BaseAdminController
 {
 
     /**
      * 开发插件列表
+     * @description 开发插件列表
      */
     public function lists()
     {
@@ -30,6 +37,12 @@ class AddonDevelop extends BaseAdminController
         return success(( new AddonDevelopService() )->getList($data[ 'search' ]));
     }
 
+    /**
+     * 开发插件详情
+     * @description 开发插件详情
+     * @param $key
+     * @return Response
+     */
     public function info($key)
     {
         return success(( new AddonDevelopService() )->getInfo($key));
@@ -37,6 +50,7 @@ class AddonDevelop extends BaseAdminController
 
     /**
      * 开发插件新增
+     * @description 开发插件新增
      * @return Response
      */
     public function add(string $key)
@@ -60,6 +74,7 @@ class AddonDevelop extends BaseAdminController
 
     /**
      * 开发插件更新
+     * @description 开发插件更新
      * @param string $id
      * @return Response
      */
@@ -85,6 +100,7 @@ class AddonDevelop extends BaseAdminController
 
     /**
      * 删除开发插件
+     * @description 删除开发插件
      * @param $key
      * @return Response
      */
@@ -95,7 +111,8 @@ class AddonDevelop extends BaseAdminController
     }
 
     /**
-     *校验key是否被占用
+     * 校验key是否被占用
+     * @description 校验key是否被占用
      * @param $key
      * @return void
      */
@@ -106,6 +123,7 @@ class AddonDevelop extends BaseAdminController
 
     /**
      * 打包
+     * @description 打包
      * @param $key
      * @return Response
      */
@@ -117,6 +135,7 @@ class AddonDevelop extends BaseAdminController
 
     /**
      * 下载
+     * @description 下载
      * @param $key
      * @return Response
      */
@@ -127,7 +146,8 @@ class AddonDevelop extends BaseAdminController
     }
 
     /**
-     *
+     * 插件key黑名单
+     * @description 插件key黑名单
      * @return Response
      */
     public function keyBlackList()

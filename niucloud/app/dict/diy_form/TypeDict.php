@@ -11,6 +11,7 @@
 
 namespace app\dict\diy_form;
 
+use app\dict\sys\AppTypeDict;
 use core\dict\DictLoader;
 
 /**
@@ -33,6 +34,15 @@ class TypeDict
                 'preview' => 'static/resource/images/diy_form/diy_from_preview.jpg', // 预览图
                 'sort' => 10001,
                 'addon' => ''
+            ],
+            //个人资料
+            'DIY_FORM_MEMBER_INFO' => [
+                'title' => get_lang('dict_diy_form.type_diy_form_member_info'),
+                'preview' => 'static/resource/images/diy_form/diy_form_member_info_preview.jpg', // 预览图
+                'sort' => 10002,
+                'addon' => '',
+                'app_type' => [AppTypeDict::ADMIN],
+                "show_submit" => true, // 是否显示表单提交组件
             ],
             //签到报名登记 todo 靠后完善
 //            'SIGN_REGISTRATION' => [

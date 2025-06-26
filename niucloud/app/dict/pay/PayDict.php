@@ -44,7 +44,7 @@ class PayDict
     public const STATUS_FINISH = '2';//已支付
 
     public const STATUS_AUDIT = '3';//待审核
-    public const STATUS_CANCLE = '-1';//已取消
+    public const STATUS_CANCEL = '-1';//已取消
 
     public const MEMBER = 'member';
     public const USER = 'user';
@@ -112,7 +112,7 @@ class PayDict
             self::STATUS_WAIT => get_lang('dict_pay.status_wait'),
             self::STATUS_ING => get_lang('dict_pay.status_ing'),
             self::STATUS_FINISH => get_lang('dict_pay.status_finish'),
-            self::STATUS_CANCLE => get_lang('dict_pay.status_cancle'),
+            self::STATUS_CANCEL => get_lang('dict_pay.status_cancel'),
             self::STATUS_AUDIT => get_lang('dict_pay.status_audit')
         ];
     }

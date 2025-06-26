@@ -13,6 +13,7 @@
                         <el-select v-model="orderTable.searchParam.search_type" clearable class="input-item">
                             <el-option :label="t('orderNo')" value="order_no"></el-option>
                             <el-option :label="t('outTradeNo')" value="out_trade_no"></el-option>
+                            <el-option :label="t('goodsName')" value="goods_name"></el-option>
                         </el-select>
                         <el-input class="input-item ml-3" v-model.trim="orderTable.searchParam.search_name" />
                     </el-form-item>

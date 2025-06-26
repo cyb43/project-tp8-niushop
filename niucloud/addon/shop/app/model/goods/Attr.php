@@ -46,6 +46,19 @@ class Attr extends BaseModel
         }
     }
 
+
+    /**
+     * 搜索器:商品参数商品参数id
+     * @param $value
+     * @param $data
+     */
+    public function searchAttrIdArrAttr($query, $value, $data)
+    {
+        if ($value) {
+            $query->where("attr_id", 'in', $value);
+        }
+    }
+
     /**
      * 搜索器:商品参数参数名称
      * @param $value

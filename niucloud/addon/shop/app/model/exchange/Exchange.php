@@ -13,6 +13,9 @@ namespace addon\shop\app\model\exchange;
 
 
 use addon\shop\app\dict\active\ExchangeDict;
+use addon\shop\app\model\goods\Brand;
+use addon\shop\app\model\goods\Goods;
+use addon\shop\app\model\goods\Label;
 use app\dict\sys\FileDict;
 use core\base\BaseModel;
 use think\db\Query;
@@ -41,7 +44,7 @@ class Exchange extends BaseModel
     ];
 
     // 设置json类型字段
-    protected $json = [ 'product_detail' ];
+    protected $json = ['product_detail'];
 
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
@@ -116,14 +119,14 @@ class Exchange extends BaseModel
      */
     public function searchCreateTimeAttr(Query $query, $value, $data)
     {
-        $start_time = empty($value[ 0 ]) ? 0 : strtotime($value[ 0 ]);
-        $end_time = empty($value[ 1 ]) ? 0 : strtotime($value[ 1 ]);
+        $start_time = empty($value[0]) ? 0 : strtotime($value[0]);
+        $end_time = empty($value[1]) ? 0 : strtotime($value[1]);
         if ($start_time > 0 && $end_time > 0) {
             $query->whereBetweenTime('create_time', $start_time, $end_time);
         } else if ($start_time > 0 && $end_time == 0) {
-            $query->where([ [ 'create_time', '>=', $start_time ] ]);
+            $query->where([['create_time', '>=', $start_time]]);
         } else if ($start_time == 0 && $end_time > 0) {
-            $query->where([ [ 'create_time', '<=', $end_time ] ]);
+            $query->where([['create_time', '<=', $end_time]]);
         }
     }
 
@@ -159,10 +162,10 @@ class Exchange extends BaseModel
      */
     public function getTypeNameAttr($value, $data)
     {
-        if (empty($data[ 'type' ])) {
+        if (empty($data['type'])) {
             return '';
         }
-        return ExchangeDict::getType()[ $data[ 'type' ] ] ?? '';
+        return ExchangeDict::getType()[$data['type']] ?? '';
     }
 
     /**
@@ -173,10 +176,10 @@ class Exchange extends BaseModel
      */
     public function getStatusNameAttr($value, $data)
     {
-        if (empty($data[ 'status' ]) && $data[ 'status' ] != 0) {
+        if (empty($data['status']) && $data['status'] != 0) {
             return '';
         }
-        return ExchangeDict::getStatus()[ $data[ 'status' ] ] ?? '';
+        return ExchangeDict::getStatus()[$data['status']] ?? '';
     }
 
     /**
@@ -184,9 +187,9 @@ class Exchange extends BaseModel
      */
     public function getGoodsCoverThumbSmallAttr($value, $data)
     {
-        $data[ 'goods_cover' ] = explode(',', $data[ 'image' ])[ 0 ];
-        if (isset($data[ 'goods_cover' ]) && $data[ 'goods_cover' ] != '') {
-            return get_thumb_images($data[ 'goods_cover' ], FileDict::SMALL);
+        $data['goods_cover'] = explode(',', $data['image'])[0];
+        if (isset($data['goods_cover']) && $data['goods_cover'] != '') {
+            return get_thumb_images($data['goods_cover'], FileDict::SMALL);
         }
         return [];
     }
@@ -196,9 +199,9 @@ class Exchange extends BaseModel
      */
     public function getGoodsCoverThumbMidAttr($value, $data)
     {
-        $data[ 'goods_cover' ] = explode(',', $data[ 'image' ])[ 0 ];
-        if (isset($data[ 'goods_cover' ]) && $data[ 'goods_cover' ] != '') {
-            return get_thumb_images($data[ 'goods_cover' ], FileDict::MID);
+        $data['goods_cover'] = explode(',', $data['image'])[0];
+        if (isset($data['goods_cover']) && $data['goods_cover'] != '') {
+            return get_thumb_images($data['goods_cover'], FileDict::MID);
         }
         return [];
     }
@@ -208,9 +211,9 @@ class Exchange extends BaseModel
      */
     public function getGoodsCoverThumbBigAttr($value, $data)
     {
-        $data[ 'goods_cover' ] = explode(',', $data[ 'image' ])[ 0 ];
-        if (isset($data[ 'goods_cover' ]) && $data[ 'goods_cover' ] != '') {
-            return get_thumb_images($data[ 'goods_cover' ], FileDict::BIG);
+        $data['goods_cover'] = explode(',', $data['image'])[0];
+        if (isset($data['goods_cover']) && $data['goods_cover'] != '') {
+            return get_thumb_images($data['goods_cover'], FileDict::BIG);
         }
         return [];
     }
@@ -220,8 +223,8 @@ class Exchange extends BaseModel
      */
     public function getGoodsImageThumbSmallAttr($value, $data)
     {
-        if (isset($data[ 'image' ]) && $data[ 'image' ] != '') {
-            $goods_image = explode(',', $data[ 'image' ]);
+        if (isset($data['image']) && $data['image'] != '') {
+            $goods_image = explode(',', $data['image']);
             $img_arr = [];
             foreach ($goods_image as $k => $v) {
                 $img = get_thumb_images($v, FileDict::SMALL);
@@ -239,8 +242,8 @@ class Exchange extends BaseModel
      */
     public function getGoodsImageThumbMidAttr($value, $data)
     {
-        if (isset($data[ 'image' ]) && $data[ 'image' ] != '') {
-            $goods_image = explode(',', $data[ 'image' ]);
+        if (isset($data['image']) && $data['image'] != '') {
+            $goods_image = explode(',', $data['image']);
             $img_arr = [];
             foreach ($goods_image as $k => $v) {
                 $img = get_thumb_images($v, FileDict::MID);
@@ -258,8 +261,8 @@ class Exchange extends BaseModel
      */
     public function getGoodsImageThumbBigAttr($value, $data)
     {
-        if (isset($data[ 'image' ]) && $data[ 'image' ] != '') {
-            $goods_image = explode(',', $data[ 'image' ]);
+        if (isset($data['image']) && $data['image'] != '') {
+            $goods_image = explode(',', $data['image']);
             $img_arr = [];
             foreach ($goods_image as $k => $v) {
                 $img = get_thumb_images($v, FileDict::BIG);
@@ -270,6 +273,28 @@ class Exchange extends BaseModel
             return $img_arr;
         }
         return [];
+    }
+
+    public function getGoodsBrandAttr($value, $data)
+    {
+        $product_detail = !is_array($data['product_detail']) ? json_decode($data['product_detail'], true) : $data['product_detail'];
+        $goods_id = $product_detail[0]['goods_id'];
+        $brand_id = (new Goods())->where([
+            ['goods_id', '=', $goods_id],
+        ])->value('brand_id') ?? 0;
+        $brand = (new Brand())->where([['brand_id', '=', $brand_id]])->field('brand_name,brand_id,color_json,logo')->findOrEmpty();
+        return $brand->isEmpty() ? null : $brand->toArray();
+    }
+
+    public function getGoodsLabelAttr($value, $data)
+    {
+        $product_detail = !is_array($data['product_detail']) ? json_decode($data['product_detail'], true) : $data['product_detail'];
+        $goods_id = $product_detail[0]['goods_id'];
+        $label_ids = (new Goods())->where([
+            ['goods_id', '=', $goods_id],
+        ])->value('label_ids') ?? [];
+        return (new Label())->where([ ['label_id', 'in', $label_ids]])->field('label_id,label_name,color_json,style_type,icon')->select()->toArray();
+
     }
 
 }

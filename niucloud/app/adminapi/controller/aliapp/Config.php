@@ -15,10 +15,17 @@ use app\service\admin\aliapp\AliappConfigService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 支付宝配置
+ * Class Config
+ * @description 支付宝配置
+ * @package app\adminapi\controller\aliapp
+ */
 class Config extends BaseAdminController
 {
     /**
      * 获取支付宝配置信息
+     * @description 获取支付宝配置信息
      * @return Response
      */
     public function get()
@@ -28,6 +35,7 @@ class Config extends BaseAdminController
 
     /**
      * 设置支付宝配置信息
+     * @description 设置支付宝配置信息
      * @return Response
      */
     public function set()
@@ -49,6 +57,7 @@ class Config extends BaseAdminController
 
     /**
      * 静态资源
+     * @description 静态资源
      * @return Response
      */
     public function static()

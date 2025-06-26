@@ -14,10 +14,13 @@ use app\adminapi\middleware\AdminCheckToken;
 use app\adminapi\middleware\AdminLog;
 use think\facade\Route;
 
+// 第三方配送
+Route::any('delivery/third/callback/:type/:order_no', 'addon\shop\app\adminapi\controller\delivery\Local@thirdDeliveryCallback');
+
 /**
  * 商城系统
  */
-Route::group('shop', function() {
+Route::group('shop', function () {
 
     /************************************************** 配送相关接口 *****************************************************/
     //物流公司 分页列表
@@ -106,6 +109,7 @@ Route::group('shop', function() {
 
     // 设置同城配送
     Route::put('local', 'addon\shop\app\adminapi\controller\delivery\Local@setLocal');
+    Route::get('third/init', 'addon\shop\app\adminapi\controller\delivery\Local@getThirdPartyInit');
 
     /************************************************** 接口管理 *******************************************************/
 
@@ -502,10 +506,10 @@ Route::group('shop', function() {
     //优惠券状态列表
     Route::get('goods/coupon/status', 'addon\shop\app\adminapi\controller\marketing\Coupon@getCouponStatus');
 
-   //发送优惠券范围列表
+    //发送优惠券范围列表
     Route::get('goods/coupon/send/init', 'addon\shop\app\adminapi\controller\marketing\Coupon@getSendRangeInit');
     Route::get('goods/coupon/send/pages/:coupon_id', 'addon\shop\app\adminapi\controller\marketing\Coupon@getSendPages');
-    Route::post('goods/coupon/send/:coupon_id', 'addon\shop\app\adminapi\controller\marketing\Coupon@addSendRecord');
+    Route::post('goods/coupon/send/:coupon_id', 'addon\shop\app\adminapi\controller\marketing\Coupon@sendCoupon');
 
     //商家地址库列表
     Route::get('shop_address', 'addon\shop\app\adminapi\controller\shop_address\ShopAddress@lists');
@@ -554,7 +558,7 @@ Route::group('shop', function() {
     //校验商品编码
     Route::post('goods/verify/skuno', 'addon\shop\app\adminapi\controller\goods\Goods@verifySkuNo');
 
-   //商品搜索配置
+    //商品搜索配置
     Route::get('goods/config/search', 'addon\shop\app\adminapi\controller\goods\Config@getSearchConfig');
     Route::post('goods/config/search', 'addon\shop\app\adminapi\controller\goods\Config@setSearchConfig');
 
@@ -599,8 +603,17 @@ Route::group('shop', function() {
     //删除
     Route::delete('active/discount/:discount_id', 'addon\shop\app\adminapi\controller\marketing\Discount@del');
 
+    //获取限时折扣状态列表
+    Route::get('active/discount/status', 'addon\shop\app\adminapi\controller\marketing\Discount@discountStatus');
+
     //关闭
     Route::put('active/discount/close/:discount_id', 'addon\shop\app\adminapi\controller\marketing\Discount@close');
+
+    //批量删除
+    Route::post('active/discount/batchDelete', 'addon\shop\app\adminapi\controller\marketing\Discount@batchDelete');
+
+    //批量关闭
+    Route::post('active/discount/batchClose', 'addon\shop\app\adminapi\controller\marketing\Discount@batchClose');
 
     //详情-基础信息
     Route::get('active/discount/info/:discount_id', 'addon\shop\app\adminapi\controller\marketing\Discount@info');
@@ -654,6 +667,15 @@ Route::group('shop', function() {
 
     //删除
     Route::delete('active/exchange/:id', 'addon\shop\app\adminapi\controller\marketing\Exchange@del');
+
+    //批量删除
+    Route::post('active/exchange/batchDelete', 'addon\shop\app\adminapi\controller\marketing\Exchange@batchDelete');
+
+    //批量下架
+    Route::post('active/exchange/batchDown', 'addon\shop\app\adminapi\controller\marketing\Exchange@batchDown');
+
+    //批量上架
+    Route::post('active/exchange/batchUp', 'addon\shop\app\adminapi\controller\marketing\Exchange@batchUp');
 
     //修改排序号
     Route::put('active/exchange/sort/:id', 'addon\shop\app\adminapi\controller\marketing\Exchange@modifySort');

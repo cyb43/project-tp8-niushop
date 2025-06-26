@@ -53,10 +53,12 @@ class DiscountService extends BaseApiService
                 }
             ])
             ->findOrEmpty()->toArray();
-        $info['active_id'] = $info['discount_id'];
-        $info['discount']['active_id'] = $info['active_id'];
-        $info['active'] = $info['discount'];
-        unset($info['discount']);
+        if(!empty($info)) {
+            $info[ 'active_id' ] = $info[ 'discount_id' ];
+            $info[ 'discount' ][ 'active_id' ] = $info[ 'active_id' ];
+            $info[ 'active' ] = $info[ 'discount' ];
+            unset($info[ 'discount' ]);
+        }
         return $info;
 
     }

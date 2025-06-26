@@ -72,7 +72,7 @@ const formData = ref({
     select_bg_color_start: "#FFFFFF",
     select_bg_color_end: "#FFEBD7",
     rank_images: "",
-});
+})
 
 const formRef = ref<FormInstance>();
 

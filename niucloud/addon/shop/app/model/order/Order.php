@@ -322,6 +322,7 @@ class Order extends BaseModel
             $search_name = $this->handelSpecialCharacter($data[ 'search_name' ]);
             if ($value == 'order_no') $query->where("order_no", "like", "%$search_name%");
             if ($value == 'out_trade_no') $query->where("order.out_trade_no", "like", "%$search_name%");
+            if ($value == 'goods_name') $query->where("order.body", "like", "%$search_name%");
         }
     }
 

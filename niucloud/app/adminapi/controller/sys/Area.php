@@ -15,10 +15,17 @@ use app\service\admin\sys\AreaService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 地区管理
+ * Class Area
+ * @description 地区管理
+ * @package app\adminapi\controller\sys
+ */
 class Area extends BaseAdminController
 {
     /**
-     * 拖过pid获取子项列表
+     * 根据pid获取子项列表
+     * @description 根据pid获取子项列表
      * @param int $pid
      * @return Response
      */
@@ -29,6 +36,7 @@ class Area extends BaseAdminController
 
     /**
      * 获取层级列表
+     * @description 获取层级列表
      * @param int $level
      * @return Response
      */
@@ -38,6 +46,8 @@ class Area extends BaseAdminController
     }
 
     /**
+     * 获取地址信息
+     * @description 获取地址信息
      * @return Response
      */
     public function addressInfo()
@@ -49,6 +59,8 @@ class Area extends BaseAdminController
     }
 
     /**
+     * 获取地址信息
+     * @description 获取地址信息
      * @return Response
      */
     public function contraryAddress()
@@ -60,7 +72,8 @@ class Area extends BaseAdminController
     }
 
     /**
-     *
+     * 根据code获取地址信息
+     * @description 根据code获取地址信息
      * @return void
      */
     public function areaByAreaCode(string $code) {

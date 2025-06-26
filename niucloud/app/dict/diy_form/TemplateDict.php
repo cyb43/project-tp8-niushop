@@ -82,7 +82,7 @@ class TemplateDict
                                 "imgUrl" => "",
                                 "imgWidth" => "",
                                 "imgHeight" => "",
-                                "count" => -1,
+                                "count" => 'once',
                                 "show" => 0,
                                 "link" => [
                                     "name" => ""
@@ -681,6 +681,392 @@ class TemplateDict
                         ]
                     ]
 
+                ],
+            ],
+            "DIY_FORM_MEMBER_INFO" => [
+                'member_info_form_data' => [ // 页面标识
+                    "title" => "个人资料", // 页面名称
+                    'cover' => '', // 页面封面图
+                    'preview' => '', // 页面预览图
+                    'desc' => '适用于会员个人资料字段补充收集', // 页面描述
+                    'containField' => '共7个字段，包含7个字段：姓名、身份证号、邮箱、职业、爱好、身份证人像面、身份证国徽面', // 包含字段
+                    // 页面数据源
+                    "data" => [
+                        "global" => [
+                            "title" => "个人资料",
+                            "completeLayout" => "style-1",
+                            "completeAlign" => "left",
+                            "borderControl" => true,
+                            "pageStartBgColor" => "rgba(255, 255, 255, 1)",
+                            "pageEndBgColor" => "",
+                            "pageGradientAngle" => "to bottom",
+                            "bgUrl" => "",
+                            "bgHeightScale" => 100,
+                            "imgWidth" => "",
+                            "imgHeight" => "",
+                            "topStatusBar" => [
+                                "isShow" => true,
+                                "bgColor" => "#ffffff",
+                                "rollBgColor" => "#ffffff",
+                                "style" => "style-1",
+                                "styleName" => "风格1",
+                                "textColor" => "#333333",
+                                "rollTextColor" => "#333333",
+                                "textAlign" => "center",
+                                "inputPlaceholder" => "请输入搜索关键词",
+                                "imgUrl" => "",
+                                "link" => [
+                                    "name" => ""
+                                ]
+                            ],
+                            "bottomTabBarSwitch" => true,
+                            "popWindow" => [
+                                "imgUrl" => "",
+                                "imgWidth" => "",
+                                "imgHeight" => "",
+                                "count" => -1,
+                                "show" => 0,
+                                "link" => [
+                                    "name" => ""
+                                ]
+                            ],
+                            "template" => [
+                                "textColor" => "#303133",
+                                "pageStartBgColor" => "",
+                                "pageEndBgColor" => "",
+                                "pageGradientAngle" => "to bottom",
+                                "componentBgUrl" => "",
+                                "componentBgAlpha" => 2,
+                                "componentStartBgColor" => "",
+                                "componentEndBgColor" => "",
+                                "componentGradientAngle" => "to bottom",
+                                "topRounded" => 0,
+                                "bottomRounded" => 0,
+                                "elementBgColor" => "",
+                                "topElementRounded" => 0,
+                                "bottomElementRounded" => 0,
+                                "margin" => [
+                                    "top" => 0,
+                                    "bottom" => 0,
+                                    "both" => 0
+                                ],
+                                "isHidden" => false
+                            ]
+                        ],
+                        "value" => [
+                            [
+                                "path" => "edit-form-input",
+                                "uses" => 0,
+                                "position" => "",
+                                "componentType" => "diy_form",
+                                "id" => "46wkksoz5ew0",
+                                "componentName" => "FormInput",
+                                "componentTitle" => "单行文本",
+                                "ignore" => [
+                                    "componentBgUrl"
+                                ],
+                                "field" => [
+                                    "name" => "姓名",
+                                    "remark" => [
+                                        "text" => "",
+                                        "color" => "#999999",
+                                        "fontSize" => 14
+                                    ],
+                                    "required" => true,
+                                    "unique" => false,
+                                    "autofill" => false,
+                                    "privacyProtection" => false,
+                                    "cache" => true,
+                                    "default" => "",
+                                    "value" => ""
+                                ],
+                                "placeholder" => "请输入姓名",
+                                "fontSize" => 14,
+                                "fontWeight" => "bold",
+                                "textColor" => "#303133",
+                                "pageStartBgColor" => "#FFFFFF",
+                                "pageEndBgColor" => "",
+                                "pageGradientAngle" => "to bottom",
+                                "componentBgUrl" => "",
+                                "componentBgAlpha" => 2,
+                                "componentStartBgColor" => "",
+                                "componentEndBgColor" => "",
+                                "componentGradientAngle" => "to bottom",
+                                "topRounded" => 0,
+                                "bottomRounded" => 0,
+                                "elementBgColor" => "",
+                                "topElementRounded" => 0,
+                                "bottomElementRounded" => 0,
+                                "margin" => [
+                                    "top" => 15,
+                                    "bottom" => 10,
+                                    "both" => 25
+                                ],
+                                "isHidden" => false,
+                                "pageStyle" => "background-color:#FFFFFF;padding-top:30rpx;padding-bottom:20rpx;padding-right:34rpx;padding-left:34rpx;"
+                            ],
+                            [
+                                "path" => "edit-form-identity",
+                                "uses" => 1,
+                                "componentType" => "diy_form",
+                                "id" => "4hy63cm1lj80",
+                                "componentName" => "FormIdentity",
+                                "componentTitle" => "身份证号",
+                                "ignore" => [
+                                    "componentBgUrl"
+                                ],
+                                "field" => [
+                                    "name" => "身份证号",
+                                    "remark" => [
+                                        "text" => "",
+                                        "color" => "#999999",
+                                        "fontSize" => 14
+                                    ],
+                                    "required" => false,
+                                    "unique" => true,
+                                    "autofill" => false,
+                                    "privacyProtection" => false,
+                                    'cache' => true,
+                                    "default" => "",
+                                    "value" => ""
+                                ],
+                                "placeholder" => "请输入身份证号",
+                                "fontSize" => 14,
+                                "fontWeight" => "bold",
+                                "textColor" => "#303133",
+                                "pageStartBgColor" => "#FFFFFF",
+                                "pageEndBgColor" => "",
+                                "pageGradientAngle" => "to bottom",
+                                "componentBgUrl" => "",
+                                "componentBgAlpha" => 2,
+                                "componentStartBgColor" => "",
+                                "componentEndBgColor" => "",
+                                "componentGradientAngle" => "to bottom",
+                                "topRounded" => 0,
+                                "bottomRounded" => 0,
+                                "elementBgColor" => "",
+                                "topElementRounded" => 0,
+                                "bottomElementRounded" => 0,
+                                "margin" => [
+                                    "top" => 5,
+                                    "bottom" => 10,
+                                    "both" => 25
+                                ],
+                                "isHidden" => false,
+                                "pageStyle" => "background-color:#FFFFFF;padding-top:10rpx;padding-bottom:20rpx;padding-right:34rpx;padding-left:34rpx;"
+                            ],
+                            [
+                                "path" => "edit-form-email",
+                                "uses" => 0,
+                                "componentType" => "diy_form",
+                                "id" => "13f2w3r9h9vg",
+                                "componentName" => "FormEmail",
+                                "componentTitle" => "邮箱",
+                                "ignore" => [
+                                    "componentBgUrl"
+                                ],
+                                "field" => [
+                                    "name" => "邮箱",
+                                    "remark" => [
+                                        "text" => "",
+                                        "color" => "#999999",
+                                        "fontSize" => 14
+                                    ],
+                                    "required" => false,
+                                    "unique" => false,
+                                    "autofill" => false,
+                                    "privacyProtection" => false,
+                                    'cache' => true,
+                                    "default" => "",
+                                    "value" => ""
+                                ],
+                                "placeholder" => "请输入邮箱",
+                                "fontSize" => 14,
+                                "fontWeight" => "bold",
+                                "textColor" => "#303133",
+                                "pageStartBgColor" => "#FFFFFF",
+                                "pageEndBgColor" => "",
+                                "pageGradientAngle" => "to bottom",
+                                "componentBgUrl" => "",
+                                "componentBgAlpha" => 2,
+                                "componentStartBgColor" => "",
+                                "componentEndBgColor" => "",
+                                "componentGradientAngle" => "to bottom",
+                                "topRounded" => 0,
+                                "bottomRounded" => 0,
+                                "elementBgColor" => "",
+                                "topElementRounded" => 0,
+                                "bottomElementRounded" => 0,
+                                "margin" => [
+                                    "top" => 5,
+                                    "bottom" => 10,
+                                    "both" => 25
+                                ],
+                                "isHidden" => false,
+                                "pageStyle" => "background-color:#FFFFFF;padding-top:10rpx;padding-bottom:20rpx;padding-right:34rpx;padding-left:34rpx;"
+                            ],
+                            [
+                                "path" => "edit-form-checkbox",
+                                "uses" => 0,
+                                "convert" => [],
+                                "componentType" => "diy_form",
+                                "id" => "4jcvmb2asve0",
+                                "componentName" => "FormCheckbox",
+                                "componentTitle" => "多选项",
+                                "ignore" => [
+                                    "componentBgUrl"
+                                ],
+                                "field" => [
+                                    "name" => "职业",
+                                    "remark" => [
+                                        "text" => "",
+                                        "color" => "#999999",
+                                        "fontSize" => 14
+                                    ],
+                                    "required" => true,
+                                    "unique" => false,
+                                    "autofill" => false,
+                                    "privacyProtection" => false,
+                                    'cache' => true,
+                                    "default" => [],
+                                    "value" => []
+                                ],
+                                "fontSize" => 14,
+                                "fontWeight" => "bold",
+                                "style" => "style-3",
+                                "options" => [
+                                    [
+                                        "id" => "incszbphksdt",
+                                        "text" => "选项1"
+                                    ],
+                                    [
+                                        "id" => "dzcjgipwkffx",
+                                        "text" => "选项2"
+                                    ]
+                                ],
+                                "selectableNum" => [
+                                    "min" => 0,
+                                    "max" => 0
+                                ],
+                                "textColor" => "#303133",
+                                "pageStartBgColor" => "#FFFFFF",
+                                "pageEndBgColor" => "",
+                                "pageGradientAngle" => "to bottom",
+                                "componentBgUrl" => "",
+                                "componentBgAlpha" => 2,
+                                "componentStartBgColor" => "",
+                                "componentEndBgColor" => "",
+                                "componentGradientAngle" => "to bottom",
+                                "topRounded" => 0,
+                                "bottomRounded" => 0,
+                                "elementBgColor" => "",
+                                "topElementRounded" => 0,
+                                "bottomElementRounded" => 0,
+                                "margin" => [
+                                    "top" => 5,
+                                    "bottom" => 10,
+                                    "both" => 25
+                                ],
+                                "isHidden" => false,
+                            ],
+                            [
+                                "path" => "edit-form-textarea",
+                                "uses" => 0,
+                                "componentType" => "diy_form",
+                                "id" => "64a0gh89tz40",
+                                "componentName" => "FormTextarea",
+                                "componentTitle" => "多行文本",
+                                "ignore" => [
+                                    "componentBgUrl"
+                                ],
+                                "field" => [
+                                    "name" => "爱好",
+                                    "remark" => [
+                                        "text" => "",
+                                        "color" => "#999999",
+                                        "fontSize" => 14
+                                    ],
+                                    "required" => false,
+                                    "unique" => false,
+                                    "autofill" => false,
+                                    "privacyProtection" => false,
+                                    'cache' => true,
+                                    "default" => "",
+                                    "value" => ""
+                                ],
+                                "placeholder" => "请输入特长优点",
+                                "fontSize" => 14,
+                                "fontWeight" => "bold",
+                                "rowCount" => 4,
+                                "textColor" => "#303133",
+                                "pageStartBgColor" => "#FFFFFF",
+                                "pageEndBgColor" => "",
+                                "pageGradientAngle" => "to bottom",
+                                "componentBgUrl" => "",
+                                "componentBgAlpha" => 2,
+                                "componentStartBgColor" => "",
+                                "componentEndBgColor" => "",
+                                "componentGradientAngle" => "to bottom",
+                                "topRounded" => 0,
+                                "bottomRounded" => 0,
+                                "elementBgColor" => "",
+                                "topElementRounded" => 0,
+                                "bottomElementRounded" => 0,
+                                "margin" => [
+                                    "top" => 5,
+                                    "bottom" => 10,
+                                    "both" => 25
+                                ],
+                                "isHidden" => false,
+                                "pageStyle" => "background-color:#FFFFFF;padding-top:10rpx;padding-bottom:20rpx;padding-right:34rpx;padding-left:34rpx;"
+                            ],
+                            [
+                                "path" => "edit-form-submit",
+                                "uses" => 1,
+                                "position" => "bottom_fixed",
+                                "componentType" => "diy_form",
+                                "id" => "38b02iygfzc0",
+                                "componentName" => "FormSubmit",
+                                "componentTitle" => "表单提交",
+                                "ignore" => [
+                                    "componentBgUrl"
+                                ],
+                                "btnPosition" => "follow_content",
+                                "submitBtn" => [
+                                    "text" => "提交",
+                                    "color" => "#ffffff",
+                                    "bgColor" => "#409EFF"
+                                ],
+                                "resetBtn" => [
+                                    "control" => true,
+                                    "text" => "重置",
+                                    "color" => "",
+                                    "bgColor" => ""
+                                ],
+                                "textColor" => "#303133",
+                                "pageStartBgColor" => "",
+                                "pageEndBgColor" => "",
+                                "pageGradientAngle" => "to bottom",
+                                "componentBgUrl" => "",
+                                "componentBgAlpha" => 2,
+                                "componentStartBgColor" => "",
+                                "componentEndBgColor" => "",
+                                "componentGradientAngle" => "to bottom",
+                                "topRounded" => 0,
+                                "bottomRounded" => 0,
+                                "elementBgColor" => "",
+                                "topElementRounded" => 50,
+                                "bottomElementRounded" => 50,
+                                "margin" => [
+                                    "top" => 5,
+                                    "bottom" => 5,
+                                    "both" => 25
+                                ],
+                                "isHidden" => false,
+                                "pageStyle" => "padding-top:10rpx;padding-bottom:10rpx;padding-right:20rpx;padding-left:20rpx;"
+                            ]
+                        ]
+                    ]
                 ],
             ],
             //  todo 靠后完善

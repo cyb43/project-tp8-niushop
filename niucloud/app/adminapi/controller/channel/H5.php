@@ -15,10 +15,16 @@ use app\service\admin\channel\H5Service;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * H5配置
+ * Class H5
+ * @package app\adminapi\controller\channel
+ */
 class H5 extends BaseAdminController
 {
     /**
      * 获取H5配置信息
+     * @description 获取H5配置信息
      * @return Response
      */
     public function get()
@@ -28,6 +34,7 @@ class H5 extends BaseAdminController
 
     /**
      * 设置H5配置信息
+     * @description 设置H5配置信息
      * @return Response
      */
     public function set()

@@ -113,7 +113,7 @@
 
                     <view class="flex justify-end">
                         <view class="min-w-[180rpx] box-border text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#ccc] text-[#333] rounded-full ml-[20rpx]"
-                            @click="refundBtnFn('cancel')" v-if="['6','7','8','-1'].indexOf(detail.status) == -1">{{ t('refundApply') }}</view>
+                            @click="refundBtnFn('cancel')" v-if="['6','7','8','-1','-3'].indexOf(detail.status) == -1">{{ t('refundApply') }}</view>
                         <view v-if="['3'].indexOf(detail.status) != -1" class="min-w-[180rpx] box-border text-[#333] text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"
                               @click.stop="refundBtnFn('edit')">编辑退款信息</view>
                         <view v-if="['2'].indexOf(detail.status) != -1" class="min-w-[180rpx] box-border text-[#333] text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"

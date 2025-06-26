@@ -25,6 +25,7 @@ class Newcomer extends BaseAdminController
 
     /**
      * 新人专享设置
+     * @description 设置新人专享配置
      * @return \think\Response
      */
     public function setConfig()
@@ -47,6 +48,7 @@ class Newcomer extends BaseAdminController
 
     /**
      * 获取新增专享配置
+     * @description 获取新增专享配置
      * @return \think\Response
      */
     public function getConfig()
@@ -56,6 +58,7 @@ class Newcomer extends BaseAdminController
 
     /**
      * 商品选择分页列表（按照单商品）
+     * @description 商品选择分页列表（按照单商品）
      * @return \think\Response
      */
     public function select()
@@ -76,6 +79,7 @@ class Newcomer extends BaseAdminController
 
     /**
      * 已选商品列表
+     * @description 获取已选商品列表
      * @return \think\Response
      */
     public function selectGoodsSku()

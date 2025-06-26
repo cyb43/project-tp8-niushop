@@ -42,6 +42,7 @@
   "goodsBtnResult": "按钮效果",
   "goodsBtnIsShow": "是否显示",
   "goodsCartIncident": "点击事件",
+  "goodsAddCart": "加入购物车",
   "goodsBtnStyle": "样式",
   "goodsSaleNum": "商品销量",
   "goodsDetail": "商品详情",
@@ -92,7 +93,7 @@
   "shopMemberInfoComponentAccountTextColor": "账户颜色",
   "shopMemberInfoComponentAccount": "账号信息",
   "shopGoodsRecommendComponentTag": "标签",
-  "shopGoodsRecommendComponentTagcolor": "标签颜色",
+  "shopGoodsRecommendComponentTagColor": "标签颜色",
   "shopGoodsRecommendComponentTagPlaceholder": "请输入标签内容",
   "shopGoodsRecommendComponentButtonBorderColor": "按钮边框颜色",
   "carouselStyle": "轮播样式",
@@ -143,5 +144,7 @@
   "pointExchangeSelectContentPointUnit": "积分",
   "pointExchangeSelectContentPriceUnit": "元",
   "pointExchangeSelectContentRedeemedAndSurplus": "已兑/剩余",
-  "pointExchangeSelectContentTips": "请选择积分商品"
+  "pointExchangeSelectContentTips": "请选择积分商品",
+  "categoryName": "分类名称",
+  "categoryImage": "分类图片"
 }

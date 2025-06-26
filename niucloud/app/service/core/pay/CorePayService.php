@@ -81,7 +81,7 @@ class CorePayService extends BaseCoreService
         $where = array(
             [ 'trade_type', '=', $trade_type ],
             [ 'trade_id', '=', $trade_id ],
-            [ 'status', '<>', PayDict::STATUS_CANCLE ],///不查询已取消的单据
+            [ 'status', '<>', PayDict::STATUS_CANCEL ],///不查询已取消的单据
         );
         return $this->model->where($where)->append([ 'type_name', 'status_name' ])->findOrEmpty();
     }
@@ -283,8 +283,8 @@ class CorePayService extends BaseCoreService
             $pay = $this->createByTrade($trade_type, $trade_id);
         }
         if ($pay[ 'status' ] == PayDict::STATUS_FINISH) throw new PayException('PAY_SUCCESS');
-//        if ($pay['status'] == PayDict::STATUS_CANCLE) throw new PayException('PAY_IS_REMOVE');
-        if ($pay[ 'status' ] == PayDict::STATUS_ING || $pay[ 'status' ] == PayDict::STATUS_CANCLE) {
+//        if ($pay['status'] == PayDict::STATUS_CANCEL) throw new PayException('PAY_IS_REMOVE');
+        if ($pay[ 'status' ] == PayDict::STATUS_ING || $pay[ 'status' ] == PayDict::STATUS_CANCEL) {
             if ($pay[ 'status' ] == PayDict::STATUS_ING) {
                 //尝试关闭原有的支付单据
                 $this->close($pay->out_trade_no);
@@ -354,7 +354,7 @@ class CorePayService extends BaseCoreService
     {
         $pay = $this->findPayInfoByOutTradeNo($out_trade_no);
         if ($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');
-        if ($pay[ 'status' ] == PayDict::STATUS_CANCLE) return true;
+        if ($pay[ 'status' ] == PayDict::STATUS_CANCEL) return true;
 
         if (!in_array($pay[ 'status' ], [
             PayDict::STATUS_WAIT,
@@ -420,7 +420,7 @@ class CorePayService extends BaseCoreService
 
         if ($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');
         if ($pay[ 'status' ] == PayDict::STATUS_FINISH) throw new PayException('DOCUMENT_IS_PAID');
-        if ($pay[ 'status' ] == PayDict::STATUS_CANCLE) throw new PayException('PAY_IS_REMOVE');
+        if ($pay[ 'status' ] == PayDict::STATUS_CANCEL) throw new PayException('PAY_IS_REMOVE');
         $status = $params[ 'status' ];
         switch ($status) {
             case OnlinePayDict::SUCCESS://支付成功
@@ -476,7 +476,7 @@ class CorePayService extends BaseCoreService
             }
         };
 
-        Log::write('业务_' . $channel . '_' . $type . '_' . $action);
+        Log::write('业务' . '_' . $channel . '_' . $type . '_' . $action);
         return $this->pay_event->init($channel, $type)->notify($action, $callback);
     }
 
@@ -491,7 +491,7 @@ class CorePayService extends BaseCoreService
         $pay = $this->findPayInfoByOutTradeNo($out_trade_no);
         if ($pay->isEmpty()) throw new PayException('ALIPAY_TRANSACTION_NO_NOT_EXIST');
         if ($pay[ 'status' ] == PayDict::STATUS_FINISH) throw new PayException('PAY_SUCCESS');//单据已支付
-        if ($pay[ 'status' ] == PayDict::STATUS_CANCLE) throw new PayException('PAY_IS_REMOVE');//单据已取消
+        if ($pay[ 'status' ] == PayDict::STATUS_CANCEL) throw new PayException('PAY_IS_REMOVE');//单据已取消
         //查询第三方支付单据
         $pay_info = $this->pay_event->init($pay->channel, $pay->type)->getOrder($out_trade_no);
         $type = $pay[ 'type' ];
@@ -579,7 +579,7 @@ class CorePayService extends BaseCoreService
         try {
             $pay = $this->findPayInfoByOutTradeNo($out_trade_no);
             $pay->save([
-                'status' => PayDict::STATUS_CANCLE,
+                'status' => PayDict::STATUS_CANCEL,
                 'fail_reason' => $data[ 'reason' ] ?? ''
             ]);
 

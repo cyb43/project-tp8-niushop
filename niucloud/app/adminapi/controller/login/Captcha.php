@@ -15,12 +15,18 @@ use app\service\admin\captcha\CaptchaService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 验证码
+ * Class Captcha
+ * @description 验证码
+ * @package app\adminapi\controller\login
+ */
 class Captcha extends BaseAdminController
 {
 
-
     /**
      * 创建验证码
+     * @description 创建验证码
      * @return Response
      */
     public function create()
@@ -30,6 +36,7 @@ class Captcha extends BaseAdminController
 
     /**
      * 一次校验验证码
+     * @description 一次校验验证码
      * @return Response
      */
     public function check()
@@ -39,6 +46,7 @@ class Captcha extends BaseAdminController
 
     /**
      * 二次校验验证码
+     * @description 二次校验验证码
      * @return Response
      */
     public function verification()

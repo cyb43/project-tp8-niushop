@@ -16,10 +16,17 @@ use app\service\admin\upload\UploadService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 上传管理
+ * Class Upload
+ * @description 上传管理
+ * @package app\adminapi\controller\upload
+ */
 class Upload extends BaseAdminController
 {
     /**
      * 图片上传
+     * @description 图片上传
      * @return Response
      */
     public function image()
@@ -36,6 +43,7 @@ class Upload extends BaseAdminController
 
     /**
      * 视频上传
+     * @description 视频上传
      * @return Response
      */
     public function video()
@@ -50,6 +58,7 @@ class Upload extends BaseAdminController
 
     /**
      * 文件上传(默认不上云)
+     * @description 文件上传
      * @return Response
      */
     public function document($type)
@@ -63,6 +72,7 @@ class Upload extends BaseAdminController
 
     /**
      * 上传配置
+     * @description 上传配置
      * @return Response
      */
     public function setUploadConfig()
@@ -81,6 +91,7 @@ class Upload extends BaseAdminController
 
     /**
      * 获取上传配置
+     * @description 获取上传配置
      * @return Response
      */
     public function getUploadConfig()

@@ -214,39 +214,45 @@ const router = useRouter()
 const visitStat = ref<any>(null)
 const hourStat = ref<any>(null)
 
-interface statTotalType{
-    order_num:  [number,string],
-    sale_money: [number,string],
-    refund_money:  [number,string],
-    access_sum:  [number,string]
+interface statTotalType {
+    order_num: [number, string],
+    sale_money: [number, string],
+    refund_money: [number, string],
+    access_sum: [number, string]
 }
-interface statTodayType{
-    order_num:  [number,string],
-    sale_money: [number,string],
-    refund_money:  [number,string],
-    access_sum:  [number,string]
+
+interface statTodayType {
+    order_num: [number, string],
+    sale_money: [number, string],
+    refund_money: [number, string],
+    access_sum: [number, string]
 }
-interface statYesterdayType{
-    order_num:  [number,string],
-    sale_money: [number,string],
-    refund_money:  [number,string],
-    access_sum:  [number,string]
+
+interface statYesterdayType {
+    order_num: [number, string],
+    sale_money: [number, string],
+    refund_money: [number, string],
+    access_sum: [number, string]
 }
-interface statOrderType{
-    wait_pay_order:  [number,string],
-    wait_delivery_order:  [number,string],
-    wait_take_order:  [number,string],
-    refund_order:  [number,string]
+
+interface statOrderType {
+    wait_pay_order: [number, string],
+    wait_delivery_order: [number, string],
+    wait_take_order: [number, string],
+    refund_order: [number, string]
 }
-interface statGoodsType{
-    sale_goods_num:  [number,string],
-    warehouse_goods_num:  [number,string]
+
+interface statGoodsType {
+    sale_goods_num: [number, string],
+    warehouse_goods_num: [number, string]
 }
-interface statCountType{
-    order_num:  [number,string],
+
+interface statCountType {
+    order_num: [number, string],
     time: string,
-    sale_money:  [number,string]
+    sale_money: [number, string]
 }
+
 const statTotal = ref<statTotalType|any>([])
 const statToday = ref<statTodayType|any>([])
 const statYesterday = ref<statYesterdayType|any>([])

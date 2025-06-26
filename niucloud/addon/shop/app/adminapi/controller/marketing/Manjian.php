@@ -26,6 +26,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 获取满减列表
+     * @description 查看满减活动列表
      * @return \think\Response
      */
     public function lists()
@@ -40,6 +41,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 满减送关闭
+     * @description 关闭满减活动
      * @return \think\Response
      */
     public function closeManjian($id)
@@ -50,6 +52,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 满减送删除
+     * @description 删除满减活动
      * @return \think\Response
      */
     public function del($id)
@@ -60,6 +63,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 满减送详情
+     * @description 查看满减活动详情
      * @param int $id
      * @return \think\Response
      */
@@ -70,6 +74,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 参与会员
+     * @description 查看满减活动参与会员
      * @param int $id
      * @return \think\Response
      * @throws \think\db\exception\DbException
@@ -85,6 +90,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 添加满减送
+     * @description 添加满减活动
      * @return \think\Response
      */
     public function add()
@@ -116,6 +122,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 获取满减送编辑数据
+     * @description 获取满减送编辑数据
      * @return \think\Response
      */
     public function init()
@@ -128,6 +135,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 商品编辑
+     * @description 编辑满减活动
      * @param $id
      * @return \think\Response
      */
@@ -159,6 +167,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 获取活动状态
+     * @description 获取满减送活动状态字典
      * @return \think\Response
      */
     public function status()
@@ -184,6 +193,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 批量关闭
+     * @description 批量关闭满减送活动
      * @return \think\Response
      */
     public function batchClose()
@@ -197,6 +207,7 @@ class Manjian extends BaseAdminController
 
     /**
      * 批量删除
+     * @description 批量删除满减送活动
      * @return \think\Response
      */
     public function batchDelete()

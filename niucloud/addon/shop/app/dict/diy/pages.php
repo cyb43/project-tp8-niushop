@@ -39,7 +39,7 @@ return [
                         "imgUrl" => "",
                         "imgWidth" => "",
                         "imgHeight" => "",
-                        "count" => -1,
+                        "count" => 'once',
                         "show" => 0,
                         "link" => [
                             "name" => ""
@@ -1456,7 +1456,7 @@ return [
                         "imgUrl" => "",
                         "imgWidth" => "",
                         "imgHeight" => "",
-                        "count" => -1,
+                        "count" => 'once',
                         "show" => 0,
                         "link" => [
                             "name" => ""
@@ -2956,7 +2956,7 @@ return [
                         "imgUrl" => "",
                         "imgWidth" => "",
                         "imgHeight" => "",
-                        "count" => -1,
+                        "count" => 'once',
                         "show" => 0,
                         "link" => [
                             "name" => ""
@@ -3529,7 +3529,7 @@ return [
                         "imgUrl" => "",
                         "imgWidth" => "",
                         "imgHeight" => "",
-                        "count" => -1,
+                        "count" => 'once',
                         "show" => 0,
                         "link" => [
                             "name" => ""

@@ -18,6 +18,7 @@ use app\model\member\Member;
 use app\model\member\MemberLabel;
 use app\model\member\MemberLevel;
 use app\service\core\diy_form\CoreDiyFormRecordsService;
+use app\service\core\member\CoreMemberConfigService;
 use core\base\BaseApiService;
 use core\exception\ApiException;
 
@@ -281,6 +282,45 @@ class DiyFormService extends BaseApiService
     }
 
     /**
+     * 编辑填表记录
+     * @param array $data
+     * @return array
+     */
+    public function editRecord(array $data = [])
+    {
+        $diy_form_records_model = new DiyFormRecords();
+        $records_info = $diy_form_records_model->field('form_id')->where([['record_id', '=', $data['record_id']], ['member_id', '=', $this->member_id]])->findOrEmpty()->toArray();
+        if (empty($records_info)) throw new ApiException('DIY_FORM_RECORDS_NOT_EXIST');
+
+        $data[ 'form_id' ] = $records_info[ 'form_id' ];
+        $data[ 'member_id' ] = $this->member_id;
+
+        $info = $this->model->field('status')->where([ [ 'form_id', '=', $records_info[ 'form_id' ] ] ])->findOrEmpty()->toArray();
+        if (empty($info)) throw new ApiException('DIY_FORM_NOT_EXIST');
+        if ($info[ 'status' ] == 0) throw new ApiException('DIY_FORM_NOT_OPEN');
+
+        $core_diy_form_records_service = new CoreDiyFormRecordsService();
+        $write_config = ( new DiyFormWriteConfig() )->where([
+            [ 'form_id', '=', $records_info[ 'form_id' ] ]
+        ])->findOrEmpty()->toArray();
+        if (!empty($write_config)) {
+            if ($error_msg = $this->checkMemberCanJoinOrNot($this->member_id, $write_config)) {
+                throw new ApiException($error_msg[ 'desc' ]);
+            }
+            if ($error_msg = $this->checkFormWriteTime($write_config)) {
+                throw new ApiException($error_msg[ 'desc' ]);
+            }
+            if ($error_msg = $this->checkFormWriteLimitNum($records_info[ 'form_id' ], $write_config)) {
+                throw new ApiException($error_msg[ 'desc' ]);
+            }
+            if ($error_msg = $this->checkMemberWriteLimitNum($this->member_id, $records_info[ 'form_id' ], $write_config)) {
+                throw new ApiException($error_msg[ 'desc' ]);
+            }
+        }
+        return $core_diy_form_records_service->edit($data);
+    }
+
+    /**
      * 获取表单填写结果信息
      * @param array $params
      * @return mixed
@@ -309,6 +349,45 @@ class DiyFormService extends BaseApiService
                 }
             ])->findOrEmpty()->toArray();
 
+        return $info;
+    }
+
+    /**
+     * 获取个人资料表单填写记录
+     * @param array $params
+     * @return mixed
+     */
+    public function getMemberInfoFormRecordInfo()
+    {
+        $info = [];
+        $config = (new CoreMemberConfigService())->getMemberConfig();
+        if (!empty($config['form_id'])) {
+            $diy_form_records_model = new DiyFormRecords();
+            $field = 'record_id,form_id,create_time';
+            $records_info = $diy_form_records_model->field($field)->where([['form_id', '=', $config['form_id']], ['member_id', '=', $this->member_id]])->with([
+                // 关联填写字段列表
+                'recordsFieldList' => function($query) {
+                    $query->field('id, form_id, form_field_id, record_id, field_key, field_type, field_name, field_value, field_required, field_unique, privacy_protection, update_num, update_time')->append([ 'handle_field_value', 'render_value' ]);
+                }
+            ])->order('create_time desc')->findOrEmpty()->toArray();
+
+            $form_info = $this->model->where([['form_id', '=', $config['form_id']], ['status', '=', 1]])->field('form_id,type')
+                ->with(['formField' => function($query) {
+                    $query->field('form_id,field_id as form_field_id,field_key,field_type,field_name,field_default as field_value,field_required,field_unique,privacy_protection');
+                }])->append([ 'type_name' ])->findOrEmpty()->toArray();
+
+            if (!empty($form_info)) {
+                if (!empty($records_info)) {
+                    $records_info['recordsFieldList'] = array_column($records_info['recordsFieldList'], null, 'field_key');
+                    foreach ($form_info['formField'] as $k => &$v) {
+                        if (!empty($records_info['recordsFieldList'][$v['field_key']])) {
+                            $v['field_value'] = $records_info['recordsFieldList'][$v['field_key']]['field_value'];
+                        }
+                    }
+                }
+                $info = $form_info;
+            }
+        }
         return $info;
     }
 

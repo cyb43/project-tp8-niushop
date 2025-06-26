@@ -15,11 +15,11 @@
                     <el-form-item :label="t('name')" prop="name">
                         <el-input v-model.trim="tableData.searchParam.name" :placeholder="t('namePlaceholder')" />
                     </el-form-item>
-                    <el-form-item :label="t('status')" prop='status'>
+                    <!-- <el-form-item :label="t('status')" prop='status'>
                         <el-select v-model="tableData.searchParam.status" clearable :placeholder="t('statusPlaceholder')" class="input-item">
                             <el-option v-for="(item, key) in activeStatusOption" :key="key" :label="item" :value="key"></el-option>
                         </el-select>
-                    </el-form-item>
+                    </el-form-item> -->
                     <el-form-item>
                         <el-button type="primary" @click="loadDiscountList()">{{ t('search') }}</el-button>
                         <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
@@ -29,11 +29,20 @@
 
             <!-- 列表 -->
             <div>
-                <el-table :data="tableData.data" size="large" v-loading="tableData.loading">
+                <el-tabs v-model="tableData.searchParam.status" class="goods-tabs" @tab-click="tabHandleClick">
+                    <el-tab-pane :label="t('全部')" name=""></el-tab-pane>
+                    <el-tab-pane v-for="(label, value) in activeStatusOption" :key="value" :label="label" :name="value"></el-tab-pane>
+                </el-tabs>
+                <div class="mb-[10px] flex items-center">
+                    <el-checkbox v-model="toggleCheckbox" size="large" class="px-[14px]" @change="toggleChange" :indeterminate="isIndeterminate" />
+                    <el-button @click="batchDeleteEvent" size="small" v-if="tableData.searchParam.status != 'active'">{{t("batchDelete")}}</el-button>
+                    <el-button @click="batchcloseEvent" size="small" v-if="tableData.searchParam.status =='active' || tableData.searchParam.status == '' || tableData.searchParam.status == null">{{t("batchClose")}}</el-button>
+                </div>
+                <el-table :data="tableData.data" size="large" v-loading="tableData.loading" ref="discountListTableRef" @selection-change="handleSelectionChange">
                     <template #empty>
                         <span>{{ !tableData.loading ? t('emptyData') : '' }}</span>
                     </template>
-
+                    <el-table-column type="selection" width="55" />
                     <el-table-column prop="name" :label="t('name')" min-width="130" />
                     <el-table-column prop="remark" :label="t('title')" min-width="130" />
                     <el-table-column prop="status_name" :label="t('status')" min-width="130" />
@@ -73,7 +82,7 @@
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, FormInstance } from 'element-plus'
-import { getActiveDiscountPageList,getActiveDiscountStatusList,closeActiveDiscount,deleteActiveDiscount } from "@/addon/shop/api/marketing";
+import { getActiveDiscountPageList,getActiveDiscountStatusList,closeActiveDiscount,deleteActiveDiscount,batchCloseActiveDiscount,batchDeleteActiveDiscount } from "@/addon/shop/api/marketing";
 import { t } from '@/lang'
 import discountDetail from '@/addon/shop/views/marketing/discount/components/discount-detail.vue'
 import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
@@ -95,6 +104,45 @@ const tableData = reactive({
     }
 })
 const searchFormRef = ref<FormInstance>()
+
+const tabHandleClick = (tab: any, event: Event) => {
+    tableData.searchParam.status = tab.props.name
+    loadDiscountList()
+}
+// 批量复选框
+const toggleCheckbox = ref()
+
+// 复选框中间状态
+const isIndeterminate = ref(false)
+
+// 监听批量复选框事件
+const toggleChange = (value: any) => {
+    isIndeterminate.value = false
+    discountListTableRef.value.toggleAllSelection()
+}
+
+const discountListTableRef = ref()
+
+// 选中数据
+const multipleSelection: any = ref([])
+
+// 监听表格单行选中
+const handleSelectionChange = (val: []) => {
+    multipleSelection.value = val
+
+    toggleCheckbox.value = false
+    if (multipleSelection.value.length > 0 && multipleSelection.value.length < tableData.data.length) {
+        isIndeterminate.value = true
+    } else {
+        isIndeterminate.value = false
+    }
+
+    if (multipleSelection.value.length == tableData.data.length && tableData.data.length && multipleSelection.value.length) {
+        toggleCheckbox.value = true
+    }
+}
+
+
 const loadDiscountList = (page: number = 1) => {
     tableData.loading = true
     tableData.page = page
@@ -166,6 +214,64 @@ const deleteEvent = (id:number)=>{
         }
     ).then(() => {
         deleteActiveDiscount(id).then(() => {
+            loadDiscountList()
+        }).catch(() => {
+        })
+    })
+}
+
+// 批量删除
+const batchDeleteEvent = () => {
+    if (multipleSelection.value.length == 0) {
+        ElMessage({
+            type: "warning",
+            message: `${ t("batchEmptySelectedGoodsTips") }`,
+        })
+        return
+    }
+
+    ElMessageBox.confirm(t("batchDeleteTips"), t("warning"), {
+        confirmButtonText: t("confirm"),
+        cancelButtonText: t("cancel"),
+        type: "warning"
+    }).then(() => {
+        const discount_ids: any = []
+        multipleSelection.value.forEach((item: any) => {
+            discount_ids.push(item.discount_id)
+        })
+
+        batchDeleteActiveDiscount({
+            ids: discount_ids
+        }).then(() => {
+            loadDiscountList()
+        }).catch(() => {
+        })
+    })
+}
+
+// 批量关闭
+const batchcloseEvent = () => {
+    if (multipleSelection.value.length == 0) {
+        ElMessage({
+            type: "warning",
+            message: `${ t("batchEmptySelectedGoodsTips") }`,
+        })
+        return
+    }
+
+    ElMessageBox.confirm(t("batchCloseTips"), t("warning"), {
+        confirmButtonText: t("confirm"),
+        cancelButtonText: t("cancel"),
+        type: "warning"
+    }).then(() => {
+        const discount_ids: any = []
+        multipleSelection.value.forEach((item: any) => {
+            discount_ids.push(item.discount_id)
+        })
+
+        batchCloseActiveDiscount({
+            ids: discount_ids
+        }).then(() => {
             loadDiscountList()
         }).catch(() => {
         })

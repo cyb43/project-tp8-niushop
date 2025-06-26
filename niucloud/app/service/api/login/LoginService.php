@@ -111,6 +111,54 @@ class LoginService extends BaseApiService
         $is_bind_mobile = $config[ 'is_bind_mobile' ];
         if ($is_mobile != 1 && $is_bind_mobile != 1) throw new AuthException('MOBILE_LOGIN_UNOPENED');
         $member_service = new MemberService();
+
+        if (!empty($params['openid'])) {
+            $mobile = $params[ 'mobile' ];
+            $openid = $params[ 'openid' ];
+;
+            $openid_field = match ( $this->channel ) {
+                    'wechat' => 'wx_openid',
+                    'weapp' => 'weapp_openid',
+                    default => ''
+            };
+
+            $openid_member_info = $member_service->findMemberInfo([ $openid_field => $openid ]);
+            $mobile_member_info = $member_service->findMemberInfo([ 'mobile' => $mobile ]);
+
+            //openid 账号已存在
+            if (!$openid_member_info->isEmpty()) {
+                // 手机号也存在
+                if (!$mobile_member_info->isEmpty()) {
+                    // 如果不是同一个人 抛异常
+                    if ($openid_member_info['member_id'] != $mobile_member_info['member_id']) {
+                        throw new AuthException('MOBILE_IS_EXIST'); // 手机号已被其他账号绑定
+                    }
+                    // 是同一个用户，直接登录
+                    return $this->login($mobile_member_info, MemberLoginTypeDict::MOBILE);
+                }
+
+                // 手机号不存在，给 openid 账号绑定手机号
+                $openid_member_info->mobile = $mobile;
+                $openid_member_info->save();
+                return $this->login($openid_member_info, MemberLoginTypeDict::MOBILE);
+            }
+
+            //openid 账号不存在
+            if (!$mobile_member_info->isEmpty()) {
+                // 手机号已存在，不能注册，避免重复
+                throw new AuthException('MOBILE_IS_EXIST');
+            }
+
+            //都不存在，执行注册
+            $data = [
+                'mobile'     => $mobile,
+                'nickname'   => $params['nickname'] ?? '',
+                'headimg'    => $params['headimg'] ?? '',
+                $openid_field  => $openid
+            ];
+            return (new RegisterService())->register($mobile, $data, MemberRegisterTypeDict::MOBILE, false);
+        }
+
         $member_info = $member_service->findMemberInfo([ 'mobile' => $params[ 'mobile' ] ]);
         if ($member_info->isEmpty()) {
             //开启强制绑定手机号，登录会自动注册并绑定手机号

@@ -18,6 +18,9 @@
                                 <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
                                 {{ item.goods_name }}
                             </view>
+							<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden mb-[5rpx]" v-if="item.sub_title">
+							    {{ item.sub_title }}
+							</view>
                             <view v-if="item.goods_label_name && item.goods_label_name.length && diyComponent.labelStyle.control" class="flex flex-wrap mb-[10rpx]">
                                 <template v-for="(tagItem, tagIndex) in item.goods_label_name">
                                     <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')"/>
@@ -43,13 +46,31 @@
                                         已售{{ item.sale_num }}{{ item.unit || '件' }}
                                     </text>
                                 </view>
-                                <view v-if="diyComponent.btnStyle.control" class="absolute right-[0] bottom-[0]">
-                                    <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="px-[18rpx] min-w-[100rpx] box-border h-[48rpx] flex items-center justify-center">
-                                        <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
+                                <view class="absolute right-[16rpx] bottom-[16rpx]" @click.stop v-if="diyComponent.btnStyle.control && !item.isMaxBuy || diyStore.mode == 'decorate'">
+                                    <view v-if="(item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && diyComponent.btnStyle.cartEvent === 'cart'" class="flex items-center">
+                                        <view class="relative w-[40rpx] h-[40rpx]">
+                                            <text class="!text-[40rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[12rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
+                                                @click.stop="reduceCart(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id])"></text>
+                                        </view>
+                                        <text class="text-[#333] text-[24rpx] mx-[16rpx] w-[20rpx] text-center">{{ cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id].num }}</text>
+                                        <view class="relative w-[40rpx] h-[40rpx]">
+                                            <text class="!text-[40rpx] text-color iconfont iconjiahao2fill absolute flex items-center justify-center -left-[14rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
+                                                :id="'itemCart' + index"
+                                                @click.stop="addCartBtn(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id], 'itemCart' + index)"></text>
+                                        </view>
                                     </view>
-                                    <view v-else :style="goodsBtnCss" class="w-[50rpx] h-[50rpx] rounded-[50%] flex items-center justify-center">
-                                        <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
-                                    </view>
+                                    <template v-else-if="(item.goods_type == 'virtual'  && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
+                                        <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="relative px-[18rpx] h-[48rpx] flex items-center justify-center bg-[red]" @click.stop="itemCart(item, 'itemCart' + index)">
+                                            <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
+                                            <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
+                                            :class="['absolute right-[-16rpx] top-[-16rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
+                                        </view>
+                                        <view v-else :style="goodsBtnCss" class="relative w-[46rpx] h-[46rpx] rounded-[50%] flex items-center justify-center" @click.stop="itemCart(item, 'itemCart' + index)">
+                                            <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
+                                            <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
+                                            :class="['absolute right-[-16rpx] top-[-16rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
+                                        </view>
+                                    </template>
                                 </view>
                             </view>
                         </view>
@@ -72,6 +93,9 @@
                                         <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
                                         {{ item.goods_name }}
                                     </view>
+									<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden my-[5rpx]" v-if="item.sub_title">
+									    {{ item.sub_title }}
+									</view>
                                     <view v-if="item.goods_label_name && item.goods_label_name.length && diyComponent.labelStyle.control" class="flex flex-wrap">
                                         <template v-for="(tagItem, tagIndex) in item.goods_label_name">
                                             <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')" />
@@ -97,13 +121,31 @@
                                                 已售{{ item.sale_num }}{{ item.unit || '件' }}
                                             </text>
                                         </view>
-                                        <view class="absolute right-[16rpx] bottom-[16rpx]" v-if="diyComponent.btnStyle.control">
-                                            <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="px-[18rpx] h-[48rpx] flex items-center justify-center">
-                                                <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
+                                        <view class="absolute right-[16rpx] bottom-[16rpx]" @click.stop v-if="diyComponent.btnStyle.control && !item.isMaxBuy || diyStore.mode == 'decorate'">
+                                            <view v-if="(item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && diyComponent.btnStyle.cartEvent === 'cart'" class="flex items-center">
+                                                <view class="relative w-[40rpx] h-[40rpx]">
+                                                    <text class="!text-[40rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[12rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
+                                                        @click.stop="reduceCart(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id])"></text>
+                                                </view>
+                                                <text class="text-[#333] text-[24rpx] mx-[16rpx] w-[20rpx] text-center">{{ cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id].num }}</text>
+                                                <view class="relative w-[40rpx] h-[40rpx]">
+                                                    <text class="!text-[40rpx] text-color iconfont iconjiahao2fill absolute flex items-center justify-center -left-[14rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
+                                                        :id="'itemCart' + index"
+                                                        @click.stop="addCartBtn(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id], 'itemCart' + index)"></text>
+                                                </view>
                                             </view>
-                                            <view v-else :style="goodsBtnCss" class="w-[46rpx] h-[46rpx] rounded-[50%] flex items-center justify-center">
-                                                <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
-                                            </view>
+                                            <template v-else-if="(item.goods_type == 'virtual' && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
+                                                <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="relative px-[18rpx] h-[48rpx] flex items-center justify-center bg-[red]" @click.stop="itemCart(item, 'itemCart' + index)">
+                                                    <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
+                                                    <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
+                                                    :class="['absolute right-[-16rpx] top-[-16rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
+                                                </view>
+                                                <view v-else :style="goodsBtnCss" class="relative w-[46rpx] h-[46rpx] rounded-[50%] flex items-center justify-center" @click.stop="itemCart(item, 'itemCart' + index)">
+                                                    <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
+                                                    <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
+                                                    :class="['absolute right-[-16rpx] top-[-16rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
+                                                </view>
+                                            </template>
                                         </view>
                                     </view>
                                 </view>
@@ -125,6 +167,9 @@
                                         <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
                                         {{ item.goods_name }}
                                     </view>
+									<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden my-[5rpx]" v-if="item.sub_title">
+									    {{ item.sub_title }}
+									</view>
                                     <view v-if="item.goods_label_name && item.goods_label_name.length && diyComponent.labelStyle.control" class="flex flex-wrap">
                                         <template v-for="(tagItem, tagIndex) in item.goods_label_name">
                                             <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')" />
@@ -149,13 +194,31 @@
                                                 已售{{ item.sale_num }}{{ item.unit || '件' }}
                                             </text>
                                         </view>
-                                        <view class="absolute right-[16rpx] bottom-[16rpx]" v-if="diyComponent.btnStyle.control">
-                                            <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="px-[18rpx] h-[48rpx] flex items-center justify-center">
-                                                <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
+                                        <view class="absolute right-[16rpx] bottom-[16rpx]" @click.stop v-if="diyComponent.btnStyle.control && !item.isMaxBuy || diyStore.mode == 'decorate'">
+                                            <view v-if="(item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && diyComponent.btnStyle.cartEvent === 'cart'" class="flex items-center">
+                                                <view class="relative w-[40rpx] h-[40rpx]">
+                                                    <text class="!text-[40rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[12rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
+                                                        @click.stop="reduceCart(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id])"></text>
+                                                </view>
+                                                <text class="text-[#333] text-[24rpx] mx-[16rpx] w-[20rpx] text-center">{{ cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id].num }}</text>
+                                                <view class="relative w-[40rpx] h-[40rpx]">
+                                                    <text class="!text-[40rpx] text-color iconfont iconjiahao2fill absolute flex items-center justify-center -left-[14rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
+                                                        :id="'itemCart' + index"
+                                                        @click.stop="addCartBtn(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id], 'itemCart' + index)"></text>
+                                                </view>
                                             </view>
-                                            <view v-else :style="goodsBtnCss" class="w-[46rpx] h-[46rpx] rounded-[50%] flex items-center justify-center">
-                                                <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
-                                            </view>
+                                            <template v-else-if="(item.goods_type == 'virtual'  && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
+                                                <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="relative px-[18rpx] h-[48rpx] flex items-center justify-center bg-[red]" @click.stop="itemCart(item, 'itemCart' + index)">
+                                                    <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
+                                                    <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
+                                                    :class="['absolute right-[-16rpx] top-[-16rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
+                                                </view>
+                                                <view v-else :style="goodsBtnCss" class="relative w-[46rpx] h-[46rpx] rounded-[50%] flex items-center justify-center" @click.stop="itemCart(item, 'itemCart' + index)">
+                                                    <text :class="['nc-iconfont', 'text-[30rpx]', diyComponent.btnStyle.style]"></text>
+                                                    <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
+                                                    :class="['absolute right-[-16rpx] top-[-16rpx] rounded-[30rpx] h-[30rpx] min-w-[30rpx] text-center leading-[26rpx] bg-[var(--primary-color)] text-[#fff] text-[20rpx] font-500 box-border box-border border-[2rpx] border-solid border-[#fff]', cartList['goods_' + item.goods_id].totalNum > 9 ? 'px-[10rpx]' : '']">{{ cartList['goods_' + item.goods_id].totalNum }}</view>
+                                                </view>
+                                            </template>
                                         </view>
                                     </view>
                                 </view>
@@ -194,6 +257,7 @@
                     </view>
 
                 </template>
+                <add-cart-popup ref="cartRef" />
             </view>
         </view>
     </x-skeleton>
@@ -206,6 +270,19 @@ import { redirect, img } from '@/utils/common';
 import useDiyStore from '@/app/stores/diy';
 import { getGoodsComponents } from '@/addon/shop/api/goods';
 import { useGoods } from '@/addon/shop/hooks/useGoods'
+import addCartPopup from '@/addon/shop/pages/goods/components/add-cart-popup.vue'
+import useCartStore from '@/addon/shop/stores/cart'
+import useMemberStore from '@/stores/member'
+import { useLogin } from '@/hooks/useLogin'
+import { cloneDeep } from 'lodash-es'
+
+const cartStore = useCartStore();
+// 查询购物车列表
+cartStore.getList();
+
+const memberStore = useMemberStore()
+const cartList = computed(() => cartStore.cartList)
+const userInfo = computed(() => memberStore.info)
 
 const diyGoods = useGoods();
 const props = defineProps(['component', 'index', 'value']);
@@ -367,8 +444,184 @@ const getGoodsListFn = () => {
                 if (diyComponent.value.style == 'style-3') setItemStyle3()
             }, 500)
         })
+
+        goodsMaxBuy()
     });
 }
+
+/*************** 加入购物车 - start ***********************/
+const goodsMaxBuy = () => {
+    goodsList.value.forEach((data, index) => {
+        data.isMaxBuy = false;
+
+        let maxBuyNum = -1;
+        // 限购 - 是否开启限购
+        if (data.is_limit) {
+            if (data.max_buy) {
+                let max_buy = 0;
+                if (data.limit_type == 1) { //单次限购
+                    max_buy = data.max_buy;
+                } else { // 单人限购
+                    let buyVal = data.max_buy - (data.has_buy || 0);
+                    max_buy = buyVal > 0 ? buyVal : 0;
+                }
+
+                if (max_buy > data.stock) {
+                    maxBuyNum = data.stock
+                } else if (max_buy <= data.stock) {
+                    maxBuyNum = max_buy;
+                }
+            }
+        }
+        if (maxBuyNum == 0) {
+            data.isMaxBuy = true;
+        }
+    })
+}
+
+// 商品价格
+const goodsPrice = (data: any) => {
+    let price = "0.00";
+	price = data.goodsSku.show_price
+    return price;
+}
+
+const animationAddCart = (row: any, id: any) => {
+    if (cartRepeatFlag.value) return false
+    cartRepeatFlag.value = true
+
+    let obj: any = {
+        goods_id: row.goodsSku.goods_id,
+        sku_id: row.goodsSku.sku_id,
+        sale_price: goodsPrice(row),
+        stock: row.goodsSku.stock
+    };
+    if (row.id) {
+        obj.num = row.num;
+        obj.id = row.id;
+    }
+
+    // 起购
+    let num = 1;
+    if (row.min_buy > 0 && !row.num) {
+        num = row.min_buy;
+    } else {
+        num = 1;
+    }
+
+    cartStore.increase(obj, num, () => {
+        cartRepeatFlag.value = false
+        cartStore.isAddCartRecommend = true
+    });
+}
+
+//点击商品购物车按钮
+const cartRef = ref()
+const cartRepeatFlag = ref<Boolean>(false)
+const itemCart = (row: any, id: any) => {
+    if(diyStore.mode == 'decorate') return false
+    // 虚拟商品，并且需要核销，禁止加入购物车
+    if (row.goods_type == 'virtual' && row.virtual_receive_type == 'verify') {
+        return toLink(row)
+    }
+    if (diyComponent.value.btnStyle.cartEvent !== 'cart') {
+        return toLink(row)
+    }
+
+    if (!userInfo.value) {
+        useLogin().setLoginBack({ url: '/addon/shop/pages/index' })
+        return false
+    }
+    
+    if (row.goodsSku.sku_spec_format) {
+        cartRef.value.open(row.goodsSku.sku_id)
+    } else {
+        //单规格添加购物车
+        if (!row.goodsSku.stock || parseInt(row.goodsSku.num || 0) > parseInt(row.goodsSku.stock)) {
+            uni.showToast({ title: '商品库存不足', icon: 'none' })
+            return;
+        }
+        if (row.min_buy && row.min_buy > parseInt(row.stock)) {
+            uni.showToast({ title: '商品库存小于起购数量', icon: 'none' })
+            return;
+        }
+        animationAddCart(row, id)
+    }
+}
+
+
+//点击购物车加号 添加数量
+const addCartBtn = (item: any, row: any, id: string) => {
+    if(diyStore.mode == 'decorate') return false
+    if (parseInt(row.num) >= parseInt(row.stock)) {
+        uni.showToast({ title: '商品库存不足', icon: 'none' })
+        return;
+    }
+
+    // 起购
+    let num = row.num;
+    if (item.min_buy > 0 && item.min_buy > row.num) {
+        num = item.min_buy;
+    }
+
+    /************** 限购-start *****************/
+    // let maxBuyNum = -1;
+    // 限购 - 是否开启限购
+    if (item.is_limit && item.max_buy) {
+        let max_buy = 0;
+        if (item.limit_type == 1) { //单次限购
+            max_buy = item.max_buy;
+        } else { // 单人限购
+            let buyVal = item.max_buy - (item.has_buy || 0);
+            max_buy = buyVal > 0 ? buyVal : 0;
+        }
+
+        // if(max_buy > item.goodsSku.stock){
+        // 	maxBuyNum = item.goodsSku.stock
+        // }else if(max_buy <= item.goodsSku.stock){
+        // 	maxBuyNum = max_buy;
+        // }
+    }
+    if (item.is_limit && num >= item.max_buy) {
+        let tips = `该商品单次限购${ item.max_buy }件`;
+        if (item.limit_type != 1) { //单次限购
+            tips = `该商品每人限购${ item.max_buy }件`;
+        }
+        uni.showToast({ title: tips, icon: 'none' })
+        return false;
+    }
+    /************** 限购-end *****************/
+
+    let obj = cloneDeep(item)
+    obj.num = num;
+    obj.id = row.id;
+    animationAddCart(obj, id)
+}
+
+//点击购物车减号
+const reduceCart = (data: any, row: any) => {
+    if (cartRepeatFlag.value || diyStore.mode == 'decorate') return false
+    cartRepeatFlag.value = true
+
+    let reduceNum = 1;
+    if (data.min_buy > 0 && data.min_buy == row.num) {
+        reduceNum = data.min_buy;
+    }
+
+    cartStore.reduce({
+        id: row.id,
+        goods_id: row.goods_id,
+        sku_id: row.sku_id,
+        stock: row.stock,
+        sale_price: row.sale_price,
+        num: row.num
+    }, reduceNum, () => {
+        cartRepeatFlag.value = false
+        cartStore.isAddCartRecommend = true
+    })
+
+}
+/*************** 加入购物车 - end ***********************/
 
 const initSkeleton = () => {
     if (diyComponent.value.style == 'style-1') {
@@ -468,5 +721,8 @@ const toLink = (data: any) => {
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-gap: 10px;
+}
+.text-color {
+    color: var(--primary-color);
 }
 </style>

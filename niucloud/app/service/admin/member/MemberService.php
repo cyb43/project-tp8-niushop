@@ -65,7 +65,7 @@ class MemberService extends BaseAdminService
     public function getList(array $where = [])
     {
         $field = 'member_id, nickname, headimg';
-        $temp_where[] = [];
+        $temp_where = [];
         if (!empty($where[ 'member_ids' ])) {
             $temp_where[] = [ 'member_id', 'in', implode(',', $where[ 'member_ids' ]) ];
         }
@@ -79,7 +79,7 @@ class MemberService extends BaseAdminService
      */
     public function getInfo(int $member_id)
     {
-        $field = 'member_id,member_no, username, mobile, password, register_channel, register_type, nickname, headimg, member_level, member_label, wx_openid, weapp_openid, wx_unionid, ali_openid, douyin_openid, login_ip, login_type, login_channel, login_count, login_time, create_time, last_visit_time, last_consum_time, sex, status, birthday, point, point_get, balance, balance_get, growth, growth_get, is_member, member_time, is_del, province_id, city_id, district_id, address, location, delete_time, money, money_get, commission, commission_get, commission_cash_outing';
+        $field = 'member_id,member_no, id_card,remark,username, mobile, password, register_channel, register_type, nickname, headimg, member_level, member_label, wx_openid, weapp_openid, wx_unionid, ali_openid, douyin_openid, login_ip, login_type, login_channel, login_count, login_time, create_time, last_visit_time, last_consum_time, sex, status, birthday, point, point_get, balance, balance_get, growth, growth_get, is_member, member_time, is_del, province_id, city_id, district_id, address, location, delete_time, money, money_get, commission, commission_get, commission_cash_outing';
         return $this->makeUp($this->model->where([ [ 'member_id', '=', $member_id ] ])->field($field)->with('member_level_name_bind')->append([ 'register_channel_name', 'register_type_name', 'sex_name', 'login_channel_name', 'login_type_name', 'status_name' ])->findOrEmpty()->toArray());
     }
 
@@ -153,6 +153,16 @@ class MemberService extends BaseAdminService
     public function modify(int $member_id, string $field, $data)
     {
         return ( new CoreMemberService() )->modify($member_id, $field, $data);
+    }
+
+    /**
+     * 批量修改字段
+     * @param $data
+     * @return Member
+     */
+    public function batchModify($data)
+    {
+        return ( new CoreMemberService() )->batchModify($data);
     }
 
     /**

@@ -59,26 +59,37 @@
                         <!-- 姓名 -->
                         <view class="px-[20rpx] py-[14rpx]">
                             <view class="flex justify-between items-center">
-                                <view class="text-color text-[28rpx]" @click="handleTime">姓名</view>
-                                <input class="text-right" maxlength="20" placeholder-style="color:#B1B3B5" placeholder="请输入" v-model="createData.delivery.taker_name" />
+                                <view class="text-color text-[26rpx]" @click="handleTime">姓名</view>
+                                <input class="text-right" maxlength="20" placeholder-style="color:#B1B3B5;font-size:26rpx" placeholder="请输入" v-model="createData.delivery.taker_name" />
                             </view>
                         </view>
                         <!-- 预留手机 -->
                         <view class="px-[20rpx] py-[14rpx]">
                             <view class="flex justify-between items-center">
-                                <view class="text-color text-[28rpx]">预留手机</view>
-                                <input class="text-right" maxlength="11" placeholder-style="color:#B1B3B5" placeholder="请输入" v-model="createData.delivery.taker_mobile" />
+                                <view class="text-color text-[26rpx]">预留手机</view>
+                                <input class="text-right" maxlength="11" placeholder-style="color:#B1B3B5;font-size:26rpx" placeholder="请输入" v-model="createData.delivery.taker_mobile" />
                             </view>
                         </view>
                         <!-- 提货时间 -->
                         <view class="flex justify-between items-center box-border pt-[14rpx] pb-[24rpx] px-[20rpx]">
-                            <view class="text-color text-[28rpx]">提货时间</view>
+                            <view class="text-color text-[26rpx]">提货时间</view>
                             <view class="flex" @click="handleTime">
-                                <view class="text-[28rpx] ml-2 text-right" :class="{'text-[#63676D]': !createData.delivery.buyer_ask_delivery_time }">{{ createData.delivery.buyer_ask_delivery_time ? showGetDate : '选择提货时间' }}</view>
+                                <view class="text-[26rpx] ml-2 text-right" :class="{'text-[#63676D]': !createData.delivery.buyer_ask_delivery_time }">{{ createData.delivery.buyer_ask_delivery_time ? showGetDate : '选择提货时间' }}</view>
                                 <text class="text-[26rpx] text-[var(--text-color-light6)] nc-iconfont nc-icon-youV6xx"></text>
                             </view>
                         </view>
                     </view>
+					<view class="" v-if="createData.delivery.delivery_type == 'local_delivery' && localConfig.time_is_open" >
+						<view class="flex justify-between items-center  px-[20rpx] pt-[14rpx] pb-[24rpx]"
+					    @click="handleTime">
+						    <view class="text-color text-[26rpx]">{{createData.delivery.local_delivery_type =='subscribe' ?'预约配送':''}}</view>
+						    <view class="flex items-center">
+						        <view v-if="createData.delivery.local_delivery_type =='subscribe'" class="text-[26rpx] ml-2 text-right" :class="{'text-[#63676D]': !createData.delivery.buyer_ask_delivery_time }">{{ createData.delivery.buyer_ask_delivery_time ? showGetDate : '选择时间' }}</view>
+								 <view v-else class="text-[26rpx] ml-2 text-right" >{{isDelivery?'立即配送':'当前时间不支持配送'}}</view>
+						        <text class="text-[26rpx] text-[var(--text-color-light6)] nc-iconfont nc-icon-youV6xx"></text>
+						    </view>
+						</view>
+					</view>
                 </view>
                 <view class="mb-[var(--top-m)] card-template h-[100rpx] flex items-center" v-if="orderData.basic.has_goods_types.includes('real') && !delivery_type_list.length">
                     <p class="text-[28rpx] text-[var(--primary-color)]">商家尚未配置配送方式</p>
@@ -205,9 +216,9 @@
             <!-- 地址 -->
             <address-list ref="addressRef" @confirm="confirmAddress" back="/addon/shop/pages/point/payment" />
 
-            <pay ref="payRef" @close="payClose" />
+            <pay ref="payRef" @close="payClose" :ignore-pay="['friendspay']" />
 
-            <ns-select-time ref="selectTime" :rules="service_time" v-if="Object.keys(service_time).length" :isQuantum="true" @change="getTime" @getDate="getDate"></ns-select-time>
+            <ns-select-time ref="selectTime" :rules="service_time" v-if="Object.keys(service_time).length" :isQuantum="true"  :isOpen="localConfig.time_is_open" @change="getTime" @getDate="getDate"></ns-select-time>
         </view>
     </view>
 </template>
@@ -215,6 +226,7 @@
 <script setup lang="ts">
 import { ref, watch, computed, nextTick } from 'vue'
 import { orderCreateCalculate, orderCreate } from '@/addon/shop/api/point'
+import {getLocal} from '@/addon/shop/api/order'
 import { redirect, img, mobileHide } from '@/utils/common'
 import { onShow } from '@dcloudio/uni-app'
 import selectStore from './../order/components/select-store/select-store'
@@ -255,23 +267,47 @@ const selectTime = ref(null)
 const handleTime = () => {
     if (selectTime.value) {
         selectTime.value.show = true;
-    } else {
+    } else if(createData.value.delivery.delivery_type=='store'){
         uni.showToast({ title: '请选择自提点', icon: 'none' })
     }
 };
-
-
+const isDelivery = ref(false)
 // 时间(月日时间段)
 const getTime = (e) => {
-    createData.value.delivery.buyer_ask_delivery_time = e
+	if (createData.value.delivery.delivery_type == 'local_delivery') {
+		isDelivery.value = true
+		if(e.includes('立即配送') ){
+			createData.value.delivery.buyer_ask_delivery_time = '';
+			createData.value.delivery.local_delivery_type = 'now';
+		}else {
+			createData.value.delivery.buyer_ask_delivery_time = e;
+			createData.value.delivery.local_delivery_type = 'subscribe';
+		}
+	}else {
+		createData.value.delivery.buyer_ask_delivery_time = e;
+	}
 }
-
+// 时间(年-月-日)
+const getStamp = (e) => {
+    // createData.value.reserve_service_time_stamp = new Date(e).getTime() / 1000
+}
 const showGetDate = ref(null)
 const getDate = (e) => {
-    showGetDate.value = e
+	if (createData.value.delivery.delivery_type == 'local_delivery') {
+		if (e.includes('立即配送')) {
+			showGetDate.value = null
+		} else {
+			showGetDate.value = e
+		}
+	}else {
+		showGetDate.value = e
+	}
 }
-
+const localConfig = ref({})
 onShow(() => {
+	getLocal().then((res:any)=>{
+		localConfig.value = res.data
+	})
 })
 
 const openSelectStore = () => {
@@ -313,9 +349,21 @@ const switchDeliveryType = (type: string, index: number) => {
         createData.value.order_key = ''
         createData.value.delivery.delivery_type = type
         createData.value.delivery.take_address_id = 0
+		createData.value.delivery.buyer_ask_delivery_time = ''
+		service_time.value = {}  //清空配置时间
         calculate()
     }
 }
+
+const formatTimeWeek = (timeType: number, weekStr: string): string[] => {
+    if (timeType === 0) {
+        // 每天都可以预约
+        return ['1', '2', '3', '4', '5', '6', '0'];
+    }
+    // 自定义时间周
+    return weekStr ? weekStr.split(',').map(item => item.trim()) : [];
+};
+
 
 /**
  * 订单计算
@@ -334,6 +382,16 @@ const calculate = () => {
             createData.value.delivery.taker_name = orderData.value.delivery.take_address.name
             createData.value.delivery.taker_mobile = orderData.value.delivery.take_address.mobile
         }
+		if(createData.value.delivery.delivery_type == 'local_delivery'){
+		    service_time.value = {
+		        time_interval: localConfig.value.time_interval,
+		        time_week: formatTimeWeek(localConfig.value.time_type, localConfig.value.time_week),
+		        trade_time_json: localConfig.value.delivery_time,
+		        most_day: localConfig.value.most_day,
+		        advance_day: localConfig.value.advance_day,
+				type:"subscribe"
+		    }
+		}
 
         if (orderData.value.delivery.take_store) {
             service_time.value = {
@@ -394,7 +452,14 @@ const create = () => {
         } else {
             payRef.value?.open(data.trade_type, data.order_id, `/addon/shop/pages/order/detail?order_id=${ data.order_id }`)
         }
-    }).catch(() => {
+    }).catch((err) => {
+		if (err.code == 401) {
+			uni.showToast({ icon: 'none', title:'登录过期，请重新登录' })
+			redirect({
+			    url: '/addon/shop/pages/index',
+			    mode: 'reLaunch'
+			});
+		}
         createLoading.value = false
     })
 }
@@ -435,6 +500,10 @@ const verify = () => {
                 return false
             }
         }
+		if(data.delivery.delivery_type == 'local_delivery' && !isDelivery.value && localConfig.value.time_is_open){
+			uni.showToast({ title: '当前时间不支持配送', icon: 'none' })
+			return false
+		}
     }
 
     return verify
@@ -469,6 +538,9 @@ const confirmSelectStore = (store: any) => {
             time_week: store.time_week,
             trade_time_json: store.trade_time_json
         };
+    }else{
+        service_time.value = {}
+        createData.value.delivery.buyer_ask_delivery_time = ''
     }
 
     calculate()

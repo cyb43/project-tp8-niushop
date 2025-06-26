@@ -24,6 +24,7 @@ class Agreement extends BaseAdminController
 {
     /**
      * 协议列表
+     * @description 协议列表
      * @return Response
      */
     public function lists()
@@ -34,6 +35,7 @@ class Agreement extends BaseAdminController
 
     /**
      * 协议内容
+     * @description 协议内容
      * @param string $key
      * @return Response
      */
@@ -45,6 +47,7 @@ class Agreement extends BaseAdminController
 
     /**
      * 协议更新
+     * @description 协议更新
      * @param string $key
      * @return Response
      */
@@ -58,6 +61,5 @@ class Agreement extends BaseAdminController
         (new AgreementService())->setAgreement($key, $data['title'], $data['content']);
         return success('EDIT_SUCCESS');
     }
-
 
 }

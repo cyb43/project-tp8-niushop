@@ -11,6 +11,7 @@
 
 namespace app\api\controller\wechat;
 
+use app\service\api\login\LoginService;
 use app\service\api\wechat\WechatConfigService;
 use app\service\api\wechat\WechatAuthService;
 use core\base\BaseController;
@@ -96,6 +97,10 @@ class Wechat extends BaseController
         $this->validate($data, [
             'mobile' => 'mobile'
         ]);
+
+        // 校验手机验证码（电脑端扫码）
+        ( new LoginService() )->checkMobileCode($data[ 'mobile' ]);
+
         $wechat_auth_service = new WechatAuthService();
         return success($wechat_auth_service->register($data[ 'openid' ], $data[ 'mobile' ], wx_unionid: $data[ 'unionid' ]));
     }

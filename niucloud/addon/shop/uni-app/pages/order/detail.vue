@@ -2,22 +2,29 @@
     <view :style="themeColor()">
         <view class="bg-[var(--page-bg-color)] min-h-screen overflow-hidden" v-if="!loading">
             <view v-if="!loading" class="pb-20rpx">
-                <view v-if="detail.status_name" class="pl-[40rpx] pr-[50rpx] bg-linear pb-[100rpx]">
+                <view v-if="detail.status_name" class="pl-[40rpx] pr-[35rpx] bg-linear pb-[100rpx]">
                     <!-- #ifdef MP-WEIXIN -->
                     <top-tabbar :data="topTabbarData" :scrollBool="topTabarObj.getScrollBool()" />
                     <!-- #endif -->
                     <view class="flex justify-between items-center pt-[40rpx]">
-                        <view class="text-[#fff] text-[36rpx] font-500 leading-[42rpx]">{{ detail.status_name.name }}</view>
-                        <image v-if="detail.status == 1" class="w-[180rpx] h-[140rpx]"
+                        <view class="flex flex-col">
+                            <image class="w-[28rpx] h-[20rpx] mb-[10rpx] ml-[4rpx]" :src="img('addon/shop/detail/head_001.png')" mode="aspectFit" />
+                            <view class="text-[#fff] text-[36rpx] font-500 leading-[42rpx]">{{ detail.status_name.name }}</view>
+                        </view>
+                        <view class="flex items-end relative -bottom-[6rpx]">
+                            <image v-if="detail.status == 1" class="w-[160rpx] h-[140rpx]"
                                :src="img('addon/shop/detail/payment.png')" mode="aspectFit" />
-                        <image v-if="detail.status == 2" class="w-[180rpx] h-[140rpx]"
-                               :src="img('addon/shop/detail/deliver_goods.png')" mode="aspectFit" />
-                        <image v-if="detail.status == 3" class="w-[180rpx] h-[140rpx]"
-                               :src="img('addon/shop/detail/receive.png')" mode="aspectFit" />
-                        <image v-if="detail.status == 5" class="w-[180rpx] h-[140rpx]"
-                               :src="img('addon/shop/detail/complete.png')" mode="aspectFit" />
-                        <image v-if="detail.status == -1" class="w-[180rpx] h-[140rpx]"
-                               :src="img('addon/shop/detail/close.png')" mode="aspectFit" />
+                            <image v-if="detail.status == 2" class="w-[160rpx] h-[140rpx]"
+                                :src="img('addon/shop/detail/deliver_goods.png')" mode="aspectFit" />
+                            <image v-if="detail.status == 3" class="w-[160rpx] h-[140rpx]"
+                                :src="img('addon/shop/detail/receive.png')" mode="aspectFit" />
+                            <image v-if="detail.status == 5" class="w-[160rpx] h-[140rpx]"
+                                :src="img('addon/shop/detail/complete.png')" mode="aspectFit" />
+                            <image v-if="detail.status == -1" class="w-[160rpx] h-[140rpx]"
+                                :src="img('addon/shop/detail/close.png')" mode="aspectFit" />
+                            <image class="w-[8rpx] h-[30rpx] mb-[20rpx]"
+                                :src="img('addon/shop/detail/head_002.png')" mode="aspectFit" />
+                        </view>
                     </view>
                 </view>
                 <view class="sidebar-margin mt-[-86rpx] card-template" v-if="detail.delivery_type != 'virtual'">
@@ -72,6 +79,7 @@
                             </view>
                             <text class="text-[24rpx] mt-[12rpx] leading-[26rpx]">{{ detail.taker_full_address }}</text>
                         </view>
+						
                     </view>
                 </view>
 				<!-- 自提核销-->
@@ -237,19 +245,22 @@
                         <view class="text-[28rpx]">{{ detail.create_time }}</view>
                     </view>
 					<view class="justify-between card-template-item" v-if="detail.member_remark">
-					    <view class="text-[28rpx]">{{ t('memberRemark') }}</view>
-					    <view class="text-[28rpx]">{{ detail.member_remark }}</view>
+					    <view class="text-[28rpx] w-[180rpx]">{{ t('memberRemark') }}</view>
+					    <view class="text-[28rpx] flex-1 text-right">{{ detail.member_remark }}</view>
 					</view>
                     <view class=" card-template-item justify-between">
                         <view class="text-[28rpx]">{{ t('deliveryType') }}</view>
-                        <view class="text-[28rpx]">{{ detail.delivery_type_name }}</view>
+                        <view class="text-[28rpx]">{{ detail.delivery_type_name }}<text v-if="detail.order_delivery && detail.order_delivery[0]?.third_delivery_name && detail.delivery_type == 'local_delivery'&& detail.status_name.status!=2 && detail.status_name.status!=1 ">-{{detail.order_delivery[0].third_delivery_name}}</text></view>
                     </view>
+					<view class=" card-template-item justify-between" v-if="detail.delivery_type == 'local_delivery' &&  detail.buyer_ask_delivery_time">
+					    <view class="text-[28rpx]">预约配送时间</view>
+					    <view class="text-[28rpx]">{{ detail.buyer_ask_delivery_time }}</view>
+					</view>
                     <view v-if="detail.pay" class="card-template-item justify-between" :class="{ '!mb-[18rpx]' : detail.member_id !== detail.pay.main_id && detail.pay.status == 2 }">
                         <view class="text-[28rpx]">{{ t('payTypeName') }}</view>
                         <view class="text-[28rpx]">{{ detail.pay.type_name }}</view>
                     </view>
-                    <view v-if="detail.pay && detail.member_id !== detail.pay.main_id && detail.pay.status == 2"
-                          class="card-template-item justify-end">
+                    <view v-if="detail.pay && detail.member_id !== detail.pay.main_id && detail.pay.status == 2" class="card-template-item justify-end">
                         <view class="friend-pay relative px-[20rpx] py-[12rpx] bg-[#F2F2F2] rounded-[10rpx] flex items-center">
                             <u-avatar :src="img(detail.pay.pay_member_headimg)" size="20" leftIcon="none" :default-url="img('static/resource/images/default_headimg.png')" />
                             <text class="ml-[14rpx] text-[24rpx] using-hidden">{{ detail.pay.pay_member }}{{ t('helpPay') }}</text>
@@ -261,6 +272,24 @@
                     </view>
 
                 </view>
+				<view class="sidebar-margin mt-[var(--top-m)] card-template" v-if="detail.order_delivery && detail.order_delivery[0] && detail.order_delivery[0].third_delivery_info && detail.delivery_type == 'local_delivery' && detail.status_name.status!=2 && detail.status_name.status!=1 ">
+				    <view v-if="detail.order_delivery[0].third_delivery_info?.transporter_name" class="justify-between card-template-item">
+				        <view class="text-[28rpx]">配送员</view>
+				        <view class="text-[28rpx]">{{ detail.order_delivery[0].third_delivery_info?.transporter_name }}</view>
+				    </view>
+				    <view v-if="detail.order_delivery[0].third_delivery_info?.transporter_phone" class="justify-between card-template-item">
+				        <view class="text-[28rpx]">配送员手机号</view>
+				        <view class="text-[28rpx]">{{ detail.order_delivery[0].third_delivery_info?.transporter_phone }}</view>
+				    </view>
+					<view v-if="detail.order_delivery[0].third_delivery_info?.status_name" class="justify-between card-template-item">
+					    <view class="text-[28rpx]">配送状态</view>
+					    <view class="text-[28rpx]">{{ detail.order_delivery[0].third_delivery_info?.status_name }}</view>
+					</view>
+				    <view v-if="detail.order_delivery[0].third_delivery_name" class=" card-template-item justify-between">
+				        <view class="text-[28rpx]">{{ t('deliveryType') }}</view>
+				        <view class="text-[28rpx]"><text v-if="detail.delivery_type == 'local_delivery'&& detail.status_name.status!=2 && detail.status_name.status!=1 ">{{detail.order_delivery[0].third_delivery_name}}</text></view>
+				    </view>
+				</view>
                 <!-- 核销码 -->
                 <template v-if="isShowVerify">
                     <view class="sidebar-margin  mt-[var(--top-m)] card-template" v-if="verifyInfo && verifyInfo.length">
@@ -606,16 +635,18 @@ const orderBtnFn = (type = '') => {
         });
     } else if (type == 'logistics') {
         if (detail.value.order_delivery.length > 0) {
-            let params = {
-                id: detail.value.order_delivery[0].id,
-                mobile: detail.value.taker_mobile
-            }
             let list: any = []
             detail.value.order_delivery.forEach((item: any, index: number) => {
-                item.name = `包裹${ index + 1 }`
-                list.push(item)
+                if(item.delivery_type == 'express' && (item.sub_delivery_type == 'express' || item.sub_delivery_type == 'none_express')) {
+                    item.name = `包裹${ index + 1 }`
+                    list.push(item)
+                }
             })
 
+            let params = {
+                id: list[0].id,
+                mobile: detail.value.taker_mobile
+            }
             materialRef.value.open(params);
             materialRef.value.packageList = list
         }
@@ -679,10 +710,7 @@ const showLogistics = (data: any) => {
     if (data.delivery_type != 'express') return false;
     for (let i = 0; i < data.order_delivery.length; i++) {
         let item = data.order_delivery[i];
-        if (item.sub_delivery_type === 'express' && data.status === '3') {
-            status = true;
-            break;
-        } else if (item.sub_delivery_type === 'express' && data.status === '5') {
+        if (item.sub_delivery_type === 'express') {
             status = true;
             break;
         } else {
@@ -768,7 +796,7 @@ const getOrderDiyFormDetailCallback = (data: any) => {
 }
 
 .bg-linear {
-    background: linear-gradient(94deg, #F84949 8%, #FF9A68 99%);
+    background: linear-gradient(90deg, #FF0000 0%, #FF7800 100%);
 }
 
 .triangle {

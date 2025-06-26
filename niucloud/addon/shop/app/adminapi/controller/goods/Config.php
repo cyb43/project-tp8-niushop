@@ -18,7 +18,8 @@ use core\base\BaseAdminController;
 class Config extends BaseAdminController
 {
     /**
-     * 获取搜做配置
+     * 获取搜索配置
+     * @description 查看搜索配置
      * @return \think\Response
      */
     public function getSearchConfig()
@@ -29,6 +30,7 @@ class Config extends BaseAdminController
 
     /**
      * 设置搜索配置
+     * @description 设置搜索配置
      * @return \think\Response
      */
     public function setSearchConfig()
@@ -44,6 +46,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取商品唯一编码配置
+     * @description 获取商品唯一编码配置
      * @return \think\Response
      */
     public function getUniqueConfig()
@@ -54,6 +57,7 @@ class Config extends BaseAdminController
 
     /**
      * 设置商品唯一编码配置
+     * @description 设置商品唯一编码配置
      * @return \think\Response
      */
     public function setUniqueConfig()
@@ -68,6 +72,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取商品排序配置
+     * @description 查看商品排序配置
      * @return \think\Response
      */
     public function getSortConfig()
@@ -77,6 +82,7 @@ class Config extends BaseAdminController
 
     /**
      * 设置商品排序配置
+     * @description 设置商品排序配置
      * @return \think\Response
      */
     public function setSortConfig()

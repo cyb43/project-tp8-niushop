@@ -15,10 +15,17 @@ use app\service\admin\member\MemberSignService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 会员签到
+ * Class MemberSign
+ * @description 会员签到
+ * @package app\adminapi\controller\member
+ */
 class MemberSign extends BaseAdminController
 {
     /**
      * 会员签到记录
+     * @description 会员签到记录
      * @return Response
      */
     public function lists()
@@ -32,6 +39,7 @@ class MemberSign extends BaseAdminController
 
     /**
      * 会员签到详情
+     * @description 会员签到详情
      * @param int $sign_id
      * @return Response
      */
@@ -40,7 +48,9 @@ class MemberSign extends BaseAdminController
         return success(( new MemberSignService() )->getInfo($sign_id));
     }
 
-    /**设置签到设置
+    /**
+     * 设置签到设置
+     * @description 设置签到设置
      * @return Response
      */
     public function setSign()
@@ -58,6 +68,7 @@ class MemberSign extends BaseAdminController
 
     /**
      * 获取签到设置
+     * @description 获取签到设置
      * @return Response
      */
     public function getSign()

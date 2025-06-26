@@ -24,7 +24,8 @@ class Menu extends BaseAdminController
 {
 
     /**
-     * 菜单信息
+     * 获取微信菜单
+     * @description 获取微信菜单
      * @return Response
      */
     public function info()
@@ -34,7 +35,8 @@ class Menu extends BaseAdminController
     }
 
     /**
-     * 设置菜单
+     * 更新微信菜单
+     * @description 更新微信菜单
      * @return Response
      * @throws InvalidConfigException
      * @throws GuzzleException

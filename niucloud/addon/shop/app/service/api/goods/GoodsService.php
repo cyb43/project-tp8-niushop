@@ -49,7 +49,7 @@ class GoodsService extends BaseApiService
      */
     public function getPage(array $where = [])
     {
-        $field = 'goods_id,goods_name,goods_type,goods_cover,unit,sale_num + goods.virtual_sale_num as sale_num,is_limit,limit_type,max_buy,min_buy,member_discount,virtual_receive_type,label_ids,brand_id,stock';
+        $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,unit,sale_num + goods.virtual_sale_num as sale_num,is_limit,limit_type,max_buy,min_buy,member_discount,virtual_receive_type,label_ids,brand_id,stock';
 
         $sku_where = [
             [ 'goodsSku.is_default', '=', 1 ],
@@ -205,7 +205,7 @@ class GoodsService extends BaseApiService
             ->field($field)
             ->with([
                 'goods' => function ($query) {
-                    $query->withField('goods_id, goods_name, goods_type, sub_title, goods_cover, goods_category, goods_image,goods_video,goods_desc,brand_id,label_ids,service_ids, unit, stock, sale_num + virtual_sale_num as sale_num, is_limit,limit_type,max_buy,min_buy,status,delivery_type,attr_id,attr_format,member_discount,is_discount,poster_id,virtual_receive_type,is_gift,form_id')
+                    $query->withField('goods_id, goods_name, goods_type, sub_title, goods_cover, goods_category, goods_image,goods_video,goods_desc,brand_id,label_ids,service_ids, unit, stock, sale_num + virtual_sale_num as sale_num, is_limit,limit_type,max_buy,min_buy,status,delivery_type,attr_ids,attr_format,member_discount,is_discount,poster_id,virtual_receive_type,is_gift,form_id')
                         ->append([ 'goods_type_name', 'goods_cover_thumb_mid', 'delivery_type_list', 'goods_image_thumb_small', 'goods_image_thumb_mid', 'goods_image_thumb_big', 'goods_brand' ]);
                 },
                 // 商品规格列表
@@ -281,7 +281,7 @@ class GoodsService extends BaseApiService
                 }
 
                 // 查询会员价
-                if (!empty($info[ 'type' ]) && $data[ 'type' ] == ActiveDict::NEWCOMER_DISCOUNT) {
+                if (!empty($data[ 'type' ]) && $data[ 'type' ] == ActiveDict::NEWCOMER_DISCOUNT) {
                     // 查询新人价
                     $newcomer_service = new NewcomerService();
                     if ($newcomer_service->checkIfNewcomer()) {
@@ -394,7 +394,7 @@ class GoodsService extends BaseApiService
      */
     public function getGoodsComponents(array $where = [])
     {
-        $field = 'goods_id,goods_name,goods_type,goods_cover,unit,sale_num + goods.virtual_sale_num as sale_num,member_discount,label_ids,brand_id';
+        $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,unit,sale_num + goods.virtual_sale_num as sale_num,member_discount,label_ids,brand_id,is_limit,limit_type,max_buy,min_buy';
 
         $sku_where = [
             [ 'goodsSku.is_default', '=', 1 ],

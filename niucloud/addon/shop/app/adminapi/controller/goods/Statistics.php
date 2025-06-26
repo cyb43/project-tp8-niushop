@@ -24,6 +24,7 @@ class Statistics extends BaseAdminController
 
     /**
      * 获取商品统计基本信息
+     * @description 查看商品统计基本信息
      * @return \think\Response
      */
     public function getBasic()
@@ -36,6 +37,7 @@ class Statistics extends BaseAdminController
 
     /**
      * 获取商品统计图表信息
+     * @description 查看商品统计图表信息
      * @return \think\Response
      */
     public function getTrend()
@@ -48,6 +50,7 @@ class Statistics extends BaseAdminController
 
     /**
      * 获取商品排行榜信息
+     * @description 查看商品排行榜信息
      * @return \think\Response
      */
     public function getRank()
@@ -63,6 +66,7 @@ class Statistics extends BaseAdminController
 
     /**
      * 获取商品排行榜统计类型
+     * @description 获取商品排行榜统计类型
      * @return \think\Response
      */
     public function getType()
@@ -74,6 +78,7 @@ class Statistics extends BaseAdminController
 
     /**
      * 同步商品统计信息
+     * @description 同步商品统计信息
      * @return \think\Response
      */
     public function syncStatGoods()

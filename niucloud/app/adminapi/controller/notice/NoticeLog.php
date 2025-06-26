@@ -15,11 +15,18 @@ use app\service\admin\notice\NoticeLogService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 消息发送记录
+ * Class NoticeLog
+ * @description 消息发送记录
+ * @package app\adminapi\controller\notice
+ */
 class NoticeLog extends BaseAdminController
 {
 
     /**
      * 消息发送记录列表
+     * @description 消息发送记录列表
      * @return Response
      */
     public function lists()
@@ -34,6 +41,12 @@ class NoticeLog extends BaseAdminController
         return success($res);
     }
 
+    /**
+     * 消息发送记录详情
+     * @description 消息发送记录详情
+     * @param $id
+     * @return Response
+     */
     public function info($id)
     {
         $res = (new NoticeLogService())->getInfo($id);

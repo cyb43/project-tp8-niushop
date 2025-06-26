@@ -87,7 +87,8 @@ class RankService extends BaseApiService
     public function getRankComponents($data)
     {
         $rank_id = $data[ 'rank_id' ];
-        $where = [
+        $limit = $data[ 'limit' ];
+        $where[] = [
             [ 'status', '=', RankDict::ON ]
         ];
         $order = '';
@@ -103,7 +104,7 @@ class RankService extends BaseApiService
         if (!empty($rank_info)) {
             $data[ 'rank_id' ] = $rank_info[ 'rank_id' ];
             $data[ 'name' ] = $rank_info[ 'name' ];
-            $data[ 'goods_list' ] = $this->getGoodsList($rank_info, 3);
+            $data[ 'goods_list' ] = $this->getGoodsList($rank_info, $limit);
         }
         return $data;
     }
@@ -189,7 +190,7 @@ class RankService extends BaseApiService
                     'data' => $list,
                 ];
             } else {
-                $goods_list = array_slice($list, 0, 3);
+                $goods_list = array_slice($list, 0, $limit);
             }
 
         } elseif ($rank_info[ 'goods_source' ] == RankDict::CATEGORY) {

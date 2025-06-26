@@ -16,11 +16,18 @@ use app\service\admin\sys\ExportService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 报表导出
+ * Class Export
+ * @description 报表导出
+ * @package app\adminapi\controller\sys
+ */
 class Export extends BaseAdminController
 {
 
     /**
      * 报表导出列表
+     * @description 报表导出列表
      * @return Response
      */
     public function lists()
@@ -36,6 +43,7 @@ class Export extends BaseAdminController
 
     /**
      * 报表导出
+     * @description 报表导出
      * @param string $type
      * @return Response
      */
@@ -46,6 +54,7 @@ class Export extends BaseAdminController
 
     /**
      * 检查导出数据源是否为空
+     * @description 检查导出数据源是否为空
      * @param string $type
      * @return Response
      */
@@ -57,6 +66,7 @@ class Export extends BaseAdminController
 
     /**
      * 报表删除
+     * @description 报表删除
      * @param $id
      * @return Response
      */
@@ -68,6 +78,7 @@ class Export extends BaseAdminController
 
     /**
      * 获取导出状态列表
+     * @description 获取导出状态列表
      * @param string $type
      */
     public function getExportStatus()
@@ -77,6 +88,7 @@ class Export extends BaseAdminController
 
     /**
      * 获取导出数据类型列表
+     * @description 获取导出数据类型列表
      * @return Response
      */
     public function getExportDataType(){

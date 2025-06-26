@@ -18,6 +18,7 @@ use core\base\BaseAdminController;
 /**
  * 自定义海报
  * Class Poster
+ * @description 自定义海报
  * @package app\adminapi\controller\sys
  */
 class Poster extends BaseAdminController
@@ -25,6 +26,7 @@ class Poster extends BaseAdminController
 
     /**
      * 获取自定义海报分页列表
+     * @description 获取自定义海报分页列表
      * @return \think\Response
      */
     public function pages()
@@ -38,6 +40,7 @@ class Poster extends BaseAdminController
 
     /**
      * 获取自定义海报分页列表
+     * @description 获取自定义海报分页列表
      * @return \think\Response
      */
     public function lists()
@@ -51,6 +54,7 @@ class Poster extends BaseAdminController
 
     /**
      * 自定义海报详情
+     * @description 自定义海报详情
      * @param int $id
      * @return \think\Response
      */
@@ -61,6 +65,7 @@ class Poster extends BaseAdminController
 
     /**
      * 添加自定义海报
+     * @description 添加自定义海报
      * @return \think\Response
      */
     public function add()
@@ -80,6 +85,7 @@ class Poster extends BaseAdminController
 
     /**
      * 自定义海报编辑
+     * @description 自定义海报编辑
      * @param int $id 自定义海报id
      * @return \think\Response
      */
@@ -100,6 +106,7 @@ class Poster extends BaseAdminController
 
     /**
      * 自定义海报删除
+     * @description 自定义海报删除
      * @param int $id 自定义海报id
      * @return \think\Response
      */
@@ -111,6 +118,7 @@ class Poster extends BaseAdminController
 
     /**
      * 修改自定义海报状态
+     * @description 修改自定义海报状态
      * @return \think\Response
      */
     public function modifyStatus()
@@ -125,6 +133,7 @@ class Poster extends BaseAdminController
 
     /**
      * 将自定义海报修改为默认海报
+     * @description 将自定义海报修改为默认海报
      * @return \think\Response
      */
     public function modifyDefault()
@@ -138,6 +147,7 @@ class Poster extends BaseAdminController
 
     /**
      * 获取自定义海报类型
+     * @description 获取自定义海报类型
      * @return \think\Response
      */
     public function type()
@@ -150,6 +160,7 @@ class Poster extends BaseAdminController
 
     /**
      * 获取自定义海报模版
+     * @description 获取自定义海报模版
      * @return \think\Response
      */
     public function template()
@@ -163,6 +174,7 @@ class Poster extends BaseAdminController
 
     /**
      * 获取自定义海报初始化数据
+     * @description 获取自定义海报初始化数据
      * @return \think\Response
      * @throws \think\db\exception\DbException
      */
@@ -178,6 +190,7 @@ class Poster extends BaseAdminController
 
     /**
      * 获取自定义海报预览
+     * @description 获取自定义海报预览
      * @return array|\think\Response
      */
     public function preview()

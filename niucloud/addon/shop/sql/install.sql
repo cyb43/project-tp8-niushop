@@ -195,7 +195,7 @@ CREATE TABLE `{{prefix}}shop_delivery_local_delivery` (
   `most_day` INT(11) NOT NULL DEFAULT 7 COMMENT '最多可预约多少天',
   `start_time` INT(11) NOT NULL DEFAULT 0 COMMENT '当日的起始时间',
   `end_time` INT(11) NOT NULL DEFAULT 0 COMMENT '当日的营业结束时间',
-  `delivery_time` VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '配送时间段',
+  `delivery_time` TEXT DEFAULT NULL COMMENT '配送时间段',
   PRIMARY KEY (`local_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='自提点表';
 
@@ -308,7 +308,7 @@ CREATE TABLE `{{prefix}}shop_goods` (
   `virtual_verify_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '虚拟商品核销有效期类型，0：不限，1：购买后几日有效，2：指定过期日期',
   `virtual_indate` int(11) NOT NULL DEFAULT '0' COMMENT '虚拟到期时间',
   `supplier_id` int(11) NOT NULL DEFAULT '0' COMMENT '供应商id',
-  `attr_id` int(11) NOT NULL DEFAULT '0' COMMENT '商品参数id',
+  `attr_ids` TEXT DEFAULT NULL COMMENT '商品参数id，支持多个',
   `attr_format` text COMMENT '商品参数内容，json格式',
   `is_discount` int(11) NOT NULL DEFAULT '0' COMMENT '是否参与限时折扣',
   `member_discount` varchar(255) NOT NULL DEFAULT '' COMMENT '会员等级折扣，不参与：空，会员折扣：discount，指定会员价：fixed_price',
@@ -724,8 +724,9 @@ CREATE TABLE `{{prefix}}shop_order_delivery` (
   `express_number` varchar(50) NOT NULL DEFAULT '' COMMENT '配送单号',
   `local_deliver_id` int(11) NOT NULL DEFAULT '0' COMMENT '同城配送员',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '配送状态',
+  `third_delivery` varchar(50) NOT NULL DEFAULT '' COMMENT '三方配送提供者',
+  `remark` varchar(1000) NOT NULL DEFAULT '' COMMENT '备注',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
-  `remark` varchar(1000) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单发货表';
 

@@ -14,6 +14,7 @@ namespace addon\shop\app\service\admin\marketing\pointexchange;
 
 use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\dict\active\ExchangeDict;
+use addon\shop\app\model\active\Active;
 use addon\shop\app\model\exchange\Exchange;
 use addon\shop\app\model\goods\GoodsSku;
 use addon\shop\app\model\goods\Goods;
@@ -233,7 +234,7 @@ class ExchangeService extends BaseAdminService
     public function edit(int $id, array $data)
     {
         $info = $this->model->where([ [ 'id', '=', $id ] ])->findOrEmpty();
-        if ($info->isEmpty()) throw new AdminException('EXCHANGE_DETA_NOT_FOUND');
+        if ($info->isEmpty()) throw new AdminException('EXCHANGE_DATA_NOT_FOUND');
 //        $product_detail = json_decode($data[ 'product_detail' ], true);
         $this->verifyData($data);
         Db::startTrans();
@@ -296,7 +297,7 @@ class ExchangeService extends BaseAdminService
     public function del(int $id)
     {
         $info = $this->model->where([ [ 'id', '=', $id ] ])->findOrEmpty();
-        if ($info->isEmpty()) throw new AdminException('EXCHANGE_DETA_NOT_FOUND');
+        if ($info->isEmpty()) throw new AdminException('EXCHANGE_DATA_NOT_FOUND');
         Db::startTrans();
         try {
             $goods_id = 0;
@@ -317,8 +318,71 @@ class ExchangeService extends BaseAdminService
             Db::rollback();
             throw new CommonException($e->getMessage());
         }
-
     }
+
+    /**
+     * 批量删除积分商城
+     * @param array $ids
+     * @return bool
+     */
+    public function batchDelete($ids)
+    {
+        $point_exchange_list = $this->model->where([ [ 'id', 'in', $ids ] ])->select()->toArray();
+        foreach ($point_exchange_list as $value){
+            if ($value[ 'status' ] == ExchangeDict::UP) throw new AdminException('EXIST_NOT_DOWN_ACTIVE');
+        }
+
+        $goods_ids = [];
+        foreach ($point_exchange_list as $value){
+            foreach ($value[ 'product_detail' ] as $v) {
+                if (!empty($v[ 'goods_id' ])) {
+                    $goods_ids[] = $v[ 'goods_id' ];
+                }
+            }
+        }
+        $goods_ids = array_unique($goods_ids);
+
+        $active_ids = ( new ActiveGoods() )->where([
+            [ 'goods_id', 'in', $goods_ids ],
+            [ 'active_class', '=', ActiveDict::EXCHANGE ],
+        ])->column('active_id');
+        Db::startTrans();
+        try {
+            $this->model->where([ [ 'id', 'in', $ids ] ])->delete();
+            (new Active())->where([ [ 'active_id', 'in', $active_ids ], [ 'active_class', '=', ActiveDict::EXCHANGE ] ])->delete();
+            (new ActiveGoods())->where([ [ 'active_id', 'in', $active_ids ], [ 'active_class', '=', ActiveDict::EXCHANGE ] ])->delete();
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw new CommonException($e->getMessage());
+        }
+    }
+
+    /**
+     * 批量下架积分商城
+     * @param array $ids
+     * @return bool
+     */
+    public function batchDown($ids)
+    {
+        $this->model->where([ [ 'id', 'in', $ids ], [ 'status', '=', ExchangeDict::UP] ])->update( [ 'status' => ExchangeDict::DOWN] );
+
+        return true;
+    }
+
+    /**
+     * 批量上架积分商城
+     * @param array $ids
+     * @return bool
+     */
+    public function batchUp($ids)
+    {
+        $this->model->where([ [ 'id', 'in', $ids ], [ 'status', '=', ExchangeDict::DOWN] ])->update( [ 'status' => ExchangeDict::UP] );
+
+        return true;
+    }
+
 
     /**
      * 商品编辑业务

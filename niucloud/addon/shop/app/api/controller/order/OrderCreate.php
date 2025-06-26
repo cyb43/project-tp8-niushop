@@ -96,4 +96,13 @@ class OrderCreate extends BaseApiController
         ]);
         return success('SUCCESS', ( new OrderCreateService() )->getStore($data[ 'latlng' ]));
     }
+
+    /**
+     * 获取同城配送配置项
+     * @return Response
+     */
+    public function getLocalDeliveryConfig()
+    {
+        return success(((new OrderCreateService())->getLocalDeliveryConfig()));
+    }
 }

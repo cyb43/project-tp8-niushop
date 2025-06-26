@@ -16,10 +16,17 @@ use app\service\admin\member\MemberService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 会员设置
+ * Class Config
+ * @description 会员设置
+ * @package app\adminapi\controller\member
+ */
 class Config extends BaseAdminController
 {
     /**
      * 获取登录设置
+     * @description 获取登录设置
      * @return Response
      */
     public function getLoginConfig()
@@ -29,6 +36,7 @@ class Config extends BaseAdminController
 
     /**
      * 注册与登录设置
+     * @description 设置注册与登录配置
      * @return Response
      */
     public function setLoginConfig()
@@ -50,6 +58,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取提现设置
+     * @description 获取提现设置
      * @return Response
      */
     public function getCashOutConfig()
@@ -59,6 +68,7 @@ class Config extends BaseAdminController
 
     /**
      * 提现设置
+     * @description 设置提现设置
      * @return Response
      */
     public function setCashOutConfig()
@@ -78,6 +88,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取会员配置
+     * @description 获取会员配置
      * @return Response
      */
     public function getMemberConfig()
@@ -87,13 +98,15 @@ class Config extends BaseAdminController
 
     /**
      * 设置会员配置
+     * @description 设置会员配置
      * @return Response
      */
     public function setMemberConfig()
     {
         $data = $this->request->params([
             [ 'prefix', '' ],
-            [ 'length', 10 ]
+            [ 'length', 10 ],
+            [ 'form_id', '' ],
         ]);
         $this->validate($data, 'app\validate\member\MemberConfig.set');
         ( new MemberConfigService() )->setMemberConfig($data);
@@ -102,6 +115,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取成长值规则配置
+     * @description 获取成长值规则配置
      * @return Response
      */
     public function getGrowthRuleConfig()
@@ -111,6 +125,7 @@ class Config extends BaseAdminController
 
     /**
      * 配置成长值规则
+     * @description 配置成长值规则
      * @return Response
      */
     public function setGrowthRuleConfig()
@@ -127,6 +142,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取积分规则配置
+     * @description 获取积分规则配置
      * @return Response
      */
     public function getPointRuleConfig()
@@ -136,6 +152,7 @@ class Config extends BaseAdminController
 
     /**
      * 配置积分规则
+     * @description 配置积分规则
      * @return Response
      */
     public function setPointRuleConfig()

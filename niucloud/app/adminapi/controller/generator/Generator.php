@@ -22,12 +22,14 @@ use think\Response;
 /**
  * 代码生成-控制器
  * Class Generate
+ * @description 代码生成器
  * @package app\adminapi\controller\generate
  */
 class Generator extends BaseController
 {
     /**
      * 代码生成器列表
+     * @description 代码生成器列表
      * @return Response
      */
     public function lists()
@@ -43,6 +45,7 @@ class Generator extends BaseController
 
     /**
      * 代码生成详情
+     * @description 代码生成详情
      * @param int $id
      * @return Response
      * @throws DataNotFoundException
@@ -56,6 +59,7 @@ class Generator extends BaseController
 
     /**
      * 代码预览
+     * @description 代码预览
      * @param int $id
      * @return Response
      */
@@ -68,6 +72,7 @@ class Generator extends BaseController
 
     /**
      * 添加代码生成
+     * @description 添加代码生成
      * @return Response
      * @throws Exception
      */
@@ -83,6 +88,7 @@ class Generator extends BaseController
 
     /**
      * 代码生成编辑
+     * @description 代码生成编辑
      * @param $id
      * @return Response
      */
@@ -111,6 +117,7 @@ class Generator extends BaseController
 
     /**
      * 代码生成删除
+     * @description 代码生成删除
      * @param int $id
      * @return Response
      */
@@ -122,6 +129,7 @@ class Generator extends BaseController
 
     /**
      * 生成代码
+     * @description 生成代码
      * @return Response
      */
     public function create()
@@ -137,6 +145,7 @@ class Generator extends BaseController
 
     /**
      * 获取数据表列表
+     * @description 获取数据表列表
      * @return Response
      */
     public function tableList()
@@ -151,6 +160,7 @@ class Generator extends BaseController
 
     /**
      * 代码生成检测
+     * @description 代码生成检测
      */
     public function checkFile()
     {
@@ -163,6 +173,7 @@ class Generator extends BaseController
 
     /**
      * 获取表字段
+     * @description 获取表字段
      */
     public function getTableColumn()
     {
@@ -172,9 +183,9 @@ class Generator extends BaseController
         return success((new GenerateService())->getTableColumn($data));
     }
 
-
     /**
      * 获取全部模型
+     * @description 获取全部模型
      */
     public function getModels()
     {
@@ -186,6 +197,7 @@ class Generator extends BaseController
 
     /**
      * 根据模型获取表字段
+     * @description 根据模型获取表字段
      */
     public function getModelTableColumn()
     {

@@ -19,12 +19,14 @@ use think\Response;
 /**
  * 自定义路由表控制器
  * Class DiyRouteController
+ * @description 自定义路由
  * @package app\adminapi\controller\diy
  */
 class DiyRoute extends BaseAdminController
 {
     /**
-     * @notes 获取自定义路由表列表
+     * 获取自定义路由表列表
+     * @description 获取自定义路由表列表
      * @return Response
      */
     public function lists()
@@ -39,6 +41,7 @@ class DiyRoute extends BaseAdminController
 
     /**
      * 自定义路由表详情
+     * @description 自定义路由表详情
      * @param int $id
      * @return Response
      */
@@ -49,6 +52,7 @@ class DiyRoute extends BaseAdminController
 
     /**
      * 自定义路由表详情
+     * @description 自定义路由表详情
      * @param string $name
      * @return Response
      */
@@ -59,6 +63,7 @@ class DiyRoute extends BaseAdminController
 
     /**
      * 添加自定义路由表
+     * @description 添加自定义路由表
      * @return Response
      */
     public function add()
@@ -77,6 +82,7 @@ class DiyRoute extends BaseAdminController
 
     /**
      * 自定义路由表编辑
+     * @description 自定义路由表编辑
      * @param $id
      * @return Response
      */
@@ -96,6 +102,7 @@ class DiyRoute extends BaseAdminController
 
     /**
      * 自定义路由表删除
+     * @description 自定义路由表删除
      * @param int $id
      * @return Response
      */
@@ -107,6 +114,7 @@ class DiyRoute extends BaseAdminController
 
     /**
      * 修改页面分享内容
+     * @description 修改页面分享内容
      */
     public function modifyShare()
     {
@@ -125,6 +133,7 @@ class DiyRoute extends BaseAdminController
 
     /**
      * 获取模板页面（存在的应用插件列表）
+     * @description 获取模板页面（存在的应用插件列表）
      * @return Response
      */
     public function getApps()

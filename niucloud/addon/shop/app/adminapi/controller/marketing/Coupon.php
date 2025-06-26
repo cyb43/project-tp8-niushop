@@ -23,7 +23,10 @@ use core\base\BaseAdminController;
  */
 class Coupon extends BaseAdminController
 {
-
+    /**
+     * @description 获取初始化信息
+     * @return \think\Response
+     */
     public function init()
     {
         $data = $this->request->params([]);
@@ -32,6 +35,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 获取商品优惠券列表
+     * @description 查看优惠券列表-分页
      * @return \think\Response
      */
     public function lists()
@@ -45,6 +49,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 商品优惠券详情
+     * @description 查看优惠券详情
      * @param int $id
      * @return \think\Response
      */
@@ -55,6 +60,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 添加商品优惠券
+     * @description 添加商品优惠券
      * @return \think\Response
      */
     public function add()
@@ -83,6 +89,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 商品优惠券编辑
+     * @description 编辑商品优惠券
      * @param $id  商品优惠券id
      * @return \think\Response
      */
@@ -112,6 +119,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 商品优惠券删除
+     * @description 删除商品优惠券
      * @param $id  商品优惠券id
      * @return \think\Response
      */
@@ -126,6 +134,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 会员领取详情
+     * @description 查看会员领取优惠券详情
      */
     public function getMemberCoupon()
     {
@@ -138,6 +147,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 领取状态编辑
+     * @description 修改优惠券状态
      */
     public function setCouponStatus($status)
     {
@@ -150,6 +160,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 优惠券选择分页列表
+     * @description 获取优惠券列表-1全部
      * @return \think\Response
      */
     public function select()
@@ -163,6 +174,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 查询选中的优惠券
+     * @description 查询选中的优惠券
      * @return \think\Response
      */
     public function getSelectedLists()
@@ -175,6 +187,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 优惠券关闭
+     * @description 批量关闭优惠券
      */
     public function couponInvalid()
     {
@@ -187,6 +200,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 获取优惠券状态
+     * @description 获取优惠券状态字典
      */
     public function getCouponStatus()
     {
@@ -195,6 +209,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 获取发送优惠券范围初始化数据
+     * @description 获取发送优惠券范围初始化数据
      * @return \think\Response
      */
     public function getSendRangeInit()
@@ -206,6 +221,7 @@ class Coupon extends BaseAdminController
 
     /**
      * 获取发送记录分页列表
+     * @description 查看发送记录列表-分页
      * @return \think\Response
      */
 
@@ -219,18 +235,19 @@ class Coupon extends BaseAdminController
     }
 
     /**
-     * 添加发送记录
+     * 发放优惠券
+     * @description 发放优惠券
      * @param $coupon_id
      * @return \think\Response
      */
-    public function addSendRecord($coupon_id)
+    public function sendCoupon($coupon_id)
     {
         $data = $this->request->params([
             [ "range_type", '' ],
             [ "range_param", '' ],
             [ "send_num", '' ],
         ]);
-        ( new CouponService() )->addSendRecords($coupon_id,$data);
+        ( new CouponService() )->sendCoupon($coupon_id,$data);
         return success("SUCCESS");
     }
 

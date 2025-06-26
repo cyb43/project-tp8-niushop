@@ -7,7 +7,6 @@ use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\dict\order\InvoiceDict;
 use addon\shop\app\dict\order\OrderDict;
 use addon\shop\app\dict\order\OrderLogDict;
-use addon\shop\app\job\order\OrderClose;
 use addon\shop\app\job\order\OrderPayRemind;
 use addon\shop\app\model\order\Order;
 use addon\shop\app\service\core\cart\CoreCartService;
@@ -18,8 +17,6 @@ use addon\shop\app\service\core\goods\CoreGoodsStockService;
 use addon\shop\app\service\core\order\CoreInvoiceService;
 use addon\shop\app\service\core\order\CoreOrderConfigService;
 use addon\shop\app\service\core\order\CoreOrderLogService;
-use core\exception\CommonException;
-use think\facade\Db;
 use think\facade\Log;
 
 class AfterShopOrderCreate
@@ -39,6 +36,7 @@ class AfterShopOrderCreate
 
             $core_goods_stock_service = new CoreGoodsStockService();
             foreach ($order_goods_data as $v) {
+                // todo 可以优化
                 $core_goods_stock_service->dec([
                     'num' => $v[ 'num' ],
                     'goods_id' => $v[ 'goods_id' ],
@@ -60,6 +58,7 @@ class AfterShopOrderCreate
             //累增销量
             $core_goods_sale_num_service = new CoreGoodsSaleNumService();
             foreach ($order_goods_data as $v) {
+                // todo 可以优化
                 //商品累计销量
                 $core_goods_sale_num_service->inc([
                     'num' => $v[ 'num' ],

@@ -17,12 +17,14 @@ use think\response\File;
 
 /**
  * 小程序版本下载控制器
+ * @description 小程序版本下载
  */
 class VersionDownload extends BaseAdminController
 {
 
     /**
      * 下载
+     * @description 下载
      * @param $id
      * @return File
      */

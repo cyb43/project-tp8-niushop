@@ -36,6 +36,7 @@ class ShippingTemplate extends BaseAdminController
 
     /**
      * 运费模板列表
+     * @description 查看运费模板列表
      * @return void
      */
     public function lists()
@@ -48,6 +49,7 @@ class ShippingTemplate extends BaseAdminController
 
     /**
      * 运费模板详情
+     * @description 查看运费模板详情
      * @param int $template_id
      * @return void
      */
@@ -58,6 +60,7 @@ class ShippingTemplate extends BaseAdminController
 
     /**
      * 添加运费模板
+     * @description 添加运费模板
      * @return void
      */
     public function add()
@@ -74,6 +77,7 @@ class ShippingTemplate extends BaseAdminController
 
     /**
      * 编辑运费模板
+     * @description 编辑运费模板
      * @return void
      */
     public function edit(int $template_id)
@@ -90,6 +94,7 @@ class ShippingTemplate extends BaseAdminController
 
     /**
      * 删除模板
+     * @description 删除运费模板
      * @param int $template_id
      * @return \think\Response
      */

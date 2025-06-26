@@ -21,7 +21,7 @@ use think\facade\Db;
 use think\facade\Log;
 
 /**
- * 优惠券限时自动开启
+ * 优惠券发送
  */
 class CouponSend extends BaseJob
 {
@@ -31,6 +31,10 @@ class CouponSend extends BaseJob
      */
     public function doJob($record_id)
     {
+        if (empty($record_id)){
+            Log::write('CouponSend 参数为空 结束');
+            return true;
+        }
         Log::write('CouponSend 发送优惠券开始');
         //调整状态为进行中
         (new CouponSendRecord())->where([
@@ -50,6 +54,7 @@ class CouponSend extends BaseJob
             Log::write("CouponSend 发送优惠券id {$record_id}  会员id数组：".json_encode($memberIds,256));
 
             foreach ($memberIds as $member_id) {
+                // todo 可以优化
                 $res = (new CoreCouponMemberService())->sendCoupon($member_id, $records_info['coupon_id'], $records_info['send_num']);
                 if ($res) {
                     $success_num += 1;
@@ -97,6 +102,7 @@ class CouponSend extends BaseJob
             case CouponDict::SEND_RANGE_MEMBER_LABEL:
                 $member_label = $range_param['member_label'];
                 $member_ids = (new Member())->where([
+                    ['member_id', '>', 0]
                 ])->withSearch(['member_label'], ['member_label' => $member_label])->column('member_id');
                 break;
             default:

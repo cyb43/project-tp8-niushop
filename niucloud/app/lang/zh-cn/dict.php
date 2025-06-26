@@ -76,25 +76,25 @@ return [
         'var_balance' => '会员余额',
         'var_point' => '会员积分',
     ],
-    'dict_sms_api'=>[
-        'template_status_again_report'=>'需重新报备',
-        'template_status_need_edit'=>'需修改报备参数',
-        'template_status_not_report'=>'未报备',
-        'template_status_wait'=>'待审核',
-        'template_status_pass'=>'审核通过',
-        'template_status_refuse'=>'审核不通过',
+    'dict_sms_api' => [
+        'template_status_again_report' => '需重新报备',
+        'template_status_need_edit' => '需修改报备参数',
+        'template_status_not_report' => '未报备',
+        'template_status_wait' => '待审核',
+        'template_status_pass' => '审核通过',
+        'template_status_refuse' => '审核不通过',
 
         //验证码-1 行业通知-2 营销推广-3
-        'template_type_verify_code'=>'验证码',
-        'template_type_industry_notice'=>'行业通知',
-        'template_type_sem'=>'营销推广',
+        'template_type_verify_code' => '验证码',
+        'template_type_industry_notice' => '行业通知',
+        'template_type_sem' => '营销推广',
 
-        'sign_audit_status_wait'=>'待审核',
-        'sign_audit_status_pass'=>'审核通过',
-        'sign_audit_status_refuse'=>'审核不通过',
+        'sign_audit_status_wait' => '待审核',
+        'sign_audit_status_pass' => '审核通过',
+        'sign_audit_status_refuse' => '审核不通过',
 
-        'balance_add'=>'充值',
-        'balance_reduce'=>'扣减'
+        'balance_add' => '充值',
+        'balance_reduce' => '扣减'
     ],
 
     //上传附件相关
@@ -131,6 +131,7 @@ return [
         'login_mobile' => '手机验证码登录',
         'login_wechat' => '微信公众号授权登录',
         'login_weapp' => '微信小程序授权登录',
+        'login_pc' => '电脑端微信授权登录',
         'account_point_adjust' => '账户调整',
         'account_point_member_register' => '会员注册',
         'account_point_level_upgrade' => '升级礼包',
@@ -203,7 +204,7 @@ return [
         'status_wait' => '待支付',
         'status_ing' => '支付中',
         'status_finish' => '已支付',
-        'status_cancle' => '已取消',
+        'status_cancel' => '已取消',
         'status_audit' => '待审核',
         'pay' => '收款',
         'refund' => '退款',
@@ -290,6 +291,7 @@ return [
     'dict_diy_form' => [
         'component_type_form' => '表单组件',
         'type_diy_form' => '自定义表单',
+        'type_diy_form_member_info' => '个人资料',
         'type_sign_registration' => '签到报名登记',
         'type_leave_message_suggestion' => '留言建议',
         'type_write_off_voucher' => '核销凭证',
@@ -449,12 +451,22 @@ return [
         'complete' => '完成',
         'fail' => '失败'
     ],
-    'common_active_short'=>[
-        'impulse_buy'=>'顺',
-        'gift_card'=>'礼',
-        'discount'=>'折',
-        'exchange'=>'积',
-        'manjiansong'=>'满减',
-        'newcomer_discount'=>'新',
+    'common_active_short' => [
+        'impulse_buy_short' => '顺',
+        'impulse_buy_name' => '顺手买',
+        'gift_card_short' => '礼',
+        'gift_card_name' => '礼品卡',
+        'discount_short' => '折',
+        'discount_name' => '限时折扣',
+        'exchange_short' => '积',
+        'exchange_name' => '积分商城',
+        'manjiansong_short' => '满减',
+        'manjiansong_name' => '满减送',
+        'newcomer_discount_short' => '新',
+        'newcomer_discount_name' => '新人专享',
+        'pintuan_short' => '拼',
+        'pintuan_name' => '拼团',
+        'seckill_short' => '秒',
+        'seckill_name' => '秒杀',
     ]
 ];

@@ -24,6 +24,7 @@ class Store extends BaseAdminController
 {
     /**
      * 获取展示用信息
+     * @description 获取添加/编辑展示用信息
      * @param int $id
      * @return \think\Response
      */
@@ -34,6 +35,7 @@ class Store extends BaseAdminController
 
     /**
      * 获取自提门店列表
+     * @description 查看自提门店列表详情
      * @return \think\Response
      */
     public function lists()
@@ -58,6 +60,7 @@ class Store extends BaseAdminController
 
     /**
      * 添加自提门店
+     * @description 添加自提门店
      * @return \think\Response
      */
     public function add()
@@ -87,6 +90,7 @@ class Store extends BaseAdminController
 
     /**
      * 自提门店编辑
+     * @description 编辑自提门店
      * @param $id  自提门店id
      * @return \think\Response
      */
@@ -118,6 +122,7 @@ class Store extends BaseAdminController
 
     /**
      * 自提门店删除
+     * @description 删除自提门店
      * @param $id  自提门店id
      * @return \think\Response
      */
@@ -127,6 +132,10 @@ class Store extends BaseAdminController
         return success('DELETE_SUCCESS');
     }
 
+    /**
+     * @description 查看自提门店列表-全部
+     * @return \think\Response
+     */
     public function getList()
     {
         $data = $this->request->params([

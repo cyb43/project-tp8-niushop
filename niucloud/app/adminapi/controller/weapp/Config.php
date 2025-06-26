@@ -15,10 +15,17 @@ use app\service\admin\weapp\WeappConfigService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 微信小程序配置
+ * Class Config
+ * @description 微信小程序配置
+ * @package app\adminapi\controller\weapp
+ */
 class Config extends BaseAdminController
 {
     /**
      * 获取微信小程序配置信息
+     * @description 获取微信小程序配置信息
      * @return Response
      */
     public function get()
@@ -28,6 +35,7 @@ class Config extends BaseAdminController
 
     /**
      * 设置微信小程序配置信息
+     * @description 设置微信小程序配置信息
      * @return Response
      */
     public function set()

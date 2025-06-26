@@ -16,10 +16,18 @@ use app\service\admin\auth\LoginService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 登录
+ * Class Login
+ * @description 登录
+ * @package app\adminapi\controller\login
+ */
 class Login extends BaseAdminController
 {
+
     /**
      * 登录
+     * @description 登录
      * @return Response
      */
     public function login()
@@ -41,7 +49,8 @@ class Login extends BaseAdminController
     }
 
     /**
-     * 登出
+     * 退出登录
+     * @description 退出登录
      * @return Response
      */
     public function logout()
@@ -50,9 +59,9 @@ class Login extends BaseAdminController
         return success('LOGOUT');
     }
 
-
     /**
      * 获取登录设置
+     * @description 获取登录设置
      * @return Response
      */
     public function getConfig()

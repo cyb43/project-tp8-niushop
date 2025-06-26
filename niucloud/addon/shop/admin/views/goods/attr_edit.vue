@@ -75,7 +75,7 @@
         </el-card>
 
         <!-- 编辑商品参数信息 -->
-        <el-dialog v-model="showDialogByAttr" :title="t('updateAttr')" width="500px" :destroy-on-close="true">
+        <el-dialog v-model="showDialogByAttr" :title="t('updateAttr')" width="500px" :close-on-click-modal="false" :destroy-on-close="true">
             <el-form :model="formData" label-width="120px" ref="formRef" :rules="formRulesByAttr" class="page-form" v-loading="loadingByAttr">
                 <el-form-item :label="t('attrName')" prop="attr_name">
                     <el-input v-model.trim="formData.attr_name" clearable :placeholder="t('attrNamePlaceholder')" class="input-width"  maxlength="20" />
@@ -96,7 +96,7 @@
         </el-dialog>
 
         <!-- 编辑商品参数值信息 -->
-        <el-dialog v-model="showDialogByAttrValue" :title="attrValueTitleDialog" width="700px" :destroy-on-close="true">
+        <el-dialog v-model="showDialogByAttrValue" :title="attrValueTitleDialog" width="700px" :close-on-click-modal="false" :destroy-on-close="true">
             <el-form :model="formAttrValueData" label-width="120px" ref="formAttrValueRef" :rules="formRulesByAttrValue" class="page-form" v-loading="loadingByAttrValue">
                 <el-form-item :label="t('attrValueName')" prop="attr_value_name">
                     <el-input v-model.trim="formAttrValueData.attr_value_name" clearable :placeholder="t('attrValueNamePlaceholder')" class="input-width" maxlength="20" show-word-limit />
@@ -222,10 +222,10 @@ const formRulesByAttr = computed(() => {
 })
 
 // 编辑商品参数
-const editEvent = (data:any)=>{
+const editEvent = ()=>{
     formData.attr_id = attrInfo.attr_id;
     formData.attr_name = attrInfo.attr_name;
-    formData.sort = attrInfo.sort;
+    formData.sort = attrInfo.sort
     showDialogByAttr.value = true
 }
 
@@ -332,7 +332,7 @@ const sortInputListener = debounce((sort:any, row:any) => {
 
     for (let i = 0; i < attrInfo.attr_value_format.length; i++) {
         if (attrInfo.attr_value_format[i].attr_value_id == row.attr_value_id) {
-            attrInfo.attr_value_format[i].sort = sort;
+            attrInfo.attr_value_format[i].sort = sort ? sort : 0;
             break;
         }
     }
@@ -395,6 +395,10 @@ const confirmAttrValue = async (formEl: FormInstance | undefined) => {
 
             if (repeatAttrValue.value) return
             repeatAttrValue.value = true
+
+            formAttrValueData.child.forEach((item:any)=>{
+                item.sort = item.sort ? item.sort : 0
+            })
 
             formAttrValueData.child.sort((a: any, b: any) => {
                 return b.sort - a.sort

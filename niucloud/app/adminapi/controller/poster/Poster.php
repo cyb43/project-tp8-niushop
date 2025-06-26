@@ -15,12 +15,15 @@ use core\base\BaseAdminController;
 
 /**
  * 海报
+ * @description 海报
+ * @package app\adminapi\controller\poster
  */
 class Poster extends BaseAdminController
 {
 
     /**
      * 获取海报
+     * @description 获取海报
      * @return \think\Response
      */
     public function poster()

@@ -15,6 +15,7 @@ use addon\shop\app\dict\goods\GoodsDict;
 use addon\shop\app\dict\order\OrderDeliveryDict;
 use addon\shop\app\dict\order\OrderGoodsDict;
 use addon\shop\app\model\goods\Goods;
+use addon\shop\app\model\goods\GoodsSku;
 use app\dict\sys\FileDict;
 use app\model\member\Member;
 use core\base\BaseModel;
@@ -68,6 +69,14 @@ class OrderGoods extends BaseModel
     {
         return $this->hasOne(Goods::class, 'goods_id', 'goods_id');
     }
+    /**
+     * 商品
+     * @return HasOne
+     */
+    public function sku()
+    {
+        return $this->hasOne(GoodsSku::class, 'sku_id', 'sku_id');
+    }
 
     /**
      * 订单主表
@@ -85,6 +94,13 @@ class OrderGoods extends BaseModel
     public function member()
     {
         return $this->hasOne(Member::class, 'member_id', 'member_id');
+    }  /**
+     * 会员
+     * @return HasOne
+     */
+    public function deliveryInfo()
+    {
+        return $this->hasOne(OrderDelivery::class, 'id', 'delivery_id');
     }
 
     /**

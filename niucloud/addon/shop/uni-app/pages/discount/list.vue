@@ -14,7 +14,7 @@
                     <view class="flex items-end h-[100%]" :style="{'width':187.5*discountList.length+'rpx'}">
                         <view class="w-[187.5rpx] h-[100rpx] relative flex-shrink-0" v-for="(item,index) in discountList" @click="navClick(item)">
                             <view class="w-full absolute left-0 top-0 z-10 text-[#fff] text-center pt-[14rpx]">
-                                <view class="text-[28rpx] leading-[39rpx] font-500 px-[10rpx] h-[39rpx] overflow-hidden" :class="{'!text-[#333]':active==item.discount_id}">{{ item.name }}</view>
+                                <view class="text-[28rpx] leading-[39rpx] font-500 px-[10rpx] h-[39rpx] overflow-hidden" :class="{'!text-[#333]':active==item.discount_id}">{{ item.remark }}</view>
                                 <view class="flex justify-center w-full">
                                     <text class="text-[22rpx] h-[36rpx] flex-center mt-[5rpx]" :class="{'active flex items-center justify-center':active==item.discount_id}">{{ item.status == 'not_active' ? '预告' : item.status_name }}</text>
                                 </view>
@@ -49,7 +49,12 @@
                         </view>
 
                         <view class="ml-[20rpx] flex-1 flex flex-col justify-between">
-                            <view class="text-[28rpx] leading-[1.4] multi-hidden">{{ item.goods_name }}</view>
+							<view class="">
+								<view class="text-[28rpx] leading-[1.4] multi-hidden">{{ item.goods_name }}</view>
+								<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden mt-[16rpx]">
+									{{ item.sub_title }}
+								</view>
+							</view>
                             <view v-if="item.goods_label_name && item.goods_label_name.length" class="flex flex-wrap mb-[auto]">
                                 <template v-for="(tagItem, tagIndex) in item.goods_label_name">
                                     <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')" />

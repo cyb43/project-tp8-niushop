@@ -69,6 +69,7 @@ class DiyService extends BaseApiService
             $field = 'id,title,name,type,template, mode,value,is_default,share,visit_count';
 
             $info = $this->model->field($field)->where($condition)->findOrEmpty()->toArray();
+
             if (empty($info)) {
                 // 查询默认页面数据
                 if (!empty($params[ 'name' ])) {
@@ -170,9 +171,11 @@ class DiyService extends BaseApiService
                 continue;
             }
             $addon_theme = array_values(array_filter(event('ThemeColor', [ 'key' => $value[ 'key' ] ])))[ 0 ] ?? [];
-            $data[ $value[ 'key' ] ][ 'title' ] = $theme_data[ $value[ 'key' ] ][ 'title' ] ?? ( !empty($addon_theme) ? $addon_theme[ 'theme_color' ][ 0 ][ 'title' ] : '' );
-            $data[ $value[ 'key' ] ][ 'theme' ] = $theme_data[ $value[ 'key' ] ][ 'theme' ] ?? ( !empty($addon_theme) ? $addon_theme[ 'theme_color' ][ 0 ][ 'theme' ] : '' );
-            $data[ $value[ 'key' ] ][ 'new_theme' ] = $theme_data[ $value[ 'key' ] ][ 'new_theme' ] ?? '';
+            if (!empty($addon_theme) && !empty($addon_theme[ 'theme_color' ])) {
+                $data[ $value[ 'key' ] ][ 'title' ] = $theme_data[ $value[ 'key' ] ][ 'title' ] ?? $addon_theme[ 'theme_color' ][ 0 ][ 'title' ];
+                $data[ $value[ 'key' ] ][ 'theme' ] = $theme_data[ $value[ 'key' ] ][ 'theme' ] ?? $addon_theme[ 'theme_color' ][ 0 ][ 'theme' ];
+                $data[ $value[ 'key' ] ][ 'new_theme' ] = $theme_data[ $value[ 'key' ] ][ 'new_theme' ] ?? '';
+            }
         }
         if (count($apps) > 1) {// 应用数量大于1时，展示系统主题色设置，只有一个应用时，不展示系统主题色设置
             $data = array_merge($app_theme, $data);

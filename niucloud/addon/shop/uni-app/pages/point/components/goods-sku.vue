@@ -23,10 +23,10 @@
                                     <text class="text-[44rpx] price-font">{{ parseFloat(goodsDetail.price).toFixed(2) }}</text>
                                     <text class="text-[38rpx] price-font">元</text>
                                 </template>
-                                <template v-if="!goodsDetail.point&&!parseFloat(goodsDetail.price)">
+                                <template v-if="!goodsDetail.point && parseFloat(goodsDetail.price)">
                                     <text class="text-[26rpx] price-font">￥</text>
                                     <text class="text-[44rpx] price-font">{{ parseFloat(goodsDetail.price).toFixed(2).split('.')[0] }}</text>
-                                    <text class="text-[26rpx] mr-[6rpx] price-font">.{{ parseFloat(goodsPrice).toFixed(2).split('.')[1] }}</text>
+                                    <text class="text-[26rpx] mr-[6rpx] price-font">.{{ parseFloat(goodsDetail.price).toFixed(2).split('.')[1] }}  </text>
                                 </template>
 
                             </view>
@@ -66,21 +66,28 @@
                     </view>
                 </scroll-view>
                 <view class="px-[20rpx]">
-                    <!-- #ifdef H5 -->
-                    <button v-if="goodsDetail.detail.stock > 0" hover-class="none"
-                            class="!h-[80rpx] primary-btn-bg leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500"
-                            type="primary" @click="confirm">确定</button>
-                    <!-- #endif -->
-
-                    <!-- #ifdef MP-WEIXIN -->
+                    
                     <template v-if="goodsDetail.detail.stock > 0">
-                        <!--<button v-if="isBindMobile && userInfo && !userInfo.mobile" hover-class="none" class="!h-[80rpx] primary-btn-bg leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500" type="primary" open-type="getPhoneNumber" @getphonenumber="memberStore.bindMobile">确定</button>-->
-                        <!--<button v-else hover-class="none" class="!h-[80rpx] primary-btn-bg leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500" type="primary" @click="confirm">确定</button>-->
-                        <button hover-class="none"
+                        <!-- #ifdef H5 -->
+                        <button v-if="isPointGoods" hover-class="none"
                                 class="!h-[80rpx] primary-btn-bg leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500"
                                 type="primary" @click="confirm">确定</button>
+                        <button v-else hover-class="none"
+                                class="!h-[80rpx] leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500"
+                                disabled>该规格未参与积分商品</button>
+                        <!-- #endif -->
+
+                        <!-- #ifdef MP-WEIXIN -->
+                        <!--<button v-if="isBindMobile && userInfo && !userInfo.mobile" hover-class="none" class="!h-[80rpx] primary-btn-bg leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500" type="primary" open-type="getPhoneNumber" @getphonenumber="memberStore.bindMobile">确定</button>-->
+                        <!--<button v-else hover-class="none" class="!h-[80rpx] primary-btn-bg leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500" type="primary" @click="confirm">确定</button>-->
+                        <button hover-class="none"  v-if="isPointGoods"
+                                class="!h-[80rpx] primary-btn-bg leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500"
+                                type="primary" @click="confirm">确定</button>
+                        <button v-else hover-class="none"
+                                class="!h-[80rpx] leading-[80rpx] text-[26rpx] rounded-[50rpx] font-500"
+                                disabled>该规格未参与积分商品</button>
+                        <!-- #endif -->
                     </template>
-                    <!-- #endif -->
 
                     <button hover-class="none" v-else class="!h-[80rpx] leading-[80rpx] text-[26rpx] text-[#fff] bg-[#ccc] rounded-[50rpx] font-500">已售罄</button>
                 </view>
@@ -190,9 +197,12 @@ const goodsDetail = computed(() => {
             data.skuList.forEach((idItem: any, idIndex: any) => {
                 if (idItem.sku_id == currSpec.value.skuId) {
                     data.detail = idItem;
+                    data.is_join_exchange = idItem.is_join_exchange;
+                    
                 }
             })
         }
+        if(currSpec.value.name) detectionGoodsIsDisable(data, currSpec.value.name)
     }
     return data;
 })
@@ -201,6 +211,19 @@ const change = (data: any, index: any) => {
     currSpec.value.name[index] = data.name;
     buyNum.value = 1
     getSkuId();
+    detectionGoodsIsDisable(goodsDetail.value, currSpec.value.name)
+}
+
+const isPointGoods = ref(true)
+const detectionGoodsIsDisable = (data: any, currSkuName: any)=>{
+    const skuNameArr = []
+    data.skuList.forEach((item, index) => {
+        skuNameArr.push(item.sku_name)
+    })
+    isPointGoods.value = true
+    if(currSkuName && currSkuName.length && !skuNameArr.includes(currSkuName.join(' '))){
+        isPointGoods.value = false 
+    }
 }
 
 const emits = defineEmits(['change'])
@@ -254,7 +277,8 @@ const confirm = () => {
             ]
         },
         success: () => {
-            redirect({ url: '/addon/shop/pages/point/payment' })
+            const url = goodsDetail.value.is_join_exchange ? '/addon/shop/pages/point/payment' : '/addon/shop/pages/order/payment'
+            redirect({ url })
         }
     });
 

@@ -201,6 +201,7 @@ Route::group('shop', function () {
 
     // 查询自提点
     Route::get('order_create/store', 'addon\shop\app\api\controller\order\OrderCreate@getStore');
+    Route::get('order_create/local', 'addon\shop\app\api\controller\order\OrderCreate@getLocalDeliveryConfig');
 
     //获取订单确认数据
     Route::get('confirm', 'addon\shop\app\api\controller\order\OrderCreate@confirm');

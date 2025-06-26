@@ -58,7 +58,6 @@ export function deleteCompany(company_id: number) {
     return request.delete(`shop/delivery/company/${ company_id }`, { showErrorMessage: true, showSuccessMessage: true })
 }
 
-
 /*********************************  运费模版  ***************************************/
 /**
  * 获取运费模版分页列表
@@ -141,7 +140,6 @@ export function getStoreInfo(store_id: number) {
 
 /**
  * 获取初始化页面信息
- * @param params
  * @returns
  */
 export function getStoreInit() {
@@ -273,4 +271,12 @@ export function getLocal() {
  */
 export function setLocal(params: Record<string, any>) {
     return request.put('shop/local', params, { showSuccessMessage: true })
+}
+
+/**
+ * 三方配送
+ * @returns
+ */
+export function getThird() {
+    return request.get('shop/third/init')
 }

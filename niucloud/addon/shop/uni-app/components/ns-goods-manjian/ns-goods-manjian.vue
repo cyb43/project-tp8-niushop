@@ -14,9 +14,7 @@
                             <view class="mt-[20rpx]">
                                 <view v-if="item.goods && item.goods.length" class="flex mt-[20rpx]">
                                     <view class="w-[100rpx] flex justify-end">
-                                        <view class="bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center px-[12rpx] h-[38rpx] mr-[6rpx]">
-                                            赠品
-                                        </view>
+                                        <view class="bg-[var(--primary-color-light)] text-[var(--primary-color)] rounded-[6rpx] text-[22rpx] flex items-center justify-center px-[12rpx] h-[38rpx] mr-[6rpx]">赠品</view>
                                     </view>
                                     <view class="flex-1 ml-[8rpx]">
                                         <view class="flex p-[20rpx] bg-[#f8f8f8] rounded-[var(--goods-rounded-big)] overflow-hidden"

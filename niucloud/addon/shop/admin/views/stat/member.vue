@@ -99,12 +99,12 @@ const dialogVisible = ref(false)
 const value2 = ref('')
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-  if(tab.props.name == 'fifth'){
-    dialogVisible.value = true
-  }
-  nextTick(()=>{
-    initIncomeChart()
-  })
+    if (tab.props.name == 'fifth') {
+        dialogVisible.value = true
+    }
+    nextTick(() => {
+        initIncomeChart()
+    })
 
 }
 
@@ -118,53 +118,53 @@ const boxes = reactive([
 const currentIndex = ref(-1);
 
 const selectBox = (item) => {
-  currentIndex.value = item.id;
-};
+    currentIndex.value = item.id;
+}
 
 // 折线图
 const incomeChartRef = ref(null);
 
 const initIncomeChart = () => {
-  if (incomeChartRef.value !== null) {
-    const incomeChart = echarts.init(incomeChartRef.value);
+    if (incomeChartRef.value !== null) {
+        const incomeChart = echarts.init(incomeChartRef.value);
 
-    // 准备数据
-    const xAxisData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-    const yAxisData = [0, -20, -50, 134, 90, 230, 210];
+        // 准备数据
+        const xAxisData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+        const yAxisData = [0, -20, -50, 134, 90, 230, 210];
 
-    // 配置项
-    const option = {
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: ['新增会员数']
-      },
-      xAxis: {
-        type: 'category',
-        data: xAxisData
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        name: '新增会员数',
-        type: 'line',
-        data: yAxisData
-      }]
-    };
+        // 配置项
+        const option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['新增会员数']
+            },
+            xAxis: {
+                type: 'category',
+                data: xAxisData
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: '新增会员数',
+                type: 'line',
+                data: yAxisData
+            }]
+        };
 
-    // 使用配置项初始化图表
-    incomeChart.setOption(option);
-    incomeChart.resize({
-        width: 'auto'
-    });
-  }
-};
+        // 使用配置项初始化图表
+        incomeChart.setOption(option);
+        incomeChart.resize({
+            width: 'auto'
+        });
+    }
+}
 
 onMounted(() => {
-  initIncomeChart();
-});
+    initIncomeChart();
+})
 </script>
 <style lang="scss" scoped>
 .wenHao{

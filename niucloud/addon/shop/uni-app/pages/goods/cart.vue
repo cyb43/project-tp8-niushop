@@ -19,7 +19,7 @@
             </view>
             <template v-else>
                 <view class="flex-1 h-0">
-                    <scroll-view class="scroll-height " :scroll-y="true">
+                    <view class="scroll-height ">
                         <view class="py-[var(--top-m)] sidebar-margin">
                             <view class="bg-[#fff] pb-[10rpx] box-border rounded-[var(--rounded-big)]" v-if="cartList.length">
                                 <view class="flex mx-[var(--rounded-big)] pt-[var(--pad-top-m)] justify-between items-center box-border font-400 text-[24rpx] mb-[24rpx] leading-[30rpx]">
@@ -156,7 +156,7 @@
                             </view>
                         </view>
                         <ns-goods-recommend></ns-goods-recommend>
-                    </scroll-view>
+                    </view>
                 </view>
             </template>
         </view>
@@ -259,7 +259,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, watch } from 'vue'
 import useMemberStore from '@/stores/member'
 import { useLogin } from '@/hooks/useLogin'
 import { onShow } from '@dcloudio/uni-app'
@@ -314,6 +314,7 @@ const getCartGoodsListFn = () => {
         selectAll();
         cartCalculateFn();
         loading.value = false
+        cartStore.isAddCartRecommend = false
         if (querOne.value) querOne.value = false
     }).catch((err) => {
         if (err.code == 401) {
@@ -639,6 +640,14 @@ const goodsPrice = (data: any) => {
 	price = data.goodsSku.show_price
     return price;
 }
+
+watch(
+    () => cartStore.isAddCartRecommend,
+    (newValue, oldValue) => {
+        if(newValue){
+            getCartGoodsListFn()
+        }
+    })
 </script>
 <style lang="scss" scoped>
 @import '@/addon/shop/styles/common.scss';
@@ -675,15 +684,15 @@ uni-page-body {
 
 /*  #ifdef  H5  */
 .scroll-height {
-    height: calc(100vh - 100rpx - 50px - constant(safe-area-inset-bottom));
-    height: calc(100vh - 100rpx - 50px - env(safe-area-inset-bottom));
+    padding-bottom: calc(100rpx + 50px + constant(safe-area-inset-bottom));
+    padding-bottom: calc(100rpx + 50px + env(safe-area-inset-bottom));
 }
 
 /*  #endif  */
 /*  #ifndef  H5  */
 .scroll-height {
-    height: calc(100vh - 200rpx - constant(safe-area-inset-bottom));
-    height: calc(100vh - 200rpx - env(safe-area-inset-bottom));
+    padding-bottom: calc(100rpx + 50px + constant(safe-area-inset-bottom));
+    padding-bottom: calc(100rpx + 50px + env(safe-area-inset-bottom));
 }
 
 /*  #endif  */

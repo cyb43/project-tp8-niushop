@@ -24,12 +24,14 @@ use think\Response;
 /**
  * 万能表单控制器
  * Class DiyForm
+ * @description 万能表单
  * @package app\adminapi\controller\diy
  */
 class DiyForm extends BaseAdminController
 {
     /**
-     * @notes 获取万能表单分页列表
+     * 获取万能表单分页列表
+     * @description 获取万能表单分页列表
      * @return Response
      */
     public function pages()
@@ -43,7 +45,8 @@ class DiyForm extends BaseAdminController
     }
 
     /**
-     * @notes 获取万能表单分页列表（用于弹框选择）
+     * 获取万能表单分页列表（用于弹框选择）
+     * @description 获取万能表单分页列表（用于弹框选择）
      * @return Response
      */
     public function select()
@@ -58,7 +61,8 @@ class DiyForm extends BaseAdminController
     }
 
     /**
-     * @notes 获取万能表单列表
+     * 获取万能表单列表
+     * @description 获取万能表单列表
      * @return Response
      * @throws DataNotFoundException
      * @throws DbException
@@ -77,6 +81,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 万能表单详情
+     * @description 万能表单详情
      * @param int $id
      * @return Response
      */
@@ -87,6 +92,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 添加万能表单
+     * @description 添加万能表单
      * @return Response
      */
     public function add()
@@ -105,6 +111,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 万能表单编辑
+     * @description 万能表单编辑
      * @param $id
      * @return Response
      */
@@ -124,6 +131,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 万能表单删除
+     * @description 万能表单删除
      * @return Response
      */
     public function del()
@@ -137,6 +145,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取万能表单初始化数据
+     * @description 获取万能表单初始化数据
      * @return Response
      * @throws DbException
      */
@@ -153,6 +162,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取万能表单模板
+     * @description 获取万能表单模板
      * @return Response
      */
     public function getTemplate()
@@ -167,6 +177,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 修改页面分享内容
+     * @description 修改页面分享内容
      * @return Response
      */
     public function modifyShare()
@@ -181,6 +192,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取模板页面（存在的应用插件列表）
+     * @description 获取模板页面（存在的应用插件列表）
      * @return Response
      */
     public function getApps()
@@ -189,7 +201,8 @@ class DiyForm extends BaseAdminController
     }
 
     /**
-     * 复制模版 todo 靠后
+     * 复制万能表单
+     * @description 复制万能表单
      * @return Response
      */
     public function copy()
@@ -203,6 +216,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取模板页面（存在的应用插件列表）
+     * @description 获取模板页面（存在的应用插件列表）
      * @return Response
      */
     public function getFormType()
@@ -212,6 +226,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 修改状态
+     * @description 修改状态
      * @return \think\Response
      */
     public function modifyStatus()
@@ -226,6 +241,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取使用记录
+     * @description 获取使用记录
      * @return Response
      */
     public function getRecordPages()
@@ -240,6 +256,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取使用记录详情
+     * @description 获取使用记录详情
      * @param int $record_id
      * @return Response
      */
@@ -250,6 +267,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 使用记录删除
+     * @description 使用记录删除
      * @return Response
      */
     public function delRecord()
@@ -264,6 +282,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取万能表单字段记录
+     * @description 获取万能表单字段记录
      * @return Response
      */
     public function getFieldsList()
@@ -278,6 +297,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取表单填写配置
+     * @description 获取表单填写配置
      * @param $form_id int 所属万能表单id
      * @return Response
      */
@@ -288,6 +308,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 编辑表单填写配置
+     * @description 编辑表单填写配置
      * @return Response
      */
     public function editWriteConfig()
@@ -314,6 +335,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取表单提交成功 也配置
+     * @description 获取表单提交成功页配置
      * @param $form_id int 所属万能表单id
      * @return Response
      */
@@ -324,6 +346,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 编辑表单提交成功页配置
+     * @description 编辑表单提交成功页配置
      * @return Response
      */
     public function editSubmitConfig()
@@ -347,6 +370,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取万能表单填表人统计列表
+     * @description 获取万能表单填表人统计列表
      * @return Response
      */
     public function memberStatPages()
@@ -360,6 +384,7 @@ class DiyForm extends BaseAdminController
 
     /**
      * 获取万能表单字段统计列表
+     * @description 获取万能表单字段统计列表
      * @return Response
      */
     public function fieldStatList()

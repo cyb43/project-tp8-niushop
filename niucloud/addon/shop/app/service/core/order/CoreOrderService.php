@@ -52,7 +52,7 @@ class CoreOrderService extends BaseCoreService
         $config = ( new CoreConfigService() )->getDeliverySearchConfig();
         $class = new DeliverySearchLoader("KdniaoDeliverySearch", $config);
         $data = [
-            'express_no' => $params[ 'company' ][ 'express_no' ],
+            'express_no' => !empty($params[ 'company' ]) ? $params[ 'company' ][ 'express_no' ] : '',
             'logistic_no' => $params[ 'express_number' ],
             'mobile' => $params[ 'mobile' ],
         ];

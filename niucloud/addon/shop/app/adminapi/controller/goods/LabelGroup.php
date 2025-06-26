@@ -24,6 +24,7 @@ class LabelGroup extends BaseAdminController
 {
     /**
      * 获取商品标签分组分页列表
+     * @description 获取商品标签分组列表-分页
      * @return \think\Response
      */
     public function pages()
@@ -38,6 +39,7 @@ class LabelGroup extends BaseAdminController
 
     /**
      * 获取商品标签分组列表
+     * @description 获取商品标签分组列表-全部
      * @return \think\Response
      */
     public function lists()
@@ -50,6 +52,7 @@ class LabelGroup extends BaseAdminController
 
     /**
      * 商品标签分组详情
+     * @description 查看商品标签分组详情
      * @param int $id
      * @return \think\Response
      */
@@ -60,6 +63,7 @@ class LabelGroup extends BaseAdminController
 
     /**
      * 添加商品标签分组
+     * @description 添加商品标签分组
      * @return \think\Response
      */
     public function add()
@@ -75,6 +79,7 @@ class LabelGroup extends BaseAdminController
 
     /**
      * 商品标签分组编辑
+     * @description 编辑商品标签分组
      * @param $id  商品标签分组id
      * @return \think\Response
      */
@@ -91,6 +96,7 @@ class LabelGroup extends BaseAdminController
 
     /**
      * 商品标签分组删除
+     * @description 删除商品标签分组
      * @param $id  商品标签分组id
      * @return \think\Response
      */
@@ -102,6 +108,7 @@ class LabelGroup extends BaseAdminController
 
     /**
      * 修改排序
+     * @description 修改商品标签分组排序
      * @return \think\Response
      */
     public function modifySort()

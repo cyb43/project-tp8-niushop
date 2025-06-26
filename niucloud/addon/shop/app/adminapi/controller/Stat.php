@@ -21,6 +21,7 @@ class Stat extends BaseAdminController
 {
     /**
      * 总计
+     * @description 查看统计数据-总计
      * @return \think\Response
      */
     public function total() {
@@ -29,6 +30,7 @@ class Stat extends BaseAdminController
 
     /**
      * 今日
+     * @description 查看统计数据-今日
      * @return void
      */
     public function today() {
@@ -37,6 +39,7 @@ class Stat extends BaseAdminController
 
     /**
      * 昨日
+     * @description 查看统计数据-昨日
      * @return void
      */
     public function yesterday() {
@@ -46,6 +49,7 @@ class Stat extends BaseAdminController
 
     /**
      * 获取阶段统计数据
+     * @description 查看统计数据-阶段统计数据
      * @return \think\Response
      */
     public function stat() {
@@ -58,6 +62,7 @@ class Stat extends BaseAdminController
 
     /**
      * 获取统计数据按时段
+     * @description 查看统计数据-统计数据按时段
      * @return \think\Response
      */
     public function hourStat() {
@@ -69,12 +74,18 @@ class Stat extends BaseAdminController
 
     /**
      * 订单统计
+     * @description 查看统计数据-订单
      * @return \think\Response
      */
     public function order() {
         return success(data: (new OrderService())->getOrderCount());
     }
 
+    /**
+     * @description 查看统计数据-商品
+     * @return \think\Response
+     * @throws \think\db\exception\DbException
+     */
     public function goods()
     {
         return success(data: (new GoodsService())->getGoodsCount());

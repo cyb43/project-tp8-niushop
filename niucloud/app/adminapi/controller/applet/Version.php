@@ -18,11 +18,13 @@ use think\Response;
 
 /**
  * 小程序版本管理控制器
+ * @description 小程序版本管理
  */
 class Version extends BaseAdminController
 {
     /**
      * 列表
+     * @description 列表
      * @return Response
      */
     public function lists()
@@ -35,6 +37,7 @@ class Version extends BaseAdminController
 
     /**
      * 详情
+     * @description 详情
      * @param int $id
      * @return Response
      */
@@ -45,6 +48,7 @@ class Version extends BaseAdminController
 
     /**
      * 添加
+     * @description 添加
      * @return Response
      */
     public function add()
@@ -62,6 +66,7 @@ class Version extends BaseAdminController
 
     /**
      * 编辑
+     * @description 编辑
      * @param int $id
      * @return Response
      */
@@ -80,6 +85,7 @@ class Version extends BaseAdminController
 
     /**
      * 删除
+     * @description 删除
      * @param int $id
      * @return Response
      */
@@ -91,6 +97,7 @@ class Version extends BaseAdminController
 
     /**
      * 设置状态
+     * @description 设置状态
      * @param int $id
      * @param $status
      * @return Response
@@ -103,6 +110,7 @@ class Version extends BaseAdminController
 
     /**
      * 小程序包上传
+     * @description 小程序包上传
      * @return Response
      * @throws Exception
      */

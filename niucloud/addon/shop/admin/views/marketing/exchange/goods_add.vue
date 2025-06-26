@@ -478,18 +478,18 @@ const goodsType = reactive([
 const initialFormData = {
     type: 'goods', // 名称
     names: '', // 标题
-    title:'',
-    image:'',
-    goods_ids:[],
-    coupon_ids:[],
-    product_list:[],
-    stock:'',
-    limit_num:'',
-    point:'',
-    price:'',
-    balance:'',
-    isBalance:1,
-    content:''
+    title: '',
+    image: '',
+    goods_ids: [],
+    coupon_ids: [],
+    product_list: [],
+    stock: '',
+    limit_num: '',
+    point: '',
+    price: '',
+    balance: '',
+    isBalance: 1,
+    content: ''
 }
 const formData: Record<string, any> = ref({ ...initialFormData })
 const formRef = ref<FormInstance>()
@@ -517,14 +517,14 @@ const formRules = computed(() => {
         ],
     }
 })
-const changeGoodsType=(item:any)=>{
+const changeGoodsType = (item:any) => {
     formData.value.type = item.type
     formData.value.coupon_ids = []
     formData.value.goods_ids = []
-    if(formData.value.type == 'goods'){
+    if (formData.value.type == 'goods') {
         formData.value.goods_info = {}
-    }else {
-        if(formData.value.goods_info) delete formData.value.goods_info
+    } else {
+        if (formData.value.goods_info) delete formData.value.goods_info
     }
     formData.value.product_list = []
 }
@@ -537,13 +537,13 @@ const deleteGoods = ()=>{
     formData.value.product_list = []
 }
 //设置商品sku是否参与
-const enabledEvent = (row:any)=>{
+const enabledEvent = (row:any)=> {
     row.is_enabled = row.is_enabled ? 0 : 1
-    if(formData.value.product_list.every((el:any)=>el.is_enabled===0)){
+    if (formData.value.product_list.every((el: any) => el.is_enabled === 0)) {
         row.is_enabled = 1
         ElMessage({
-             type: 'warning',
-            message: `${t('noEnabledTip')}`
+            type: 'warning',
+            message: `${ t('noEnabledTip') }`
         })
         return
     }
@@ -552,6 +552,7 @@ const enabledEvent = (row:any)=>{
     row.point = '';
     row.price = '';
 }
+
 const goodsSelectPopupRef = ref()
 const goodsSelect = (value:any)=> {
     const goods_info: any = Object.values(deepClone(value))[0]
@@ -732,30 +733,30 @@ const onSave = async (formEl: FormInstance | undefined) => {
     await formEl.validate(async (valid) => {
         if (valid) {
             loading.value = true
-           
-            if(formData.value.type == 'goods'){
-                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el:any)=>{
+
+            if (formData.value.type == 'goods') {
+                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el: any) => {
                     return {
-                        goods_id:el.goods_id,
-                        sku_id:el.sku_id,
-                        point:el.point||'0',
-                        price:el.price||'0',
-                        limit_num:el.limit_num||'0',
-                        stock:el.stock||'0',
-                        is_enabled:el.is_enabled
+                        goods_id: el.goods_id,
+                        sku_id: el.sku_id,
+                        point: el.point || '0',
+                        price: el.price || '0',
+                        limit_num: el.limit_num || '0',
+                        stock: el.stock || '0',
+                        is_enabled: el.is_enabled
                     }
-                }).filter((el:any)=>el.is_enabled===1))
-            } else if(formData.value.type == 'coupon'){
-                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el:any)=>{
+                }).filter((el: any) => el.is_enabled === 1))
+            } else if (formData.value.type == 'coupon') {
+                formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el: any) => {
                     return {
-                        coupon_id:el.id,
+                        coupon_id: el.id,
                     }
                 }))
-            }else{
-                if(formData.value.isBalance){
-                    formData.value.product_detail=JSON.stringify([{balance:formData.value.balance}])
-                }else{
-                    formData.value.product_detail=JSON.stringify([{money:formData.value.balance}])
+            } else {
+                if (formData.value.isBalance) {
+                    formData.value.product_detail = JSON.stringify([{ balance: formData.value.balance }])
+                } else {
+                    formData.value.product_detail = JSON.stringify([{ money: formData.value.balance }])
                 }
             }
             // formData.value.goods_data =  JSON.stringify(formData.value.product_list.filter((el:any)=>{
@@ -771,6 +772,7 @@ const onSave = async (formEl: FormInstance | undefined) => {
         }
     })
 }
+
 const back = () => {
     router.push('/shop/marketing/exchange/goods_list')
 }

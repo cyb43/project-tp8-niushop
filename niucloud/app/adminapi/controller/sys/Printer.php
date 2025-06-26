@@ -19,6 +19,7 @@ use core\base\BaseAdminController;
 /**
  * 小票打印机控制器
  * Class Printer
+ * @description 小票打印机
  * @package app\adminapi\controller\sys
  */
 class Printer extends BaseAdminController
@@ -26,6 +27,7 @@ class Printer extends BaseAdminController
 
     /**
      * 获取小票打印机分页列表
+     * @description 获取小票打印机分页列表
      * @return \think\Response
      */
     public function pages()
@@ -38,6 +40,7 @@ class Printer extends BaseAdminController
 
     /**
      * 获取小票打印机列表
+     * @description 获取小票打印机列表
      * @return \think\Response
      */
     public function lists()
@@ -50,6 +53,7 @@ class Printer extends BaseAdminController
 
     /**
      * 小票打印机详情
+     * @description 小票打印机详情
      * @param int $id
      * @return \think\Response
      */
@@ -60,6 +64,7 @@ class Printer extends BaseAdminController
 
     /**
      * 添加小票打印机
+     * @description 添加小票打印机
      * @return \think\Response
      */
     public function add()
@@ -84,6 +89,7 @@ class Printer extends BaseAdminController
 
     /**
      * 小票打印机编辑
+     * @description 小票打印机编辑
      * @param $id  小票打印机id
      * @return \think\Response
      */
@@ -109,6 +115,7 @@ class Printer extends BaseAdminController
 
     /**
      * 修改小票打印机状态
+     * @description 修改小票打印机状态
      * @return \think\Response
      */
     public function modifyStatus()
@@ -123,6 +130,7 @@ class Printer extends BaseAdminController
 
     /**
      * 小票打印机删除
+     * @description 小票打印机删除
      * @param $id  小票打印机id
      * @return \think\Response
      */
@@ -134,6 +142,7 @@ class Printer extends BaseAdminController
 
     /**
      * 获取小票打印模板分页列表
+     * @description 获取小票打印模板分页列表
      * @return \think\Response
      */
     public function templatePageLists()
@@ -147,6 +156,7 @@ class Printer extends BaseAdminController
 
     /**
      * 获取小票打印模板列表
+     * @description 获取小票打印模板列表
      * @return \think\Response
      * @throws \think\db\exception\DbException
      */
@@ -161,6 +171,7 @@ class Printer extends BaseAdminController
 
     /**
      * 小票打印模板详情
+     * @description 小票打印模板详情
      * @param int $id
      * @return \think\Response
      */
@@ -171,6 +182,7 @@ class Printer extends BaseAdminController
 
     /**
      * 添加小票打印模板
+     * @description 添加小票打印模板
      * @return \think\Response
      */
     public function templateAdd()
@@ -187,6 +199,7 @@ class Printer extends BaseAdminController
 
     /**
      * 小票打印模板编辑
+     * @description 小票打印模板编辑
      * @param $id  小票打印模板id
      * @return \think\Response
      */
@@ -204,6 +217,7 @@ class Printer extends BaseAdminController
 
     /**
      * 小票打印模板删除
+     * @description 小票打印模板删除
      * @param $id  小票打印模板id
      * @return \think\Response
      */
@@ -215,6 +229,7 @@ class Printer extends BaseAdminController
 
     /**
      * 获取小票打印模板类型
+     * @description 获取小票打印模板类型
      * @return array|\think\Response
      */
     public function getType()
@@ -224,6 +239,7 @@ class Printer extends BaseAdminController
 
     /**
      * 获取小票打印机设备品牌
+     * @description 获取小票打印机设备品牌
      * @return array|\think\Response
      */
     public function getBrand()
@@ -236,6 +252,7 @@ class Printer extends BaseAdminController
 
     /**
      * 测试打印
+     * @description 测试打印
      * @param int $id
      * @return \think\Response
      */
@@ -247,6 +264,7 @@ class Printer extends BaseAdminController
 
     /**
      * 刷新打印机token
+     * @description 刷新打印机token
      * @param int $id
      * @return \think\Response
      */
@@ -258,6 +276,7 @@ class Printer extends BaseAdminController
 
     /**
      * 打印小票内容
+     * @description 打印小票内容
      * @return \think\Response
      */
     public function printTicket()

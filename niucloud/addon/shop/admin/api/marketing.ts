@@ -166,7 +166,6 @@ export function getActiveDiscountStatusList() {
     return request.get(`shop/active/status`)
 }
 
-
 /**
  * 获取指定活动的折扣信息。
  *
@@ -226,6 +225,24 @@ export function closeActiveDiscount(active_id: number) {
  */
 export function deleteActiveDiscount(active_id: number) {
     return request.delete(`shop/active/discount/${ active_id }`, { showSuccessMessage: true })
+}
+
+/**
+ * 批量关闭限时折扣
+ * @param params
+ * @returns
+ */
+export function batchCloseActiveDiscount(params: Record<string, any>) {
+    return request.post(`shop/active/discount/batchClose`, params, { showSuccessMessage: true })
+}
+
+/**
+ * 批量删除限时折扣
+ * @param params
+ * @returns
+ */
+export function batchDeleteActiveDiscount(params: Record<string, any>) {
+    return request.post(`shop/active/discount/batchDelete`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -353,6 +370,33 @@ export function editActiveExchangeStatus(params: Record<string, any>) {
  */
 export function deleteActiveExchange(id: number) {
     return request.delete(`shop/active/exchange/${ id }`, { showSuccessMessage: true })
+}
+
+/**
+ * 批量删除积分商品
+ * @param params
+ * @returns
+ */
+export function batchDeleteActiveExchange(params: Record<string, any>) {
+    return request.post(`shop/active/exchange/batchDelete`, params, { showSuccessMessage: true })
+}
+
+/**
+ * 批量下架积分商品
+ * @param params
+ * @returns
+ */
+export function batchDownActiveExchange(params: Record<string, any>) {
+    return request.post(`shop/active/exchange/batchDown`, params, { showSuccessMessage: true })
+}
+
+/**
+ * 批量上架积分商品
+ * @param params
+ * @returns
+ */
+export function batchUpActiveExchange(params: Record<string, any>) {
+    return request.post(`shop/active/exchange/batchUp`, params, { showSuccessMessage: true })
 }
 
 /**
@@ -646,4 +690,3 @@ export function batchDeleteManjian(params: Record<string, any>) {
 export function batchCloseMajian(params: Record<string, any>) {
     return request.put(`shop/manjian/goods/batchClose`, params, { showSuccessMessage: true })
 }
-

@@ -33,6 +33,7 @@ trait WapTrait
         $content = "<template>\n";
         $content .= "    <view class=\"diy-group\" id=\"componentList\">\n";
         $content .= "        <top-tabbar :scrollBool=\"diyGroup.componentsScrollBool.TopTabbar\" v-if=\"data.global && Object.keys(data.global).length && data.global.topStatusBar && data.global.topStatusBar.isShow\" ref=\"topTabbarRef\" :data=\"data.global\" />\n";
+        $content .= "        <pop-ads v-if=\"data.global && Object.keys(data.global).length && data.global.popWindow && data.global.popWindow.show\" ref=\"popAbsRef\" :data=\"data.global\" />\n";
         $content .= "        <view v-for=\"(component, index) in data.value\" :key=\"component.id\"\n";
         $content .= "        @click=\"diyStore.changeCurrentIndex(index, component)\"\n";
         $content .= "        :class=\"diyGroup.getComponentClass(index,component)\" :style=\"component.pageStyle\">\n";
@@ -130,6 +131,7 @@ trait WapTrait
         }
 
         $content .= "   import topTabbar from '@/components/top-tabbar/top-tabbar.vue'\n";
+        $content .= "   import popAds from '@/components/pop-ads/pop-ads.vue'\n";
         $content .= "   import useDiyStore from '@/app/stores/diy';\n";
         $content .= "   import { useDiyGroup } from './useDiyGroup';\n";
         $content .= "   import { ref,getCurrentInstance } from 'vue';\n\n";

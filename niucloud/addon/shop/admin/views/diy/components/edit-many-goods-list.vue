@@ -229,6 +229,7 @@
                 <el-form-item :label="t('goodsCartIncident')" v-if="diyStore.editComponent.btnStyle.control">
                     <el-radio-group v-model="diyStore.editComponent.btnStyle.cartEvent">
                         <el-radio label="detail">{{ t('goodsDetail') }}</el-radio>
+                        <el-radio label="cart">{{ t('goodsAddCart') }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item :label="t('goodsBtnStyle')" class="!items-center" v-if="diyStore.editComponent.btnStyle.control">
@@ -252,7 +253,6 @@
                 </el-form-item>
             </el-form>
         </div>
-
 
         <div class="edit-attr-item-wrap">
             <h3 class="mb-[10px]">{{ t("goodsShowContent") }}</h3>
@@ -420,7 +420,6 @@ const firstCategoryShowDialogOpen = () => {
     }
 }
 
-
 const btnStyleList = reactive([
     {
         isShow: true,
@@ -492,8 +491,6 @@ onMounted(() => {
     window.addEventListener("resize", getScrollBarWidth);
 })
 
-const categoryTableRef = ref<InstanceType<typeof ElTable>>()
-
 /**
  * 获取商品分类列表
  */
@@ -504,7 +501,7 @@ const loadCategoryTree = () => {
     getCategoryTree().then(res => {
         categoryTable.loading = false
         categoryTable.data = res.data
-        categoryTable.data.forEach((item:any) => {
+        categoryTable.data.forEach((item: any) => {
             // 初始化一级分类的字段
             item.isShow = false; // 控制子级是否展开
             item.isSecondLevelIndeterminate = false; // 一级分类不确定状态
@@ -512,11 +509,11 @@ const loadCategoryTree = () => {
 
             // 如果有子分类（child_list），初始化子分类的字段
             if (item.child_list && item.child_list.length) {
-                item.child_list.forEach((childItem:any) => {
-                childItem.threeLevelCheckAll = false; // 子分类复选框状态
-            });
+                item.child_list.forEach((childItem: any) => {
+                    childItem.threeLevelCheckAll = false // 子分类复选框状态
+                })
             }
-        });
+        })
     }).catch(() => {
         categoryTable.loading = false
     })
@@ -539,12 +536,12 @@ const scrollBarWidth = ref(0);
 const tableBodyRef = ref(null);
 
 const getScrollBarWidth = () => {
-  nextTick(() => {
-    if (tableBodyRef.value) {      
-        scrollBarWidth.value = tableBodyRef.value.offsetWidth - tableBodyRef.value.clientWidth;
-    }
-  });
-};
+    nextTick(() => {
+        if (tableBodyRef.value) {
+            scrollBarWidth.value = tableBodyRef.value.offsetWidth - tableBodyRef.value.clientWidth;
+        }
+    })
+}
 
 // 选择商品分类
 let selectIndex = 0; // 当前选择的下标
@@ -555,7 +552,7 @@ const secondLevelArrowChange = (row:any) => {
     nextTick(() => getScrollBarWidth()); 
 };
 
-const saveCategoryId = () => { 
+const saveCategoryId = () => {
     const selected = selectedCategories.value[selectIndex];
     if (!selected || !selected.category_id) { // 确保 `category_id` 存在
         ElMessage({
@@ -564,35 +561,37 @@ const saveCategoryId = () => {
         });
         return;
     }
-    diyStore.editComponent.list[selectIndex].goods_category =  selectedCategories.value[selectIndex].category_id
-    diyStore.editComponent.list[selectIndex].goods_category_name =  selectedCategories.value[selectIndex].category_name;
+    diyStore.editComponent.list[selectIndex].goods_category = selectedCategories.value[selectIndex].category_id
+    diyStore.editComponent.list[selectIndex].goods_category_name = selectedCategories.value[selectIndex].category_name;
     categoryShowDialog.value = false
 }
+
 const clearAllSelections = () => {
-    categoryTable.data.forEach((row:any) => {
+    categoryTable.data.forEach((row: any) => {
         row.secondLevelCheckAll = false;
         if (row.child_list) {
-        row.child_list.forEach((child:any) => {
-            child.threeLevelCheckAll = false;
-        });
+            row.child_list.forEach((child: any) => {
+                child.threeLevelCheckAll = false;
+            });
         }
     });
-};
+}
+
 const categoryShowDialogOpen = (index:any) => {
-    selectIndex = index; 
-    clearAllSelections(); 
+    selectIndex = index;
+    clearAllSelections();
 
     // 设置 isShow 状态
-    categoryTable.data.forEach((row:any) => {
+    categoryTable.data.forEach((row: any) => {
         row.isShow = false; // 默认所有分类都是合住的
     });
-     // 确保 `selectedCategories.value[selectIndex]` 存在
+    // 确保 `selectedCategories.value[selectIndex]` 存在
     if (!selectedCategories.value[selectIndex]) {
         selectedCategories.value[selectIndex] = {}; // 初始化为空对象
-    } 
+    }
     // 回显已选中的分类
     nextTick(() => {
-        const selectedCategory = diyStore.editComponent.list[selectIndex];   
+        const selectedCategory = diyStore.editComponent.list[selectIndex];
         // 初始化 selectedCategories.value[selectIndex]
         if (!selectedCategories.value[selectIndex]) {
             selectedCategories.value[selectIndex] = {}; // 初始化为空对象
@@ -600,27 +599,27 @@ const categoryShowDialogOpen = (index:any) => {
             selectedCategories.value[selectIndex].category_name = selectedCategory.goods_category_name;
         }
 
-        
+
         if (selectedCategory) {
-        categoryTable.data.forEach((row:any) => {
-            if (row.category_id === selectedCategory.goods_category) {
-            row.secondLevelCheckAll = true;
-            row.isShow = true; // 展开选中的一级分类
-            }
-            if (row.child_list) {
-            row.child_list.forEach((child:any) => {
-                if (child.category_id === selectedCategory.goods_category) {
-                child.threeLevelCheckAll = true;
-                row.isShow = true; 
+            categoryTable.data.forEach((row: any) => {
+                if (row.category_id === selectedCategory.goods_category) {
+                    row.secondLevelCheckAll = true;
+                    row.isShow = true; // 展开选中的一级分类
+                }
+                if (row.child_list) {
+                    row.child_list.forEach((child: any) => {
+                        if (child.category_id === selectedCategory.goods_category) {
+                            child.threeLevelCheckAll = true;
+                            row.isShow = true;
+                        }
+                    });
                 }
             });
-            }
-        });
         }
     });
-    nextTick(() => getScrollBarWidth()); 
+    nextTick(() => getScrollBarWidth());
     categoryShowDialog.value = true;
-};
+}
 
 // 处理复选框变化
 const handleCheckboxChange = (checked: any, target: any, parentRow: any) => {
@@ -633,7 +632,7 @@ const handleCheckboxChange = (checked: any, target: any, parentRow: any) => {
             selectedCategories.value[selectIndex] = target;
             parentRow.isShow = true; // 展开父级分类
         } else {
-           // 如果是一级分类
+            // 如果是一级分类
             target.secondLevelCheckAll = checked;
             selectedCategories.value[selectIndex] = target;
             target.isShow = true; // 展开选中的一级分类
@@ -642,8 +641,7 @@ const handleCheckboxChange = (checked: any, target: any, parentRow: any) => {
         // 取消勾选时，清空选中的分类 ID
         delete selectedCategories.value[selectIndex];
     }
-};
-
+}
 
 defineExpose({})
 

@@ -12,7 +12,21 @@
                         </template>
                     </u--image>
                     <view class="flex-1 pt-[10rpx] pb-[20rpx] px-[16rpx] flex flex-col justify-between">
-                        <view class="text-[#333] leading-[40rpx] text-[28rpx] multi-hidden" :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }">{{ item.names }}</view>
+						<view class="text-[28rpx] leading-[40rpx] text-[#303133] multi-hidden mb-[10rpx]" :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }">
+						    <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
+						    {{ item.names }}
+						</view>
+						<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden my-[5rpx]">
+						    {{ item.title }}
+						</view>
+						<view v-if="item.goods_label && item.goods_label.length" class="flex flex-wrap">
+						    <template v-for="(tagItem, tagIndex) in item.goods_label">
+						        <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')"/>
+						        <view class="base-tag" v-else-if="tagItem.style_type == 'diy' || !tagItem.icon" :style="diyGoods.baseTagStyle(tagItem)">
+						            {{ tagItem.label_name }}
+						        </view>
+						    </template>
+						</view>
                         <view class="text-[22rpx] leading-[28rpx] mt-[10rpx] text-[var(--text-color-light9)]" :style="{ color : diyComponent.saleStyle.color }">已兑{{ item.total_exchange_num }}人</view>
                         <view class="flex justify-between flex-wrap items-center mt-[16rpx]">
                             <view class="flex flex-col">
@@ -44,10 +58,11 @@ import { ref, reactive, computed, watch, onMounted, nextTick, getCurrentInstance
 import { redirect, img } from '@/utils/common';
 import useDiyStore from '@/app/stores/diy';
 import { getExchangeComponentsList } from '@/addon/shop/api/point';
+import { useGoods } from '@/addon/shop/hooks/useGoods'
 
 const props = defineProps(['component', 'index', 'value']);
 const diyStore = useDiyStore();
-
+const diyGoods = useGoods();
 const skeleton = reactive({
     type: '',
     loading: diyStore.mode == 'decorate' ? false : true,
@@ -245,4 +260,5 @@ const toLink = (data: any) => {
 </script>
 
 <style lang="scss" scoped>
+	@import '@/addon/shop/styles/common.scss';
 </style>

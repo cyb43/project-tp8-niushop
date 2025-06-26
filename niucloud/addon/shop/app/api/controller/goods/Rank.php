@@ -64,6 +64,7 @@ class Rank extends BaseApiController
     {
         $data = $this->request->params([
             [ 'rank_id', 0 ],
+            [ 'limit', 3 ],
         ]);
 
         return success(( new RankService() )->getRankComponents($data));

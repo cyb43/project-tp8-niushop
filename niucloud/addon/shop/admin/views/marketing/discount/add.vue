@@ -98,7 +98,7 @@
                                                 callback(t('discountsPlaceholder'))
                                             } else if (isNaN(value) || !regExp.number.test(value)) {
                                                 callback(t('discountsTips'))
-                                            } else if (value <= 0) {
+                                            } else if (value < 0) {
                                                 callback(t('discountsTipsTwo'))
                                             } else if (value>9.9) {
                                                 callback(t('discountsTipsThree'))
@@ -112,7 +112,7 @@
                                     <el-form-item :prop="'goods_list.'+row.index + '.min_discount_rate'" :rules="[{
                                         trigger: 'blur',
                                         validator: (rule: any, value: any, callback: any) => {
-                                            if (!value) {
+                                            if (value === '' || value === null || value === undefined ) {
                                                 callback(t('skuDiscountSettingsPlaceholder'))
                                             } else if(row.min_discount_rate<0 || row.max_discount_rate<0){
                                                 callback(t('discountsTips'));
@@ -137,9 +137,9 @@
                                                     callback(t('reduceMoneyPlaceholder'))
                                                 } else if (isNaN(value) || !regExp.digit.test(value)) {
                                                     callback(t('reduceMoneyTips'))
-                                                } else if (value <=0) {
+                                                } else if (value <0) {
                                                     callback(t('reduceMoneyTipsTwo'))
-                                                } else if (value >= parseFloat(row.goodsSku.price) ) {
+                                                } else if (value > parseFloat(row.goodsSku.price) ) {
                                                     callback(t('reduceMoneyTipsThree'))
                                                 } else {
                                                     callback();
@@ -163,9 +163,9 @@
                                                     callback(t('promotionalPlaceholder'))
                                                 } else if (isNaN(value) || !regExp.digit.test(value)) {
                                                     callback(t('promotionalTips'))
-                                                } else if (value <=0 ) {
+                                                } else if (value <0 ) {
                                                     callback(t('promotionalTipsTwo'))
-                                                }else if (value >= parseFloat(row.goodsSku.price) ) {
+                                                }else if (value > parseFloat(row.goodsSku.price) ) {
                                                     callback(t('promotionalTipsThree'))
                                                 } else {
                                                     callback();
@@ -316,7 +316,7 @@ const validFn = (row: any) => {
         return false
     } else if (isNaN(row.discount_rate) || !regExp.number.test(row.discount_rate)) {
         return false
-    } else if (row.discount_rate <= 0) {
+    } else if (row.discount_rate < 0) {
         return false
     } else if (row.discount_rate > 9.9) {
         return false
@@ -324,17 +324,17 @@ const validFn = (row: any) => {
         return false
     } else if (isNaN(row.reduce_money) || !regExp.digit.test(row.reduce_money)) {
         return false
-    } else if (row.reduce_money <= 0) {
+    } else if (row.reduce_money < 0) {
         return false
-    } else if (row.reduce_money >= parseFloat(row.goodsSku.price)) {
+    } else if (row.reduce_money > parseFloat(row.goodsSku.price)) {
         return false
     } else if (row.specify_price.length == 0) {
         return false
     } else if (isNaN(row.specify_price) || !regExp.digit.test(row.specify_price)) {
         return false
-    } else if (row.specify_price <= 0) {
+    } else if (row.specify_price < 0) {
         return false
-    } else if (row.specify_price >= parseFloat(row.goodsSku.price)) {
+    } else if (row.specify_price > parseFloat(row.goodsSku.price)) {
         return false
     } else {
         return true
@@ -583,7 +583,7 @@ const saveBatch = () => {
                 message: `${ t('discountsTips') }`
             })
             return
-        } else if (batchOperation.value.discountNumber <= 0) {
+        } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
                 message: `${ t('discountsTipsTwo') }`
@@ -609,7 +609,7 @@ const saveBatch = () => {
                 message: `${ t('reduceMoneyTips') }`
             })
             return
-        } else if (batchOperation.value.discountNumber <= 0) {
+        } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
                 message: `${ t('reduceMoneyTipsTwo') }`
@@ -630,7 +630,7 @@ const saveBatch = () => {
                 message: `${ t('promotionalTips') }`
             })
             return
-        } else if (batchOperation.value.discountNumber <= 0) {
+        } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
                 message: `${ t('promotionalTipsTwo') }`

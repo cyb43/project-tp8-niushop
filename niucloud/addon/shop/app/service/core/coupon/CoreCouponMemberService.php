@@ -16,6 +16,7 @@ use addon\shop\app\model\coupon\Coupon;
 use addon\shop\app\model\coupon\CouponMember;
 use core\base\BaseCoreService;
 use core\exception\CommonException;
+use think\facade\Db;
 
 /**
  * 会员优惠券服务层
@@ -37,9 +38,9 @@ class CoreCouponMemberService extends BaseCoreService
     public function getUseCouponListByMemberId($member_id)
     {
         $where = array(
-            [ 'member_id', '=', $member_id ],
-            [ 'status', '=', CouponMemberDict::WAIT_USE ],
-            [ 'expire_time', '>', time() ]
+            ['member_id', '=', $member_id],
+            ['status', '=', CouponMemberDict::WAIT_USE],
+            ['expire_time', '>', time()]
         );
         $field = 'id, coupon_id, member_id, create_time, expire_time, use_time, type, status, price, min_condition_money, title';
         return $this->model->where($where)->field($field)->with([
@@ -58,8 +59,8 @@ class CoreCouponMemberService extends BaseCoreService
     public function getUseCouponById($id)
     {
         $where = array(
-            [ 'id', '=', $id ],
-            [ 'status', '=', CouponMemberDict::WAIT_USE ]
+            ['id', '=', $id],
+            ['status', '=', CouponMemberDict::WAIT_USE]
         );
         $field = 'id, coupon_id, member_id, create_time, expire_time, use_time, type, status, price, min_condition_money, title';
         return $this->model->where($where)->field($field)->with([
@@ -74,15 +75,15 @@ class CoreCouponMemberService extends BaseCoreService
     public function recover($id)
     {
         $where = array(
-            [ 'id', '=', $id ],
-            [ 'status', '=', CouponMemberDict::USED ]
+            ['id', '=', $id],
+            ['status', '=', CouponMemberDict::USED]
         );
 
         $coupon = $this->model->where($where)->findOrEmpty();
         //恢复没必要返还错误
         if (!$coupon->isEmpty()) {
             //判断使用时间是否过期
-            if (time() >= $coupon[ 'expire_time' ]) {
+            if (time() >= $coupon['expire_time']) {
                 $status = CouponMemberDict::EXPIRE;
             } else {
                 $status = CouponMemberDict::WAIT_USE;
@@ -107,8 +108,8 @@ class CoreCouponMemberService extends BaseCoreService
     public function invalid($ids)
     {
         $where = [
-            [ 'id', 'in', $ids ],
-            [ 'status', '=', CouponMemberDict::WAIT_USE ]
+            ['id', 'in', $ids],
+            ['status', '=', CouponMemberDict::WAIT_USE]
         ];
         $data = [
             'status' => CouponMemberDict::INVALID
@@ -125,8 +126,8 @@ class CoreCouponMemberService extends BaseCoreService
     public function expire($ids)
     {
         $where = [
-            [ 'id', 'in', $ids ],
-            [ 'status', '=', CouponMemberDict::WAIT_USE ]
+            ['id', 'in', $ids],
+            ['status', '=', CouponMemberDict::WAIT_USE]
         ];
         $data = [
             'status' => CouponMemberDict::EXPIRE
@@ -142,17 +143,17 @@ class CoreCouponMemberService extends BaseCoreService
      */
     public function use(array $data)
     {
-        $id = $data[ 'id' ];
+        $id = $data['id'];
         $where = array(
-            [ 'id', '=', $id ],
-            [ 'status', '=', CouponMemberDict::WAIT_USE ]
+            ['id', '=', $id],
+            ['status', '=', CouponMemberDict::WAIT_USE]
         );
         $coupon = $this->model->where($where)->findOrEmpty();
         if ($coupon->isEmpty()) throw new CommonException('SHOP_COUPON_IS_USED_OR_EXIST');//优惠券不存在或已使用
         $coupon->save(
             [
                 'status' => CouponMemberDict::USED,
-                'trade_id' => $data[ 'trade_id' ],
+                'trade_id' => $data['trade_id'],
                 'use_time' => time()
             ]
         );
@@ -168,7 +169,7 @@ class CoreCouponMemberService extends BaseCoreService
      */
     public function sendCoupon($member_id, $coupon_id, $num)
     {
-        $coupon = ( new Coupon() )->where([ [ 'id', '=', $coupon_id ] ])->findOrEmpty();
+        $coupon = (new Coupon())->where([['id', '=', $coupon_id]])->findOrEmpty();
         if ($coupon->isEmpty()) {
             throw new CommonException('COUPON_NOT_EXIST');
         }
@@ -188,10 +189,10 @@ class CoreCouponMemberService extends BaseCoreService
 //            }
 //        }
 
-        if ($coupon[ 'valid_type' ] == 1) {
-            $expire_time = 86400 * $coupon[ 'length' ] + time();
+        if ($coupon['valid_type'] == 1) {
+            $expire_time = 86400 * $coupon['length'] + time();
         } else {
-            $expire_time = $coupon[ 'valid_end_time' ];
+            $expire_time = $coupon['valid_end_time'];
         }
 
         $member_coupon_data = [];
@@ -202,11 +203,11 @@ class CoreCouponMemberService extends BaseCoreService
                 'create_time' => time(),
                 'expire_time' => $expire_time,
                 'receive_type' => 'send',
-                'type' => $coupon[ 'type' ],
-                'title' => $coupon[ 'title' ],
-                'price' => $coupon[ 'price' ],
+                'type' => $coupon['type'],
+                'title' => $coupon['title'],
+                'price' => $coupon['price'],
                 'status' => CouponMemberDict::WAIT_USE,
-                'min_condition_money' => $coupon[ 'min_condition_money' ]
+                'min_condition_money' => $coupon['min_condition_money']
             ];
         }
 
@@ -219,6 +220,32 @@ class CoreCouponMemberService extends BaseCoreService
         $coupon->save();
 
         return true;
+    }
+
+    /**
+     * 刷新用户优惠券过期时间
+     * @param $coupon_id
+     * @return void
+     */
+    public function refeshMemberCouponExpireTime($coupon_id)
+    {
+        $coupon_info = (new Coupon())->where([
+            ['id', '=', $coupon_id],
+        ])->findOrEmpty($coupon_id)->toArray();
+        if ($coupon_info['valid_type'] == 1) {
+            $time = 86400 * $coupon_info['length'];
+            $this->model->where([
+                ['coupon_id', '=', $coupon_id],
+            ])->update([
+                'expire_time' => Db::raw("create_time +{$time}")
+            ]);
+        } else {
+            $this->model->where([
+                ['coupon_id', '=', $coupon_id],
+            ])->update([
+                'expire_time' => strtotime($coupon_info['valid_end_time'])
+            ]);
+        }
     }
 
 }

@@ -64,11 +64,10 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getCompanyPageList, deleteCompany } from '@/addon/shop/api/delivery'
-import { img } from '@/utils/common'
+import { img, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
 import { useRoute, useRouter } from 'vue-router'
-import { setTablePageStorage, getTablePageStorage } from "@/utils/common";
 
 const route = useRoute()
 const router = useRouter()

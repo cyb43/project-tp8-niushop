@@ -17,11 +17,13 @@ use think\Response;
 
 /**
  * 小程序版本管理控制器
+ * @description 小程序版本管理
  */
 class Version extends BaseAdminController
 {
     /**
      * 列表
+     * @description 列表
      * @return Response
      */
     public function lists()
@@ -34,6 +36,7 @@ class Version extends BaseAdminController
 
     /**
      * 详情
+     * @description 详情
      * @param int $id
      * @return Response
      */
@@ -44,6 +47,7 @@ class Version extends BaseAdminController
 
     /**
      * 添加
+     * @description 添加
      * @return Response
      */
     public function add()
@@ -56,7 +60,7 @@ class Version extends BaseAdminController
 
     /**
      * 获取预览码
-     * @param int $id
+     * @description 获取预览码
      * @return Response
      */
     public function preview()
@@ -66,6 +70,7 @@ class Version extends BaseAdminController
 
     /**
      * 删除
+     * @description 删除
      * @param int $id
      * @return Response
      */

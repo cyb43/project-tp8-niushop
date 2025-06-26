@@ -324,37 +324,37 @@ const refreshGoodsCategory = (bool = false) => {
     getCategoryTree().then((res) => {
         const data = res.data;
         if (data) {
-        const goodsCategoryTree: any = [];
-        data.forEach((item: any) => {
-            const children: any = [];
-            if (item.child_list) {
-            item.child_list.forEach((childItem: any) => {
-                children.push({
-                value: childItem.category_id,
-                label: childItem.category_name,
+            const goodsCategoryTree: any = [];
+            data.forEach((item: any) => {
+                const children: any = [];
+                if (item.child_list) {
+                    item.child_list.forEach((childItem: any) => {
+                        children.push({
+                            value: childItem.category_id,
+                            label: childItem.category_name,
+                        });
+                    });
+                }
+                goodsCategoryTree.push({
+                    value: item.category_id,
+                    label: item.category_name,
+                    children,
                 });
             });
+            goodsCategoryOptions.splice(
+                0,
+                goodsCategoryOptions.length,
+                ...goodsCategoryTree
+            );
+            if (bool) {
+                ElMessage({
+                    message: t("refreshSuccess"),
+                    type: "success",
+                });
             }
-            goodsCategoryTree.push({
-            value: item.category_id,
-            label: item.category_name,
-            children,
-            });
-        });
-        goodsCategoryOptions.splice(
-            0,
-            goodsCategoryOptions.length,
-            ...goodsCategoryTree
-        );
-        if (bool) {
-            ElMessage({
-            message: t("refreshSuccess"),
-            type: "success",
-            });
-        }
         }
     });
-};
+}
 
 refreshGoodsCategory();
 
@@ -374,16 +374,16 @@ const refreshGoodsBrand = (bool = false) => {
     getBrandList({}).then((res) => {
         const data = res.data;
         if (data) {
-        brandOptions.splice(0, brandOptions.length, ...data);
-        if (bool) {
-            ElMessage({
-            message: t("refreshSuccess"),
-            type: "success",
-            });
-        }
+            brandOptions.splice(0, brandOptions.length, ...data);
+            if (bool) {
+                ElMessage({
+                    message: t("refreshSuccess"),
+                    type: "success",
+                });
+            }
         }
     });
-};
+}
 
 refreshGoodsBrand();
 
@@ -403,16 +403,16 @@ const refreshGoodsLabel = (bool = false) => {
     getLabelList({}).then((res) => {
         const data = res.data;
         if (data) {
-        labelOptions.splice(0, labelOptions.length, ...data);
-        if (bool) {
-            ElMessage({
-            message: t("refreshSuccess"),
-            type: "success",
-            });
-        }
+            labelOptions.splice(0, labelOptions.length, ...data);
+            if (bool) {
+                ElMessage({
+                    message: t("refreshSuccess"),
+                    type: "success",
+                });
+            }
         }
     });
-};
+}
 
 refreshGoodsLabel();
 
@@ -428,17 +428,17 @@ const goodsSelect = (value: any) => {
             goods_image: goods_sku.goods_cover,
             goods_name: goods_sku.goods_name,
         };
-    if (goods_json.value.length) {
-        goods_json.value.forEach((el: any) => {
-            if (el.goods_id == sku.goods_id) {
-                sku = Object.assign(sku, el)
-            }
-        })
-    }
+        if (goods_json.value.length) {
+            goods_json.value.forEach((el: any) => {
+                if (el.goods_id == sku.goods_id) {
+                    sku = Object.assign(sku, el)
+                }
+            })
+        }
         arr.push(deepClone(sku))
     }
     goods_json.value = arr;
-};
+}
 
 // 删除商品
 const deleteGoodsEvent = (row: any, index: any) => {

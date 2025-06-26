@@ -14,7 +14,6 @@ import {
     getSupplierList,
     getCategoryTree,
     getAttrList,
-    getAttrInfo,
     goodsVerify
 } from '@/addon/shop/api/goods'
 import { getPosterList } from '@/app/api/poster'
@@ -67,8 +66,8 @@ export function useGoodsEdit(params: any = {}) {
         min_buy: '',
 
         // 商品参数
+        attr_ids: [],
         attr_format: [],
-        attr_id: '',
 
         // 商品详情
         goods_desc: '',
@@ -368,7 +367,7 @@ export function useGoodsEdit(params: any = {}) {
             refreshSupplier()
         }
 
-        if(data.default_sort){
+        if (data.default_sort) {
             formData.sort = data.default_sort;
         }
 
@@ -395,11 +394,10 @@ export function useGoodsEdit(params: any = {}) {
             formData.is_gift = data.goods_info.is_gift
 
             /*************** 商品参数-start ****************/
-            formData.attr_format = data.goods_info.attr_format ? JSON.parse(data.goods_info.attr_format) : []
-            formData.attr_id = data.goods_info.attr_id
+            formData.attr_format = data.goods_info.attr_format
+            formData.attr_ids = data.goods_info.attr_ids
 
-            editCallFn.value = true;
-            attrChange(formData.attr_id || -1) //formData.attr_id为空，需要传入-1，便于attrChange方法调用
+            attrChange(formData.attr_ids, true)
             /*************** 商品参数-end ****************/
 
             // 价格库存
@@ -1352,10 +1350,11 @@ export function useGoodsEdit(params: any = {}) {
             attrFormat.forEach((item: any, index: any) => {
                 if (item.attr_value_name && item.select_child_val || item.attr_value_id > 0) {
                     let obj: any = {};
+                    obj.attr_id = item.attr_id
                     obj.attr_value_id = item.attr_value_id
                     obj.attr_value_name = item.attr_value_name
                     obj.type = item.type
-                    obj.sort = item.sort
+                    obj.sort = item.sort ? item.sort : 0
                     obj.attr_child_value_id = item.select_child_name
                     obj.attr_child_value_name = item.select_child_val
                     data.attr_format.push(obj);
@@ -1364,7 +1363,6 @@ export function useGoodsEdit(params: any = {}) {
             data.attr_format.sort((a: any, b: any) => {
                 return b.sort - a.sort
             });
-            data.attr_format = JSON.stringify(data.attr_format)
             /***** 商品参数-end ****/
 
             if (callback) {
@@ -1414,67 +1412,91 @@ export function useGoodsEdit(params: any = {}) {
 
     getAttrListFn();
 
-    let attrLoad = false;
     const attrTableData: any = reactive([])
-    const editCallFn = ref(false) //用于编辑时，只调用一次的变量标识
 
-    const attrChange = (attr_id: any = 0) => {
-        if (attrLoad || !attr_id) return false; // !attr_id 防止多次进入
-        attrLoad = true;
+    const attrChange = (attr_id_arr: any = [], isEdit: any = false) => {
+        if (attr_id_arr.length == 0) {
+            // 清空已选的商品参数模板
+            let temporaryAttrData: any = deepClone(attrTableData);
+            temporaryAttrData = temporaryAttrData.filter((item: any) => item.attr_value_id < 0);
+            attrTableData.splice(0, attrTableData.length, ...temporaryAttrData);
+            return
+        }
 
-        let id = attr_id == -1 ? 0 : attr_id; // attr_id = -1 表示清空商品参数模版
-        getAttrInfo(id).then((res) => {
-            let data = Object.keys(res.data).length && res.data.attr_value_format ? JSON.parse(res.data.attr_value_format) : []
-            let temporaryData: any = deepClone(attrTableData);
-            // 切换商品参数模版把之前的模版清除
-            temporaryData = temporaryData.filter((item: any) => item.attr_value_id <= 0);
+        getAttrList({
+            attr_id_arr
+        }).then((res) => {
+            let data = res.data;
+            if (data && Object.keys(data).length) {
 
-            // 添加
-            data.filter((item: any) => {
-                item.select_child_name = item.type == "checkbox" ? [] : '';
-                item.select_child_val = item.type == "checkbox" ? [] : '';
-            });
-
-            temporaryData = temporaryData.concat(data)
-            attrTableData.splice(0, attrTableData.length, ...temporaryData);
-            attrLoad = false;
-
-            if (editCallFn.value) {
-                let formAttrIdArray = formData.attr_format.map((obj: any) => obj.attr_value_id);
-                let temporaryAttrData: any = deepClone(attrTableData);
-
-                temporaryAttrData = temporaryAttrData.filter((item: any) => formAttrIdArray.indexOf(item.attr_value_id) > -1);
-
-                formData.attr_format.forEach((item: any, index: any) => {
-                    temporaryAttrData.forEach((attrItem: any, attrIndex: any, attrArray: any) => {
-                        if (attrItem.attr_value_id == item.attr_value_id) {
-                            attrArray[attrIndex].select_child_name = item.attr_child_value_id;
-                            attrArray[attrIndex].select_child_val = item.attr_child_value_name;
-                            attrArray[attrIndex].sort = item.sort;
-                        }
-                    });
-                });
-                let attrIdArray = temporaryAttrData.map((obj: any) => obj.attr_value_id);
-                formData.attr_format.forEach((item: any, index: any) => {
-                    if (attrIdArray.indexOf(item.attr_value_id) == -1 && item.type == 'text') {
-                        let obj: any = {};
-                        obj.attr_value_id = item.attr_value_id;
-                        obj.attr_value_name = item.attr_value_name;
-                        obj.sort = item.sort;
-                        obj.type = "text";
-                        obj.select_child_name = item.attr_child_value_id;
-                        obj.select_child_val = item.attr_child_value_name;
-                        temporaryAttrData.push(obj);
+                let temporaryData: any = deepClone(attrTableData);
+                temporaryData = temporaryData.filter((item: any) => {
+                    if (item.attr_value_id > 0) {
+                        return attr_id_arr.indexOf(item.attr_id) != -1
+                    } else {
+                        return true; // 保留自定义添加的商品参数模板
                     }
                 });
 
-                temporaryAttrData.sort((a: any, b: any) => {
-                    return b.sort - a.sort
-                });
+                let formAttrIdArray = temporaryData.map((obj: any) => obj.attr_value_id);
 
-                attrTableData.splice(0, attrTableData.length, ...temporaryAttrData);
+                data.forEach((item: any) => {
+                    if (item.attr_value_format) {
+                        let attr_value_format = JSON.parse(item.attr_value_format)
 
-                editCallFn.value = false
+                        // 过滤已添加的商品参数模板
+                        if (formAttrIdArray.length) {
+                            formAttrIdArray.forEach((id: any) => {
+                                attr_value_format = attr_value_format.filter((child: any) => child.attr_value_id != id)
+                            })
+                        }
+
+                        // 初始化
+                        attr_value_format.filter((child: any) => {
+                            child.attr_id = item.attr_id
+                            child.select_child_name = child.type == "checkbox" ? [] : ''
+                            child.select_child_val = child.type == "checkbox" ? [] : ''
+                        });
+
+                        attr_value_format.sort((a: any, b: any) => {
+                            return b.sort - a.sort
+                        });
+
+                        temporaryData = temporaryData.concat(attr_value_format);
+                        attrTableData.splice(0, attrTableData.length, ...temporaryData);
+                    }
+                })
+
+                if (isEdit) {
+                    attrTableData.forEach((item: any) => {
+                        for (let i = 0; i < formData.attr_format.length; i++) {
+                            if (formData.attr_format[i].attr_value_id == item.attr_value_id) {
+                                item.select_child_name = formData.attr_format[i].attr_child_value_id
+                                item.select_child_val = formData.attr_format[i].attr_child_value_name
+                                item.sort = formData.attr_format[i].sort
+                                break
+                            }
+                        }
+                    })
+
+                    for (let i = 0; i < formData.attr_format.length; i++) {
+                        if (formData.attr_format[i].attr_value_id < 0) {
+                            let item = formData.attr_format[i]
+                            let obj: any = {
+                                attr_id: item.attr_id,
+                                attr_value_id: item.attr_value_id,
+                                attr_value_name: item.attr_value_name,
+                                sort: item.sort ? item.sort : 0,
+                                type: "text",
+                                select_child_name: item.attr_child_value_id,
+                                select_child_val: item.attr_child_value_name
+                            };
+                            attrTableData.push(obj);
+                        }
+                    }
+
+                }
+
             }
         })
     }
@@ -1482,13 +1504,14 @@ export function useGoodsEdit(params: any = {}) {
     // 添加商品参数
     const addAttr = () => {
         let obj: any = {
+            attr_id: '',
             attr_value_id: "",
             attr_value_name: "",
             child: {
                 id: 1,
                 name: ''
             },
-            sort: '',
+            sort: 0,
             type: "text",
             select_child_name: '',
             select_child_val: ''

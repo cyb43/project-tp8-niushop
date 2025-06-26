@@ -17,10 +17,17 @@ use app\service\admin\member\MemberService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 会员账户
+ * Class Account
+ * @description 会员账户
+ * @package app\adminapi\controller\member
+ */
 class Account extends BaseAdminController
 {
     /**
      * 积分流水
+     * @description 积分流水
      * @return Response
      */
     public function point()
@@ -37,6 +44,7 @@ class Account extends BaseAdminController
 
     /**
      * 会员积分统计（用于会员积分统计窗口）
+     * @description 会员积分统计（用于会员积分统计窗口）
      */
     public function sumPoint()
     {
@@ -64,6 +72,7 @@ class Account extends BaseAdminController
 
     /**
      * 余额流水
+     * @description 余额流水
      * @return Response
      */
     public function balance()
@@ -80,6 +89,7 @@ class Account extends BaseAdminController
 
     /**
      * 可提现余额流水
+     * @description 可提现余额流水
      * @return Response
      */
     public function money()
@@ -96,6 +106,7 @@ class Account extends BaseAdminController
 
     /**
      * 查询成长值
+     * @description 查询成长值
      * @return Response
      */
     public function growth()
@@ -112,6 +123,7 @@ class Account extends BaseAdminController
 
     /**
      * 积分账户调整
+     * @description 积分账户调整
      */
     public function adjustPoint()
     {
@@ -126,6 +138,7 @@ class Account extends BaseAdminController
 
     /**
      * 余额账户调整
+     * @description 余额账户调整
      */
     public function adjustBalance()
     {
@@ -140,6 +153,7 @@ class Account extends BaseAdminController
 
     /**
      * 零钱调整
+     * @description 零钱调整
      * @return Response
      */
     public function adjustMoney()
@@ -155,6 +169,7 @@ class Account extends BaseAdminController
 
     /**
      * 会员佣金
+     * @description 会员佣金
      * @return Response
      */
     public function commission()
@@ -171,6 +186,7 @@ class Account extends BaseAdminController
 
     /**
      * 会员佣金统计（用于会员账户统计窗口）
+     * @description 会员佣金统计（用于会员账户统计窗口）
      */
     public function sumCommission()
     {
@@ -202,6 +218,7 @@ class Account extends BaseAdminController
 
     /**
      * 会员余额统计（用于会员账户统计窗口）
+     * @description 会员余额统计（用于会员账户统计窗口）
      */
     public function sumBalance()
     {
@@ -223,6 +240,7 @@ class Account extends BaseAdminController
 
     /**
      * 账户变化类型
+     * @description 账户变化类型
      * @param string $account_type
      * @return Response
      */
@@ -234,6 +252,7 @@ class Account extends BaseAdminController
 
     /**
      * 账户类型
+     * @description 账户类型
      */
     public function accountType()
     {

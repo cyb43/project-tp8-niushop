@@ -23,7 +23,7 @@ use core\base\BaseAdminController;
 class ElectronicSheet extends BaseAdminController
 {
     /**
-     * 获取电子面单分页列表
+     * @description 查看电子面单分页列表
      * @return \think\Response
      */
     public function pages()
@@ -39,7 +39,7 @@ class ElectronicSheet extends BaseAdminController
     }
 
     /**
-     * 获取电子面单列表
+     * @description 查看电子面单列表
      * @return \think\Response
      */
     public function lists()
@@ -55,7 +55,7 @@ class ElectronicSheet extends BaseAdminController
     }
 
     /**
-     * 电子面单详情
+     * @description 电子面单详情
      * @param int $id
      * @return \think\Response
      */
@@ -66,6 +66,7 @@ class ElectronicSheet extends BaseAdminController
 
     /**
      * 添加电子面单
+     * @description 添加电子面单
      * @return \think\Response
      */
     public function add()
@@ -92,6 +93,7 @@ class ElectronicSheet extends BaseAdminController
 
     /**
      * 电子面单编辑
+     * @description 编辑电子面单
      * @param $id  电子面单id
      * @return \think\Response
      */
@@ -119,6 +121,7 @@ class ElectronicSheet extends BaseAdminController
 
     /**
      * 电子面单删除
+     * @description 删除电子面单
      * @param $id  电子面单id
      * @return \think\Response
      */
@@ -130,6 +133,7 @@ class ElectronicSheet extends BaseAdminController
 
     /**
      * 电子面单设置默认模板
+     * @description 电子面单设置默认模板
      * @param int $id
      * @return array|\think\Response
      */
@@ -141,6 +145,7 @@ class ElectronicSheet extends BaseAdminController
 
     /**
      * 设置 电子面单配置
+     * @description 设置电子面单配置
      * @return array|\think\Response
      */
     public function setConfig()
@@ -159,6 +164,7 @@ class ElectronicSheet extends BaseAdminController
 
     /**
      * 获取 电子面单设置
+     * @description 查看电子面单设置
      * @return array|\think\Response
      */
     public function getConfig()
@@ -167,7 +173,7 @@ class ElectronicSheet extends BaseAdminController
     }
 
     /**
-     * 获取邮费支付方式类型
+     * @description 查看邮费支付方式类型
      * @return array|\think\Response
      */
     public function getPayType()
@@ -177,6 +183,7 @@ class ElectronicSheet extends BaseAdminController
 
     /**
      * 打印电子面单
+     * @description 打印电子面单
      * @return array|\think\Response
      */
     public function printElectronicSheet()

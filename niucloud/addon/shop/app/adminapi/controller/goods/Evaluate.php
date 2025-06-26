@@ -24,6 +24,7 @@ class Evaluate extends BaseAdminController
 {
     /**
      * 获取商品评价列表
+     * @description 查看商品评价-分页
      * @return \think\Response
      */
     public function lists()
@@ -37,6 +38,7 @@ class Evaluate extends BaseAdminController
     /**
      * 商品评价详情
      * @param int $id
+     * @description 查看商品评价详情
      * @return \think\Response
      */
     public function info(int $id)
@@ -46,6 +48,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 添加商品评价
+     * @description 添加商品评价
      * @return \think\Response
      */
     public function add()
@@ -68,6 +71,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 商品评价删除
+     * @description 删除商品评价
      * @param $id  商品评价id
      * @return \think\Response
      */
@@ -79,6 +83,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 评价审核
+     * @description 审核评价
      * @param $id
      */
     public function evaluateAudit($id)
@@ -93,6 +98,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 审核通过
+     * @description 审核-通过评价
      * @param $id
      * @return \think\Response
      */
@@ -105,6 +111,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 审核拒绝
+     * @description 审核-拒绝通过评价
      * @param $id
      * @return \think\Response
      */
@@ -117,6 +124,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 评价回复
+     * @description 回复评价
      * @param $id
      */
     public function evaluateReply($id)
@@ -131,6 +139,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 置顶
+     * @description 置顶评价
      * @param $id
      */
     public function topping($id)
@@ -142,6 +151,7 @@ class Evaluate extends BaseAdminController
 
     /**
      * 取消置顶
+     * @description 取消置顶评价
      * @param $id
      */
     public function cancelTopping($id)

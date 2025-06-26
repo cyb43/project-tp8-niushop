@@ -16,11 +16,18 @@ use app\service\admin\sys\AttachmentService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 附件管理
+ * Class Attachment
+ * @description 附件管理
+ * @package app\adminapi\controller\sys
+ */
 class Attachment extends BaseAdminController
 {
 
     /**
      * 附件列表
+     * @description 附件列表
      */
     public function lists()
     {
@@ -36,6 +43,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 删除附件
+     * @description 删除附件
      * @param $att_id
      * @return Response
      */
@@ -46,6 +54,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 批量删除
+     * @description 批量删除
      * @return Response
      */
     public function batchDel()
@@ -59,6 +68,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 新增附件分组
+     * @description 新增附件分组
      * @return Response
      */
     public function addCategory()
@@ -74,6 +84,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 附件分组列表
+     * @description 附件分组列表
      */
     public function categoryLists()
     {
@@ -86,6 +97,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 更新附件分组
+     * @description 更新附件分组
      * @return Response
      */
     public function editCategory($id)
@@ -100,6 +112,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 删除附件组
+     * @description 删除附件组
      * @param $id
      * @return Response
      */
@@ -111,6 +124,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 移动图片分组
+     * @description 移动图片分组
      * @return Response
      */
     public function moveCategory($att_id)
@@ -124,6 +138,7 @@ class Attachment extends BaseAdminController
 
     /**
      * 批量移动图片分组
+     * @description 批量移动图片分组
      * @return Response
      */
     public function batchMoveCategory()

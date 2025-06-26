@@ -116,7 +116,6 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="order_money" :label="t('paymentAmount')" min-width="100" />
-
                     <el-table-column prop="order_num" :label="t('orderCount')" min-width="100" />
                     <el-table-column prop="member_num" :label="t('activeMemberNum')" min-width="100" />
                     <el-table-column prop="success_num" :label="t('activeSuccessNum')" min-width="100" />
@@ -243,7 +242,6 @@ import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
 
 const router = useRouter()
-
 const showDialog = ref(false)
 const loading = ref(false)
 let id = ''
@@ -372,9 +370,9 @@ const getActiveDiscountMemberPageListFn = (page: number = 1) => {
     })
 }
 
-//查看会员详情
+// 查看会员详情
 const detailEvent = (member_id:number)=> {
-    let routeData = router.resolve(`/member/detail?id=${member_id}`)
+    let routeData = router.resolve(`/member/detail?id=${ member_id }`)
     window.open(routeData.href, ' blank');
 }
 

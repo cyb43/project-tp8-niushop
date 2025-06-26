@@ -15,10 +15,17 @@ use app\service\admin\verify\VerifyService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 核销记录
+ * Class Verify
+ * @description 核销记录
+ * @package app\adminapi\controller\verify
+ */
 class Verify extends BaseAdminController
 {
     /**
      * 核销记录列表
+     * @description 核销记录列表
      * @return Response
      */
     public function lists()
@@ -35,6 +42,7 @@ class Verify extends BaseAdminController
 
     /**
      * 核销信息
+     * @description 核销信息
      * @param int $order_id
      * @return Response
      */

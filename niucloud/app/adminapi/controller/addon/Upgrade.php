@@ -16,11 +16,18 @@ use app\service\admin\upgrade\UpgradeService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 升级管理
+ * Class Upgrade
+ * @description 升级管理
+ * @package app\adminapi\controller\addon
+ */
 class Upgrade extends BaseAdminController
 {
     /**
      * 更新插件
-     * @param $app_key
+     * @description 更新插件
+     * @param $addon
      * @return Response
      */
     public function upgrade($addon = '')
@@ -34,7 +41,7 @@ class Upgrade extends BaseAdminController
 
     /**
      * 执行升级
-     * @param $app_key
+     * @description 执行升级
      * @return Response
      */
     public function execute()
@@ -44,6 +51,7 @@ class Upgrade extends BaseAdminController
 
     /**
      * 获取升级内容
+     * @description 获取升级内容
      * @param $addon
      * @return Response
      */
@@ -54,6 +62,7 @@ class Upgrade extends BaseAdminController
 
     /**
      * 获取正在进行的升级任务
+     * @description 获取正在进行的升级任务
      * @return Response
      */
     public function getUpgradeTask()
@@ -63,6 +72,7 @@ class Upgrade extends BaseAdminController
 
     /**
      * 升级前环境检测
+     * @description 升级前环境检测
      * @param $addon
      * @return Response
      */
@@ -73,6 +83,7 @@ class Upgrade extends BaseAdminController
 
     /**
      * 清除
+     * @description 清除升级任务
      * @return Response
      */
     public function clearUpgradeTask()
@@ -80,12 +91,19 @@ class Upgrade extends BaseAdminController
         return success(data: ( new UpgradeService() )->clearUpgradeTask(0, 1));
     }
 
+    /**
+     * 操作
+     * @description 操作
+     * @param $operate
+     * @return Response
+     */
     public function operate($operate) {
         return success(( new UpgradeService() )->operate($operate));
     }
 
     /**
      * 获取升级记录分页列表
+     * @description 获取升级记录分页列表
      * @return Response
      */
     public function getRecords()
@@ -96,6 +114,11 @@ class Upgrade extends BaseAdminController
         return success(( new UpgradeRecordsService() )->getPage($data));
     }
 
+    /**
+     * 刪除升级记录
+     * @description 刪除升级记录
+     * @return Response
+     */
     public function delRecords() {
         $data = $this->request->params([
             [ 'ids', '' ],

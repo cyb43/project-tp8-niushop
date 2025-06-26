@@ -15,11 +15,17 @@ use app\dict\common\ChannelDict;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 渠道管理
+ * Class Channel
+ * @description 渠道管理
+ */
 class Channel extends BaseAdminController
 {
 
     /**
      * 获取渠道列表
+     * @description 获取渠道列表
      * @return Response
      */
     public function getChannelType()

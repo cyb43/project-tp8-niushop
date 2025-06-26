@@ -17,16 +17,27 @@ use core\base\BaseAdminController;
 
 /**
  * 同城配送
+ * @description 同城配送
  * Class Store
  * @package addon\shop\app\adminapi\controller\delivery
  */
 class Local extends BaseAdminController
 {
-    public function getLocal() {
-        return success(data:(new LocalService())->getLocal());
+    /**
+     * @description 查看设置
+     * @return \think\Response
+     */
+    public function getLocal()
+    {
+        return success(data: (new LocalService())->getLocal());
     }
 
-    public function setLocal() {
+    /**
+     * @description 设置配置
+     * @return \think\Response
+     */
+    public function setLocal()
+    {
         $data = $this->request->params([
             ['center', []],
             ['fee_type', ''],
@@ -49,7 +60,26 @@ class Local extends BaseAdminController
             ['start_time', 0],
             ['end_time', 0],
             ['delivery_time', ''],
+
+            ['third_party_config', []]
         ]);
-        return success(data:(new LocalService())->setLocal($data));
+        return success(data: (new LocalService())->setLocal($data));
+    }
+
+    /**
+     * @description 查看三方配送初始化信息
+     * @return \think\Response
+     */
+    public function getThirdPartyInit()
+    {
+        return success((new LocalService())->getThirdTypeConfig());
+    }
+
+    public function thirdDeliveryCallback($type, $order_no)
+    {
+        $params = $this->request->all();
+        $params['type'] = $type;
+        $params['order_no'] = $order_no;
+        (new LocalService())->thirdDeliveryCallback($params);
     }
 }

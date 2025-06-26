@@ -57,7 +57,7 @@ class VirtualGoodsService extends BaseAdminService
 
         if (!empty($params[ 'goods_id' ])) {
             // 查询商品信息，用于编辑
-            $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,supplier_id,attr_id,attr_format,virtual_auto_delivery,virtual_receive_type,virtual_verify_type,virtual_indate,member_discount,poster_id,is_gift,form_id';
+            $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,supplier_id,attr_ids,attr_format,virtual_auto_delivery,virtual_receive_type,virtual_verify_type,virtual_indate,member_discount,poster_id,is_gift,form_id';
             $goods_info = $this->model->field($field)->where([ [ 'goods_id', '=', $params[ 'goods_id' ] ] ])->findOrEmpty()->toArray();
             if (!empty($goods_info)) {
 
@@ -88,23 +88,23 @@ class VirtualGoodsService extends BaseAdminService
                 if (empty($goods_info[ 'label_ids' ])) {
                     $goods_info[ 'label_ids' ] = [];
                 } else {
-                    $goods_info[ 'label_ids' ] = array_map(function ($item) {
-                        return (int) $item;
-                    }, $goods_info[ 'label_ids' ]);
+                    $goods_info[ 'label_ids' ] = array_map(function($item) { return (int) $item; }, $goods_info[ 'label_ids' ]);
                 }
 
                 // 商品服务
                 if (empty($goods_info[ 'service_ids' ])) {
                     $goods_info[ 'service_ids' ] = [];
                 } else {
-                    $goods_info[ 'service_ids' ] = array_map(function ($item) {
-                        return (int) $item;
-                    }, $goods_info[ 'service_ids' ]);
+                    $goods_info[ 'service_ids' ] = array_map(function($item) { return (int) $item; }, $goods_info[ 'service_ids' ]);
                 }
 
                 // 商品参数，处理数据类型
-                if (empty($goods_info[ 'attr_id' ])) {
-                    $goods_info[ 'attr_id' ] = '';
+                if (empty($goods_info[ 'attr_ids' ])) {
+                    $goods_info['attr_ids'] = [];
+                } else {
+                    $goods_info['attr_ids'] = array_map(function ($item) {
+                        return (int)$item;
+                    }, $goods_info['attr_ids']);
                 }
 
                 // 商品海报id，处理数据类型
@@ -197,17 +197,11 @@ class VirtualGoodsService extends BaseAdminService
                 'goods_cover' => $data[ 'goods_cover' ],
                 'goods_image' => $data[ 'goods_image' ],
                 'goods_video' => $data[ 'goods_video' ],
-                'goods_category' => array_map(function ($item) {
-                    return (string) $item;
-                }, $data[ 'goods_category' ]),
+                'goods_category' => array_map(function($item) { return (string) $item; }, $data[ 'goods_category' ]),
                 'goods_desc' => $data[ 'goods_desc' ],
                 'brand_id' => $data[ 'brand_id' ],
-                'label_ids' => array_map(function ($item) {
-                    return (string) $item;
-                }, $data[ 'label_ids' ]),
-                'service_ids' => array_map(function ($item) {
-                    return (string) $item;
-                }, $data[ 'service_ids' ]),
+                'label_ids' => array_map(function($item) { return (string) $item; }, $data[ 'label_ids' ]),
+                'service_ids' => array_map(function($item) { return (string) $item; }, $data[ 'service_ids' ]),
                 'unit' => $data[ 'unit' ],
                 'stock' => $data[ 'stock' ],
                 'virtual_sale_num' => $data[ 'virtual_sale_num' ],
@@ -218,7 +212,7 @@ class VirtualGoodsService extends BaseAdminService
                 'is_gift' => $data[ 'is_gift' ],
                 'status' => $data[ 'status' ],
                 'sort' => $data[ 'sort' ],
-                'attr_id' => $data[ 'attr_id' ],
+                'attr_ids' => $data[ 'attr_ids' ],
                 'attr_format' => $data[ 'attr_format' ],
                 'supplier_id' => $data[ 'supplier_id' ],
                 'virtual_auto_delivery' => $data[ 'virtual_auto_delivery' ] ?? 0,
@@ -357,17 +351,11 @@ class VirtualGoodsService extends BaseAdminService
                 'goods_cover' => $data[ 'goods_cover' ],
                 'goods_image' => $data[ 'goods_image' ],
                 'goods_video' => $data[ 'goods_video' ],
-                'goods_category' => array_map(function ($item) {
-                    return (string) $item;
-                }, $data[ 'goods_category' ]),
+                'goods_category' => array_map(function($item) { return (string) $item; }, $data[ 'goods_category' ]),
                 'goods_desc' => $data[ 'goods_desc' ],
                 'brand_id' => $data[ 'brand_id' ],
-                'label_ids' => array_map(function ($item) {
-                    return (string) $item;
-                }, $data[ 'label_ids' ]),
-                'service_ids' => array_map(function ($item) {
-                    return (string) $item;
-                }, $data[ 'service_ids' ]),
+                'label_ids' => array_map(function($item) { return (string) $item; }, $data[ 'label_ids' ]),
+                'service_ids' => array_map(function($item) { return (string) $item; }, $data[ 'service_ids' ]),
                 'unit' => $data[ 'unit' ],
                 'stock' => $data[ 'stock' ],
                 'virtual_sale_num' => $data[ 'virtual_sale_num' ],
@@ -378,7 +366,7 @@ class VirtualGoodsService extends BaseAdminService
                 'is_gift' => $data[ 'is_gift' ],
                 'status' => $data[ 'status' ],
                 'sort' => $data[ 'sort' ],
-                'attr_id' => $data[ 'attr_id' ],
+                'attr_ids' => $data[ 'attr_ids' ],
                 'attr_format' => $data[ 'attr_format' ],
                 'supplier_id' => $data[ 'supplier_id' ],
                 'virtual_auto_delivery' => $data[ 'virtual_auto_delivery' ] ?? 0,
@@ -668,7 +656,7 @@ class VirtualGoodsService extends BaseAdminService
             [ 'active_goods_status', '=', 'active' ],
             [ 'active_goods_type', 'in', [ ActiveDict::GOODS_SINGLE, ActiveDict::GOODS_INDEPENDENT ] ]
         ]))->field($field)->with([
-            'active' => function ($query) {
+            'active' => function($query) {
                 $query->withField('active_id,active_name, active_desc, start_time, end_time');
             }
         ])->count();
@@ -677,7 +665,7 @@ class VirtualGoodsService extends BaseAdminService
         $discount_goods_count = $discount_goods_model->where(array_merge($condition, [
             [ 'status', '=', 'active' ]
         ]))->field('discount_goods_id')->with([
-            'discount' => function ($query) {
+            'discount' => function($query) {
                 $query->withField('discount_id');
             }
         ])->count();

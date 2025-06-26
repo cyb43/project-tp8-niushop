@@ -84,3 +84,10 @@ export function getStoreList(params: Record<string, any>) {
 export function getMaterialflowList(params: Record<string, any>) {
     return request.get('shop/order/logistics', params)
 }
+
+/**
+ * 查询同城配送预约配置
+ */
+export function getLocal() {
+    return request.get('shop/order_create/local')
+}

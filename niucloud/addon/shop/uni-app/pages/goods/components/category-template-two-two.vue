@@ -2,13 +2,7 @@
     <view class="min-h-screen bg-[var(--page-bg-color)] overflow-hidden">
         <view class="mescroll-box bg-[#f6f6f6]" :class="{ 'cart': config.cart.control && config.cart.event === 'cart', 'detail': !(config.cart.control && config.cart.event === 'cart') }" v-if="tabsData.length">
             <mescroll-body ref="mescrollRef" :down="{ use: false }" @init="mescrollInit" @up="getListFn">
-
-                <!--  #ifdef  H5 -->
                 <view v-if="config.search.control" class="box-border search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[96rpx]">
-                <!--  #endif -->
-                <!--  #ifndef  H5 -->
-                <view v-if="config.search.control" class="box-border search-box z-10 bg-[#fff] fixed top-[162rpx] left-0 right-0 h-[96rpx]">
-                <!--  #endif -->
                     <view class="flex-1 search-input">
                         <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                         <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" placeholderClass="text-[var(--text-color-light9)]" @confirm="searchNameFn">
@@ -31,7 +25,7 @@
 
                 <!--  #ifndef  H5 -->
                 <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0"
-                      :class="{ 'top-[258rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
+                      :class="{ 'top-[96rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
                     <scroll-view :scroll-y="true" class="scroll-height">
                         <view class="bg-[var(--temp-bg)]">
                             <view class="tab-item"
@@ -44,16 +38,9 @@
                 </view>
                 <!--  #endif -->
 
-                <!--  #ifdef  H5 -->
                 <view class="flex items-center h-[98rpx] pl-[24rpx] pr-[48rpx] py-[20rpx] z-10 bg-white fixed left-[168rpx] right-0 box-border top-0"
                       :class="{ '!top-[94rpx]': config.search.control }"
                       v-if="tabsData[tabActive]?.child_list && tabsData[tabActive]?.child_list.length">
-                <!--  #endif -->
-                <!--  #ifndef  H5 -->
-                <view class="flex items-center h-[98rpx] pl-[24rpx] pr-[48rpx] py-[20rpx] z-10 bg-white fixed left-[168rpx] right-0 box-border top-0"
-                      :class="{ '!top-[258rpx]': config.search.control }"
-                      v-if="tabsData[tabActive]?.child_list && tabsData[tabActive]?.child_list.length">
-                <!--  #endif -->
                     <template v-if="!labelPopup">
                         <scroll-view :scroll-x="true" scroll-with-animation
                                      :scroll-into-view="'id' + (subActive ? subActive - 1 : 0)"
@@ -75,13 +62,8 @@
                     </template>
                 </view>
                 <view class="labelPopup" :class="{ 'active': config.search.control }">
-					<!--  #ifdef  H5 -->
-					<u-popup :show="labelPopup" mode="top" zIndex='1' @close="labelPopup = false"  :customStyle="{top: '192rpx', left :'168rpx'}" :overlayStyle="{top: '192rpx', left :'168rpx'}">
-					<!--  #endif -->
-					<!--  #ifndef  H5 -->
-					<u-popup :show="labelPopup" mode="top" zIndex='1' @close="labelPopup = false"  :customStyle="{top: '355rpx', left :'168rpx'}" :overlayStyle="{top: '355rpx', left :'168rpx'}">
-					<!--  #endif -->
-                        <view class="flex flex-wrap pt-[20rpx] pb-[24rpx] pr-[100rpx]" @touchmove.prevent.stop>
+					<u-popup :show="labelPopup" mode="top" @close="labelPopup = false">
+                        <view class="flex flex-wrap pt-[20rpx] pb-[24rpx]" @touchmove.prevent.stop>
                             <text
                                 class="px-[14rpx] flex-shrink-0 w-[160rpx] box-border ml-[20rpx] mb-[26rpx] h-[60rpx] text-center leading-[56rpx] text-[24rpx] border-[2rpx] border-solid !rounded-[100rpx] text-[#333] truncate"
                                 :class="{ 'bg-[var(--primary-color-light)] font-500 text-[var(--primary-color)] border-[var(--primary-color)]': index === subActive, 'border-[var(--temp-bg)]  bg-[var(--temp-bg)]': index != subActive }"
@@ -126,7 +108,7 @@
                                                     @click.stop="addCartBtn(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id], 'itemCart' + index)"></text>
                                             </view>
                                         </view>
-                                        <template v-else-if="(item.goods_type == 'virtual' && config.cart.event !== 'cart') || item.goods_type == 'real'">
+                                        <template v-else-if="(item.goods_type == 'virtual' && item.virtual_receive_type != 'verify') || item.goods_type == 'real'">
                                             <view v-if="config.cart.control && config.cart.style === 'style-1'" class="h-[44rpx] relative  pl-[20rpx]">
                                                 <view :id="'itemCart' + index"
                                                       class="w-[102rpx] box-border text-center text-[#fff] primary-btn-bg h-[46rpx] text-[22rpx] leading-[46rpx] rounded-[100rpx]"
@@ -486,6 +468,7 @@ const subActive = ref<number>(0)
 // 一级菜单点击事件
 const firstLevelClick = (index: number, data: any) => {
     tabActive.value = index;
+    labelPopup.value = false
     if (data.child_list && data.child_list.length) {
         subMenuClick(0, data.child_list[0]);
     } else {
@@ -806,27 +789,14 @@ const goodsPrice = (data: any) => {
 }
 
 /*  #ifdef  H5  */
-// .category .labelPopup :deep(.u-transition) {
-//     top: 92rpx !important;
-//     left: 168rpx !important;
-//     z-index: 8 !important;
-// }
-
-// .category .labelPopup.active :deep(.u-transition) {
-//     top: 192rpx !important;
-// }
-
-/*  #endif  */
-
-/*  #ifdef MP-WEIXIN  */
 .category .labelPopup :deep(.u-transition) {
-    top: 192rpx !important;
+    top: 92rpx !important;
     left: 168rpx !important;
     z-index: 8 !important;
 }
 
 .category .labelPopup.active :deep(.u-transition) {
-    top: 292rpx !important;
+    top: 192rpx !important;
 }
 
 /*  #endif  */
@@ -939,18 +909,4 @@ const goodsPrice = (data: any) => {
         height: 120rpx !important;
     }
 }
-</style>
-<style>
-/*  #ifdef MP-WEIXIN  */
-.category .labelPopup :deep(.u-transition) {
-    top: 192rpx !important;
-    left: 168rpx !important;
-    z-index: 8 !important;
-}
-
-.category .labelPopup.active :deep(.u-transition) {
-    top: 292rpx !important;
-}
-
-/*  #endif  */	
 </style>

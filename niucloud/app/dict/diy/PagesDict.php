@@ -189,7 +189,7 @@ class PagesDict
                                 'imgUrl' => "",
                                 'imgWidth' => '',
                                 'imgHeight' => '',
-                                'count' => -1,
+                                'count' => 'once',
                                 'show' => 0,
                                 'link' => [
                                     'name' => ""
@@ -261,7 +261,7 @@ class PagesDict
                                 'imgUrl' => "",
                                 'imgWidth' => '',
                                 'imgHeight' => '',
-                                'count' => -1,
+                                'count' => 'once',
                                 'show' => 0,
                                 'link' => [
                                     'name' => ""
@@ -726,7 +726,7 @@ class PagesDict
                                 'imgUrl' => "",
                                 'imgWidth' => '',
                                 'imgHeight' => '',
-                                'count' => -1,
+                                'count' => 'once',
                                 'show' => 0,
                                 'link' => [
                                     'name' => ""

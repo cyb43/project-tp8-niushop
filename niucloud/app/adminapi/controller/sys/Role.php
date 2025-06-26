@@ -17,8 +17,19 @@ use core\base\BaseAdminController;
 use think\db\exception\DbException;
 use think\Response;
 
+/**
+ * 用户组管理
+ * Class Role
+ * @description 用户组管理
+ * @package app\adminapi\controller\sys
+ */
 class Role extends BaseAdminController
 {
+    /**
+     * 用户组列表
+     * @description 用户组列表
+     * @return Response
+     */
     public function lists()
     {
         $data = $this->request->params([
@@ -31,6 +42,7 @@ class Role extends BaseAdminController
 
     /**
      * 用户组详情
+     * @description 用户组详情
      * @param $role_id
      * @return Response
      */
@@ -41,6 +53,7 @@ class Role extends BaseAdminController
 
     /**
      * 获取全部权限
+     * @description 获取全部权限
      * @return Response
      */
     public function all()
@@ -50,6 +63,7 @@ class Role extends BaseAdminController
 
     /**
      * 新增用户组
+     * @description 新增用户组
      * @return Response
      */
     public function add()
@@ -64,9 +78,9 @@ class Role extends BaseAdminController
         return success('ADD_SUCCESS');
     }
 
-
     /**
      * 更新用户组
+     * @description 更新用户组
      */
     public function edit($role_id)
     {
@@ -80,9 +94,9 @@ class Role extends BaseAdminController
         return success('EDIT_SUCCESS');
     }
 
-
     /**
      * 删除单个用户组
+     * @description 删除单个用户组
      * @param $role_id
      * @return Response
      * @throws DbException
@@ -95,15 +109,17 @@ class Role extends BaseAdminController
 
     /**
      * 设置角色状态
+     * @description 设置角色状态
      * @param $role_id
      * @return Response
      */
-    public function setStatus($role_id)
+    public function modifyStatus($role_id)
     {
         $data = $this->request->params([
             ['status', RoleStatusDict::ON],
         ]);
-        (new RoleService())->setStatus($role_id, $data['status']);
+        (new RoleService())->modifyStatus($role_id, $data['status']);
         return success('DELETE_SUCCESS');
     }
+
 }

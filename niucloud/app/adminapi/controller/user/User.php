@@ -19,10 +19,16 @@ use think\Response;
 
 /**
  * 站点用户接口
+ * @description 站点用户
  * Class User
  */
 class User extends BaseAdminController
 {
+    /**
+     * 用户列表
+     * @description 用户列表
+     * @return Response
+     */
     public function lists()
     {
         $data = $this->request->params([
@@ -50,6 +56,11 @@ class User extends BaseAdminController
         return success((new UserService())->getInfo($uid));
     }
 
+    /**
+     * 获取全部用户
+     * @description 获取全部用户
+     * @return Response
+     */
     public function getUserAll()
     {
         $data = $this->request->params([
@@ -63,6 +74,7 @@ class User extends BaseAdminController
 
     /**
      * 新增用户
+     * @description 新增用户
      * @return Response
      * @throws Exception
      */
@@ -81,9 +93,9 @@ class User extends BaseAdminController
         return success('ADD_SUCCESS', ['uid' => $uid]);
     }
 
-
     /**
      * 更新用户
+     * @description 更新用户
      */
     public function edit($uid)
     {
@@ -100,6 +112,7 @@ class User extends BaseAdminController
 
     /**
      * 更新字段
+     * @description 更新字段
      * @param $uid
      * @param $field
      * @return Response
@@ -118,6 +131,7 @@ class User extends BaseAdminController
 
     /**
      * 删除单个用户
+     * @description 删除单个用户
      * @param $uid
      * @return Response
      */
@@ -129,6 +143,7 @@ class User extends BaseAdminController
 
     /**
      * 锁定用户
+     * @description 锁定用户
      */
     public function lock($uid)
     {
@@ -138,12 +153,12 @@ class User extends BaseAdminController
 
     /**
      * 解锁用户
+     * @description 解锁用户
      */
     public function unlock($uid)
     {
         (new UserService())->unlock($uid);
         return success('MODIFY_SUCCESS');
     }
-
 
 }

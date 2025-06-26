@@ -24,7 +24,6 @@
                         <div class="text-[25px] font-bold">0</div>
                     </div>
                 </div>
-                
             </el-tab-pane>
             <el-tab-pane label="昨日" name="second">
                 <div class="flex w-full justify-between flex-wrap">
@@ -133,7 +132,7 @@
                         <div class="text-[25px] font-bold">0</div>
                     </div>
                 </div>
-                
+
             </el-tab-pane>
         </el-tabs>
         <div ref="incomeChartRef" class="h-[400px] mt-[60px] ml-[-90px]"></div>
@@ -149,13 +148,13 @@ const dialogVisible = ref(false)
 const value2 = ref('')
 
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-  if(tab.props.name == 'fifth'){
-    dialogVisible.value = true
-  }
-  nextTick(()=>{
-    initIncomeChart()
-  })
-  
+    if (tab.props.name == 'fifth') {
+        dialogVisible.value = true
+    }
+    nextTick(() => {
+        initIncomeChart()
+    })
+
 }
 
 const boxes = reactive([
@@ -166,57 +165,57 @@ const boxes = reactive([
   { content: '盒子 2', id : 5  },
   { content: '盒子 3', id : 6  },
   { content: '盒子 3', id : 7  },
-]);
-const currentIndex = ref(-1); 
+])
+const currentIndex = ref(-1);
 
 const selectBox = (item) => {
-  currentIndex.value = item.id;
-};
+    currentIndex.value = item.id;
+}
 
 // 折线图
 const incomeChartRef = ref(null);
 
 const initIncomeChart = () => {
-  if (incomeChartRef.value !== null) {
-    const incomeChart = echarts.init(incomeChartRef.value);
+    if (incomeChartRef.value !== null) {
+        const incomeChart = echarts.init(incomeChartRef.value);
 
-    // 准备数据
-    const xAxisData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-    const yAxisData = [0, -20, -50, 134, 90, 230, 210];
+        // 准备数据
+        const xAxisData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+        const yAxisData = [0, -20, -50, 134, 90, 230, 210];
 
-    // 配置项
-    const option = {
-      tooltip: {
-        trigger: 'axis'
-      },
-      legend: {
-        data: ['预计收入']
-      },
-      xAxis: {
-        type: 'category',
-        data: xAxisData
-      },
-      yAxis: {
-        type: 'value'
-      },
-      series: [{
-        name: '预计收入',
-        type: 'line',
-        data: yAxisData
-      }]
-    };
+        // 配置项
+        const option = {
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['预计收入']
+            },
+            xAxis: {
+                type: 'category',
+                data: xAxisData
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name: '预计收入',
+                type: 'line',
+                data: yAxisData
+            }]
+        };
 
-    // 使用配置项初始化图表
-    incomeChart.setOption(option);
-    incomeChart.resize({
-        width: 'auto'
-    });
-  }
-};
+        // 使用配置项初始化图表
+        incomeChart.setOption(option);
+        incomeChart.resize({
+            width: 'auto'
+        });
+    }
+}
 
 onMounted(() => {
-  initIncomeChart();
-});
+    initIncomeChart();
+})
 </script>
 <style lang="scss" scoped>
 .wenHao{

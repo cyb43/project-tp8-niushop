@@ -17,10 +17,17 @@ use app\service\admin\member\MemberCashOutService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 提现
+ * Class CashOut
+ * @description 提现
+ * @package app\adminapi\controller\member
+ */
 class CashOut extends BaseAdminController
 {
     /**
      * 提现列表
+     * @description 提现列表
      * @return Response
      */
     public function lists()
@@ -40,6 +47,7 @@ class CashOut extends BaseAdminController
 
     /**
      * 提现详情
+     * @description 提现详情
      * @param int $id
      * @return Response
      */
@@ -48,6 +56,13 @@ class CashOut extends BaseAdminController
         return success((new MemberCashOutService())->getInfo($id));
     }
 
+    /**
+     * 提现申请
+     * @description 提现申请
+     * @param $id
+     * @param $action
+     * @return Response
+     */
     public function audit($id, $action)
     {
         $data = $this->request->params([
@@ -59,6 +74,7 @@ class CashOut extends BaseAdminController
 
     /**
      * 转账方式
+     * @description 转账方式
      * @return Response
      */
     public function getTransferType()
@@ -68,6 +84,7 @@ class CashOut extends BaseAdminController
 
     /**
      * 转账方式
+     * @description 转账方式
      * @param $id
      * @return Response
      */
@@ -84,6 +101,7 @@ class CashOut extends BaseAdminController
 
     /**
      * 备注转账信息
+     * @description 备注转账信息
      * @param $id
      * @return Response
      */
@@ -97,6 +115,7 @@ class CashOut extends BaseAdminController
     }
     /**
      * 状态
+     * @description 状态
      * @return Response
      */
     public function getStatusList()
@@ -106,6 +125,7 @@ class CashOut extends BaseAdminController
 
     /**
      * 统计数据
+     * @description 统计数据
      */
     public function stat()
     {
@@ -114,6 +134,7 @@ class CashOut extends BaseAdminController
 
     /**
      * 校验数组是否
+     * @description 校验数组是否
      * @return void
      */
     public function checkTransferStatus($id){
@@ -123,6 +144,7 @@ class CashOut extends BaseAdminController
 
     /**
      * 取消
+     * @description 取消
      * @param $id
      * @return void
      */

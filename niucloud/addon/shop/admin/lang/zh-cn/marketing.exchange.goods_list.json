@@ -23,5 +23,11 @@
   "down": "下架",
   "downTips": "是否确认下架当前商品",
   "startDate": "开始时间",
-  "endDate": "结束时间"
+  "endDate": "结束时间",
+  "batchUpTips":"是否确认批量上架选中的商品？",
+  "batchDownTips":"是否确认批量下架选中的商品？",
+  "batchDeleteTips":"是否确认批量删除选中的商品？",
+  "batchUp":"批量上架",
+  "batchDown":"批量下架",
+  "batchDelete":"批量删除"
 }

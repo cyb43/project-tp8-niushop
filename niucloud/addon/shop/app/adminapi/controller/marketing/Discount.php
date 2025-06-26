@@ -12,6 +12,7 @@
 namespace addon\shop\app\adminapi\controller\marketing;
 
 use addon\shop\app\dict\active\ActiveDict;
+use addon\shop\app\dict\active\DiscountDict;
 use addon\shop\app\service\admin\marketing\DiscountService;
 use core\base\BaseAdminController;
 
@@ -23,7 +24,10 @@ use core\base\BaseAdminController;
  */
 class Discount extends BaseAdminController
 {
-
+    /**
+     * @description 查看限时折扣列表-分页
+     * @return \think\Response
+     */
     public function lists()
     {
         $data = $this->request->params([
@@ -35,6 +39,7 @@ class Discount extends BaseAdminController
 
     /**
      * 详情-基础信息
+     * @description 查看限时折扣详情
      * @param int $discount_id
      * @return \think\Response
      */
@@ -45,6 +50,7 @@ class Discount extends BaseAdminController
 
     /**
      * 详情
+     * @description 查看限时折扣详情
      * @param int $discount_id
      * @return \think\Response
      */
@@ -55,6 +61,7 @@ class Discount extends BaseAdminController
 
     /**
      * 添加限时折扣
+     * @description 添加限时折扣
      * @return \think\Response
      */
     public function add()
@@ -73,6 +80,7 @@ class Discount extends BaseAdminController
 
     /**
      * 限时折扣编辑
+     * @description 编辑限时折扣
      * @param int $discount_id
      * @return \think\Response
      */
@@ -92,6 +100,7 @@ class Discount extends BaseAdminController
 
     /**
      * 限时折扣商品校验
+     * @description 限时折扣商品校验
      * @return \think\Response
      */
     public function checkGoods()
@@ -108,6 +117,7 @@ class Discount extends BaseAdminController
 
     /**
      * 获取活动状态
+     * @description 获取限时折扣活动状态字典
      * @return \think\Response
      */
     public function status()
@@ -117,6 +127,7 @@ class Discount extends BaseAdminController
 
     /**
      * 删除活动
+     * @description 删除限时折扣
      * @param int $discount_id
      * @return \think\Response
      */
@@ -128,6 +139,7 @@ class Discount extends BaseAdminController
 
     /**
      * 活动关闭
+     * @description 关闭限时折扣
      * @param int $discount_id
      * @return \think\Response
      */
@@ -138,7 +150,44 @@ class Discount extends BaseAdminController
     }
 
     /**
+     * 获取限时活动状态
+     */
+    public function discountStatus()
+    {
+        return success(DiscountDict::getStatus());
+    }
+
+    /**
+     * 批量删除活动
+     * @description 批量删除限时折扣
+     * @return \think\Response
+     */
+    public function batchDelete()
+    {
+        $data = $this->request->params([
+            [ 'ids', [] ],
+        ]);
+        ( new DiscountService() )->batchDel($data['ids']);
+        return success('SUCCESS');
+    }
+
+    /**
+     * 批量关闭活动
+     * @description 批量关闭限时折扣
+     * @return \think\Response
+     */
+    public function batchClose()
+    {
+        $data = $this->request->params([
+            [ 'ids', [] ],
+        ]);
+        ( new DiscountService() )->batchClose($data['ids']);
+        return success('SUCCESS');
+    }
+
+    /**
      * 参与订单
+     * @description 查看限时折扣订单
      * @param int $active_id
      * @return \think\Response
      */
@@ -157,6 +206,7 @@ class Discount extends BaseAdminController
 
     /**
      * 参与会员
+     * @description 查看限时折扣会员
      * @param int $active_id
      * @return \think\Response
      * @throws \think\db\exception\DbException
@@ -172,6 +222,7 @@ class Discount extends BaseAdminController
 
     /**
      * 参与商品
+     * @description 查看限时折扣商品
      * @param int $active_id
      * @return \think\Response
      * @throws \think\db\exception\DbException
@@ -187,6 +238,7 @@ class Discount extends BaseAdminController
 
     /**
      * 获取轮播图配置
+     * @description 获取轮播图配置
      * @return void
      */
     public function banner()
@@ -196,6 +248,7 @@ class Discount extends BaseAdminController
 
     /**
      * 设置轮播图配置
+     * @description 设置轮播图配置
      * @return \think\Response
      */
     public function setBanner()

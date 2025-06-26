@@ -16,8 +16,20 @@ use app\service\core\niucloud\CoreAuthService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 模块
+ * Class Module
+ * @description 模块
+ * @package app\adminapi\controller\niucloud
+ */
 class Module extends BaseAdminController
 {
+    /**
+     * 获取授权信息
+     * @description 获取授权信息
+     * @return Response
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function authorize()
     {
         return success(( new CoreAuthService() )->getAuthInfo());
@@ -25,6 +37,7 @@ class Module extends BaseAdminController
 
     /**
      * 设置 授权信息
+     * @description 设置 授权信息
      */
     public function setAuthorize()
     {
@@ -38,6 +51,7 @@ class Module extends BaseAdminController
 
     /**
      * 获取 授权信息
+     * @description 获取 授权信息
      */
     public function getAuthorize()
     {
@@ -46,6 +60,7 @@ class Module extends BaseAdminController
 
     /**
      * 获取框架最新版本
+     * @description 获取框架最新版本
      * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -56,6 +71,7 @@ class Module extends BaseAdminController
 
     /**
      * 获取框架最新版本
+     * @description 获取框架最新版本
      * @return Response
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
@@ -66,6 +82,7 @@ class Module extends BaseAdminController
 
     /**
      * 申请体验
+     * @description 申请体验
      * @return Response
      */
     public function applyExperience()
@@ -75,6 +92,7 @@ class Module extends BaseAdminController
 
     /**
      * 获取应用/插件的版本更新记录
+     * @description 获取应用/插件的版本更新记录
      * @return Response
      */
     public function getAppVersionList()

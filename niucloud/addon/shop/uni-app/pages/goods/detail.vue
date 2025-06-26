@@ -36,20 +36,26 @@
                     :class="{'translate-x-0':switchMedia === 'img','translate-x-full':switchMedia != 'img'}">
                     <view class="swiper-box">
                       <u-swiper :list="goodsDetail.goods.goods_image"
+                                  @change="swiperChangeFn"
                                   :indicator="goodsDetail.goods.goods_image.length"
                                   :indicatorStyle="{'bottom': '70rpx'}" :autoplay="switchMedia === 'img'?true:false"
                                   height="100vw" radius="0" @click="swiperClick"></u-swiper>
                     </view>
                 </view>
-                <!-- <view class="media-mode absolute top-0 left-0 w-full h-full transition-transform duration-300 ease-linear transform"
-                  :class="{'translate-x-0':switchMedia === 'video','-translate-x-full':switchMedia != 'video'}">
-                  <video id="goodsVideo" class="w-full h-full" :src="img(goodsDetail.goods.goods_video)" :poster="img(goodsDetail.goods.goods_cover_thumb_mid)" objectFit="cover"></video>
-                </view> -->
+                <view @touchmove.stop.prevent class="media-mode absolute top-0 left-0 w-full h-full transition-transform duration-300 ease-linear transform"
+                  :class="{'translate-x-0':switchMedia === 'video','-translate-x-full':switchMedia != 'video'}" :style="{background: 'url(' + img(goodsDetail.goods.goods_cover_thumb_mid) + ') left bottom / cover no-repeat'}">
+                  <view class="goods-video-height">
+                    <video id="goodsVideo" :show-background-playback-button="false" :picture-in-picture-mode="[]" class="w-full h-full" :src="img(goodsDetail.goods.goods_video)" :poster="img(goodsDetail.goods.goods_cover_thumb_mid)" objectFit="cover" play-btn-position="center"></video>
+                  </view>
+                </view>
                 <!-- 切换视频、图片 -->
-                <!-- <view class="media-mode absolute bottom-[74rpx] w-full text-center leading-[50rpx] " v-if="goodsDetail.goods.goods_video != ''">
-                    <text :class="{ '!bg-[var(--primary-color)]': switchMedia == 'video' }" @click="switchMedia = 'video'">视频</text>
-                    <text :class="{ '!bg-[var(--primary-color)]': switchMedia == 'img' }" @click="(switchMedia = 'img'), videoContext.pause()">图片</text>
-                </view> -->
+                <view class="media-mode bg-[rgb(0,0,0,.5)] rounded-[50rpx] p-[4rpx] absolute bottom-[130rpx] right-[20rpx] text-center leading-[46rpx]" v-if="goodsDetail.goods.goods_video != ''">
+                    <text class="tab-item" :class="{ '!bg-[#fff] !text-[#666]': switchMedia == 'video' }" @click="switchMedia = 'video'">视频</text>
+                    <view class="tab-item flex items-center" :class="{ '!bg-[#fff] !text-[#666]': switchMedia == 'img' }" @click="(switchMedia = 'img'), videoContext.pause()">
+                        <text class="mr-[4rpx]">图片</text>
+                        <text v-if="switchMedia == 'img' && goodsDetail?.goods?.goods_image?.length > 1">{{swiperCurrentIndex}}/{{goodsDetail?.goods?.goods_image?.length}}</text>
+                    </view>
+                </view>
             </view>
             <view v-if="priceType != 'original_price'"
                   class="rounded-t-[40rpx] -mt-[44rpx] relative flex items-center justify-between !bg-cover box-border pb-[26rpx] h-[136rpx] px-[30rpx]"
@@ -113,28 +119,32 @@
                         <view class="brand-tag middle" v-if="goodsDetail.goods.goods_brand" :style="diyGoods.baseTagStyle(goodsDetail.goods.goods_brand)">{{ goodsDetail.goods.goods_brand.brand_name }}</view>
                         {{ goodsDetail.goods.goods_name }}
                     </view>
-                    <view class="flex justify-between items-start mt-[24rpx]">
-                        <view class="text-[24rpx] leading-[34rpx] text-[var(--text-color-light6)]" v-if="goodsDetail.market_price && parseFloat(goodsDetail.market_price)">
-                            <text class="whitespace-nowrap mr-[4rpx]">划线价:</text>
-                            <text class="line-through">￥{{ goodsDetail.market_price }}</text>
-                        </view>
-                        <view class="text-[24rpx] leading-[34rpx] text-[var(--text-color-light6)]">
-                            <text class="whitespace-nowrap mr-[4rpx]">库存:</text>
-                            <text>{{ goodsDetail.stock }}</text>
-                            <text>{{ goodsDetail.goods.unit }}</text>
-                        </view>
-                        <view class="text-[24rpx] leading-[34rpx] text-[var(--text-color-light6)] flex items-baseline">
-                            <text class="whitespace-nowrap mr-[4rpx]">销量:</text>
-                            <text class="mx-[2rpx]">{{ goodsDetail.goods.sale_num }}</text>
-                            <text>{{ goodsDetail.goods.unit }}</text>
-                        </view>
-                    </view>
+					<view class="text-[26rpx] text-[#666] truncate my-[16rpx] leading-[33rpx]">
+						{{goodsDetail.goods.sub_title}}
+					</view>
+                    
                     <view class="flex flex-wrap mt-[16rpx]" v-if="goodsDetail.label_info && goodsDetail.label_info.length">
                         <template v-for="item in goodsDetail.label_info" :key="item.label_id">
                             <image class="img-tag middle" v-if="item.style_type == 'icon' && item.icon" :src="img(item.icon)" mode="heightFix" @error="diyGoods.error(item,'icon')" />
                             <view class="base-tag middle" v-else-if="item.style_type == 'diy' || !item.icon" :style="diyGoods.baseTagStyle(item)">{{ item.label_name }}</view>
                         </template>
                     </view>
+					<view class="flex justify-between items-start mt-[24rpx]">
+					    <view class="text-[24rpx] leading-[34rpx] text-[var(--text-color-light6)]" v-if="goodsDetail.market_price && parseFloat(goodsDetail.market_price)">
+					        <text class="whitespace-nowrap mr-[4rpx]">划线价:</text>
+					        <text class="line-through">￥{{ goodsDetail.market_price }}</text>
+					    </view>
+					    <view class="text-[24rpx] leading-[34rpx] text-[var(--text-color-light6)]">
+					        <text class="whitespace-nowrap mr-[4rpx]">库存:</text>
+					        <text>{{ goodsDetail.stock }}</text>
+					        <text>{{ goodsDetail.goods.unit }}</text>
+					    </view>
+					    <view class="text-[24rpx] leading-[34rpx] text-[var(--text-color-light6)] flex items-baseline">
+					        <text class="whitespace-nowrap mr-[4rpx]">销量:</text>
+					        <text class="mx-[2rpx]">{{ goodsDetail.goods.sale_num }}</text>
+					        <text>{{ goodsDetail.goods.unit }}</text>
+					    </view>
+					</view>
                 </view>
                 <view class="mt-[24rpx] sidebar-margin card-template" v-if="isGoodsPropertyTemp">
                     <view @click="servicesDataShow = !servicesDataShow" v-if="goodsDetail.service && goodsDetail.service.length" class="card-template-item">
@@ -407,6 +417,7 @@ const timeData = ref({});
 const onChange = (e) => {
     timeData.value = e;
 };
+const swiperCurrentIndex = ref(1); // 轮播图当前索引
 
 // 分享
 const { setShare } = useShare()
@@ -490,19 +501,23 @@ const getDetailInfo = () => {
             goodsDetail.value.goods.goods_image[index] = img(item);
         })
 
+
         loading.value = true;
 
         let data: any = deepClone(res.data);
         goodsDetail.value.goods.attr_format = []
         if (data.goods && data.goods.attr_format) {
-            let attrFormatArr: any = deepClone(JSON.parse(data.goods.attr_format));
+            let attrFormatArr: any = deepClone(data.goods.attr_format);
             attrFormatArr.forEach((item: any, index: any) => {
                 if ((item.attr_child_value_name && !(item.attr_child_value_name instanceof Array)) || ((item.attr_child_value_name instanceof Array) && item.attr_child_value_name.length)) {
                     goodsDetail.value.goods.attr_format.push(item);
                 }
             })
         }
-        if (goodsDetail.value.goods.goods_video != '') videoContext.value = uni.createVideoContext('goodsVideo');
+        if (goodsDetail.value.goods.goods_video != '') {
+            switchMedia.value = 'video'
+            videoContext.value = uni.createVideoContext('goodsVideo');
+        }
         sendMessageTitle.value = goodsDetail.value.goods.goods_name
         sendMessagePath.value = '/addon/shop/pages/goods/detail?sku_id=' + goodsDetail.value.sku_id;
         if (goodsDetail.value.type) {
@@ -967,6 +982,12 @@ onUnload(() => {
     }
     // #endif
 })
+
+// 图片轮播change事件
+const swiperChangeFn = (e: any) => { 
+    swiperCurrentIndex.value = e.current + 1;
+}
+
 </script>
 <style lang="scss" scoped>
 @import '@/addon/shop/styles/common.scss';
@@ -987,10 +1008,6 @@ onUnload(() => {
         top: -10rpx;
         transform: translateX(-50%) rotate(45deg);
     }
-}
-
-:deep(.uni-video-bar) {
-    bottom: 34rpx !important;
 }
 
 :deep(.uni-video-cover) {
@@ -1054,18 +1071,13 @@ onUnload(() => {
 }
 
 .media-mode {
-    text {
-        background: rgba(100, 100, 100, 0.4);
+    .tab-item {
         color: #fff;
         font-size: 24rpx;
-        line-height: 50rpx;
-        border-radius: 20rpx;
-        padding: 0 30rpx;
+        line-height: 46rpx;
+        border-radius: 50rpx;
+        padding: 0 20rpx;
         display: inline-block;
-
-        &:last-child {
-            margin-left: 40rpx;
-        }
     }
 }
 
@@ -1088,4 +1100,7 @@ onUnload(() => {
 }
 
 /*  #endif  */
+.goods-video-height{
+   height: calc(100vw - 44rpx); 
+}
 </style>

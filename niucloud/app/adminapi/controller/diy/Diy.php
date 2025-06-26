@@ -24,12 +24,14 @@ use think\Response;
 /**
  * 自定义页面控制器
  * Class DiyController
+ * @description 自定义页面
  * @package app\adminapi\controller\diy
  */
 class Diy extends BaseAdminController
 {
     /**
-     * @notes 获取自定义页面分页列表
+     * 获取自定义页面分页列表
+     * @description 获取自定义页面分页列表
      * @return Response
      */
     public function lists()
@@ -44,7 +46,8 @@ class Diy extends BaseAdminController
     }
 
     /**
-     * @notes 获取自定义页面分页列表，轮播搜索组件用
+     * 获取自定义页面分页列表，轮播搜索组件用
+     * @description 获取自定义页面分页列表，轮播搜索组件用
      * @return Response
      */
     public function getPageByCarouselSearch()
@@ -53,7 +56,8 @@ class Diy extends BaseAdminController
     }
 
     /**
-     * @notes 获取自定义页面列表
+     * 获取自定义页面列表
+     * @description 获取自定义页面列表
      * @return Response
      * @throws DataNotFoundException
      * @throws DbException
@@ -71,6 +75,7 @@ class Diy extends BaseAdminController
 
     /**
      * 自定义页面详情
+     * @description 自定义页面详情
      * @param int $id
      * @return Response
      */
@@ -81,6 +86,7 @@ class Diy extends BaseAdminController
 
     /**
      * 添加自定义页面
+     * @description 添加自定义页面
      * @return Response
      */
     public function add()
@@ -104,6 +110,7 @@ class Diy extends BaseAdminController
 
     /**
      * 自定义页面编辑
+     * @description 自定义页面编辑
      * @param $id
      * @return Response
      */
@@ -126,6 +133,7 @@ class Diy extends BaseAdminController
 
     /**
      * 自定义页面删除
+     * @description 自定义页面删除
      * @param int $id
      * @return Response
      */
@@ -137,6 +145,7 @@ class Diy extends BaseAdminController
 
     /**
      * 设为使用
+     * @description 设为使用
      * @param $id
      * @return Response
      * @throws Exception
@@ -149,6 +158,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取页面初始化数据
+     * @description 获取页面初始化数据
      * @return Response
      */
     public function getPageInit()
@@ -166,6 +176,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取自定义链接列表
+     * @description 获取自定义链接列表
      */
     public function getLink()
     {
@@ -175,6 +186,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取页面模板
+     * @description 获取页面模板
      * @return Response
      */
     public function getTemplate()
@@ -192,6 +204,7 @@ class Diy extends BaseAdminController
 
     /**
      * 修改页面分享内容
+     * @description 修改页面分享内容
      * @param int $id
      * @return Response
      */
@@ -206,6 +219,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取装修页面列表
+     * @description 获取装修页面列表
      */
     public function getDecoratePage()
     {
@@ -217,6 +231,7 @@ class Diy extends BaseAdminController
 
     /**
      * 切换模板
+     * @description 切换模板
      */
     public function changeTemplate()
     {
@@ -234,6 +249,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取模板页面列表
+     * @description 获取模板页面列表
      * @return Response
      */
     public function getTemplatePages()
@@ -248,6 +264,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取模板页面（存在的应用插件列表）
+     * @description 获取模板页面（存在的应用插件列表）
      * @return Response
      */
     public function getApps()
@@ -257,6 +274,7 @@ class Diy extends BaseAdminController
 
     /**
      * 复制模版
+     * @description 复制模版
      * @return Response
      */
     public function copy()
@@ -270,6 +288,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取主题风格列表
+     * @description 获取主题风格列表
      * @return Response
      */
     public function getDiyTheme()
@@ -279,6 +298,7 @@ class Diy extends BaseAdminController
 
     /**
      * 设置主题风格
+     * @description 设置主题风格
      * @return Response
      */
     public function setDiyTheme()
@@ -296,6 +316,7 @@ class Diy extends BaseAdminController
 
     /**
      * 获取主题配色列表
+     * @description 获取主题配色列表
      * @return Response
      */
     public function getDefaultThemeColor()
@@ -308,6 +329,7 @@ class Diy extends BaseAdminController
 
     /**
      * 添加自定义主题配色
+     * @description 添加自定义主题配色
      * @return Response
      */
     public function addDiyTheme()
@@ -326,6 +348,7 @@ class Diy extends BaseAdminController
 
     /**
      * 编辑自定义主题配色
+     * @description 编辑自定义主题配色
      * @param $id
      * @return Response
      */
@@ -345,6 +368,7 @@ class Diy extends BaseAdminController
 
     /**
      * 删除自定义主题配色
+     * @description 删除自定义主题配色
      * @param $id
      * @return Response
      */

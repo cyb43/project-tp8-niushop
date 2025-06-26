@@ -11,7 +11,9 @@
 
 namespace app\service\api\member;
 
+use app\model\diy_form\DiyFormRecords;
 use app\model\member\Member;
+use app\service\core\member\CoreMemberConfigService;
 use app\service\core\member\CoreMemberService;
 use core\base\BaseApiService;
 use core\exception\ApiException;
@@ -59,7 +61,20 @@ class MemberService extends BaseApiService
     public function getInfo()
     {
         $field = 'member_id, username, member_no, mobile, register_channel, nickname, headimg, member_level, member_label, login_ip, login_type, login_time, create_time, last_visit_time, last_consum_time, sex, status, birthday, point, balance, growth, is_member, member_time, is_del, province_id, city_id, district_id, address, location, money, money_get, wx_openid, weapp_openid, commission, commission_get, commission_cash_outing';
-        return $this->model->where([['member_id', '=', $this->member_id]])->with(['member_level_name_bind'])->field($field)->append(['sex_name'])->findOrEmpty()->toArray();
+        $member_info = $this->model->where([['member_id', '=', $this->member_id]])->with(['member_level_name_bind'])->field($field)->append(['sex_name'])->findOrEmpty()->toArray();
+        if (!empty($member_info)) {
+            $config = (new CoreMemberConfigService())->getMemberConfig();
+            $member_info['form_id'] = $config['form_id'];
+            $member_info['form_record_id'] = '';
+            if (!empty($member_info['form_id'])) {
+                $diy_form_records_model = new DiyFormRecords();
+                $form_records = $diy_form_records_model->field('record_id')->where([['form_id', '=', $member_info['form_id']], ['member_id', '=', $member_info['member_id']]])->order('create_time desc')->findOrEmpty()->toArray();
+                if (!empty($form_records)) {
+                    $member_info['form_record_id'] = $form_records['record_id'];
+                }
+            }
+        }
+        return $member_info;
     }
 
     /**

@@ -15,12 +15,18 @@ use app\service\admin\auth\ConfigService;
 use core\base\BaseAdminController;
 use think\Response;
 
-
+/**
+ * 登录设置
+ * Class Config
+ * @description 登录设置
+ * @package app\adminapi\controller\login
+ */
 class Config extends BaseAdminController
 {
 
     /**
      * 获取登录设置
+     * @description 获取登录设置
      * @return Response
      */
     public function getConfig()
@@ -30,6 +36,7 @@ class Config extends BaseAdminController
 
     /**
      * 注册与登录设置
+     * @description 注册与登录设置
      * @return Response
      */
     public function setConfig()

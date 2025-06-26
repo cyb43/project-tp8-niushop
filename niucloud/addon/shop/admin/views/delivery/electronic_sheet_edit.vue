@@ -232,7 +232,6 @@ const handleSelectCompanyChange = (value: any, load: any = false) => {
             break;
         }
     }
-
 }
 
 /**

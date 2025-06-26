@@ -8,6 +8,7 @@ interface Cart {
     totalNum: number
     totalMoney: number
     isRepeat: boolean
+    isAddCartRecommend: boolean // 是否添加购物车推荐
 }
 
 const useCartStore = defineStore('cart', {
@@ -16,7 +17,8 @@ const useCartStore = defineStore('cart', {
             cartList: {}, // 购物车列表
             totalNum: 0, // 购物车商品总数量
             totalMoney: 0, // 购物车商品总价格
-            isRepeat: false
+            isRepeat: false,
+            isAddCartRecommend: false
         }
     },
     actions: {

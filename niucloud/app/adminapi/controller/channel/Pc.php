@@ -15,10 +15,17 @@ use app\service\admin\channel\PcService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * PC端配置
+ * Class Pc
+ * @description PC端配置
+ * @package app\adminapi\controller\channel
+ */
 class Pc extends BaseAdminController
 {
     /**
      * 获取PC配置信息
+     * @description 获取PC配置信息
      * @return Response
      */
     public function get()
@@ -28,6 +35,7 @@ class Pc extends BaseAdminController
 
     /**
      * 设置PC配置信息
+     * @description 设置PC配置信息
      * @return Response
      */
     public function set()

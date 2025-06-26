@@ -22,12 +22,12 @@ class App extends BaseAdminController
 {
     /**
      * 获取应用链接列表
+     * @description 获取应用链接列表
      * @return Response
      */
     public function getAppList()
     {
         return success((new AppService())->getAppList());
     }
-
 
 }

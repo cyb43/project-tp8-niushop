@@ -4,7 +4,7 @@
         <div class="main-container" v-loading="loading">
             <el-card class="box-card !border-none" shadow="never">
                 <el-row class="flex">
-                    <el-col :span="8" class="min-w-[100px]">
+                    <el-col :span="6" class="min-w-[100px]">
                         <div class="statistic-card">
                             <el-statistic :value="couponStatistics.receive_count ? Number.parseInt(couponStatistics.receive_count) : '0'"></el-statistic>
                             <div class="statistic-footer">
@@ -14,7 +14,7 @@
                             </div>
                         </div>
                     </el-col>
-                    <el-col :span="8" class="min-w-[100px]">
+                    <el-col :span="6" class="min-w-[100px]">
                         <div class="statistic-card">
                             <el-statistic :value="couponStatistics.receive_use_count ? Number.parseInt(couponStatistics.receive_use_count) : '0'"></el-statistic>
                             <div class="statistic-footer">
@@ -24,12 +24,22 @@
                             </div>
                         </div>
                     </el-col>
-                    <el-col :span="8" class="min-w-[100px]">
+                    <el-col :span="6" class="min-w-[100px]">
                         <div class="statistic-card">
                             <el-statistic :value="couponStatistics.receive_expire_count ? Number.parseInt(couponStatistics.receive_expire_count) : '0'"></el-statistic>
                             <div class="statistic-footer">
                                 <div class="footer-item text-[14px] text-[#666]">
                                     <span>{{ t('receiveExpireCount') }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </el-col>
+                    <el-col :span="6" class="min-w-[100px]">
+                        <div class="statistic-card">
+                            <el-statistic :value="couponStatistics.receive_invalid_count ? Number.parseInt(couponStatistics.receive_invalid_count) : '0'"></el-statistic>
+                            <div class="statistic-footer">
+                                <div class="footer-item text-[14px] text-[#666]">
+                                    <span>{{ t('receiveInvalidCount') }}</span>
                                 </div>
                             </div>
                         </div>

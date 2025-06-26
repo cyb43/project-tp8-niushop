@@ -51,7 +51,7 @@
                         </div>
                         <div class="text-[12px] text-[#999]">{{ t('storeDateTips') }}</div>
                     </div>
-                    
+
                 </el-form-item>
 
                 <el-form-item :label="t('storeTimeInterval')" prop="time_interval">
@@ -61,7 +61,7 @@
                         </el-radio-group>
                         <p class="text-[12px] text-[#999]">{{ t('storeTimeIntervalTips') }}</p>
                     </div>
-                    
+
                 </el-form-item>
 
                 <el-form-item :label="t('storeAddress')" prop="address_area">

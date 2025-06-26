@@ -91,4 +91,6 @@ Route::group(function () {
     Route::get('addon/list/install', 'addon.Addon/getInstallList');
     // 获取应用列表
     Route::get('addon/list/showapp', 'addon.Addon/showApp');
+    // 获取营销列表
+    Route::get('showMarketing', 'addon.Addon/showMarketing');
 });

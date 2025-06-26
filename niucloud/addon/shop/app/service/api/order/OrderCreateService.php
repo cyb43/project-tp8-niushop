@@ -12,6 +12,7 @@
 namespace addon\shop\app\service\api\order;
 
 use addon\shop\app\dict\order\OrderLogDict;
+use addon\shop\app\model\delivery\Local;
 use addon\shop\app\model\order\Order;
 use addon\shop\app\service\core\delivery\CoreStoreService;
 use addon\shop\app\service\core\order\CoreOrderCreateService;
@@ -99,5 +100,10 @@ class OrderCreateService extends BaseApiService
     public function getStore(array $data)
     {
         return (new CoreStoreService())->getStoreList($data);
+    }
+
+    public function getLocalDeliveryConfig()
+    {
+        return  (new Local())->where([['local_id', '>', 0]])->findOrEmpty()->toArray();
     }
 }

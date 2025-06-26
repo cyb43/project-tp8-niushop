@@ -11,6 +11,7 @@
 
 namespace addon\shop\app\model\order;
 
+use addon\shop\app\dict\delivery\DeliveryLocalDict;
 use addon\shop\app\model\delivery\Company;
 use core\base\BaseModel;
 
@@ -45,5 +46,9 @@ class OrderDelivery extends BaseModel
     public function orderGoods()
     {
         return $this->hasMany(OrderGoods::class, 'delivery_id', 'id');
+    }
+    public function getThirdDeliveryNameAttr($value, $data)
+    {
+        return DeliveryLocalDict::getType($data['third_delivery'])['name']  ?? "";
     }
 }

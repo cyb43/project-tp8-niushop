@@ -88,7 +88,7 @@ class CoreAddonDevelopBuildService extends BaseCoreService
      */
     public function menu(string $app_type) {
         $where = [ ['app_type', '=', $app_type], ['addon', '=', $this->addon] ];
-        $field = 'menu_name,menu_key,menu_short_name,parent_key,menu_type,icon,api_url,router_path,view_path,methods,sort,status,is_show';
+        $field = 'menu_name,menu_key,menu_short_name,parent_select_key,parent_key,menu_type,icon,api_url,router_path,view_path,methods,sort,status,is_show';
         $menu = (new SysMenu())->where($where)->field($field)->order('sort', 'desc')->select()->toArray();
         if (!empty($menu)) {
             $menu = $this->menuToTree($menu, 'menu_key', 'parent_key', 'children');

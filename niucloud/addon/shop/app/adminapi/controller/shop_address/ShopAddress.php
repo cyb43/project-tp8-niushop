@@ -24,6 +24,7 @@ class ShopAddress extends BaseAdminController
 {
     /**
      * 获取商家地址库列表
+     * @description 查看商家地址库列表-分页
      * @return \think\Response
      */
     public function lists()
@@ -37,6 +38,7 @@ class ShopAddress extends BaseAdminController
 
     /**
      * 商家地址库详情
+     * @description 查看商家地址库详情
      * @param int $id
      * @return \think\Response
      */
@@ -47,6 +49,7 @@ class ShopAddress extends BaseAdminController
 
     /**
      * 添加商家地址库
+     * @description 添加商家地址库
      * @return \think\Response
      */
     public function add()
@@ -73,6 +76,7 @@ class ShopAddress extends BaseAdminController
 
     /**
      * 商家地址库编辑
+     * @description 编辑商家地址库
      * @param $id  商家地址库id
      * @return \think\Response
      */
@@ -100,6 +104,7 @@ class ShopAddress extends BaseAdminController
 
     /**
      * 商家地址库删除
+     * @description 删除商家地址库
      * @param $id  商家地址库id
      * @return \think\Response
      */
@@ -109,6 +114,13 @@ class ShopAddress extends BaseAdminController
         return success('DELETE_SUCCESS');
     }
 
+    /**
+     * @description 获取默认配送地址
+     * @return \think\Response
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public function defaultDelivery()
     {
         return success(data:( new ShopAddressService() )->getDefaultDeliveryAddress());
@@ -116,6 +128,7 @@ class ShopAddress extends BaseAdminController
 
     /**
      * 获取商家地址（不分页）
+     * @description 获取商家地址库列表-不分页
      */
     public function getList()
     {

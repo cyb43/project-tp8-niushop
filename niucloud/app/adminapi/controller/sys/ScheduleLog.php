@@ -17,11 +17,13 @@ use think\Response;
 
 /**
  * 计划任务执行记录
+ * @description 计划任务执行记录
  */
 class ScheduleLog extends BaseAdminController
 {
     /**
      * 任务执行记录列表
+     * @description 任务执行记录列表
      * @return Response
      */
     public function lists()
@@ -38,6 +40,7 @@ class ScheduleLog extends BaseAdminController
 
     /**
      * 删除计划任务执行记录
+     * @description 删除计划任务执行记录
      * @return Response
      */
     public function del()
@@ -51,6 +54,7 @@ class ScheduleLog extends BaseAdminController
 
     /**
      * 清空计划任务执行记录
+     * @description 清空计划任务执行记录
      * @return Response
      */
     public function clear()

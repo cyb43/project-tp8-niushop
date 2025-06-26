@@ -15,11 +15,18 @@ use app\service\admin\upgrade\BackupRecordsService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 备份管理
+ * Class Backup
+ * @description 备份管理
+ * @package app\adminapi\controller\addon
+ */
 class Backup extends BaseAdminController
 {
 
     /**
      * 获取升级记录分页列表
+     * @description 获取升级记录分页列表
      * @return Response
      */
     public function getRecords()
@@ -32,6 +39,7 @@ class Backup extends BaseAdminController
 
     /**
      * 修改备注
+     * @description 修改备注
      * @return Response
      */
     public function modifyRemark()
@@ -46,6 +54,7 @@ class Backup extends BaseAdminController
 
     /**
      * 恢复前检测文件是否存在
+     * @description 恢复前检测文件是否存在
      * @return Response
      */
     public function checkDirExist()
@@ -58,6 +67,7 @@ class Backup extends BaseAdminController
 
     /**
      * 检测目录权限
+     * @description 检测目录权限
      * @return Response
      */
     public function checkPermission()
@@ -67,6 +77,7 @@ class Backup extends BaseAdminController
 
     /**
      * 恢复备份
+     * @description 恢复备份
      * @return Response
      */
     public function restoreBackup()
@@ -81,6 +92,7 @@ class Backup extends BaseAdminController
 
     /**
      * 删除升级记录
+     * @description 删除升级记录
      * @return Response
      */
     public function deleteRecords()
@@ -94,6 +106,7 @@ class Backup extends BaseAdminController
 
     /**
      * 手动备份
+     * @description 手动备份
      * @return Response
      */
     public function manualBackup()
@@ -107,6 +120,7 @@ class Backup extends BaseAdminController
 
     /**
      * 获取正在进行的恢复任务
+     * @description 获取正在进行的恢复任务
      * @return Response
      */
     public function getRestoreTask()
@@ -116,6 +130,7 @@ class Backup extends BaseAdminController
 
     /**
      * 获取正在进行的备份任务
+     * @description 获取正在进行的备份任务
      * @return Response
      */
     public function getBackupTask()

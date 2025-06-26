@@ -143,9 +143,10 @@ return [
     'EXCHANGE_COUPON_NOT_EMPTY' => '请选择要参与的优惠券',
     'EXCHANGE_COUPON_NOT_EXIST' => '优惠券不存在',
     'EXCHANGE_BALANCE_GREATER_THAN_ZERO' => '商品兑换余额要大于零',
-    'EXCHANGE_DETA_NOT_FOUND' => '积分信息活动未找到',
+    'EXCHANGE_DATA_NOT_FOUND' => '积分信息活动未找到',
     'EXCHANGE_ACTIVITY_REMOVE' => '此积分商品已经下架',
     'EXCHANGE_GOODS_ACTIVITY_EXISTING' => '此商品已经参与积分兑换活动了',
+    'EXIST_NOT_DOWN_ACTIVE' => '存在未下架活动',
     /*********************************************   积分商城end ****************************************************/
 
     /*********************************************  订单业务 *****************************************************/

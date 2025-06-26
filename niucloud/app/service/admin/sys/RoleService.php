@@ -29,6 +29,7 @@ use think\facade\Cache;
 class RoleService extends BaseAdminService
 {
     public static $cache_tag_name = 'role_cache';
+
     public function __construct()
     {
         parent::__construct();
@@ -43,20 +44,22 @@ class RoleService extends BaseAdminService
     public function getPage(array $data)
     {
         $where = [];
-        if(isset($data['role_name']) && $data['role_name'] !== '') {
-            $where[] = ['role_name', 'like', "%".$this->model->handelSpecialCharacter($data['role_name'])."%"];
+        if (isset($data[ 'role_name' ]) && $data[ 'role_name' ] !== '') {
+            $where[] = [ 'role_name', 'like', "%" . $this->model->handelSpecialCharacter($data[ 'role_name' ]) . "%" ];
         }
         $field = 'role_id,role_name,status,create_time';
-        $search_model = $this->model->where($where)->field($field)->order('create_time desc')->append(['status_name']);
+        $search_model = $this->model->where($where)->field($field)->order('create_time desc')->append([ 'status_name' ]);
         return $this->pageQuery($search_model);
     }
+
     /**
      * 获取权限信息
      * @param int $role_id
      * @return array
      */
-    public function getInfo(int $role_id){
-        return $this->model->append(['status_name'])->findOrEmpty($role_id)->toArray();
+    public function getInfo(int $role_id)
+    {
+        return $this->model->append([ 'status_name' ])->findOrEmpty($role_id)->toArray();
     }
 
     /**
@@ -69,7 +72,7 @@ class RoleService extends BaseAdminService
     public function getAll()
     {
         $where = array(
-            ['status', '=', 1]
+            [ 'status', '=', 1 ]
         );
         return $this->model->where($where)->field('role_id,role_name,status,create_time')->select()->toArray();
     }
@@ -79,8 +82,9 @@ class RoleService extends BaseAdminService
      * @param array $data
      * @return true
      */
-    public function add(array $data){
-        $data['create_time'] = time();
+    public function add(array $data)
+    {
+        $data[ 'create_time' ] = time();
         $this->model->save($data);
         Cache::tag(self::$cache_tag_name)->clear();
         return true;
@@ -92,11 +96,12 @@ class RoleService extends BaseAdminService
      * @param array $data
      * @return true
      */
-    public function edit(int $role_id, array $data){
+    public function edit(int $role_id, array $data)
+    {
         $where = array(
-            ['role_id', '=', $role_id],
+            [ 'role_id', '=', $role_id ],
         );
-        $data['update_time'] = time();
+        $data[ 'update_time' ] = time();
         $this->model->update($data, $where);
         Cache::tag(self::$cache_tag_name)->clear();
         return true;
@@ -108,9 +113,10 @@ class RoleService extends BaseAdminService
      * @param int $role_id
      * @return mixed
      */
-    public function find(int $role_id){
+    public function find(int $role_id)
+    {
         $where = array(
-            ['role_id', '=', $role_id],
+            [ 'role_id', '=', $role_id ],
         );
         $role = $this->model->where($where)->findOrEmpty();
         if ($role->isEmpty())
@@ -124,9 +130,10 @@ class RoleService extends BaseAdminService
      * @return mixed
      * @throws DbException
      */
-    public function del(int $role_id){
+    public function del(int $role_id)
+    {
         $role = $this->find($role_id);
-        if(SysUser::where([['role_ids', 'like',['%"'.$role_id.'"%']]])->count() > 0)
+        if (SysUser::where([ [ 'role_ids', 'like', [ '%"' . $role_id . '"%' ] ] ])->count() > 0)
             throw new AdminException('USER_ROLE_NOT_ALLOW_DELETE');
         $res = $role->delete();
         Cache::tag(self::$cache_tag_name)->clear();
@@ -138,14 +145,15 @@ class RoleService extends BaseAdminService
      * 获取角色id为健名,角色名为键值的数据
      * @return mixed|string
      */
-    public function getColumn(){
+    public function getColumn()
+    {
         $cache_name = 'role_column';
         return cache_remember(
             $cache_name,
-            function() {
+            function () {
                 return $this->model->column('role_name', 'role_id');
             },
-            [MenuService::$cache_tag_name, self::$cache_tag_name]
+            [ RoleService::$cache_tag_name, self::$cache_tag_name ]
         );
     }
 
@@ -157,26 +165,27 @@ class RoleService extends BaseAdminService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getMenuKeysByRoleIds(array $role_ids){
+    public function getMenuKeysByRoleIds(array $role_ids)
+    {
         sort($role_ids);
-        $cache_name = 'user_role_menu_keys_'.md5(implode('_', $role_ids));
+        $cache_name = 'user_role_menu_keys_' . md5(implode('_', $role_ids));
         return cache_remember(
             $cache_name,
-            function() use($role_ids) {
-                $rules = $this->model->where([['role_id', 'IN', $role_ids], ['status', '=', RoleStatusDict::ON]])->field('rules')->select()->toArray();
-                if(!empty($rules)){
+            function () use ($role_ids) {
+                $rules = $this->model->where([ [ 'role_id', 'IN', $role_ids ], [ 'status', '=', RoleStatusDict::ON ] ])->field('rules')->select()->toArray();
+                if (!empty($rules)) {
                     $temp = [];
-                    foreach($rules as $v){
-                        $temp = array_merge($temp, $v['rules']);
+                    foreach ($rules as $v) {
+                        $temp = array_merge($temp, $v[ 'rules' ]);
                     }
                     $temp = array_unique($temp);
 
-                    if(empty($temp)) return [];
+                    if (empty($temp)) return [];
                     return $temp;
                 }
                 return [];
             },
-            [MenuService::$cache_tag_name, self::$cache_tag_name]
+            [ RoleService::$cache_tag_name, self::$cache_tag_name ]
         );
 
     }
@@ -190,36 +199,56 @@ class RoleService extends BaseAdminService
      * @throws DbException
      * @throws ModelNotFoundException
      */
-    public function getAddonKeysByRoleIds(array $role_ids){
+    public function getAddonKeysByRoleIds(array $role_ids)
+    {
         sort($role_ids);
-        $cache_name = 'user_role_addon_keys_'.md5(implode('_', $role_ids));
+        $cache_name = 'user_role_addon_keys_' . md5(implode('_', $role_ids));
         return cache_remember(
             $cache_name,
-            function() use($role_ids) {
-                $rules = $this->model->where([['role_id', 'IN', $role_ids], ['status', '=', RoleStatusDict::ON]])->field('addon_keys')->select()->toArray();
-                if(!empty($rules)){
+            function () use ($role_ids) {
+                $rules = $this->model->where([ [ 'role_id', 'IN', $role_ids ], [ 'status', '=', RoleStatusDict::ON ] ])->field('addon_keys')->select()->toArray();
+                if (!empty($rules)) {
                     $temp = [];
-                    foreach($rules as $v){
-                        $temp = array_merge($temp, $v['addon_keys']);
+                    foreach ($rules as $v) {
+                        $temp = array_merge($temp, $v[ 'addon_keys' ]);
                     }
                     $temp = array_unique($temp);
 
-                    if(empty($temp)) return [];
+                    if (empty($temp)) return [];
                     return $temp;
                 }
                 return [];
             },
-            [MenuService::$cache_tag_name, self::$cache_tag_name]
+            [ RoleService::$cache_tag_name, self::$cache_tag_name ]
         );
 
     }
 
     /**
+     * 用户权限信息
+     * @return mixed
+     */
+    public function getUserRoles($role_ids)
+    {
+        $cache_name = 'user_roles_' . md5(implode('_', $role_ids));;
+        return cache_remember(
+            $cache_name,
+            function () use ($role_ids) {
+                $where = array(
+                    [ 'role_id', 'in', $role_ids ]
+                );
+                return $this->model->where($where)->select()->toArray();
+            },
+            [ RoleService::$cache_tag_name, self::$cache_tag_name ]
+        );
+    }
+
+    /**
      * 角色状态修改
      */
-    public function setStatus(int $id, int $status)
+    public function modifyStatus(int $id, int $status)
     {
-        $this->model->where([['role_id', '=', $id]])->update(['status' => $status]);
+        $this->model->where([ [ 'role_id', '=', $id ] ])->update([ 'status' => $status ]);
         return true;
     }
 }

@@ -7,7 +7,7 @@
                     <view @click="toLink(item)">
                         <view class="flex justify-between items-center">
                             <view class="text-[#303133] text-[26rpx] font-400 leading-[34rpx]">
-                                <text>{{ t('orderNo') }}:</text>
+                                <text>{{ t('refundNo') }}:</text>
                                 <text class="ml-[10rpx]">{{ item.order_refund_no }}</text>
                                 <text class="text-[#303133] text-[24rpx] font-400 nc-iconfont nc-icon-fuzhiV6xx1 ml-[11rpx]"
                                     @click.stop="copy(item.order_refund_no)"></text>
@@ -55,10 +55,10 @@
                             </view>
                         </view>
                     </view>
-                    <view class="mt-[20rpx] flex flex-wrap justify-end" v-if="['6','7','8','-1','3','2','5'].indexOf(item.status) == -1">
+                    <view class="mt-[20rpx] flex flex-wrap justify-end" v-if="['6','7','8','-1','3','2','5','-3'].indexOf(item.status) == -1">
                         <view class="text-[24rpx] text-[var(--text-color-light6)] font-500 h-[56rpx] leading-[52rpx] box-border px-[23rpx] border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full ml-[20rpx]"
                             @click.stop="refundBtnFn(item,'cancel')"
-                            v-if="['6','7','8','-1'].indexOf(item.status) == -1">{{ t('refundApply') }}</view>
+                            v-if="['6','7','8','-1','-3'].indexOf(item.status) == -1">{{ t('refundApply') }}</view>
                         <view v-if="['3'].indexOf(item.status) != -1"
                               class="text-[24rpx] font-500 text-[var(--text-color-light6)] h-[56rpx] box-border leading-[52rpx] px-[23rpx] border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full ml-[20rpx]"
                               @click.stop="refundBtnFn(item,'edit')">编辑退款信息</view>

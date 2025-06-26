@@ -24,6 +24,7 @@ class Label extends BaseAdminController
 {
     /**
      * 获取商品标签分页列表
+     * @description 获取商品标签列表-分页
      * @return \think\Response
      */
     public function pages()
@@ -39,6 +40,7 @@ class Label extends BaseAdminController
 
     /**
      * 获取商品标签列表
+     * @description 获取商品标签列表-全部
      * @return \think\Response
      */
     public function lists()
@@ -51,6 +53,7 @@ class Label extends BaseAdminController
 
     /**
      * 商品标签详情
+     * @description 查看商品标签详情
      * @param int $id
      * @return \think\Response
      */
@@ -61,6 +64,7 @@ class Label extends BaseAdminController
 
     /**
      * 添加商品标签
+     * @description 添加商品标签
      * @return \think\Response
      */
     public function add()
@@ -83,6 +87,7 @@ class Label extends BaseAdminController
 
     /**
      * 商品标签编辑
+     * @description 编辑商品标签
      * @param $id  `商品标签id`
      * @return \think\Response
      */
@@ -106,6 +111,7 @@ class Label extends BaseAdminController
 
     /**
      * 商品标签删除
+     * @description 删除商品标签
      * @param $id  商品标签id
      * @return \think\Response
      */
@@ -117,6 +123,7 @@ class Label extends BaseAdminController
 
     /**
      * 修改排序
+     * @description 修改商品标签排序
      * @return \think\Response
      */
     public function modifySort()
@@ -131,6 +138,7 @@ class Label extends BaseAdminController
 
     /**
      * 修改状态
+     * @description 添加商品标签状态
      * @return \think\Response
      */
     public function modifyStatus()
@@ -145,6 +153,7 @@ class Label extends BaseAdminController
 
     /**
      * 复制分类
+     * @description 复制商品标签
      * @param int $id
      * @return \think\Response
      * @throws \think\db\exception\DataNotFoundException

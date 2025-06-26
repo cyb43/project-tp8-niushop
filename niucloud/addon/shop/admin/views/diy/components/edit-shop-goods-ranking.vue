@@ -92,14 +92,14 @@ diyStore.editComponent.ignore = ['componentBgUrl'] // 忽略公共属性
 // 组件验证
 diyStore.editComponent.verify = (index: number) => {
     const res = { code: true, message: '' }
-        diyStore.value[index].list.forEach((item: any) => {
-           if (item.source == 'custom') {
-                if (item.rankIds.length == 0) {
-                    res.code = false
-                    res.message = t('请选择榜单')
-                }
+    diyStore.value[index].list.forEach((item: any) => {
+        if (item.source == 'custom') {
+            if (item.rankIds.length == 0) {
+                res.code = false
+                res.message = t('请选择榜单')
             }
-        });
+        }
+    });
     return res
 }
 

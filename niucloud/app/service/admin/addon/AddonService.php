@@ -29,14 +29,17 @@ use think\db\exception\DbException;
 class AddonService extends BaseAdminService
 {
     public static $cache_tag_name = 'addon_cache';
+
     public function __construct()
     {
         parent::__construct();
         $this->model = new Addon();
 
     }
-    public function getList(){
-        return (new CoreAddonService())->getLocalAddonList();
+
+    public function getList()
+    {
+        return ( new CoreAddonService() )->getLocalAddonList();
     }
 
     /**
@@ -45,7 +48,7 @@ class AddonService extends BaseAdminService
      */
     public function getLocalAddonList()
     {
-        return (new CoreAddonService())->getLocalAddonList();
+        return ( new CoreAddonService() )->getLocalAddonList();
     }
 
     /**
@@ -107,7 +110,8 @@ class AddonService extends BaseAdminService
      * @param string $addon
      * @return void
      */
-    public function uninstallCheck(string $addon) {
+    public function uninstallCheck(string $addon)
+    {
         return ( new CoreAddonInstallService($addon) )->uninstallCheck();
     }
 
@@ -128,7 +132,7 @@ class AddonService extends BaseAdminService
      */
     public function getPage(array $where = [])
     {
-        return (new CoreAddonService())->getPage($where);
+        return ( new CoreAddonService() )->getPage($where);
     }
 
     /**
@@ -138,7 +142,7 @@ class AddonService extends BaseAdminService
      */
     public function getInfo(int $id)
     {
-        return (new CoreAddonService())->getInfo($id);
+        return ( new CoreAddonService() )->getInfo($id);
     }
 
     /**
@@ -146,8 +150,9 @@ class AddonService extends BaseAdminService
      * @param int $id
      * @param int $status
      */
-    public function setStatus(int $id, int $status){
-        return (new CoreAddonService())->setStatus($id, $status);
+    public function setStatus(int $id, int $status)
+    {
+        return ( new CoreAddonService() )->setStatus($id, $status);
     }
 
     /**
@@ -155,9 +160,10 @@ class AddonService extends BaseAdminService
      * @param string $app_key
      * @return true
      */
-    public function download(string $app_key, string $version){
+    public function download(string $app_key, string $version)
+    {
         if (empty($version)) throw new CommonException('ADDON_DOWNLOAD_VERSION_EMPTY');
-        return (new CoreAddonDownloadService())->download($app_key, $version);
+        return ( new CoreAddonDownloadService() )->download($app_key, $version);
     }
 
 
@@ -165,8 +171,9 @@ class AddonService extends BaseAdminService
      * 查询已安装应用
      * @return array
      */
-    public function getInstallList(){
-        return (new CoreAddonService())->getInstallAddonList();
+    public function getInstallList()
+    {
+        return ( new CoreAddonService() )->getInstallAddonList();
     }
 
     /**
@@ -177,15 +184,16 @@ class AddonService extends BaseAdminService
      * @throws \think\db\exception\DataNotFoundException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function getAddonListByKeys($keys){
+    public function getAddonListByKeys($keys)
+    {
         sort($keys);
-        $cache_name = 'addon_list'.implode('_', $keys);
+        $cache_name = 'addon_list' . implode('_', $keys);
         return cache_remember(
             $cache_name,
             function () use ($keys) {
                 $where = [
-                    ['key', 'in', $keys],
-                    ['status', '=', AddonDict::ON]
+                    [ 'key', 'in', $keys ],
+                    [ 'status', '=', AddonDict::ON ]
                 ];
                 return $this->model->where($where)->field('title, icon, key, desc, status, cover')->select()->toArray();
 
@@ -244,7 +252,7 @@ class AddonService extends BaseAdminService
 
         }
 
-        $addons = $this->model->where([['status', '=', AddonDict::ON]])->append(['status_name'])->column('title, icon, key, desc, status, type, support_app', 'key');
+        $addons = $this->model->where([ [ 'status', '=', AddonDict::ON ] ])->append([ 'status_name' ])->column('title, icon, key, desc, status, type, support_app', 'key');
         if (!empty($addons)) {
             foreach ($addons as $k => $v) {
                 if (!in_array($v[ 'key' ], $keys) && $v[ 'type' ] == AddonDict::ADDON && $v[ 'status' ] == AddonDict::ON) {
@@ -255,6 +263,40 @@ class AddonService extends BaseAdminService
                         'key' => $v[ 'key' ]
                     ];
                 }
+            }
+        }
+
+        return $list;
+    }
+
+    /**
+     * 查询营销列表
+     * @return array
+     */
+    public function getShowMarketingTools()
+    {
+        $list = [
+            'marketing' => [
+                'title' => '营销活动',
+                'list' => []
+            ]
+        ];
+
+        $apps = event('ShowMarketing');
+
+        $keys = [];
+        foreach ($apps as $v) {
+            foreach ($v as $ck => $cv) {
+                if (!empty($cv)) {
+                    foreach ($cv as $addon_k => $addon_v) {
+                        if (in_array($addon_v[ 'key' ], $keys)) {
+                            continue;
+                        }
+                        $list[ $ck ][ 'list' ][] = $addon_v;
+                        $keys[] = $addon_v[ 'key' ];
+                    }
+                }
+
             }
         }
 

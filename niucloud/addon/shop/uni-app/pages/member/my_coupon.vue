@@ -18,8 +18,7 @@
             </scroll-view>
         </view>
 
-        <mescroll-body ref="mescrollRef" top="176rpx" @init="mescrollInit" :down="{ use: false }"
-                       @up="getMyCouponListFn">
+        <mescroll-body ref="mescrollRef" top="176rpx" @init="mescrollInit" :down="{ use: false }" @up="getMyCouponListFn">
             <view class="py-[var(--top-m)] px-[var(--sidebar-m)]" v-if="list.length">
                 <template v-for="(item, index) in list">
 
@@ -28,13 +27,12 @@
                           :class="{'mt-[var(--top-m)]':index}">
                         <view
                             class=" w-[186rpx] h-[160rpx] flex  flex-col items-center justify-center rounded-[var(--rounded-small)] relative coupon-item"
-                            :class="{'bg-[var(--primary-help-color4)]':couponStatus == 2 , 'bg-[var(--primary-color-light)]' :couponStatus == 3}">
-                            <view class="price-font flex items-baseline" :class="{'text-[#fff]' : couponStatus == 2 , 'text-[#FFB4B1]' : couponStatus == 3}">
-                                <text class="text-[30rpx] leading-[34rpx] mr-[2rpx] text-center price-font font-500">￥
-                                </text>
+                            :class="{'bg-[var(--primary-help-color4)]':couponStatus == 2 , 'bg-[var(--primary-color-light)]' :couponStatus == 3 || couponStatus == 4}">
+                            <view class="price-font flex items-baseline" :class="{'text-[#fff]' : couponStatus == 2 , 'text-[#FFB4B1]' : couponStatus == 3 || couponStatus == 4}">
+                                <text class="text-[30rpx] leading-[34rpx] mr-[2rpx] text-center price-font font-500">￥</text>
                                 <text class="text-[54rpx] font-500 leading-[58rpx] price-font truncate">{{ item.coupon_price }}</text>
                             </view>
-                            <text class="truncate max-w-[176rpx] mt-[6rpx] text-[24rpx] h-[32rpx] leading-[32rpx]" :class="{'text-[#fff]': couponStatus == 2 , 'text-[var(--primary-help-color4)]': couponStatus == 3}">{{ item.title }}</text>
+                            <text class="truncate max-w-[176rpx] mt-[6rpx] text-[24rpx] h-[32rpx] leading-[32rpx]" :class="{'text-[#fff]': couponStatus == 2 , 'text-[var(--primary-help-color4)]': couponStatus == 3 ||couponStatus == 4}">{{ item.title }}</text>
                         </view>
                         <view class="ml-[30rpx] flex-1 h-[100%] box-border py-[20rpx]">
                             <view class="text-[26rpx] leading-[40rpx] text-left font-500">
@@ -58,6 +56,9 @@
                             <button class="flex-center rounded-full remove-border"
                                     :style="{width:'150rpx',height:'60rpx',color:'var(--primary-help-color4)', fontSize:'24rpx', padding:'0',border:'none',backgroundColor:'var(--primary-color-light)'}"
                                     v-if="couponStatus == 3">已过期</button>
+							<button class="flex-center rounded-full remove-border"
+							        :style="{width:'150rpx',height:'60rpx',color:'var(--primary-help-color4)', fontSize:'24rpx', padding:'0',border:'none',backgroundColor:'var(--primary-color-light)'}"
+							        v-if="couponStatus == 4">已失效</button>
                         </view>
                     </view>
                     <view v-else class="flex items-center relative w-[100%] rounded-[var(--rounded-small)] overflow-hidden bg-[#fff]"
@@ -118,7 +119,8 @@ const couponStatus = ref(1);
 
 const getMyCouponStatusCountFn = () => {
     getMyCouponStatusCount().then((res: any) => {
-        statusList.value = res.data.filter((item: any) => item.status != 4)
+        // statusList.value = res.data.filter((item: any) => item.status != 4)
+		statusList.value = res.data
     })
 }
 const statusClickFn = (status: any) => {

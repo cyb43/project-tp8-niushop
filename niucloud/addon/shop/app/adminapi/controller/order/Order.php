@@ -29,6 +29,7 @@ class Order extends BaseAdminController
 {
     /**
      * 订单列表
+     * @description 查看订单列表-分页
      * @return Response
      */
     public function lists()
@@ -49,6 +50,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单详情
+     * @description 查看订单详情
      * @param int $order_id
      * @return Response
      */
@@ -59,6 +61,7 @@ class Order extends BaseAdminController
 
     /**
      * 获取订单状态
+     * @description 获取订单状态字典
      * @return Response
      */
     public function getOrderStatus()
@@ -68,6 +71,7 @@ class Order extends BaseAdminController
 
     /**
      * 获取订单类型
+     * @description 获取订单类型字典
      * @return Response
      */
     public function getOrderType()
@@ -77,6 +81,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单关闭
+     * @description 关闭订单
      * @param $id
      * @return Response
      */
@@ -87,6 +92,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单完成
+     * @description 完成订单
      * @param $id
      * @return Response
      */
@@ -98,6 +104,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单发货
+     * @description 订单发货
      * @param $id
      * @return Response
      */
@@ -105,6 +112,7 @@ class Order extends BaseAdminController
     {
         $data = $this->request->params([
             ['order_id', 0],
+            ['delivery_id', 0],//修改
             ['order_goods_ids', []],
             ['delivery_type', ''],
             ['delivery_way', ''], // 发货方式，manual_write：手动填写，electronic_sheet：电子面单
@@ -118,7 +126,9 @@ class Order extends BaseAdminController
     }
 
     /**
+     *
      * 获取订单配送方式
+     * @description 获取订单配送方式
      */
     public function getDeliveryType()
     {
@@ -130,6 +140,7 @@ class Order extends BaseAdminController
 
     /**
      * 商家留言
+     * @description 设置商家留言
      * @return Response
      */
     public function setShopRemark()
@@ -144,6 +155,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单包裹
+     * @description 查看订单包裹
      * @return Response
      */
     public function getOrderPackage()
@@ -157,6 +169,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单包裹列表
+     * @description 查看订单包裹列表-分页
      * @return Response
      */
     public function getDeliveryPackageList()
@@ -169,6 +182,7 @@ class Order extends BaseAdminController
 
     /**
      * 获取支付方式
+     * @description 获取订单支付方式字典
      * @return Response
      */
     public function getPayType()
@@ -178,6 +192,7 @@ class Order extends BaseAdminController
 
     /**
      * 获取订单来源
+     * @description 获取订单来源字典
      */
     public function getOrderFrom()
     {
@@ -186,6 +201,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单改价
+     * @description 修改订单价格
      * @return void
      */
     public function editPrice()
@@ -200,6 +216,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单配送信息修改
+     * @description 修改订单配送信息
      */
     public function editDelivery()
     {
@@ -223,6 +240,7 @@ class Order extends BaseAdminController
 
     /**
      * 订单修改配送信息数据获取
+     * @description 修改订单配送信息
      */
     public function editDeliveryData()
     {
@@ -246,6 +264,7 @@ class Order extends BaseAdminController
 
     /**
      *获取订单批量操作记录
+     * @description 查看订单批量操作
      * @return Response
      */
     public function getOrderBatchDeliveryPage()
@@ -261,6 +280,7 @@ class Order extends BaseAdminController
 
     /**
      * 记录详情
+     * @description 查看批量操作订单配送记录信息
      * @param $id
      * @return Response
      * @throws \think\db\exception\DbException
@@ -272,6 +292,7 @@ class Order extends BaseAdminController
 
     /**
      * 发布导入批量操作
+     * @description 批量订单发货
      * @return Response
      */
     public function addBatchOrderDelivery()
@@ -284,6 +305,7 @@ class Order extends BaseAdminController
 
     /**
      * 获取操作类型
+     * @description 获取批量发送类型字典
      * @return Response
      */
     public function getBatchType()
@@ -293,6 +315,7 @@ class Order extends BaseAdminController
 
     /**
      * 获取批量状态
+     * @description 获取订单批量发送状态字典
      * @return Response
      */
     public function getBatchStatus()
@@ -300,6 +323,10 @@ class Order extends BaseAdminController
         return success(data: OrderBatchDeliveryDict::getStatus());
     }
 
+    /**
+     * @description 删除订单
+     * @return Response
+     */
     public function delete()
     {
         $params = $this->request->params([

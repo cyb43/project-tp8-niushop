@@ -243,14 +243,14 @@ const save = () => {
             obj.member_price = {}
             tableData.member_level.forEach((levelItem: any, levelIndex) => {
                 if (verify) {
-                    obj.member_price[`level_${levelItem.level_id}`] = item[`level_${levelItem.level_id}`]
-                    if (parseFloat(item[`level_${levelItem.level_id}`]) <= 0) {
+                    obj.member_price[`level_${ levelItem.level_id }`] = item[`level_${ levelItem.level_id }`]
+                    if (parseFloat(item[`level_${ levelItem.level_id }`]) <= 0) {
                         verify = false
-                        ElMessage.error(`[${item.sku_name}][${levelItem.level_name}]的指定价格不能小于等于零`)
+                        ElMessage.error(`[${ item.sku_name }][${ levelItem.level_name }]的指定价格不能小于等于零`)
                     }
-                    if (parseFloat(item[`level_${levelItem.level_id}`]) > parseFloat(item.price)) {
+                    if (parseFloat(item[`level_${ levelItem.level_id }`]) > parseFloat(item.price)) {
                         verify = false
-                        ElMessage.error(`[${item.sku_name}][${levelItem.level_name}]的指定价格不能大于商品原价`)
+                        ElMessage.error(`[${ item.sku_name }][${ levelItem.level_name }]的指定价格不能大于商品原价`)
                     }
                 }
             })
@@ -268,8 +268,11 @@ const save = () => {
         member_discount: formData.member_discount,
         sku_list
     }).then(res => {
-        saveLoad = false
+        showDialog.value = false
         emit('load')
+        saveLoad = false
+    }).catch(() => {
+        saveLoad = false
         showDialog.value = false
     })
 }

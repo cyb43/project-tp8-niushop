@@ -40,7 +40,6 @@ return [
         ],
         //活动信息
         'ShopGoodsMarketCalculate' => [
-//            'addon\shop\app\listener\marketing\ShopDiscountCalculate',   //限时折扣
             'addon\shop\app\listener\marketing\ShopNewcomerCalculate'   //新人专享
         ],
         /***************************************************** 退款 start *****************************************************/
@@ -146,6 +145,10 @@ return [
         'ThemeColor' => [ 'addon\shop\app\listener\diy\ThemeColorListener' ],
         //万能表单删除前
         'BeforeFormDelete' => [ 'addon\shop\app\listener\diy\BeforeFormDeleteListener' ],
+        //查询营销列表
+        'ShowMarketing' => [
+            'addon\shop\app\listener\system\ShowMarketingListener'
+        ],
         //获取商品展示价格
         'GoodsShowPrice' => [ 'addon\shop\app\listener\goods\GoodsShowPriceListener' ]
 

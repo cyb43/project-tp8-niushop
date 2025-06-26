@@ -53,7 +53,22 @@
                                class="w-[100%] h-[350rpx] rounded-tl-[var(--rounded-mid)] rounded-tr-[var(--rounded-mid)]"
                                :src="img('static/resource/images/diy/shop_default.jpg')" :mode="'aspectFill'"/>
                         <view class="px-[16rpx] flex-1 pt-[10rpx] pb-[20rpx] flex flex-col justify-between">
-                            <view class="text-[] leading-[40rpx] text-[28rpx] multi-hidden">{{ item.names }}</view>
+                         <!--   <view class="text-[#333] leading-[40rpx] text-[28rpx] multi-hidden">{{ item.names }}</view> -->
+						 <view class="text-[28rpx] text-[#333] leading-[40rpx] multi-hidden mb-[10rpx]">
+						     <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
+						     {{ item.names }}
+						 </view>
+						 <view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden mb-[8rrpx]">
+						     {{ item.sub_title }}
+						 </view>
+						 <view v-if="item.goods_label && item.goods_label.length" class="flex flex-wrap">
+						     <template v-for="(tagItem, tagIndex) in item.goods_label">
+						         <image class="img-tag" v-if="tagItem.style_type == 'icon' && tagItem.icon" :src="img(tagItem.icon)" mode="heightFix" @error="diyGoods.error(tagItem,'icon')"/>
+						         <view class="base-tag" v-else-if="tagItem.style_type == 'diy' || !tagItem.icon" :style="diyGoods.baseTagStyle(tagItem)">
+						             {{ tagItem.label_name }}
+						         </view>
+						     </template>
+						 </view>
                             <view class="text-[24rpx] font-400 leading-[34rpx] mt-[10rpx] text-[var(--text-color-light9)]">已兑{{ item.total_exchange_num }}人</view>
                             <view class="flex justify-between flex-wrap items-center mt-[16rpx]">
                                 <view class="flex flex-col">
@@ -88,7 +103,8 @@ import MescrollBody from '@/components/mescroll/mescroll-body/mescroll-body.vue'
 import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.vue';
 import useMescroll from '@/components/mescroll/hooks/useMescroll.js';
 import { onShow, onPageScroll, onReachBottom } from '@dcloudio/uni-app';
-
+import { useGoods } from '@/addon/shop/hooks/useGoods'
+const diyGoods = useGoods();
 const { mescrollInit, downCallback, getMescroll } = useMescroll(onPageScroll, onReachBottom);
 const goodsList = ref<Array<any>>([]);
 const coupon_id = ref<number | string>('');
@@ -171,6 +187,7 @@ onMounted(() => {
 </script>
 
 <style lang="scss" scoped>
+@import '@/addon/shop/styles/common.scss';
 .bg-color {
     background: linear-gradient(180deg, #EF000C 16%, rgba(239, 0, 12, 0) 92%);
 }

@@ -18,12 +18,14 @@ use addon\shop\app\service\admin\delivery\CompanyService;
 /**
  * 物流公司控制器
  * Class Company
+ * @description 物流公司
  * @package addon\shop\app\adminapi\controller\delivery
  */
 class Company extends BaseAdminController
 {
     /**
      * 获取物流公司列表
+     * @description 查看物流公司列表-分页
      * @return \think\Response
      */
     public function pages()
@@ -37,6 +39,7 @@ class Company extends BaseAdminController
 
     /**
      * 获取物流公司列表
+     * @description 查看物流公司列表-全部
      * @return \think\Response
      */
     public function lists()
@@ -50,6 +53,7 @@ class Company extends BaseAdminController
 
     /**
      * 物流公司详情
+     * @description 查看详情
      * @param int $id
      * @return \think\Response
      */
@@ -60,6 +64,7 @@ class Company extends BaseAdminController
 
     /**
      * 添加物流公司
+     * @description 添加
      * @return \think\Response
      */
     public function add()
@@ -81,6 +86,7 @@ class Company extends BaseAdminController
 
     /**
      * 物流公司编辑
+     * @description 编辑
      * @param int $id 物流公司id
      * @return \think\Response
      */
@@ -103,6 +109,7 @@ class Company extends BaseAdminController
 
     /**
      * 物流公司删除
+     * @description 删除
      * @param int $id 物流公司id
      * @return \think\Response
      */

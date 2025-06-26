@@ -226,8 +226,7 @@
                         <view class="w-[210rpx] relative -right-[2rpx] -bottom-[2rpx] flex items-center text-[#FF0E00] pb-[2rpx]">
                             <view class="flex items-center justify-center flex-1">
                                 <text class="text-[20rpx] font-500">￥</text>
-                                <text class="text-[36rpx] max-w-[140rpx] font-500 truncate">{{ goodsPrice(item) }}
-                                </text>
+                                <text class="text-[36rpx] max-w-[140rpx] font-500 truncate">{{ goodsPrice(item) }}</text>
                             </view>
                             <text class="btn-bg ml-auto">抢</text>
                         </view>

@@ -66,7 +66,7 @@ class CoreOrderCreateService extends BaseCoreService
         $this->checkError();
         //普通订单校验库存
         $this->checkStock($this->goods_data);
-
+        $local_delivery_type = $data[ 'delivery' ]['local_delivery_type'] ?? '';
         $order_data = [
             //订单整体
             'order_type' => OrderDict::TYPE,
@@ -84,7 +84,7 @@ class CoreOrderCreateService extends BaseCoreService
             'delivery_type' => $this->delivery[ 'delivery_type' ] ?? '',
             'taker_name' => $data[ 'delivery' ][ 'taker_name' ] ?? $this->delivery[ 'take_address' ][ 'name' ] ?? '',
             'taker_mobile' => $data[ 'delivery' ][ 'taker_mobile' ] ?? $this->delivery[ 'take_address' ][ 'mobile' ] ?? '',
-            'buyer_ask_delivery_time' => $data[ 'delivery' ][ 'buyer_ask_delivery_time' ] ?? '', // 购买者期望的时间
+            'buyer_ask_delivery_time' =>$local_delivery_type == 'now' ? "" :  $data[ 'delivery' ][ 'buyer_ask_delivery_time' ] ?? '', // 购买者期望的时间
             'taker_province' => $this->delivery[ 'take_address' ][ 'province_id' ] ?? 0,
             'taker_city' => $this->delivery[ 'take_address' ][ 'city_id' ] ?? 0,
             'taker_district' => $this->delivery[ 'take_address' ][ 'district_id' ] ?? 0,

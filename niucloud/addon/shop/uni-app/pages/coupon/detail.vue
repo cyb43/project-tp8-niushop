@@ -86,7 +86,7 @@ onLoad((option: any) => {
         goback(parameter)
     } else {
         getShopCouponInfoFn(option.coupon_id)
-        getShopCouponQrocdeFn(option.coupon_id)
+        getShopCouponQrcodeFn(option.coupon_id)
     }
 })
 
@@ -123,7 +123,7 @@ const getShopCouponInfoFn = (id: number) => {
     })
 }
 
-const getShopCouponQrocdeFn = (id: any) => {
+const getShopCouponQrcodeFn = (id: any) => {
     // #ifdef H5
     QRCode.toDataURL(window.location.href, { errorCorrectionLevel: 'L', margin: 0, width: 100 }).then(url => {
         codeUrl.value = url

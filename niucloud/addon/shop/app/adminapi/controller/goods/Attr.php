@@ -24,6 +24,7 @@ class Attr extends BaseAdminController
 {
     /**
      * 获取商品参数分页列表
+     * @description 查看商品参数列表-分页
      * @return \think\Response
      */
     public function pages()
@@ -38,11 +39,13 @@ class Attr extends BaseAdminController
 
     /**
      * 获取商品参数分页列表
+     * @description 查看商品参数列表-全部
      * @return \think\Response
      */
     public function lists()
     {
         $data = $this->request->params([
+            [ 'attr_id_arr', [] ],
             [ "attr_name", "" ],
             [ 'order', '' ],
             [ 'sort', '' ]
@@ -52,6 +55,7 @@ class Attr extends BaseAdminController
 
     /**
      * 商品参数详情
+     * @description 查看商品参数详情
      * @param int $id
      * @return \think\Response
      */
@@ -62,6 +66,7 @@ class Attr extends BaseAdminController
 
     /**
      * 添加商品参数
+     * @description 添加商品参数
      * @return \think\Response
      */
     public function add()
@@ -78,6 +83,7 @@ class Attr extends BaseAdminController
 
     /**
      * 商品参数编辑
+     * @description 编辑商品参数模板
      * @param $id  商品参数id
      * @return \think\Response
      */
@@ -94,6 +100,7 @@ class Attr extends BaseAdminController
 
     /**
      * 商品参数删除
+     * @description 删除商品参数模板
      * @param int $id 商品参数id
      * @return \think\Response
      */
@@ -105,6 +112,7 @@ class Attr extends BaseAdminController
 
     /**
      * 修改商品排序号
+     * @description 修改商品参数排序
      * @return \think\Response
      */
     public function modifySort()
@@ -119,6 +127,7 @@ class Attr extends BaseAdminController
 
     /**
      * 修改商品参数名称
+     * @description 修改商品参数名称
      * @return \think\Response
      */
     public function modifyAttrName()
@@ -133,6 +142,7 @@ class Attr extends BaseAdminController
 
     /**
      * 修改商品参数值
+     * @description 修改商品参数值
      * @return \think\Response
      */
     public function modifyAttrValueFormat()

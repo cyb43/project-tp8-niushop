@@ -49,7 +49,7 @@ const initDataFn = ()=>{
 }
 
 // 打开弹窗
-const open = ()=>{
+const open = () => {
     initDataFn();
     importDialog.value = true;
 }
@@ -73,10 +73,10 @@ const refundDialogConfirm = async (formEl: FormInstance | undefined) => {
 }
 const importDataFormRef = ref<FormInstance>()
 
-const examineTemplate = ()=>{
-    let url = `${import.meta.env.VITE_IMG_DOMAIN || location.origin}/addon/shop/batch/batch_delivery_order.xls`;
-    if(importData.value.type == 'order_goods'){
-        url = `${import.meta.env.VITE_IMG_DOMAIN || location.origin}/addon/shop/batch/batch_delivery_order_goods.xls`;
+const examineTemplate = () => {
+    let url = `${ import.meta.env.VITE_IMG_DOMAIN || location.origin }/addon/shop/batch/batch_delivery_order.xls`;
+    if (importData.value.type == 'order_goods') {
+        url = `${ import.meta.env.VITE_IMG_DOMAIN || location.origin }/addon/shop/batch/batch_delivery_order_goods.xls`;
     }
     window.open(url)
 }

@@ -17,7 +17,7 @@ use think\db\Query;
 
 /**
  * 导出报表模型
- * Class SysUserLog
+ * Class SysExport
  * @package app\model\sys
  */
 class SysExport extends BaseModel

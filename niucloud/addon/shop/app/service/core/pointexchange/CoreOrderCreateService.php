@@ -57,6 +57,7 @@ class CoreOrderCreateService extends BaseCoreService
         $this->checkError();
         //基础校验库存/活动信息
         $this->checkExchangeGoods($this->goods_data);
+        $local_delivery_type = $data[ 'delivery' ]['local_delivery_type'] ?? '';
         $order_data = [
             //订单整体
             'order_type' => OrderDict::TYPE,
@@ -80,6 +81,9 @@ class CoreOrderCreateService extends BaseCoreService
             'taker_longitude' => $this->delivery[ 'take_address' ][ 'lng' ] ?? '',
             'taker_latitude' => $this->delivery[ 'take_address' ][ 'lat' ] ?? '',
             'take_store_id' => $this->delivery[ 'take_store' ][ 'store_id' ] ?? 0,
+
+            'buyer_ask_delivery_time' =>$local_delivery_type == 'now' ? "" :  $data[ 'delivery' ][ 'buyer_ask_delivery_time' ] ?? '', // 购买者期望的时间
+
             //附属信息
             'member_remark' => $this->param[ 'member_remark' ] ?? '',//买家留言
             'point' => $this->basic[ 'point_sum' ] ?? 0,//买家留言
@@ -201,7 +205,7 @@ class CoreOrderCreateService extends BaseCoreService
         $sku_where = [];
         $field = 'names,total_exchange_num,stock,id,type,names,title,image,status,product_detail,point,price,limit_num,content,sort,total_point_num,total_price_num,total_order_num,total_member_num,update_time,create_time';
         $exchange_goods_info = ( new  Exchange() )->where(array_merge($sku_where, [ [ 'product_detail', 'like', '%' . '"sku_id":' . $sku_ids[ 0 ] . ',' . '%' ] ]))->append([ 'type_name', 'status_name' ])->field($field)->findOrEmpty()->toArray();
-        if (empty($exchange_goods_info)) throw new CommonException('EXCHANGE_DETA_NOT_FOUND');//无效的商品
+        if (empty($exchange_goods_info)) throw new CommonException('EXCHANGE_DATA_NOT_FOUND');//无效的商品
         $sku_key = array_search($sku_id, array_column($exchange_goods_info[ 'product_detail' ], 'sku_id'));
         //todo 限制兑换 业务
         $sku_info = $exchange_goods_info[ 'product_detail' ][ $sku_key ];
@@ -283,7 +287,7 @@ class CoreOrderCreateService extends BaseCoreService
             $sku_where = [];
             $field = 'names,total_exchange_num,stock,id,type,names,title,image,status,product_detail,point,price,limit_num,content,sort,total_point_num,total_price_num,total_order_num,total_member_num,update_time,create_time';
             $exchange_goods_info = ( new  Exchange() )->where(array_merge($sku_where, [ [ 'product_detail', 'like', '%' . '"sku_id":' . $v[ 'sku_id' ] . ',' . '%' ] ]))->append([ 'type_name', 'status_name' ])->field($field)->findOrEmpty()->toArray();
-            if (empty($exchange_goods_info)) throw new CommonException('EXCHANGE_DETA_NOT_FOUND');//无效的商品
+            if (empty($exchange_goods_info)) throw new CommonException('EXCHANGE_DATA_NOT_FOUND');//无效的商品
             if ($exchange_goods_info[ 'status' ] != 1) throw new CommonException('EXCHANGE_ACTIVITY_REMOVE');//下架判断
             $sku_key = array_search($v[ 'sku_id' ], array_column($exchange_goods_info[ 'product_detail' ], 'sku_id'));
             //todo 限制兑换 业务

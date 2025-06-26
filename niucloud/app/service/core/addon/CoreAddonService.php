@@ -68,7 +68,7 @@ class CoreAddonService extends CoreAddonBaseService
                 $list[$v['app']['app_key']] = $data;
             }
             $online_app_list = array_column($list, 'key');
-        } catch ( Throwable $e ) {
+        } catch (Throwable $e) {
             $error = $e->getMessage();
         }
         $files = get_files_by_dir($this->addon_path);
@@ -82,7 +82,7 @@ class CoreAddonService extends CoreAddonBaseService
                     $data['install_info'] = $install_addon_list[$key] ?? [];
                     $data['is_download'] = true;
                     $data['is_local'] = in_array($data['key'], $online_app_list) ? false : true;
-                    $data['version'] = isset($list[ $data['key'] ]) ? $list[ $data['key'] ]['version'] : $data['version'];
+                    $data['version'] = isset($list[$data['key']]) ? $list[$data['key']]['version'] : $data['version'];
                     $list[$key] = $data;
                 }
             }
@@ -219,7 +219,8 @@ class CoreAddonService extends CoreAddonBaseService
      * 查询已安装的有效的应用
      * @return array
      */
-    public function getInstallAddonList(){
+    public function getInstallAddonList()
+    {
         $addon_list = $this->model->where([['status', '=', AddonDict::ON]])->append(['status_name'])->column('title, icon, key, desc, status, type, support_app', 'key');
         if (!empty($addon_list)) {
             foreach ($addon_list as &$data) {
@@ -290,13 +291,31 @@ class CoreAddonService extends CoreAddonBaseService
             $data['cover'] = is_file($data['cover']) ? image_to_base64($data['cover']) : '';
             $data['type_name'] = empty($data['type']) ? '' : AddonDict::getType()[$data['type']] ?? '';
         }
-        if(isset($data['support_app']) && !empty($data['support_app']))
-        {
+        if (isset($data['support_app']) && !empty($data['support_app'])) {
             $data['support_type'] = 2;
-        }else{
+        } else {
             $data['support_type'] = 1;
         }
         return $data;
+    }
+
+    /**
+     * 获取首页应用标签
+     * @return array
+     */
+    public function getIndexAddonLabelList()
+    {
+        return (new CoreModuleService())->getIndexModuleLabelList()['data'] ?? [];
+    }
+
+    /**
+     * 获取首页应用
+     * @param int $label_id
+     * @return array
+     */
+    public function getIndexAddonList($label_id)
+    {
+        return (new CoreModuleService())->getIndexModuleList($label_id)['data'] ?? [];
     }
 
 }

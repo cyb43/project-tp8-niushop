@@ -24,6 +24,7 @@ class Service extends BaseAdminController
 {
     /**
      * 获取商品服务分页列表
+     * @description 查看商品服务列表-分页
      * @return \think\Response
      */
     public function pages()
@@ -36,6 +37,7 @@ class Service extends BaseAdminController
 
     /**
      * 获取商品服务列表
+     * @description 查看商品服务列表-全部
      * @return \think\Response
      */
     public function lists()
@@ -48,6 +50,7 @@ class Service extends BaseAdminController
 
     /**
      * 商品服务详情
+     * @description 查看商品服务详情
      * @param int $id
      * @return \think\Response
      */
@@ -58,6 +61,7 @@ class Service extends BaseAdminController
 
     /**
      * 添加商品服务
+     * @description 添加商品服务
      * @return \think\Response
      */
     public function add()
@@ -74,6 +78,7 @@ class Service extends BaseAdminController
 
     /**
      * 商品服务编辑
+     * @description 编辑服务编辑
      * @param $id  商品服务id
      * @return \think\Response
      */
@@ -91,6 +96,7 @@ class Service extends BaseAdminController
 
     /**
      * 商品服务删除
+     * @description 删除服务编辑
      * @param $id  商品服务id
      * @return \think\Response
      */

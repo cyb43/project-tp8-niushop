@@ -1,6 +1,6 @@
 <template>
     <view @touchmove.prevent.stop>
-        <u-popup :show="goodsSkuPop" @close="closeFn" mode="bottom">
+        <u-popup :show="goodsSkuPop" @close="closeFn" mode="bottom" zIndex="999999">
             <view v-if="Object.keys(goodsDetail).length" @touchmove.prevent.stop class="rounded-t-[20rpx] overflow-hidden bg-[#fff] py-[32rpx] relative">
                 <view class="flex px-[32rpx] mb-[58rpx]">
                     <u--image width="180rpx" height="180rpx" :radius="'var(--goods-rounded-big)'" :src="img(detail.sku_image)" model="aspectFill">
@@ -308,7 +308,6 @@ const reduceNumChange = () => {
         }
     }
 }
-
 const save = () => {
     //删除商品
     if (buyNum.value == 0) {
@@ -318,6 +317,8 @@ const save = () => {
             goods_id: detail.value.goods_id,
             sale_price: detail.value.show_price,
             sku_id: detail.value.sku_id
+        }, 1, ()=>{
+            cartStore.isAddCartRecommend = true;
         });
     } else {
 
@@ -339,6 +340,7 @@ const save = () => {
             num: buyNum.value
 
         }, 0, () => {
+            cartStore.isAddCartRecommend = true;
             uni.showToast({
                 title: '加入购物车成功',
                 icon: 'none'
@@ -346,7 +348,6 @@ const save = () => {
         });
     }
     goodsSkuPop.value = false
-
 }
 
 // 商品价格

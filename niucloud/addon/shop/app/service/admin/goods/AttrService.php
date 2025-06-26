@@ -42,7 +42,7 @@ class AttrService extends BaseAdminService
         if (!empty($where[ 'order' ])) {
             $order = $where[ 'order' ] . ' ' . $where[ 'sort' ];
         }
-        $search_model = $this->model->where([ [ 'attr_id', ">", 0 ] ])->withSearch([ "attr_id", "attr_name" ], $where)->field($field)->order($order);
+        $search_model = $this->model->where([ [ 'attr_id', ">", 0 ] ])->withSearch([ "attr_id_arr", "attr_id", "attr_name" ], $where)->field($field)->order($order);
         $list = $this->pageQuery($search_model);
         return $list;
     }
@@ -53,13 +53,13 @@ class AttrService extends BaseAdminService
      * @param string $field
      * @return mixed
      */
-    public function getList(array $where = [], $field = 'attr_id,attr_name,sort')
+    public function getList(array $where = [], $field = 'attr_id,attr_name,attr_value_format,sort')
     {
         $order = 'sort desc,attr_id desc';
         if (!empty($where[ 'order' ])) {
             $order = $where[ 'order' ] . ' ' . $where[ 'sort' ];
         }
-        return $this->model->where([ [ 'attr_id', ">", 0 ] ])->withSearch([ "attr_id", "attr_name" ], $where)->field($field)->order($order)->select()->toArray();
+        return $this->model->where([ [ 'attr_id', ">", 0 ] ])->withSearch([ "attr_id_arr", "attr_id", "attr_name" ], $where)->field($field)->order($order)->select()->toArray();
     }
 
     /**

@@ -23,6 +23,7 @@ class Config extends BaseAdminController
 {
     /**
      * 交易设置配置
+     * @description 设置交易设置配置
      * @return \think\Response
      */
     public function setConfig()
@@ -49,6 +50,7 @@ class Config extends BaseAdminController
 
     /**
      * 获取交易配置
+     * @description 获取交易配置
      * @return \think\Response
      */
     public function getConfig()

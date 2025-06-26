@@ -11,8 +11,7 @@
                 <el-tab-pane :label="t('tabESConfig')" name="/shop/delivery/electronic_sheet/config" />
             </el-tabs>
 
-            <el-form class="page-form" :model="formData" :rules="formRules" label-width="150px" ref="formRef"
-                     v-loading="loading">
+            <el-form class="page-form" :model="formData" :rules="formRules" label-width="150px" ref="formRef" v-loading="loading">
                 <el-card class="box-card !border-none" shadow="never">
                     <h3 class="panel-title !text-sm">{{ t('apiSet') }}</h3>
 
@@ -24,7 +23,7 @@
                             <template v-if="formData.interface_type == 'kdbird'">
                                 <p class="text-[12px] text-[#b2b2b2]">
                                     {{ t('promptTips1-1') }}
-                                    <el-button class="button-size" type="primary" link @click="kdnEvent('https://www.kdniao.com')">https://www.kdniao.com</el-button>
+                                    <el-button class="button-size" type="primary" link @click="kdnEvent('https://www.kdniao.com/reg?from=niucloud')">https://www.kdniao.com</el-button>
                                 </p>
                             </template>
                         </div>
@@ -144,7 +143,7 @@ const formRules = reactive<FormRules>({
     ],
     https_port: [
         { required: true, message: t('httpsPortPlaceholder'), trigger: 'blur' },
-    ],
+    ]
 })
 
 /**

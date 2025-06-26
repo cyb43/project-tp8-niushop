@@ -63,14 +63,34 @@
                 </el-tabs>
 
                 <div class="mb-[10px] flex items-center">
-                    <el-checkbox v-model="toggleCheckbox" size="large" class="px-[14px]" @change="toggleChange" :indeterminate="isIndeterminate" />
+                    <el-dropdown class="mr-[20px] !text-primary">
+                        <span class="el-dropdown-link">
+                            <span>{{ currentSelectMode === 'all' ? t('全选所有页') : t('全选当前页')}}</span>({{ selectedCount }})
+                            <el-icon class="">
+                                <arrow-down />
+                            </el-icon>
+                        </span>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-dropdown-item class="select-wrap" :class="{ active: currentSelectMode === 'all' }" @click="selectAllPages">
+                                    全选所有页
+                                </el-dropdown-item>
+                                <el-dropdown-item class="select-wrap"  :class="{ active: currentSelectMode === 'page' }" @click="toggleChange">
+                                    全选当前页 
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+
+                    
+                    <!-- <el-checkbox v-model="toggleCheckbox" size="large" class="px-[14px]" @change="toggleChange" :indeterminate="isIndeterminate" /> -->
                     <el-button @click="batchGoodsStatus(1)" size="small" v-if="goodsTable.searchParam.status != '1'">{{ t('batchOnGoods') }}</el-button>
                     <el-button @click="batchGoodsStatus(0)" size="small" v-if="goodsTable.searchParam.status != '0'">{{ t('batchOffGoods') }}</el-button>
                     <el-button @click="batchDeleteGoods" size="small">{{ t('batchDeleteGoods') }}</el-button>
                     <el-button @click="batchSetGoods" size="small">{{ t('batchSetting') }}</el-button>
                 </div>
 
-                <el-table :data="goodsTable.data" size="large" v-loading="goodsTable.loading" ref="goodsListTableRef" @sort-change="sortChange" @selection-change="handleSelectionChange">
+                <el-table :data="goodsTable.data" size="large" v-loading="goodsTable.loading" ref="goodsListTableRef" @sort-change="sortChange" :row-key="row => row.goods_id" :default-selection="defaultSelection" @selection-change="handleSelectionChange">
                     <template #empty>
                         <span>{{ !goodsTable.loading ? t('emptyData') : '' }}</span>
                     </template>
@@ -93,6 +113,18 @@
                                     <span :title="row.goods_name" class="multi-hidden">{{ row.goods_name }}</span>
                                     <span class="text-primary text-[12px]">{{ row.goods_type_name }}</span>
                                     <span class="px-[4px]  text-[12px] text-[#fff] rounded-[4px] bg-primary leading-[18px]" v-if="row.is_gift == 1">赠品</span>
+                                    <div class="flex flex-wrap mt-[4px] gap-[4px]" @click.stop="activeclick()">
+                                        <el-tooltip v-for="(item, index) in row.active" :key="index" placement="top">
+                                            <template #content>
+                                                <div style="white-space: pre-wrap">
+                                                    {{item.name.trim() || item.short?.active_name }}
+                                                </div>    
+                                            </template>
+                                            <span class="text-[12px] text-white rounded-[4px] px-[4px] leading-[18px]" :style="{ backgroundColor: item.short?.bg_color || '#333' }">
+                                                {{ item.short?.name }}
+                                            </span>
+                                        </el-tooltip>
+                                    </div>
                                 </div>
                             </div>
                         </template>
@@ -181,12 +213,12 @@
         <goods-member-price-popup ref="memberPricePopupRef" @load="loadGoodsList" />
 
         <!-- 批量设置弹出框 -->
-        <goods-batch-settings-popup ref="goodsBatchSettingPopupRef" @load="loadGoodsList" />
+        <goods-batch-settings-popup ref="goodsBatchSettingPopupRef" @load="loadGoodsListReset" />
     </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref ,nextTick ,computed} from 'vue'
 import { t } from '@/lang'
 import { debounce, img, filterDigit, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
@@ -319,39 +351,123 @@ initData()
 // 当前选中tab页面
 const tabHandleClick = (tab: any, event: Event) => {
     goodsTable.searchParam.status = tab.props.name
+    isReset.value = true
     loadGoodsList()
 }
 
+// 全选所有页时排除的 ID
+const excludedIds = ref<number[]>([])         
+// 是否全选所有页
+const isSelectAllPages = ref(false)
+
 // 批量复选框
 const toggleCheckbox = ref()
+const currentSelectMode = ref<'all' | 'page' | null>(null)
 
 // 复选框中间状态
 const isIndeterminate = ref(false)
 
-// 监听批量复选框事件
-const toggleChange = (value: any) => {
-    isIndeterminate.value = false
-    goodsListTableRef.value.toggleAllSelection()
+// 全选当前页
+const toggleChange = () => {
+    restoringSelection.value = true // 加锁
+    if (currentSelectMode.value === 'page') {
+        isSelectAllPages.value = false
+        currentSelectMode.value = null
+        excludedIds.value = []
+        multipleSelection.value = []
+        goodsListTableRef.value.clearSelection()
+    } else {
+        isSelectAllPages.value = false
+        currentSelectMode.value = 'page'
+        excludedIds.value = []
+        multipleSelection.value = []
+        goodsTable.data.forEach(row => {
+            goodsListTableRef.value.toggleRowSelection(row, true)
+        })
+        multipleSelection.value = [...goodsTable.data]
+        
+    }
+    nextTick(() => {
+        restoringSelection.value = false // 解锁
+    })
 }
+
+// 全选所有页
+const selectAllPages = () => {
+    restoringSelection.value = true // 加锁
+    if (currentSelectMode.value === 'all') {
+        isSelectAllPages.value = false
+        currentSelectMode.value = null
+        excludedIds.value = []
+        multipleSelection.value = []
+        goodsListTableRef.value.clearSelection()
+    } else {
+        // goodsListTableRef.value.clearSelection()
+        excludedIds.value = []
+        multipleSelection.value = []
+        isSelectAllPages.value = true
+        currentSelectMode.value = 'all'
+        goodsTable.data.forEach(row => {
+            goodsListTableRef.value.toggleRowSelection(row, true)
+        })
+    }
+    nextTick(() => {
+        restoringSelection.value = false // 解锁
+    })
+}
+const defaultSelection = computed(() => {
+    if (isSelectAllPages.value) {
+        return goodsTable.data.filter(item => !excludedIds.value.includes(item.goods_id))
+    } else {
+        return multipleSelection.value
+    }
+})
 
 const goodsListTableRef = ref()
 
 // 选中数据
 const multipleSelection: any = ref([])
+const restoringSelection = ref(false)
 
-// 监听表格单行选中
-const handleSelectionChange = (val: []) => {
-    multipleSelection.value = val
+const handleSelectionChange = (val: any[]) => {
+    if (restoringSelection.value) return // 阻止自动恢复触发逻辑
 
-    toggleCheckbox.value = false
-    if (multipleSelection.value.length > 0 && multipleSelection.value.length < goodsTable.data.length) {
-        isIndeterminate.value = true
+    if (isSelectAllPages.value) {
+        const currentPageIds = goodsTable.data.map(item => item.goods_id)
+        const selectedIds = val.map(item => item.goods_id)
+        const unselected = currentPageIds.filter(id => !selectedIds.includes(id))
+
+        excludedIds.value = Array.from(new Set([...excludedIds.value, ...unselected]))
+        excludedIds.value = excludedIds.value.filter(id => !selectedIds.includes(id))
     } else {
-        isIndeterminate.value = false
+        multipleSelection.value = val
     }
+}
+const selectedCount = computed(() => {
+    if (isSelectAllPages.value) {
+        return goodsTable.total - excludedIds.value.length
+    } else {
+        return multipleSelection.value.length
+    }
+})
 
-    if (multipleSelection.value.length == goodsTable.data.length && goodsTable.data.length && multipleSelection.value.length) {
-        toggleCheckbox.value = true
+const getBatchPayload = () => {
+    if (isSelectAllPages.value) {
+        return {
+            is_all: 1,
+            ids: excludedIds.value,
+            where: {
+                ...goodsTable.searchParam
+            }
+        }
+    } else {
+        return {
+            is_all: 0,
+            ids: multipleSelection.value.map(item => item.goods_id),
+            where: {
+                ...goodsTable.searchParam
+            }
+        }
     }
 }
 
@@ -364,6 +480,10 @@ const previewEvent = (data: any) => {
         }
     })
     window.open(url.href)
+}
+
+const activeclick = (row: any) => {
+    
 }
 
 // 监听排序
@@ -410,50 +530,61 @@ const statusChange = (row: any, value: any) => {
 
 // 批量设置上下架
 const batchGoodsStatus = (status: any) => {
-    if (multipleSelection.value.length == 0) {
+    const isNoneSelected =
+        (!isSelectAllPages.value && multipleSelection.value.length === 0) ||
+        (isSelectAllPages.value && excludedIds.value.length === goodsTable.total)
+
+    if (isNoneSelected) {
         ElMessage({
             type: 'warning',
-            message: `${t('batchEmptySelectedGoodsTips')}`
+            message: `${ t('batchEmptySelectedGoodsTips') }`
         })
         return
     }
-
-    const goodsIds: any = []
-    multipleSelection.value.forEach((item: any) => {
-        goodsIds.push(item.goods_id)
-    })
-
+    const info = getBatchPayload()
     editGoodsStatus({
-        goods_ids: goodsIds,
+        is_all: info.is_all,
+        goods_ids: info.ids,
+        where: info.where,
         status
     }).then((res) => {
+        isReset.value = true
         loadGoodsList()
     })
 }
+
 /** ***************** 批量设置-start *************************/
 const goodsBatchSettingPopupRef = ref()
 const batchSetGoods = () => {
-    if (multipleSelection.value.length == 0) {
+    const isNoneSelected =
+    (!isSelectAllPages.value && multipleSelection.value.length === 0) ||
+    (isSelectAllPages.value && excludedIds.value.length === goodsTable.total)
+
+    if (isNoneSelected) {
         ElMessage({
             type: 'warning',
             message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
-    goodsBatchSettingPopupRef.value.show(multipleSelection.value)
+    const info = getBatchPayload()
+    goodsBatchSettingPopupRef.value.show(info)
 }
 
 /** ***************** 批量设置-end *************************/
 
 const batchDeleteGoods = () => {
-    if (multipleSelection.value.length == 0) {
+    const isNoneSelected =
+    (!isSelectAllPages.value && multipleSelection.value.length === 0) ||
+    (isSelectAllPages.value && excludedIds.value.length === goodsTable.total)
+
+    if (isNoneSelected) {
         ElMessage({
             type: 'warning',
             message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
-
     ElMessageBox.confirm(t('batchGoodsDeleteTips'), t('warning'),
         {
             confirmButtonText: t('confirm'),
@@ -463,15 +594,13 @@ const batchDeleteGoods = () => {
     ).then(() => {
         if (repeat.value) return
         repeat.value = true
-
-        const goodsIds: any = []
-        multipleSelection.value.forEach((item: any) => {
-            goodsIds.push(item.goods_id)
-        })
-
+        const info = getBatchPayload()
         deleteGoods({
-            goods_ids: goodsIds
+            is_all: info.is_all,
+            goods_ids: info.ids,
+            where:info.where,
         }).then(() => {
+            isReset.value = true
             loadGoodsList()
             repeat.value = false
         }).catch(() => {
@@ -500,6 +629,7 @@ const sortInputListener = debounce((sort, row) => {
     })
 })
 
+const isReset = ref(false)
 /**
  * 获取商品列表
  */
@@ -507,42 +637,42 @@ const loadGoodsList = (page: number = 1) => {
     if (goodsTable.searchParam.start_sale_num && !regExp.digit.test(goodsTable.searchParam.start_sale_num)) {
         ElMessage({
             type: 'warning',
-            message: `${t('startSaleNumTips')}`
+            message: `${ t('startSaleNumTips') }`
         })
         return
     }
     if (goodsTable.searchParam.end_sale_num && !regExp.digit.test(goodsTable.searchParam.end_sale_num)) {
         ElMessage({
             type: 'warning',
-            message: `${t('endSaleNumTips')}`
+            message: `${ t('endSaleNumTips') }`
         })
         return
     }
     if (Number(goodsTable.searchParam.start_sale_num) > Number(goodsTable.searchParam.end_sale_num)) {
         ElMessage({
             type: 'warning',
-            message: `${t('shopSaleNumTips')}`
+            message: `${ t('shopSaleNumTips') }`
         })
         return
     }
     if (goodsTable.searchParam.start_price && !regExp.digit.test(goodsTable.searchParam.start_price)) {
         ElMessage({
             type: 'warning',
-            message: `${t('startPriceTips')}`
+            message: `${ t('startPriceTips') }`
         })
         return
     }
     if (goodsTable.searchParam.end_price && !regExp.digit.test(goodsTable.searchParam.end_price)) {
         ElMessage({
             type: 'warning',
-            message: `${t('endPriceTips')}`
+            message: `${ t('endPriceTips') }`
         })
         return
     }
     if (Number(goodsTable.searchParam.start_price) > Number(goodsTable.searchParam.end_price)) {
         ElMessage({
             type: 'warning',
-            message: `${t('shopPriceTips')}`
+            message: `${ t('shopPriceTips') }`
         })
         return
     }
@@ -559,9 +689,30 @@ const loadGoodsList = (page: number = 1) => {
         goodsTable.loading = false
         goodsTable.data = res.data.data
         goodsTable.total = res.data.total
-        multipleSelection.value = []
         setTablePageStorage(goodsTable.page, goodsTable.limit, searchData)
+        if (isReset.value) {
+            isSelectAllPages.value = false
+            excludedIds.value = []
+            currentSelectMode.value = null
+            multipleSelection.value = []
+        }
+        if (isSelectAllPages.value && !isReset.value) {
+            restoringSelection.value = true
+            nextTick(() => {
+                goodsTable.data.forEach(item => {
+                    if (!excludedIds.value.includes(item.goods_id)) {
+                        goodsListTableRef.value?.toggleRowSelection(item, true)
+                    } else {
+                        goodsListTableRef.value?.toggleRowSelection(item, false)
+                    }
+                })
+
+                restoringSelection.value = false
+            })
+        }
+        isReset.value = false
     }).catch(() => {
+        isReset.value = false
         goodsTable.loading = false
     })
 }
@@ -682,6 +833,12 @@ const deleteEvent = (id: number) => {
     })
 }
 
+// 批量重置全选状态
+const loadGoodsListReset = () => {
+    isReset.value = true
+    loadGoodsList()
+}
+
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
@@ -689,7 +846,7 @@ const resetForm = (formEl: FormInstance | undefined) => {
     goodsTable.searchParam.end_price = ''
     goodsTable.searchParam.start_sale_num = ''
     goodsTable.searchParam.end_sale_num = ''
-
+    isReset.value = true
     loadGoodsList()
 }
 </script>
@@ -718,4 +875,9 @@ const resetForm = (formEl: FormInstance | undefined) => {
             }
         }
     }
+    .select-wrap .active {
+        font-weight: bold;
+        background-color: #f5f7fa;
+    }
+
 </style>

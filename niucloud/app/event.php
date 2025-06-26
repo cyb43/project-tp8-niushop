@@ -106,6 +106,9 @@ $system_event = [
         'ShowApp' => [
             'app\listener\system\ShowAppListener'
         ],
+        'ShowMarketing' => [
+            'app\listener\system\ShowMarketingListener'
+        ],
         //获取微信转账场景配置
         'GetWechatTransferTradeScene' => [
             'app\listener\transfer\TransferCashOutListener'

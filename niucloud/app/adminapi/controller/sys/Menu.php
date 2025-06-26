@@ -19,83 +19,93 @@ use app\service\admin\sys\MenuService;
 use core\base\BaseAdminController;
 use think\Response;
 
+/**
+ * 菜单管理
+ * Class Menu
+ * @description 菜单管理
+ * @package app\adminapi\controller\sys
+ */
 class Menu extends BaseAdminController
 {
 
     /**
-     * 菜单列表
+     * 菜单列表(todo  限制只有平台端可以访问)
+     * @description 菜单列表
      * @return Response
      */
     public function lists()
     {
-        return success((new MenuService())->getAllMenuList('all', 1));
+        return success(( new MenuService() )->getAllMenuList('all', 1));
     }
 
     /**
      * 菜单信息
+     * @description 菜单信息
      * @param $menu_key
      * @return Response
      */
     public function info($menu_key)
     {
-        return success((new MenuService())->get($menu_key));
+        return success(( new MenuService() )->get($menu_key));
     }
 
     /**
      * 新增菜单接口
+     * @description 新增菜单
      * @return Response
      */
     public function add()
     {
         $data = $this->request->params([
-            ['menu_name', ''],
-            ['menu_type', 0],
-            ['menu_key', ''],
-            ['parent_key', ''],
-            ['icon', ''],
-            ['api_url', ''],
-            ['view_path', ''],
-            ['router_path', ''],
-            ['methods', ''],
-            ['sort', 0],
-            ['status', MenuDict::ON],
-            ['is_show', 0],
-            ['addon', ''],
-            ['menu_short_name','']
+            [ 'menu_name', '' ],
+            [ 'menu_type', 0 ],
+            [ 'menu_key', '' ],
+            [ 'parent_key', '' ],
+            [ 'icon', '' ],
+            [ 'api_url', '' ],
+            [ 'view_path', '' ],
+            [ 'router_path', '' ],
+            [ 'methods', '' ],
+            [ 'sort', 0 ],
+            [ 'status', MenuDict::ON ],
+            [ 'is_show', 0 ],
+            [ 'addon', '' ],
+            [ 'menu_short_name', '' ]
         ]);
         $this->validate($data, 'app\validate\sys\Menu.add');
-        (new MenuService())->add($data);
+        ( new MenuService() )->add($data);
         return success('ADD_SUCCESS');
     }
 
     /**
      * 菜单或接口更新
+     * @description 菜单或接口更新
      */
     public function edit($menu_key)
     {
         $data = $this->request->params([
-            ['menu_name', ''],
-            ['parent_key', ''],
-            ['menu_type', 0],
-            ['icon', ''],
-            ['api_url', ''],
-            ['router_path', ''],
-            ['view_path', ''],
-            ['methods', ''],
-            ['sort', 0],
-            ['status', MenuDict::ON],
-            ['is_show', 0],
-            ['addon', ''],
-            ['menu_short_name','']
+            [ 'menu_name', '' ],
+            [ 'parent_key', '' ],
+            [ 'menu_type', 0 ],
+            [ 'icon', '' ],
+            [ 'api_url', '' ],
+            [ 'router_path', '' ],
+            [ 'view_path', '' ],
+            [ 'methods', '' ],
+            [ 'sort', 0 ],
+            [ 'status', MenuDict::ON ],
+            [ 'is_show', 0 ],
+            [ 'addon', '' ],
+            [ 'menu_short_name', '' ]
         ]);
         $this->validate($data, 'app\validate\sys\Menu.edit');
-        (new MenuService())->edit($menu_key, $data);
+        ( new MenuService() )->edit($menu_key, $data);
         return success('EDIT_SUCCESS');
     }
 
-
     /**
      * 获取菜单类型静态资源
+     * @description 获取菜单类型静态资源
      * @return Response
      */
     public function getMenuType()
@@ -105,6 +115,7 @@ class Menu extends BaseAdminController
 
     /**
      * 获取请求方式
+     * @description 获取请求方式
      * @return Response
      */
     public function getMethodType()
@@ -114,46 +125,53 @@ class Menu extends BaseAdminController
 
     /**
      * 删除菜单
+     * @description 删除菜单
      * @param $menu_key
      * @return Response
      */
     public function del($menu_key)
     {
-        (new MenuService())->del($menu_key);
+        ( new MenuService() )->del($menu_key);
         return success('DELETE_SUCCESS');
     }
 
+    /**
+     * 刷新菜单
+     * @description 刷新菜单
+     * @return Response
+     */
     public function refreshMenu()
     {
-        (new InstallSystemService())->install();
+        ( new InstallSystemService() )->install();
         return success('SUCCESS');
     }
 
     /**
      * 查询菜单信息
+     * @description 查询菜单信息
      */
     public function getSystem()
     {
-        $data = $this->request->params([
-            ['status', 'all'],
-        ]);
-        return success( (new MenuService())->getSystemMenu($data['status'], 1));
+        return success(( new MenuService() )->getSystemMenu('all', 1));
     }
 
     /**
      * 查询应用权限信息
+     * @description 查询应用权限信息
      */
     public function getAddonMenu($app_key)
     {
-        return success( (new MenuService())->getAddonMenu($app_key,'all', 1));
+        return success(( new MenuService() )->getAddonMenu($app_key, 'all', 1));
     }
 
     /**
      * 查询菜单类型为目录的菜单
+     * @description 查询菜单类型为目录的菜单
      * @param $addon
      * @return Response
      */
-    public function getMenuByTypeDir($addon = 'system') {
-        return success( (new MenuService())->getMenuByTypeDir($addon));
+    public function getMenuByTypeDir($addon = 'system')
+    {
+        return success(( new MenuService() )->getMenuByTypeDir($addon));
     }
 }

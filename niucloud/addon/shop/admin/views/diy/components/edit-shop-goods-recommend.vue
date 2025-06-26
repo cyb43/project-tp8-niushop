@@ -34,7 +34,7 @@
                         <el-form-item :label="t('activeCubeSubTitleTextColor')">
                             <el-color-picker v-model="item.title.textColor" show-alpha :predefine="diyStore.predefineColors" />
                         </el-form-item>
-                        <el-form-item :label="t('shopGoodsRecommendComponentTagcolor')">
+                        <el-form-item :label="t('shopGoodsRecommendComponentTagColor')">
                             <el-color-picker v-model="item.moreTitle.startColor" show-alpha :predefine="diyStore.predefineColors" />
                             <icon name="iconfont iconmap-connect" size="20px" class="block !text-gray-400 mx-[5px]" />
                             <el-color-picker v-model="item.moreTitle.endColor" show-alpha :predefine="diyStore.predefineColors" />

@@ -23,6 +23,7 @@ class Reply extends BaseAdminController
 
     /**
      * 关键词回复
+     * @description 关键词回复
      * @return Response
      */
     public function keyword($id)
@@ -43,6 +44,7 @@ class Reply extends BaseAdminController
 
     /**
      * 新增关键词回复
+     * @description 新增关键词回复
      * @return Response
      */
     public function addKeyword()
@@ -62,6 +64,7 @@ class Reply extends BaseAdminController
 
     /**
      * 更新关键词回复
+     * @description 更新关键词回复
      * @return Response
      */
     public function editKeyword($id)
@@ -81,6 +84,7 @@ class Reply extends BaseAdminController
 
     /**
      * 删除关键字回复
+     * @description 删除关键字回复
      * @return Response
      */
     public function delKeyword($id)
@@ -92,6 +96,7 @@ class Reply extends BaseAdminController
 
     /**
      * 获取默认回复
+     * @description 获取默认回复
      * @return Response
      */
     public function default()
@@ -102,6 +107,7 @@ class Reply extends BaseAdminController
 
     /**
      * 更新默认回复
+     * @description 更新默认回复
      * @return Response
      */
     public function editDefault()
@@ -116,6 +122,7 @@ class Reply extends BaseAdminController
 
     /**
      * 获取关注回复
+     * @description 获取关注回复
      * @return Response
      */
     public function subscribe()
@@ -126,6 +133,7 @@ class Reply extends BaseAdminController
 
     /**
      * 更新关注回复
+     * @description 更新关注回复
      * @return Response
      */
     public function editSubscribe()

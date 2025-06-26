@@ -287,11 +287,13 @@ const formRules = reactive({
     ]
 })
 
-const goods_ids: any = [];
-const show = (multipleSelection: any) => {
-    multipleSelection.forEach((item: any) => {
-        goods_ids.push(item.goods_id);
-    });
+const goods_ids = ref([]);
+const is_all = ref(null)
+const where = ref({})
+const show = (info: any) => {
+    goods_ids.value = info.ids
+    is_all.value = info.is_all
+    where.value = info.where
     showDialog.value = true
 }
 
@@ -317,7 +319,9 @@ const confirm = async (formEl: FormInstance | undefined) => {
 
             formData.goods_category = goodsCategory
             let data = {
-                goods_ids: goods_ids,
+                is_all: is_all.value,
+                where: where.value,
+                goods_ids: goods_ids.value,
                 set_type: activeMenu.value,
                 set_value: formData
             }
@@ -325,7 +329,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
                 if (['stock'].indexOf(activeMenu.value) != -1) {
                     activeMenu.value = 'label';
                     showDialog.value = false
-                    goods_ids.splice(0, goods_ids.length);
+                    goods_ids.value.splice(0, goods_ids.value.length);
                     Object.assign(formData, {
                         label_ids: [],
                         service_ids: [],

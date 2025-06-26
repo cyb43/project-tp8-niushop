@@ -24,6 +24,7 @@ class BindDispatch extends Controller
         }
 
         switch ($channel) {
+            case MemberLoginTypeDict::PC:
             case MemberLoginTypeDict::WECHAT:
                 $controller = 'wechat.Wechat';
                 $action = 'register';

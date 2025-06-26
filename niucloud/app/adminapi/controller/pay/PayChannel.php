@@ -19,11 +19,18 @@ use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\Response;
 
+/**
+ * 支付渠道设置
+ * Class PayChannel
+ * @description 支付渠道设置
+ * @package app\adminapi\controller\pay
+ */
 class PayChannel extends BaseAdminController
 {
 
     /**
      * 支付渠道设置
+     * @description 支付渠道设置
      * @return Response
      */
     public function set($channel, $type)
@@ -39,9 +46,9 @@ class PayChannel extends BaseAdminController
         return success('SET_SUCCESS');
     }
 
-
     /**
      * 支付渠道列表
+     * @description 支付渠道列表
      * @return Response
      */
     public function lists()
@@ -51,6 +58,7 @@ class PayChannel extends BaseAdminController
 
     /**
      * 通过渠道获取支付配置
+     * @description 通过渠道获取支付配置
      * @param $channel
      * @return Response
      * @throws DataNotFoundException
@@ -62,9 +70,9 @@ class PayChannel extends BaseAdminController
         return success((new PayChannelService())->getListByChannel($channel));
     }
 
-
     /**
      * 支付设置
+     * @description 支付设置
      * @return Response
      */
     public function setTransfer()
@@ -81,6 +89,7 @@ class PayChannel extends BaseAdminController
 
     /**
      * 多渠道支付设置
+     * @description 多渠道支付设置
      * @return Response
      */
     public function setAll()
@@ -96,6 +105,7 @@ class PayChannel extends BaseAdminController
 
     /**
      * 获取全部支付方式
+     * @description 获取全部支付方式
      * @return Response
      */
     public function getPayTypeList() {

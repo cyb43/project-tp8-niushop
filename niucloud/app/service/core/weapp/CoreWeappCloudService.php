@@ -67,7 +67,7 @@ class CoreWeappCloudService extends CoreCloudBaseService
         // 如果不存在编译版小程序
         if ($compile_addon->isEmpty()) {
             dir_copy($this->root_path . 'uni-app', $uni_dir, exclude_dirs: [ 'node_modules', 'unpackage', 'dist' ]);
-            $this->handleTabbar($uni_dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR);
+//            $this->handleTabbar($uni_dir . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR);
             // 替换env文件
             $this->weappEnvReplace($uni_dir . DIRECTORY_SEPARATOR . '.env.production');
         } else {

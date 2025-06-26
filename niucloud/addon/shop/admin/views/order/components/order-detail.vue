@@ -186,8 +186,8 @@
                     <div class="mb-[100px] px-[20px]" style="min-height: 100px">
                         <div class="flex" v-for="(items, index) in formData.order_log" :key="index">
                             <div class="mr-[20px] min-w-[71px]">
-                                <div class="leading-[1] w-full text-[14px] w-[100px] flex justify-end">{{ items.create_time && items.create_time.split(' ')[0] }}</div>
-                                <div class="leading-[1] w-full text-[14px]  w-[100px] flex justify-end mt-[15px]">{{ items.create_time && items.create_time.split(' ')[1] }}</div>
+                                <div class="leading-[1] text-[14px] w-[100px] flex justify-end">{{ items.create_time && items.create_time.split(' ')[0] }}</div>
+                                <div class="leading-[1] text-[14px]  w-[100px] flex justify-end mt-[15px]">{{ items.create_time && items.create_time.split(' ')[1] }}</div>
                             </div>
                             <div>
                                 <div class="w-[16px] h-[16px] flex items-center bg-[#D1EBFF] border-[1px] border-[#0091FF] rounded-[999px]">

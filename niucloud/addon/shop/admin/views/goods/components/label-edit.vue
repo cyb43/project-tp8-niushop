@@ -78,12 +78,12 @@ const title = ref('')
 const initialFormData = {
     label_id: '',
     label_name: '',
-    group_id:'',
+    group_id: '',
     style_type: 'diy',
     color_json: {
         text_color: 'rgba(255, 255, 255, 1)',
         bg_color: 'rgba(255, 65, 66, 1)',
-        border_color: '',
+        border_color: ''
     },
     icon: '',
     memo: '',

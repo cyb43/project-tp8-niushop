@@ -35,6 +35,28 @@ class CoreModuleService extends BaseNiucloudClient
         return $this->httpGet('member_app_all', $params);
     }
 
+    public function getIndexModuleLabelList()
+    {
+        $params = [
+            'code' => $this->code,
+            'secret' => $this->secret,
+        ];
+        return $this->httpGet('store/label/all', $params);
+    }
+
+    public function getIndexModuleList($label_id)
+    {
+        $params = [
+            'code' => $this->code,
+            'secret' => $this->secret,
+            'labels' => [ $label_id ],
+            'product_key' => self::PRODUCT,
+            'is_recommend' => 1,
+            'order_field' => 'sale_num desc, visit_num desc',
+        ];
+        return $this->httpGet('store/app', $params);
+    }
+
     /**
      * 授权信息
      * @param $module_id

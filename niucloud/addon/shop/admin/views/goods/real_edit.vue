@@ -37,14 +37,26 @@
                             <el-input v-model.trim="goodsEdit.formData.goods_name" clearable :placeholder="t('goodsNamePlaceholder')" class="input-width" maxlength="60" show-word-limit />
                         </el-form-item>
                         <el-form-item :label="t('subTitle')" prop="sub_title">
-                            <el-input v-model.trim="goodsEdit.formData.sub_title" clearable :placeholder="t('subTitlePlaceholder')" class="input-width" maxlength="80" show-word-limit />
+                            <el-input v-model.trim="goodsEdit.formData.sub_title" clearable :placeholder="t('subTitlePlaceholder')" class="input-width" maxlength="30" show-word-limit />
                         </el-form-item>
                         <el-form-item :label="t('goodsImage')" prop="goods_image">
                             <upload-image v-model="goodsEdit.formData.goods_image" :limit="10" />
                         </el-form-item>
-<!--                        <el-form-item :label="t('goodsVideo')">-->
-<!--                            <upload-video v-model="goodsEdit.formData.goods_video" :limit="1" />-->
-<!--                        </el-form-item>-->
+                        <el-form-item :label="t('goodsVideo')">
+                                <div class="flex flex-col">
+                                    <upload-video v-model="goodsEdit.formData.goods_video" :limit="1" />
+                                    <el-input v-model="goodsEdit.formData.goods_video" clearable :placeholder="t('在此输入外链视频地址')" class="input-width mt-[10px]" />
+                                    
+                                    <div class="flex flex-col mt-[10px]">
+                                        <div class="text-[12px] text-[#999] leading-[20px]">{{ t('goodsVideoTipTile') }}</div>
+                                        <div class="mt-[5px] text-[12px] text-[var(--el-color-primary)] leading-[20px]">{{ t('goodsVideoTipOne') }}</div>
+                                        <div class="mt-[5px] text-[12px] text-[var(--el-color-primary)] leading-[20px]">{{ t('goodsVideoTipTwo') }}</div>
+                                        <div class="mt-[5px] text-[12px] text-[var(--el-color-primary)] leading-[20px]">{{ t('goodsVideoTipThree') }}</div>
+                                        <div class="mt-[5px] text-[12px] text-[var(--el-color-primary)] leading-[20px]">{{ t('goodsVideoTipFour') }}</div>
+                                        <div class="mt-[5px] text-[12px] text-[var(--el-color-primary)] leading-[20px]">{{ t('goodsVideoTipFive') }}</div>
+                                    </div>
+                                </div>
+                        </el-form-item>
                         <el-form-item :label="t('goodsCategory')" prop="goods_category">
                             <el-cascader v-model="goodsEdit.formData.goods_category" :options="goodsEdit.goodsCategoryOptions" :props="goodsEdit.goodsCategoryProps" clearable filterable @change="goodsEdit.categoryHandleChange" popper-class="choice" />
                             <div class="ml-[10px]">
@@ -505,7 +517,7 @@
 
                         <el-form-item :label="t('goodsArgumentsTemp')">
                             <div>
-                                <el-select v-model="goodsEdit.formData.attr_id" :placeholder="t('goodsArgumentsTempPlaceholder')" clearable @change="goodsEdit.attrChange" @clear="goodsEdit.attrChange(-1)">
+                                <el-select v-model="goodsEdit.formData.attr_ids" :placeholder="t('goodsArgumentsTempPlaceholder')" clearable multiple @change="goodsEdit.attrChange" @clear="goodsEdit.attrChange">
                                     <el-option v-for="item in goodsEdit.attrOptions" :key="item.attr_id" :label="item.attr_name" :value="item.attr_id" />
                                 </el-select>
                                 <div class="mt-[10px] text-[12px] text-[#999] leading-[20px]">{{t('goodsArgumentsTempHint')}}</div>

@@ -41,9 +41,50 @@
                 <el-form-item v-if="formData.type == 3" prop="goods_ids">
                     <div>
                         <el-form-item>
-                            <goods-select-popup ref="goodsSelectPopupRef" v-model="formData.goods_ids" :min="1" :max="99" />
+                            <goods-select-popup ref="goodsSelectPopupRef" v-model="formData.goods_ids" @goodsSelect="goodsSelect" :min="1" :max="99" />
                         </el-form-item>
                     </div>
+                </el-form-item>
+                <el-form-item v-if="formData.goods_list && formData.goods_list.length && formData.type == 3">
+                    <el-table :data="formData.goods_list" size="large" max-height="400">
+                        <el-table-column prop="goods_id" :label="t('goodsSelectPopupGoodsInfo')" min-width="300">
+                            <template #default="{ row }">
+                                <div class="flex items-center cursor-pointer">
+                                <div class="min-w-[60px] h-[60px] flex items-center justify-center">
+                                    <el-image v-if="row.goods_image" class="w-[60px] h-[60px]" :src="img(row.goods_image)" fit="contain">
+                                    <template #error>
+                                        <div class="image-slot">
+                                        <img class="w-[60px] h-[60px]" src="@/addon/shop/assets/goods_default.png" />
+                                        </div>
+                                    </template>
+                                    </el-image>
+                                    <img v-else class="w-[70px] h-[60px]" src="@/addon/shop/assets/goods_default.png" fit="contain" />
+                                </div>
+                                <div class="ml-2">
+                                    <span :title="row.sku_name" class="multi-hidden">{{row.sku_name ? row.goods_name + " " + row.sku_name: row.goods_name}}</span>
+                                    <span class="text-primary text-[12px]">{{row.goods_type_name}}</span>
+                                </div>
+                                </div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column prop="price" :label="t('goodsSelectPopupPrice')" min-width="120">
+                            <template #default="{ row }">
+                                <div>￥{{ row.price }}</div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="stock" :label="t('goodsSelectPopupStock')" min-width="120">
+                            <template #default="{ row }">
+                                <div>{{ row.stock }}</div>
+                            </template>
+                        </el-table-column>
+
+                        <el-table-column :label="t('operation')" align="right" min-width="160">
+                            <template #default="{ row, $index }">
+                                <el-button type="primary" link @click="deleteGoodsEvent(row, $index)">{{ t("delete") }}</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </el-form-item>
 
                 <!-- 使用门槛 -->
@@ -160,7 +201,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getGoodsCategoryList, addCoupon } from '@/addon/shop/api/marketing'
 import type { FormInstance } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { filterNumber, filterDigit } from '@/utils/common'
+import { filterNumber, filterDigit,deepClone,img } from '@/utils/common'
 import goodsSelectPopup from '@/addon/shop/views/goods/components/goods-select-popup.vue'
 import { cloneDeep } from 'lodash-es'
 
@@ -192,6 +233,7 @@ interface FormDataType {
     valid_type: number
     receive_time: any
     valid_time: any
+    goods_list: any[]
 }
 
 const formData = ref<FormDataType>({
@@ -211,7 +253,8 @@ const formData = ref<FormDataType>({
     receive_type_time: 2,
     valid_type: 1, // 有效方式，1=时长，2=范围
     receive_time: [start, end],
-    valid_time: end
+    valid_time: end,
+    goods_list: []
 })
 
 const formRef = ref<FormInstance>()
@@ -349,6 +392,37 @@ const onSave = async (formEl: FormInstance | undefined) => {
 const back = () => {
     router.push('/shop/marketing/coupon/list')
 }
+// 删除商品
+
+const deleteGoodsEvent = (row: any, index: any) => {
+    formData.value.goods_list.splice(index, 1);
+    formData.value.goods_ids.splice(formData.value.goods_ids.indexOf(row.goods_id), 1);
+};
+//选择商品
+const goodsSelect = (value: any) => {
+    let arr = [];
+    for (let key in value) {
+        let goods_sku: any = value[key];
+        let sku: any = {
+            goods_id: goods_sku.goods_id,
+            price: goods_sku.goodsSku.price,
+            goods_type_name: goods_sku.goods_type_name,
+            goods_image: goods_sku.goods_cover,
+            goods_name: goods_sku.goods_name,
+            stock: goods_sku.stock,
+        };
+    if (formData.value.goods_list.length) {
+        formData.value.goods_list.forEach((el: any) => {
+            if (el.goods_id == sku.goods_id) {
+                sku = Object.assign(sku, el)
+            }
+        })
+    }
+        arr.push(deepClone(sku))
+    }
+    formData.value.goods_list = arr;
+};
+
 
 </script>
 

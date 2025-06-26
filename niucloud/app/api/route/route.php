@@ -108,6 +108,8 @@ Route::group(function() {
 
     // 获取初始化数据信息
     Route::get('init', 'sys.Config/init');
+    // 获取公众号用户是否绑定手机
+    Route::get('member_mobile_exist', 'sys.Config/getMemberMobileExist');
 
     /***************************************************** 地区管理 ****************************************************/
     //通过pid获取列表

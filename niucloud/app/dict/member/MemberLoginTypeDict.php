@@ -27,13 +27,16 @@ class MemberLoginTypeDict
     //微信小程序授权登录
     public const WEAPP = 'weapp';
 
+    // PC登录
+    public const PC = 'pc';
+
     public static function getType($type = '')
     {
         $data = [
             self::USERNAME => get_lang('dict_member.login_username'),//用户名密码登录
             self::MOBILE => get_lang('dict_member.login_mobile'),//手机号验证码登录,
             self::WECHAT => get_lang('dict_member.login_wechat'),//'微信公众号授权登录',
-            self::WEAPP => get_lang('dict_member.login_weapp'),//'微信小程序授权登录',
+            self::PC => get_lang('dict_member.login_pc'),//'微信小程序授权登录',
         ];
         if (empty($type)) {
             return $data;

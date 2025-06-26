@@ -36,6 +36,7 @@ Route::group('member', function() {
     Route::get('member/export', 'member.Member/export');
 
     Route::put('member/modify/:member_id/:field', 'member.Member/modify');
+    Route::post('member/batch_modify', 'member.Member/batchModify');
     //会员注册方式
     Route::get('registertype', 'member.Member/getMemberRegisterType');
     //会员注册渠道

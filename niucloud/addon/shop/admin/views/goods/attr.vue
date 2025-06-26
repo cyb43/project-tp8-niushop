@@ -51,7 +51,7 @@
 
         </el-card>
 
-        <el-dialog v-model="showDialog" :title="titleDialog" width="500px" :destroy-on-close="true">
+        <el-dialog v-model="showDialog" :title="titleDialog" width="500px" :close-on-click-modal="false" :destroy-on-close="true">
             <el-form :model="formData" label-width="120px" ref="formRef" :rules="formRules" class="page-form" v-loading="loading">
                 <el-form-item :label="t('attrName')" prop="attr_name">
                     <el-input v-model.trim="formData.attr_name" clearable :placeholder="t('attrNamePlaceholder')" class="input-width"  maxlength="20" />

@@ -215,7 +215,7 @@ const deleteSearch = (index: number) => {
 
 const repeat = ref(false)
 const onSave = async (formEl: any) => {
-    await formEl.validate(async (valid:any) => {
+    await formEl.validate(async (valid: any) => {
         if (valid) {
             if (activeName.value === 'search') {
                 for (let i = 0; i < searchList.value.length; i++) {
@@ -240,7 +240,7 @@ const onSave = async (formEl: any) => {
                     loading.value = false
                     repeat.value = false
                 })
-            } else  if (activeName.value === 'code')  {
+            } else if (activeName.value === 'code') {
                 if (repeat.value) return
                 repeat.value = true
 
@@ -255,7 +255,7 @@ const onSave = async (formEl: any) => {
                     repeat.value = false
                     codeLoading.value = false
                 })
-            }else{
+            } else {
                 if (repeat.value) return
                 repeat.value = true
 

@@ -17,12 +17,14 @@ use think\Response;
 
 /**
  * 微信小程序订阅消息
+ * @description 微信小程序订阅消息
  */
 class Template extends BaseAdminController
 {
 
     /**
      * 订阅消息
+     * @description 订阅消息
      * @return Response
      */
     public function lists()
@@ -31,9 +33,9 @@ class Template extends BaseAdminController
         return success($wechat_template_service->getList());
     }
 
-
     /**
-     * 菜单信息
+     * 同步微信公众号消息模板
+     * @description 同步微信公众号消息模板
      * @return Response
      */
     public function sync()

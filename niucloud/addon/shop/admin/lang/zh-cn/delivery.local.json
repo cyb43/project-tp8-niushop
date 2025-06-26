@@ -1,7 +1,7 @@
 {
   "basicSettings": "同城配送基础设置",
   "timeIsOpen": "配送时间设置",
-  "timeIsOpenTips": "开启后，买家下单选择同城配送时，可选择配送时间，提交订单后，将在买家备注中显示。",
+  "timeIsOpenTips": "开启后，买家下单选择同城配送时，可选择配送时间，提交订单后，将在买家备注中显示。关闭后，买家下单默认为立即配送",
   "close": "关闭",
   "open": "开启",
   "everyDay": "每天",
@@ -51,5 +51,9 @@
   "defaultDeliveryAddressEmpty": "请先配置默认发货地址",
   "toSetting": "去配置",
   "update": "修改",
-  "deliveryAddressChange": "取货地址已变更请注意是否需重新调整配送区域"
+  "deliveryAddressChange": "取货地址已变更请注意是否需重新调整配送区域",
+  "tradeTimePlaceholderTwo": "请选择自提时段",
+  "tradeTimePlaceholderThree": "请选择细分时段",
+  "tradeTimePlaceholderFour": "结束时间不能小于或等于开始时间",
+  "tradeTimePlaceholderFive": "后一个时间段的开始时间不能小于前一个时间段的结束时间"
 }

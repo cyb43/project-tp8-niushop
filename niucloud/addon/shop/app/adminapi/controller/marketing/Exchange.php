@@ -24,7 +24,10 @@ use core\base\BaseAdminController;
  */
 class Exchange extends BaseAdminController
 {
-
+    /**
+     * @description 查看积分商城列表-分页
+     * @return \think\Response
+     */
     public function lists()
     {
         $data = $this->request->params([
@@ -37,6 +40,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 积分商品分页列表（用于弹框选择）
+     * @description 积分商城列表-全部
      * @return \think\Response
      */
     public function select()
@@ -51,6 +55,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 获取活动商品类型
+     * @description 积分商城商品类型
      * @return \think\Response
      */
     public function type()
@@ -60,6 +65,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 获取积分商城状态
+     * @description 积分商城状态字典
      */
     public function status()
     {
@@ -68,6 +74,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 添加积分商城
+     * @description 添加积分商城活动
      * @return \think\Response
      */
     public function add()
@@ -91,6 +98,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 详情
+     * @description 查看积分商城详情
      * @param int $id
      * @return \think\Response
      */
@@ -101,6 +109,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 积分商城编辑
+     * @description 编辑积分商城活动
      * @param int $id
      * @return \think\Response
      */
@@ -125,6 +134,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 修改上架状态
+     * @description 修改积分商城上下架
      * @param int $id
      * @return \think\Response
      */
@@ -139,6 +149,7 @@ class Exchange extends BaseAdminController
 
     /**
      * 删除活动
+     * @description 删除积分商城活动
      * @param int $id
      * @return \think\Response
      */
@@ -149,7 +160,50 @@ class Exchange extends BaseAdminController
     }
 
     /**
+     * 批量删除活动
+     * @description 批量删除积分商城活动
+     * @return \think\Response
+     */
+    public function batchDelete()
+    {
+        $data = $this->request->params([
+            [ 'ids', [] ],
+        ]);
+        ( new ExchangeService() )->batchDelete($data['ids']);
+        return success('SUCCESS');
+    }
+
+    /**
+     * 批量下架活动
+     * @description 批量下架积分商城活动
+     * @return \think\Response
+     */
+    public function batchDown()
+    {
+        $data = $this->request->params([
+            [ 'ids', [] ],
+        ]);
+        ( new ExchangeService() )->batchDown($data['ids']);
+        return success('SUCCESS');
+    }
+
+    /**
+     * 批量上架架活动
+     * @description 批量下架积分商城活动
+     * @return \think\Response
+     */
+    public function batchUp()
+    {
+        $data = $this->request->params([
+            [ 'ids', [] ],
+        ]);
+        ( new ExchangeService() )->batchUp($data['ids']);
+        return success('SUCCESS');
+    }
+
+    /**
      * 修改排序
+     * @description 修改积分商城活动排序
      * @param int $id
      * @return \think\Response
      */

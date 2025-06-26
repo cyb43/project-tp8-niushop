@@ -229,7 +229,7 @@ class CoreScheduleService extends BaseCoreService
         $job = $class.($function == 'doJob' ? '' : '['.$function.']');
         if(!empty($output)) $output->writeln('[Schedule]['.date('Y-m-d H:i:s').']'." Processing:" . $job.'('.$name.')');
         try {
-            $result = Container::getInstance()->invoke([$class, $function ?? 'doJob']);
+            $result = Container::getInstance()->invoke([$class, $function ?? 'doJob'],$schedule['params']?? []);
             if(!empty($output)) $output->writeln('[Schedule]['.date('Y-m-d H:i:s').']'." Processed:" . $job.'('.$name.')');
             $status = ScheduleLogDict::SUCCESS;
             if ($result == 1) $result = '计划任务：'.$name.'执行成功';

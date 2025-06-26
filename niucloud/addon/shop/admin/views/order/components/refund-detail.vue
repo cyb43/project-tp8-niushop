@@ -147,6 +147,7 @@
                             <span class="text-[14px] px-[15px] py-[5px] ml-[30px] text-[#5c96fc] bg-[#ebf3ff] cursor-pointer" v-if="formData.status == 4 && formData.refund_type == 2" @click="deliverEvent">{{ t('confirmDelivery') }}</span>
                             <span class="text-[14px] px-[15px] py-[5px] ml-[30px] text-[#5c96fc] bg-[#ebf3ff] cursor-pointer" v-if="formData.status == 4 && formData.refund_type == 2" @click="deliveryRefuseEvent">{{ t('refuse') }}</span>
                             <span class="text-[14px] px-[15px] py-[5px] ml-[30px] text-[#5c96fc] bg-[#ebf3ff] cursor-pointer" v-if="formData.status == 6" @click="transferEvent">{{ t('transferAccounts') }}</span>
+                            <span class="text-[14px] px-[15px] py-[5px] ml-[30px] text-[#5c96fc] bg-[#ebf3ff] cursor-pointer" v-if="formData.status != 8 && formData.status != -3"  @click="closeEvent">{{ t('closeRefund') }}</span>
                         </div>
                         <div class="flex ml-[30px] mt-[15px]">
                             <span class="text-[14px] text-[#ff7f5b]">{{ t('remind') }}：</span>
@@ -182,10 +183,10 @@
                         <template v-if="formData.refund_log.length > 0">
                             <div class="flex" v-for="(items, index) in formData.refund_log" :key="index">
                                 <div class="mr-[20px] min-w-[71px]">
-                                    <div class="leading-[1] w-full text-[14px] w-[100px] flex justify-end">
+                                    <div class="leading-[1] text-[14px] w-[100px] flex justify-end">
                                         {{ items.create_time.split(' ')[0] }}
                                     </div>
-                                    <div class="leading-[1] w-full text-[14px]  w-[100px] flex justify-end mt-[15px]">
+                                    <div class="leading-[1] text-[14px]  w-[100px] flex justify-end mt-[15px]">
                                         {{ items.create_time.split(' ')[1] }}
                                     </div>
                                 </div>
@@ -276,7 +277,7 @@
 <script lang="ts" setup>
 import { ref, reactive, computed } from 'vue'
 import { t } from '@/lang'
-import { orderRefundDetail, auditRefund, refundDelivery } from '@/addon/shop/api/order'
+import { orderRefundDetail, auditRefund, refundDelivery ,closeRefund} from '@/addon/shop/api/order'
 import { getOrderRefundAddress } from '@/addon/shop/api/shop_address'
 import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
@@ -296,7 +297,6 @@ const handleClose = (done: () => void) => {
 const activeName = ref('order')
 let refundId = '';
 const emit = defineEmits(['load'])
-
 
 const getOrderInfoFn = async () => {
     loading.value = true
@@ -334,7 +334,7 @@ const formRules = computed(() => {
             { required: true, message: t('moneyPlaceholder'), trigger: 'blur' }
         ],
         refund_address_id: [
-            { required: true, message: t('refundaddressPlaceholder'), trigger: 'blur' }
+            { required: true, message: t('refundAddressPlaceholder'), trigger: 'blur' }
         ]
     }
 })
@@ -497,6 +497,21 @@ const toOrderDetail = (id:number) => {
         query: { order_id: id }
     })
     window.open(routeUrl.href, '_blank')
+}
+
+// 关闭售后
+const closeEvent = () => {
+    ElMessageBox.confirm(t('closeRefundTips'), t('warning'),
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
+    ).then(() => {
+        closeRefund(formData.value.order_refund_no).then(() => {
+            resetFn();
+        })
+    })
 }
 
 

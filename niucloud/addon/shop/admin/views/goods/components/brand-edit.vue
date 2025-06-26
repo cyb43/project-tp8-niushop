@@ -44,7 +44,6 @@ import { ref, reactive, computed } from 'vue'
 import { t } from '@/lang'
 import type { FormInstance } from 'element-plus'
 import { filterNumber } from '@/utils/common'
-
 import { addBrand, editBrand, getBrandInfo } from '@/addon/shop/api/goods'
 
 const showDialog = ref(false)
@@ -144,11 +143,6 @@ const setFormData = async (row: any = null) => {
         title.value = t('addBrand')
     }
     loading.value = false
-}
-
-const filterSpecial = (event:any) => {
-    event.target.value = event.target.value.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '')
-    event.target.value = event.target.value.replace(/[`~!@#$%^&*()_\-+=<>?:"{}|,.\/;'\\[\]·~！@#￥%……&*（）——\-+={}|《》？：“”【】、；‘’，。、]/g, '')
 }
 
 defineExpose({

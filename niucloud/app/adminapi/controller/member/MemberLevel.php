@@ -18,10 +18,17 @@ use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
 use think\Response;
 
+/**
+ * 会员等级
+ * Class MemberLevel
+ * @description 会员等级
+ * @package app\adminapi\controller\member
+ */
 class MemberLevel extends BaseAdminController
 {
     /**
      * 会员等级分页列表
+     * @description 会员等级分页列表
      * @return Response
      */
     public function pages()
@@ -34,6 +41,7 @@ class MemberLevel extends BaseAdminController
 
     /**
      * 会员等级详情
+     * @description 会员等级详情
      * @param int $id
      * @return Response
      */
@@ -44,6 +52,7 @@ class MemberLevel extends BaseAdminController
 
     /**
      * 添加会员等级
+     * @description 添加会员等级
      * @return Response
      */
     public function add()
@@ -62,6 +71,7 @@ class MemberLevel extends BaseAdminController
 
     /**
      * 编辑会员等级
+     * @description 编辑会员等级
      */
     public function edit($id)
     {
@@ -79,6 +89,7 @@ class MemberLevel extends BaseAdminController
 
     /**
      * 会员等级删除
+     * @description 会员等级删除
      * @param int $id
      * @return Response
      */
@@ -90,6 +101,7 @@ class MemberLevel extends BaseAdminController
 
     /**
      * 获取标签
+     * @description 获取标签
      * @return Response
      * @throws DataNotFoundException
      * @throws DbException
