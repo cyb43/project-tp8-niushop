@@ -1,1 +1,0 @@
-import{u as t}from"./poster-df482fa2.js";import{d as r,h as n,c as s,b as _}from"./index-e05985b6.js";const c={class:"content-wrap"},a=r({__name:"edit-qrcode",setup(l,{expose:e}){return t(),e({}),(o,m)=>(n(),s("div",c,[_(o.$slots,"common")]))}}),i=Object.freeze(Object.defineProperty({__proto__:null,default:a},Symbol.toStringTag,{value:"Module"}));export{i as _};

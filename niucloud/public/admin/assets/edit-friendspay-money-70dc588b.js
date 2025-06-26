@@ -1,1 +1,0 @@
-import{u as t}from"./poster-df482fa2.js";import{d as r,h as n,c as s,b as _}from"./index-e05985b6.js";const a={class:"content-wrap"},c=r({__name:"edit-friendspay-money",setup(l,{expose:e}){return t(),e({}),(o,m)=>(n(),s("div",a,[_(o.$slots,"common")]))}}),d=Object.freeze(Object.defineProperty({__proto__:null,default:c},Symbol.toStringTag,{value:"Module"}));export{d as _};
