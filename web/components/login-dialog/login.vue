@@ -140,6 +140,7 @@ const checkScanFn = (key) => {
                 if (!data.login_data.token) {
                     useCookie('openId').value = data.login_data.openid
                     navigateTo(`/auth/bind`)
+                    memberStore.logClose()
                 } else {
                     memberStore.setToken(data.login_data.token)
                     memberStore.logClose()
