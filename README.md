@@ -36,6 +36,7 @@ NIUCLOUD-ADMIN是一款快速开发通用管理后台框架，整体功能架构
 
 ### NIUCLOUD-ADMIN 技术特点 
 
+
 - 支持composer快速安装扩展，支持 **redis** 缓存以及消息队列，支持多语言设计开发，采用严格的 **restful** 的api设计开发。
 - 后台前后端分离采用 **element-plus、vue3.0、typescript、vite、pina** 等前端技术,同时使用i18n支持国际化多语言开发。
 - 手机端采用uniapp前后端分离，使用 **uview、vue3.0、typescript、vite、pina** 前端技术，支持h5,微信小程序，支付宝小程序，抖音小程序等使用场景。
