@@ -31,36 +31,26 @@ class CouponSend extends BaseJob
      */
     public function doJob($record_id)
     {
-        if (empty($record_id)){
-            Log::write('CouponSend 参数为空 结束');
+        if (empty($record_id)) {
+            //Log::write('CouponSend 参数为空 结束');
             return true;
         }
         Log::write('CouponSend 发送优惠券开始');
         //调整状态为进行中
         (new CouponSendRecord())->where([
-            ['id' ,'=',$record_id]
+            ['id', '=', $record_id]
         ])->update([
             'status' => CouponDict::SEND_STATUS_PROGRESS,
         ]);
         Db::startTrans();
         try {
-
-            $success_num = 0;
-
             $records_info = (new CouponSendRecord())->where([
-                ['id' ,'=',$record_id]
+                ['id', '=', $record_id]
             ])->findOrEmpty()->toArray();
             $memberIds = $this->getMemberIds($records_info['range_type'], $records_info['range_param']);
-            Log::write("CouponSend 发送优惠券id {$record_id}  会员id数组：".json_encode($memberIds,256));
-
-            foreach ($memberIds as $member_id) {
-                // todo 可以优化
-                $res = (new CoreCouponMemberService())->sendCoupon($member_id, $records_info['coupon_id'], $records_info['send_num']);
-                if ($res) {
-                    $success_num += 1;
-                }
-            }
-            (new CouponSendRecord())->where([['id' ,'=',$record_id]])->update([
+            Log::write("CouponSend 发送优惠券id {$record_id}  会员id数组：" . json_encode($memberIds, 256));
+            $success_num = (new CoreCouponMemberService())->sendCoupon( $memberIds, $records_info['coupon_id'], $records_info['send_num']);
+            (new CouponSendRecord())->where([['id', '=', $record_id]])->update([
                 'status' => CouponDict::SEND_STATUS_FINISH,
                 'success_num' => $success_num,
                 'end_time' => time(),
@@ -69,7 +59,7 @@ class CouponSend extends BaseJob
             Db::commit();
             return true;
         } catch (\Exception $e) {
-            Log::error('CouponSend 发送优惠券失败'.$e->getMessage().$e->getLine());
+            Log::error('CouponSend 发送优惠券失败' . $e->getMessage() . $e->getLine());
             Db::rollback();
             return false;
         }
@@ -91,12 +81,12 @@ class CouponSend extends BaseJob
                 ])->column('member_id');
                 break;
             case CouponDict::SEND_RANGE_MEMBER:
-                $member_ids =$range_param['member_ids'];
+                $member_ids = $range_param['member_ids'];
                 break;
             case CouponDict::SEND_RANGE_MEMBER_LEVEL:
                 $member_level = $range_param['member_level'];
                 $member_ids = (new Member())->where([
-                    ['member_level', 'in', implode(',',$member_level)],
+                    ['member_level', 'in', implode(',', $member_level)]
                 ])->column('member_id');
                 break;
             case CouponDict::SEND_RANGE_MEMBER_LABEL:

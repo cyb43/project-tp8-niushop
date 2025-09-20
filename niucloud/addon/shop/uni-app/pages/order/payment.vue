@@ -2,7 +2,7 @@
     <view :style="themeColor()" class="payment-wrap">
         <view class="payment-body min-h-[100vh]" v-if="orderData">
             <!-- #ifdef MP -->
-            <top-tabbar :data="topTabbarData" :scrollBool="topTabarObj.getScrollBool()"/>
+            <top-tabbar :data="topTabbarData" :scrollBool="topTabarObj.getScrollBool()" :mustFill="true" />
             <!-- #endif -->
             <view class="pt-[30rpx] sidebar-margin payment-bottom">
                 <!-- 配送方式 -->
@@ -21,7 +21,7 @@
                             <view v-if="!$u.test.isEmpty(orderData.delivery.take_address)" class="pt-[20rpx] pb-[30rpx] flex items-center">
                                 <image class="w-[60rpx] h-[60rpx] mr-[20rpx] flex-shrink-0" :src="img('addon/shop/payment/position_01.png')" mode="aspectFit"/>
                                 <view class="flex flex-col overflow-hidden">
-                                    <text class="text-[26rpx] text-[var(--text-color-light9)] mt-[16rpx] truncate max-w-[536rpx]">{{ orderData.delivery.take_address.full_address.split(orderData.delivery.take_address.address)[0] }}</text>
+                                    <text class="text-[26rpx] text-[var(--text-color-light9)] mt-[16rpx] truncate max-w-[536rpx]">{{ orderData.delivery.take_address.full_address.substring(0, orderData.delivery.take_address.full_address.lastIndexOf(orderData.delivery.take_address.address)) }}</text>
                                     <text class="font-500 text-[30rpx] mt-[14rpx] text-[#333] truncate max-w-[536rpx]">{{ orderData.delivery.take_address.address }}</text>
                                     <view class="flex items-center text-[26rpx] text-[var(--text-color-light6)] mt-[16rpx]">
                                         <text class="mr-[16rpx]">{{ orderData.delivery.take_address.name }}</text>
@@ -88,7 +88,7 @@
                             </view>
                         </view>
                     </view>
-					<view class="" v-if="createData.delivery.delivery_type == 'local_delivery' && localConfig.time_is_open" >
+					<view v-if="createData.delivery.delivery_type == 'local_delivery' && localConfig.time_is_open" >
 						<view class="flex justify-between items-center  px-[20rpx] pt-[14rpx] pb-[24rpx]"
                         @click="handleTime">
 						    <view class="text-color text-[26rpx]">{{createData.delivery.local_delivery_type =='subscribe' ?'预约配送':''}}</view>
@@ -175,11 +175,14 @@
                         </view>
                     </view>
                     <!-- 买家留言 -->
-                    <view class="bg-white flex items-center leading-[30rpx] px-[var(--pad-sidebar-m)]">
+                    <view class="bg-white flex items-center leading-[30rpx] px-[var(--pad-sidebar-m)] mt-[30rpx]" @click="toLeaveMessage">
                         <view class="text-[28rpx] w-[150rpx] text-[#303133]">买家留言</view>
-                        <view class="flex-1 text-[#303133]">
-                            <input type="text" v-model="createData.member_remark" class="text-right text-[#333] text-[28rpx]" maxlength="50" placeholder="请输入留言信息给卖家" placeholder-class="text-[var(--text-color-light9)] text-[28rpx]"/>
-                        </view>
+                        <view class="flex-1 text-[#303133] flex items-center justify-center">
+                            <view class="flex-1 w-0 text-right truncate">
+                                <text class="text-[28rpx] text-[var(--text-color-light9)]">{{createData.member_remark?createData.member_remark:'请输入留言信息给卖家'}}</text>
+                            </view>
+                           <text class="ml-auto text-[28rpx] nc-iconfont nc-icon-youV6xx  text-[var(--text-color-light9)]"></text>
+                      </view>
                     </view>
                     <!-- 发票 -->
                     <view v-if="invoiceRef && invoiceRef.invoiceOpen" class="flex items-center text-[#303133] leading-[30rpx] mt-[30rpx] px-[var(--pad-sidebar-m)]" @click="invoiceRef.open()">
@@ -217,19 +220,19 @@
                 <view class="card-template">
                     <view class="title">价格明细</view>
                     <view class="card-template-item">
-                        <view class="text-[28rpx] w-[150rpx] leading-[30rpx] text-[#303133]">商品金额</view>
+                        <view class="text-[26rpx] w-[150rpx] leading-[30rpx] text-[#303133]">商品金额</view>
                         <view class="flex-1 w-0 text-right  price-font text-[#333] text-[32rpx]">￥{{ parseFloat(orderData.basic.goods_money).toFixed(2) }}</view>
                     </view>
                     <view class="card-template-item" v-if="parseFloat(orderData.basic.delivery_money)">
-                        <view class="text-[28rpx] w-[150rpx] leading-[30rpx] text-[#303133]">配送费用</view>
+                        <view class="text-[26rpx] w-[150rpx] leading-[30rpx] text-[#303133]">配送费用</view>
                         <view class="flex-1 w-0 text-right price-font text-[#333] text-[32rpx]">￥{{ parseFloat(orderData.basic.delivery_money).toFixed(2) }}</view>
                     </view>
                     <view class="card-template-item" v-if="parseFloat(orderData.basic.coupon_money)">
-                        <view class="text-[28rpx] w-[170rpx] leading-[30rpx] text-[#303133]">优惠券优惠</view>
+                        <view class="text-[26rpx] w-[170rpx] leading-[30rpx] text-[#303133]">优惠券优惠</view>
                         <view class="flex-1 w-0 text-right text-[var(--price-text-color)] text-[32rpx] price-font leading-[1]">-￥{{ parseFloat(orderData.basic.coupon_money).toFixed(2) }}</view>
                     </view>
                     <view class="card-template-item" v-if="parseFloat(orderData.basic.manjian_discount_money)">
-                        <view class="text-[28rpx] w-[170rpx] leading-[30rpx] text-[#303133]">满减优惠</view>
+                        <view class="text-[26rpx] w-[170rpx] leading-[30rpx] text-[#303133]">满减优惠</view>
                         <view class="flex-1 w-0 text-right text-[var(--price-text-color)] text-[32rpx] price-font leading-[1]">-￥{{ parseFloat(orderData.basic.manjian_discount_money).toFixed(2) }}</view>
                     </view>
                 </view>
@@ -253,7 +256,7 @@
         </view>
 
         <!-- 选择自提点 -->
-        <select-store ref="storeRef" @confirm="confirmSelectStore" v-if="orderData && orderData.basic && orderData.basic.has_goods_types && orderData.basic.has_goods_types.includes('real')"/>
+        <select-store ref="storeRef" @confirm="confirmSelectStore" v-show="orderData && orderData.basic && orderData.basic.has_goods_types && orderData.basic.has_goods_types.includes('real')"/>
         <!-- 发票 -->
         <invoice ref="invoiceRef" @confirm="confirmInvoice"/>
         <!-- 地址 -->
@@ -263,6 +266,7 @@
         <pay ref="payRef" @close="payClose"/>
 
         <ns-select-time ref="selectTime" :rules="service_time" v-if="Object.keys(service_time).length" :isQuantum="true" :isOpen="localConfig.time_is_open" @change="getTime" @getStamp="getStamp" @getDate="getDate"></ns-select-time>
+        <message-open ref="messageOpenRef" @submit="confirmMessage" :default-message="createData.member_remark" />
 
     </view>
 </template>
@@ -274,6 +278,8 @@ import { redirect, img, mobileHide } from '@/utils/common'
 import selectCoupon from './components/select-coupon/select-coupon'
 import selectStore from './components/select-store/select-store'
 import addressList from './components/address-list/address-list'
+import messageOpen from './components/message-open/message-open.vue'
+
 import invoice from './components/invoice/invoice'
 import nsGoodsManjian from '@/addon/shop/components/ns-goods-manjian/ns-goods-manjian.vue';
 import { useSubscribeMessage } from '@/hooks/useSubscribeMessage'
@@ -365,10 +371,13 @@ const getDate = (e) => {
 	}
 }
 const localConfig = ref({})
-onShow(() => {
-	getLocal().then((res:any)=>{
-		localConfig.value = res.data
-	})
+onShow(async () => {
+	const res = await getLocal();
+	localConfig.value = res.data;
+    // 解决在创建订单时，使用优惠券并在切换页面后，提示优惠券已失效的问题
+    if(!payRef.value?.payInfo){
+        calculate(); // 确保在 localConfig 赋值后执行
+    }
 })
 
 const openSelectStore = () => {
@@ -400,7 +409,6 @@ const switchDeliveryType = async (type: string, index: number) => {
         // console.warn("storeRef is still undefined!");
         return;
     }
-
     // 切换配送方式时，清空顺买商品,预约自提时间
     if (createData.value.delivery.delivery_type != type && createData.value) {
         delete createData.value.impulse_buy_goods
@@ -418,7 +426,6 @@ const switchDeliveryType = async (type: string, index: number) => {
             }
         });
     }
-    
     if (createData.value.delivery.delivery_type != type) {
         activeIndex.value = index
         createData.value.order_key = ''
@@ -470,8 +477,7 @@ const calculate = (params: any = {}) => {
             createData.value.delivery.taker_name = orderData.value.delivery.take_address.name
             createData.value.delivery.taker_mobile = orderData.value.delivery.take_address.mobile
         }
-
-        if(createData.value.delivery.delivery_type == 'local_delivery'){
+        if(orderData.value.delivery.delivery_type == 'local_delivery'){
             service_time.value = {
                 time_interval: localConfig.value.time_interval,
                 time_week: formatTimeWeek(localConfig.value.time_type, localConfig.value.time_week),
@@ -517,7 +523,6 @@ const calculate = (params: any = {}) => {
     })
 }
 
-calculate()
 
 // 改变配送方式
 watch(
@@ -666,7 +671,7 @@ const verify = () => {
             return false
         }
     }
-	if(data.delivery.delivery_type == 'local_delivery' && !isDelivery.value && localConfig.value.time_is_open ){
+	if(data.delivery.delivery_type == 'local_delivery' && !isDelivery.value && localConfig.value.time_is_open){
 		uni.showToast({ title: '当前时间不支持配送', icon: 'none' })
 		return false
 	}
@@ -732,6 +737,14 @@ const confirmAddress = (data: any) => {
     createData.value.delivery.delivery_type = data.delivery
     createData.value.delivery.take_address_id = data.address_id
     calculate();
+}
+const messageOpenRef = ref()
+const toLeaveMessage = () => {
+  messageOpenRef.value.open();
+}
+const confirmMessage = (message: string) => {
+    console.log(message)
+  createData.value.member_remark = message
 }
 </script>
 

@@ -236,19 +236,28 @@ const categoryShowDialog = ref(false)
 
 const categoryTable = reactive({
     loading: true,
-    data: [],
+    data: []
 })
 onMounted(() => {
     loadCategoryList()
+    btnStyleList.forEach((item, index, arr) => {
+        if (item.type == 'button') {
+            if (diyStore.editComponent.style == 'style-3') {
+                item.isShow = false
+            } else {
+                item.isShow = true
+            }
+        }
+    })
 })
 
 const styleChangeFn = (style) => {
     btnStyleList.forEach((item, index, arr) => {
-        if (item.type == "button") {
-            if (style == "style-3") {
-                item.isShow = false;
+        if (item.type == 'button') {
+            if (style == 'style-3') {
+                item.isShow = false
             } else {
-                item.isShow = true;
+                item.isShow = true
             }
         }
     })
@@ -265,7 +274,7 @@ const styleChangeFn = (style) => {
         diyStore.editComponent.saleStyle.isShow = true
         diyStore.editComponent.labelStyle.isShow = true
     }
-    diyStore.editComponent.style = style;
+    diyStore.editComponent.style = style
 }
 
 const btnStyleList = reactive([
@@ -320,7 +329,7 @@ const handleSelectionChange = (val: string | any[]) => {
 
 const saveCategoryId = () => {
     diyStore.editComponent.goods_category = currCategoryData.category_id
-    diyStore.editComponent.goods_category_name = currCategoryData.category_name;
+    diyStore.editComponent.goods_category_name = currCategoryData.category_name
     categoryShowDialog.value = false
 }
 
@@ -331,7 +340,7 @@ const categoryShowDialogOpen = () => {
     })
 }
 
-//分类数据选中回填,设置展开行
+// 分类数据选中回填,设置展开行
 const expand_category_ids = ref<Array<any>>([])
 const setRowSelection = () => {
     expand_category_ids.value = []
@@ -352,8 +361,6 @@ const setRowSelection = () => {
 defineExpose({})
 
 </script>
-
-<style lang="scss" scoped></style>
 <style lang="scss">
 .goods-list-slider {
     .el-slider__input {

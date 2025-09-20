@@ -16,13 +16,13 @@ const prop = defineProps({
 })
 
 const data = computed(() => {
-    return prop.value;
+    return prop.value
 })
 
 const componentStyle = computed(() => {
-    var style = '';
-    style += `width: ${ prop.value.width }px;`;
-    return style;
+    let style = ''
+    style += `width: ${prop.value.width}px;`
+    return style
 })
 
 defineExpose({})

@@ -6,7 +6,7 @@
   "goodsType": "商品类型",
   "goodsTypePlaceholder": "请选择商品类型",
   "brand": "商品品牌",
-  "brandPlaceholder": "请选择商品品牌",
+  "brandPlaceholder": "请输入商品品牌",
   "labelIds": "商品标签",
   "labelIdsPlaceholder": "请选择商品标签",
   "saleNum": "销量",

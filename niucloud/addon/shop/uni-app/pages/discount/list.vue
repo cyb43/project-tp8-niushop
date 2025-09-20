@@ -49,7 +49,7 @@
                         </view>
 
                         <view class="ml-[20rpx] flex-1 flex flex-col justify-between">
-							<view class="">
+							<view>
 								<view class="text-[28rpx] leading-[1.4] multi-hidden">{{ item.goods_name }}</view>
 								<view class="text-[24rpx] text-[#999] leading-[30rpx] using-hidden mt-[16rpx]">
 									{{ item.sub_title }}
@@ -118,15 +118,12 @@ import useMescroll from '@/components/mescroll/hooks/useMescroll.js'
 import { onPageScroll, onReachBottom } from '@dcloudio/uni-app'
 import { topTabar } from '@/utils/topTabbar'
 import { useGoods } from '@/addon/shop/hooks/useGoods'
+import useSystemStore from "@/stores/system";
 
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 const diyGoods = useGoods();
 const headStyle = computed(() => {
-    let style = Object.keys(menuButtonInfo).length ? (pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 368) + 'rpx' : '490rpx'
+    let style = Object.keys(systemStore.menuButtonInfo).length ? (pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 368) + 'rpx' : '490rpx'
     return style
 })
 
@@ -228,7 +225,7 @@ const toLink = (item: any) => {
 
 const mescrollTop = ref('')
 const calculateHeight = () => {
-    mescrollTop.value = Object.keys(menuButtonInfo).length ? (pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 368) + (discountList.value.length ? 70 : 0) + 'rpx' : (discountList.value.length ? '560rpx' : '490rpx')
+    mescrollTop.value = Object.keys(systemStore.menuButtonInfo).length ? (pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 368) + (discountList.value.length ? 70 : 0) + 'rpx' : (discountList.value.length ? '560rpx' : '490rpx')
 }
 </script>
 

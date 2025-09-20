@@ -6,7 +6,7 @@
             <el-form label-width="80px" class="px-[10px]">
                 <el-form-item :label="t('selectStyle')" class="flex">
                     <span class="text-primary flex-1 cursor-pointer" @click="showTitleStyle">{{ diyStore.editComponent.titleStyle.title }}</span>
-                    <el-icon>
+                    <el-icon @click="showTitleStyle" class="cursor-pointer">
                         <ArrowRight />
                     </el-icon>
                 </el-form-item>

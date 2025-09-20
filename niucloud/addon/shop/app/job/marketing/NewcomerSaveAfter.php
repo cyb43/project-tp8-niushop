@@ -25,7 +25,7 @@ class NewcomerSaveAfter extends BaseJob
      */
     public function doJob()
     {
-        Log::write('新人专享活动修改后更新会员活动有效期');
+        //Log::write('新人专享活动修改后更新会员活动有效期');
         try {
             //修改状态
             (new CoreNewcomerService())->afterSave();

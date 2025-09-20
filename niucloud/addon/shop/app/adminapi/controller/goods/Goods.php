@@ -132,7 +132,8 @@ class Goods extends BaseAdminController
 
             ['member_discount', ''], // 会员等级折扣，不参与：空，会员折扣：discount，指定会员价：fixed_price
             ['poster_id', 0], // 海报id
-            ['form_id', 0] // 万能表单id
+            ['form_id', 0], // 万能表单id
+            ['diy_detail_id', 0] // 自定义详情id
         ]);
 
         $this->validate($data, 'addon\shop\app\validate\goods\Goods.add');
@@ -201,7 +202,8 @@ class Goods extends BaseAdminController
             ['member_discount', ''], // 会员等级折扣，不参与：空，会员折扣：discount，指定会员价：fixed_price
 
             ['poster_id', 0], // 海报id
-            ['form_id', 0] // 万能表单id
+            ['form_id', 0], // 万能表单id
+            ['diy_detail_id', 0] // 自定义详情id
         ]);
         $this->validate($data, 'addon\shop\app\validate\goods\Goods.edit');
         $res = (new GoodsService())->edit($id, $data);
@@ -281,6 +283,21 @@ class Goods extends BaseAdminController
     }
 
     /**
+     * 修改商品上下架状态（单商品）
+     * @description 修改商品上下架状态（单商品）
+     * @return \think\Response
+     */
+    public function editSingleStatus()
+    {
+        $data = $this->request->params([
+            ['goods_id', 0],
+            ['status', 0],
+        ]);
+        (new GoodsService())->editSingleStatus($data);
+        return success('SUCCESS');
+    }
+
+    /**
      * 复制商品
      * @description 复制商品
      * @param int $goods_id
@@ -334,7 +351,7 @@ class Goods extends BaseAdminController
     }
 
     /**
-     * 商品选择分页列表(带sku) todo 没用到
+     * 商品选择分页列表(带sku)
      * @return \think\Response
      */
     public function selectGoodsSku()

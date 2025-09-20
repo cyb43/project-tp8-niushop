@@ -31,22 +31,19 @@ class DiscountEnd extends BaseJob
      */
     public function doJob()
     {
-        Log::write('限时折扣自动开启');
+        //Log::write('DiscountEnd 限时折扣自动关闭');
         try {
 
             $ids = (new Discount())->where([
                 ['status', '=', DiscountDict::ACTIVE],
             ])->whereBetweenTime('end_time', 1, time())->column('discount_id');//过滤end_time=0的情况，0表示活动永久有效
 
-            foreach($ids as $k => $v){
-                (new Discount())->where([ ['discount_id', '=', $v], ['status', '=', DiscountDict::ACTIVE], [ 'end_time', '<=', time() ] ])->update([ 'status' => DiscountDict::END ]);
-                (new DiscountGoods())->where([ ['discount_id', '=', $v]])->update([ 'status' => DiscountDict::END ]);
-                ( new DiscountService() )->discountEndAfter($v);
-            }
-
+            (new Discount())->where([['discount_id', 'in', $ids], ['status', '=', DiscountDict::ACTIVE], ['end_time', '<=', time()]])->update(['status' => DiscountDict::END]);
+            (new DiscountGoods())->where([['discount_id', 'in', $ids]])->update(['status' => DiscountDict::END]);
+            (new DiscountService())->discountEndAfter($ids);
             return true;
         } catch (\Exception $e) {
-            Log::write('限时折扣自动开启error'.$e->getMessage().$e->getFile().$e->getLine());
+            Log::error('DiscountEnd 限时折扣自动关闭error' . $e->getMessage() . $e->getFile() . $e->getLine());
             return false;
         }
     }

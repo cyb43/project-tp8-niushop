@@ -126,7 +126,7 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getOrderList, getOrderStatus, getOrderPayType, getOrderFrom } from '@/addon/shop/api/order'
-import { img,setTablePageStorage,getTablePageStorage } from '@/utils/common'
+import { img, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import { FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
 
@@ -168,7 +168,7 @@ const orderTable = reactive<OrderTable>({
         status: '',
         create_time: [],
         pay_time: [],
-        activity_type:'exchange'
+        activity_type: 'exchange'
     }
 })
 
@@ -194,12 +194,12 @@ const loadOrderList = (page: number = 1) => {
             return el
         })
         orderTable.total = res.data.total
-        setTablePageStorage(orderTable.page, orderTable.limit, orderTable.searchParam);
+        setTablePageStorage(orderTable.page, orderTable.limit, orderTable.searchParam)
     }).catch(() => {
         orderTable.loading = false
     })
 }
-loadOrderList(getTablePageStorage(orderTable.searchParam).page);
+loadOrderList(getTablePageStorage(orderTable.searchParam).page)
 
 const handleClick = (event: any) => {
     orderTable.searchParam.status = event

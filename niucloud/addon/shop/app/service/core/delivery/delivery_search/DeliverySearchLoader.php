@@ -11,6 +11,8 @@
 
 namespace addon\shop\app\service\core\delivery\delivery_search;
 
+use addon\shop\app\service\core\delivery\CoreConfigService;
+use core\exception\AdminException;
 use core\loader\Loader;
 
 /**
@@ -21,7 +23,19 @@ use core\loader\Loader;
  */
 class DeliverySearchLoader extends Loader
 {
+    public array $method = [
+        1 => 'KdniaoDeliverySearch',
+        2 => 'Kd100DeliverySearch',
+    ];
 
+    public function __construct()
+    {
+        $config = ( new CoreConfigService() )->getDeliverySearchConfig();
+        if(empty($config['interface_type']) || !isset($this->method[$config['interface_type']]) ){
+            throw new AdminException('NOT_CONFIGURED_DELIVERY_TYPE');
+        }
+        parent::__construct($this->method[$config['interface_type']], $config);
+    }
     /**
      * 空间名
      * @var string

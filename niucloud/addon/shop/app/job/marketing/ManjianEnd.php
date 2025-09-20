@@ -30,15 +30,11 @@ class ManjianEnd extends BaseJob
         Log::write('满减送自动关闭');
         try {
 
-            $ids = ( new Manjian() )->where([
-                [ 'status', '=', ManjianDict::ACTIVE ],
+            $ids = (new Manjian())->where([
+                ['status', '=', ManjianDict::ACTIVE],
             ])->whereBetweenTime('end_time', 1, time())->column('manjian_id');//过滤end_time=0的情况，0表示活动永久有效
-
-            foreach ($ids as $k => $v) {
-                ( new Manjian() )->where([ [ 'manjian_id', '=', $v ], [ 'status', '=', ManjianDict::ACTIVE ], [ 'end_time', '<=', time() ] ])->update([ 'status' => ManjianDict::END ]);
-                ( new ManjianGoods() )->where([ [ 'manjian_id', '=', $v ] ])->update([ 'status' => ManjianDict::END ]);
-            }
-
+            (new Manjian())->where([['manjian_id', 'in', $ids], ['status', '=', ManjianDict::ACTIVE], ['end_time', '<=', time()]])->update(['status' => ManjianDict::END]);
+            (new ManjianGoods())->where([['manjian_id', 'in', $ids]])->update(['status' => ManjianDict::END]);
             return true;
         } catch (\Exception $e) {
             Log::write('满减送自动关闭error' . $e->getMessage() . $e->getFile() . $e->getLine());

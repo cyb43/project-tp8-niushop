@@ -104,7 +104,6 @@ defineExpose({
 })
 </script>
 
-<style lang="scss" scoped></style>
 <style lang="scss">
 .diy-dialog-wrap .el-form-item__label {
     height: auto !important;

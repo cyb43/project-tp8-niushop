@@ -349,9 +349,9 @@ class CoreManjianService extends BaseCoreService
 
                 if ($level >= 0) {
                     foreach ($match_sku_ids as $sku_id) {
-                        $value['rule'] = $rule_json[$level];
-                        if ($value['rule']['is_discount'] || $value['rule']['is_free_shipping'] || $value['rule']['is_give_point'] || $value['rule']['is_give_balance'] || !empty($value['rule']['coupon']) || !empty($value['rule']['goods'])) {
-                            $order->goods_data[$sku_id]['manjian_info'] = $value;
+                        $value[ 'rule' ] = $rule_json[ $level ];
+                        if ($value[ 'rule' ][ 'is_discount' ] || $value[ 'rule' ][ 'is_free_shipping' ] || $value[ 'rule' ][ 'is_give_point' ] || $value[ 'rule' ][ 'is_give_balance' ] || !empty($value[ 'rule' ][ 'coupon' ]) || !empty($value[ 'rule' ][ 'goods' ])) {
+                            $order->goods_data[ $sku_id ][ 'manjian_info' ] = $value;
                         }
                     }
                 }
@@ -403,7 +403,7 @@ class CoreManjianService extends BaseCoreService
             $discount_money = $match_order_goods_money;
         }
         $surplus_money = $discount_money;
-        $match_sku_ids = array_filter($match_sku_ids, function($item) use ($order) {
+        $match_sku_ids = array_filter($match_sku_ids, function ($item) use ($order) {
             return ( $order->goods_data[ $item ][ 'goods_money' ] - $order->goods_data[ $item ][ 'discount_money' ] ) !== 0;
         });
         $match_count = count($match_sku_ids);
@@ -603,7 +603,7 @@ class CoreManjianService extends BaseCoreService
             foreach ($give_records as $v) {
                 //会员积分发放
                 if ($v[ 'point' ] > 0) {
-                    $core_member_account->addLog($v[ 'member_id' ], MemberAccountTypeDict:: POINT, $v[ 'point' ], 'manjian_gift_give', '满减送活动赠送', $v[ 'manjian_id' ]);
+                    $core_member_account->addLog( $v[ 'member_id' ], MemberAccountTypeDict:: POINT, $v[ 'point' ], 'manjian_gift_give', '满减送活动赠送', $v[ 'manjian_id' ]);
                 }
                 //会员余额发放
                 if ($v[ 'balance' ] > 0) {
@@ -613,7 +613,7 @@ class CoreManjianService extends BaseCoreService
                     $coupon_num = 0;
                     foreach ($v[ 'coupon_json' ] as $coupon) {
                         try {
-                            $core_coupon_member_service->sendCoupon($v[ 'member_id' ], $coupon[ 'coupon_id' ], $coupon[ 'num' ]);
+                            $core_coupon_member_service->sendCoupon( $v[ 'member_id' ], $coupon[ 'coupon_id' ], $coupon[ 'num' ]);
                             $coupon_num += $coupon[ 'num' ];
                         } catch (CommonException $e) {
                             Log::write('满减赠送优惠券“' . $coupon[ 'coupon_id' ] . '”发放失败，错误原因：' . $e->getMessage() . $e->getFile() . $e->getLine());
@@ -646,10 +646,11 @@ class CoreManjianService extends BaseCoreService
     public function refundCheck($data)
     {
         $order_goods_model = new OrderGoods();
+        //查询订单是否全部退款
         $order_goods_list = $order_goods_model->where([
             [ 'order_id', '=', $data[ 'order_id' ] ],
             [ 'member_id', '=', $data[ 'member_id' ] ],
-            [ 'order_goods_id', '<>', $data[ 'order_goods_id' ] ],
+            [ 'status', '<>', OrderGoodsDict::REFUND_FINISH ],
             [ 'is_gift', '=', 0 ]
         ])->column('order_goods_id,goods_id,sku_id,num,goods_money,extend', 'order_goods_id');
 
@@ -668,35 +669,37 @@ class CoreManjianService extends BaseCoreService
             $condition_type = $manjian_info[ 'condition_type' ];
             $condition_match_value = 0;
 
-            foreach ($order_goods_list as $v) {
-                $manjian_goods_count = ( new ManjianGoods() )->where([
-                    [ 'goods_id', '=', $v[ 'goods_id' ] ],
-                    [ 'sku_id', '=', $v[ 'sku_id' ] ],
-                    [ 'manjian_id', '=', $value[ 'manjian_id' ] ],
-                    [ 'status', '=', ManjianDict::ACTIVE ]
-                ])->count();
-                if ($manjian_info[ 'goods_type' ] == ManjianDict::ALL_GOODS) {//全部商品参与
-                    if ($condition_type == ManjianDict::OVER_N_YUAN) {//满N元
-                        $condition_match_value += $v[ 'goods_money' ];
-                    } else {//满N件
-                        $condition_match_value += $v[ 'num' ];
-                    }
-
-                } elseif ($manjian_info[ 'goods_type' ] == ManjianDict::SELECTED_GOODS) {//指定商品参与
-                    if ($manjian_goods_count > 0) {
+            if (!empty($order_goods_list)) {
+                foreach ($order_goods_list as $v) {
+                    $manjian_goods_count = ( new ManjianGoods() )->where([
+                        [ 'goods_id', '=', $v[ 'goods_id' ] ],
+                        [ 'sku_id', '=', $v[ 'sku_id' ] ],
+                        [ 'manjian_id', '=', $value[ 'manjian_id' ] ],
+                        [ 'status', '=', ManjianDict::ACTIVE ]
+                    ])->count();
+                    if ($manjian_info[ 'goods_type' ] == ManjianDict::ALL_GOODS) {//全部商品参与
                         if ($condition_type == ManjianDict::OVER_N_YUAN) {//满N元
                             $condition_match_value += $v[ 'goods_money' ];
                         } else {//满N件
                             $condition_match_value += $v[ 'num' ];
                         }
 
-                    }
-                } elseif ($manjian_info[ 'goods_type' ] == ManjianDict::SELECTED_GOODS_NOT) {//指定商品不参与
-                    if ($manjian_goods_count == 0) {
-                        if ($condition_type == ManjianDict::OVER_N_YUAN) {//满N元
-                            $condition_match_value += $v[ 'goods_money' ];
-                        } else {//满N件
-                            $condition_match_value += $v[ 'num' ];
+                    } elseif ($manjian_info[ 'goods_type' ] == ManjianDict::SELECTED_GOODS) {//指定商品参与
+                        if ($manjian_goods_count > 0) {
+                            if ($condition_type == ManjianDict::OVER_N_YUAN) {//满N元
+                                $condition_match_value += $v[ 'goods_money' ];
+                            } else {//满N件
+                                $condition_match_value += $v[ 'num' ];
+                            }
+
+                        }
+                    } elseif ($manjian_info[ 'goods_type' ] == ManjianDict::SELECTED_GOODS_NOT) {//指定商品不参与
+                        if ($manjian_goods_count == 0) {
+                            if ($condition_type == ManjianDict::OVER_N_YUAN) {//满N元
+                                $condition_match_value += $v[ 'goods_money' ];
+                            } else {//满N件
+                                $condition_match_value += $v[ 'num' ];
+                            }
                         }
                     }
                 }
@@ -760,7 +763,7 @@ class CoreManjianService extends BaseCoreService
                 }
             }
 
-            if ($level < $value[ 'level' ]) {//优惠层级降级,退还全部赠品
+            if ($level < $value[ 'level' ] || empty($order_goods_list)) {//优惠层级降级或订单全部退款,退还全部赠品
                 if ($value[ 'point' ] > 0) {
                     $refund_gift_list[ $value[ 'manjian_id' ] ][ 'point' ] = $value[ 'point' ];
                 }
@@ -847,7 +850,7 @@ class CoreManjianService extends BaseCoreService
                 if (isset($v[ 'point' ]) && $v[ 'point' ] > 0) {
                     //会员积分扣除
                     if ($member_info[ 'point' ] >= $v[ 'point' ]) {//剩余积分足够才扣除
-                        $core_member_account->addLog($data[ 'member_id' ], MemberAccountTypeDict:: POINT, -$v[ 'point' ], 'manjian_gift_back', '满减送活动订单退款退还赠送积分', $manjian_id);
+                        $core_member_account->addLog( $data[ 'member_id' ], MemberAccountTypeDict:: POINT, -$v[ 'point' ], 'manjian_gift_back', '满减送活动订单退款退还赠送积分', $manjian_id);
                         $manjian_give_records_service->where($manjian_give_where)->update([ 'point' => Db::raw('point - ' . $v[ 'point' ]) ]);
                     }
                 }
@@ -936,7 +939,7 @@ class CoreManjianService extends BaseCoreService
                     'coupon_num' => -( $coupon_num ?? 0 ),
                     'goods_num' => -( $goods_num ?? 0 )
                 ];
-                $core_manjian_stat_service->stat($manjian_id, $stat_data);
+                $core_manjian_stat_service->stat( $manjian_id, $stat_data);
             }
         }
         return true;
@@ -1062,7 +1065,7 @@ class CoreManjianService extends BaseCoreService
                 $discount_money = $discount_array[ 'discount_money' ];
                 $promotion_money = bcadd($promotion_money, $discount_money, 2);
                 if (!empty($discount_array[ 'rule' ])) {
-                    $goods_list = array_map(function($item) use ($all_info) {
+                    $goods_list = array_map(function ($item) use ($all_info) {
                         $item[ 'promotion' ][ 'manjian' ] = $all_info;
                         return $item;
                     }, $goods_list);
@@ -1104,7 +1107,7 @@ class CoreManjianService extends BaseCoreService
                     $discount_money = bcadd($discount_money, $discount_array[ 'discount_money' ], 2);
 
                     if (!empty($discount_array[ 'rule' ])) {
-                        $goods_list = array_map(function($item) use ($sku_ids, $not_select_info) {
+                        $goods_list = array_map(function ($item) use ($sku_ids, $not_select_info) {
                             if (in_array($item[ 'sku_id' ], $sku_ids)) {
                                 $item[ 'promotion' ][ 'manjian' ] = $not_select_info;
                             }
@@ -1157,7 +1160,7 @@ class CoreManjianService extends BaseCoreService
                         $discount_money = bcadd($discount_money, $discount_array[ 'discount_money' ], 2);
 
                         if (!empty($discount_array[ 'rule' ])) {
-                            $goods_list = array_map(function($item) use ($sku_ids, $v, $discount_array) {
+                            $goods_list = array_map(function ($item) use ($sku_ids, $v, $discount_array) {
                                 if (in_array($item[ 'sku_id' ], $sku_ids)) {
                                     $item[ 'promotion' ][ 'manjian' ] = $v;
                                     $item[ 'promotion' ][ 'manjian' ][ 'discount_array' ] = $discount_array;
@@ -1267,8 +1270,8 @@ class CoreManjianService extends BaseCoreService
     public function getManjianInfo($data)
     {
         $member_id = $data[ 'member_id' ];
-        $goods_id  = $data[ 'goods_id' ];
-        $sku_id    = $data[ 'sku_id' ];
+        $goods_id = $data[ 'goods_id' ];
+        $sku_id = $data[ 'sku_id' ];
         $gift_goods = $data[ 'gift_goods' ] ?? [];
         if (empty($sku_id) && !empty($goods_id)) {
             // 查询默认规格项
@@ -1400,6 +1403,9 @@ class CoreManjianService extends BaseCoreService
                             $goods[ 'goods_name' ] = $sku_info[ 'goods' ][ 'goods_name' ];
                             $goods[ 'sku_name' ] = $sku_info[ 'sku_name' ];
                             $goods[ 'sku_image' ] = $sku_info[ 'sku_image' ];
+                            if (empty($goods[ 'sku_image' ])) {
+                                $goods[ 'sku_image' ] = $sku_info[ 'goods' ][ 'goods_cover_thumb_mid' ];
+                            }
                             $goods[ 'price' ] = $sku_info[ 'price' ];
 
                             if ($goods[ 'num' ] == 0) {

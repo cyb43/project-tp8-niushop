@@ -174,7 +174,17 @@ class Order extends BaseModel
     {
         if (empty($data[ 'order_type' ]))
             return '';
-//        return OrderDict::getType()[$data['order_type']] ?? '';
+//        return OrderDict::getOrderType($data['order_type']) ?? '';
+    }
+    /**
+     * 订单类型
+     * @param $value
+     * @param $data
+     * @return mixed|string
+     */
+    public function getActivityTypeNameAttr($value, $data)
+    {
+        return OrderDict::getOrderActiveTypeName($data['activity_type']);
     }
 
     /**

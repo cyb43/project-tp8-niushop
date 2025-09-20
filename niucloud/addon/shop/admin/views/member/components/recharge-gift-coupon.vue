@@ -71,8 +71,8 @@
 import { computed, reactive, ref, watch } from 'vue'
 import couponSelectPopup from '@/addon/shop/views/goods/components/coupon-select-popup.vue'
 import { FormRules } from 'element-plus'
-import {deepClone } from '@/utils/common'
-import { t } from "@/lang";
+import { deepClone } from '@/utils/common'
+import { t } from '@/lang'
 
 const props = defineProps({
     modelValue: {
@@ -86,7 +86,7 @@ const emits = defineEmits(['update:modelValue'])
 
 const formData = ref({
     coupon_id: [],
-    value: [],
+    value: []
 })
 
 const formRef = ref(null)
@@ -103,9 +103,9 @@ const formRules = reactive<FormRules>({
 
 // 选择优惠券
 const couponSelect = (selectedCoupons: any, levelIndex: number) => {
-    let arr = [];
-    for (let key in selectedCoupons) {
-        let coupons: any = selectedCoupons[key];
+    const arr = []
+    for (const key in selectedCoupons) {
+        const coupons: any = selectedCoupons[key]
         let coupon: any = {
             price: coupons.price,
             title: coupons.title,
@@ -115,33 +115,33 @@ const couponSelect = (selectedCoupons: any, levelIndex: number) => {
             valid_type: coupons.valid_type,
             valid_end_time: coupons.valid_end_time,
             length: coupons.length,
-            num:1
-        };
+            num: 1
+        }
 
         if (formData.value.value.length) {
             formData.value.value.forEach((el: any) => {
-            if (el.coupon_id == coupon.coupon_id) {
-                coupon = Object.assign(coupon, el)
-            }
-        })
+                if (el.coupon_id == coupon.coupon_id) {
+                    coupon = Object.assign(coupon, el)
+                }
+            })
         }
         arr.push(deepClone(coupon))
     }
-    formData.value.value = arr;
+    formData.value.value = arr
 }
 
 // 删除优惠券
 const deleteCouponEvents = (row: any, levelIndex: number) => {
-    const couponsIndex = formData.value.value.findIndex((el: any) => el.coupon_id === row.coupon_id);
+    const couponsIndex = formData.value.value.findIndex((el: any) => el.coupon_id === row.coupon_id)
     if (couponsIndex !== -1) {
-        formData.value.value.splice(couponsIndex, 1);
+        formData.value.value.splice(couponsIndex, 1)
     }
 
-    const couponsIdIndex = formData.value.coupon_id.indexOf(row.coupon_id);
+    const couponsIdIndex = formData.value.coupon_id.indexOf(row.coupon_id)
     if (couponsIndex !== -1) {
-        formData.value.coupon_id.splice(couponsIdIndex, 1);
+        formData.value.coupon_id.splice(couponsIdIndex, 1)
     }
-};
+}
 
 const value = computed({
     get () {

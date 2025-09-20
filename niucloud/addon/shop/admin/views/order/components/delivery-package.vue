@@ -120,7 +120,7 @@ defineExpose({
 }
 
 .notes-form .el-dialog__body .el-form-item {
-    margin-bottom: 0px !important;
+    margin-bottom: 0 !important;
 }
 
 /* 多行超出隐藏 */

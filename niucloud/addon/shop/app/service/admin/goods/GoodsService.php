@@ -11,11 +11,8 @@
 
 namespace addon\shop\app\service\admin\goods;
 
-use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\dict\goods\GoodsDict;
 use addon\shop\app\dict\order\OrderDict;
-use addon\shop\app\model\active\ActiveGoods;
-use addon\shop\app\model\discount\DiscountGoods;
 use addon\shop\app\model\goods\Brand;
 use addon\shop\app\model\goods\Goods;
 use addon\shop\app\model\goods\GoodsSku;
@@ -25,6 +22,7 @@ use addon\shop\app\model\order\OrderGoods;
 use addon\shop\app\service\admin\marketing\ManjianService;
 use addon\shop\app\service\core\goods\CoreGoodsConfigService;
 use addon\shop\app\service\core\goods\CoreGoodsLimitBuyService;
+use app\model\diy\Diy;
 use app\model\diy_form\DiyForm;
 use app\model\member\Member;
 use app\service\admin\addon\AddonService;
@@ -62,19 +60,14 @@ class GoodsService extends BaseAdminService
 
         if (!empty($params[ 'goods_id' ])) {
             // 查询商品信息，用于编辑
-            $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,attr_ids,attr_format,member_discount,poster_id,is_gift,form_id';
+            $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,attr_ids,attr_format,member_discount,poster_id,is_gift,form_id,diy_detail_id';
             $goods_info = $this->model->field($field)->where([ [ 'goods_id', '=', $params[ 'goods_id' ] ] ])->findOrEmpty()->toArray();
             if (!empty($goods_info)) {
 
                 if (!empty($goods_info[ 'goods_category' ])) {
+                    $goods_category = array_values($goods_info[ 'goods_category' ]);
                     $category_service = new CategoryService();
-                    // todo 可以优化
-                    foreach ($goods_info[ 'goods_category' ] as $k => $v) {
-                        $category = $category_service->getInfo($v);
-                        if (empty($category)) {
-                            unset($goods_info[ 'goods_category' ][ $k ]);
-                        }
-                    }
+                    $goods_info[ 'goods_category' ] = $category_service->checkCategoryValid($goods_category);
                 }
 
                 // 商品品牌，处理数据类型
@@ -120,6 +113,19 @@ class GoodsService extends BaseAdminService
                 // 商品海报id，处理数据类型
                 if (empty($goods_info[ 'poster_id' ])) {
                     $goods_info[ 'poster_id' ] = '';
+                }
+
+                // 自定义商品详情模板id，处理数据类型
+                if (!empty($goods_info[ 'diy_detail_id' ])) {
+                    $diy_model = new Diy();
+                    $diy_count = $diy_model->where([
+                        [ 'id', '=', $goods_info[ 'diy_detail_id' ] ]
+                    ])->count();
+                    if ($diy_count == 0) {
+                        $goods_info[ 'diy_detail_id' ] = '';
+                    }
+                } else {
+                    $goods_info[ 'diy_detail_id' ] = '';
                 }
 
                 // 万能表单id，处理数据类型
@@ -223,7 +229,7 @@ class GoodsService extends BaseAdminService
     {
         $goods_ids = array_column($goods_data, 'goods_id');
         $join_list = event('GetGoodsJoinInfo', [
-            'goods_ids' => $goods_ids,
+            'goods_ids' => $goods_ids
         ]);
         $goods_join = [];
         foreach ($join_list as $item) {
@@ -247,7 +253,7 @@ class GoodsService extends BaseAdminService
                     if (!isset($active_tips[ $goods_id ][ $join_type ][ 'name' ])) {
                         $active_tips[ $goods_id ][ $join_type ][ 'name' ] = '';
                     }
-                    if (!isset($v[ 'short' ])) {
+                    if (isset($v[ 'short' ])) {
                         $active_tips[ $goods_id ][ $join_type ][ 'short' ] = $v[ 'short' ];
                         unset($v[ 'short' ]);
                         $active_tips[ $goods_id ][ $join_type ][ 'list' ][] = $v;
@@ -272,7 +278,7 @@ class GoodsService extends BaseAdminService
      */
     public function getInfo(int $id)
     {
-        $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,sale_num,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,create_time,update_time,member_discount,poster_id,form_id';
+        $field = 'goods_id,goods_name,sub_title,goods_type,goods_cover,goods_image,goods_video,goods_desc,brand_id,goods_category,label_ids,service_ids,unit,stock,sale_num,virtual_sale_num,is_limit,limit_type,max_buy,min_buy,status,sort,delivery_type,is_free_shipping,fee_type,delivery_money,delivery_template_id,supplier_id,create_time,update_time,member_discount,poster_id,form_id,diy_detail_id';
         $info = $this->model->field($field)->where([ [ 'goods_id', '=', $id ] ])->findOrEmpty()->toArray();
         return $info;
     }
@@ -332,6 +338,7 @@ class GoodsService extends BaseAdminService
                 'member_discount' => $data[ 'member_discount' ],
                 'poster_id' => $data[ 'poster_id' ],
                 'form_id' => $data[ 'form_id' ],
+                'diy_detail_id' => $data[ 'diy_detail_id' ],
                 'create_time' => time()
             ];
             $res = $this->model->create($goods_data);
@@ -498,6 +505,7 @@ class GoodsService extends BaseAdminService
                 'member_discount' => $data[ 'member_discount' ],
                 'poster_id' => $data[ 'poster_id' ],
                 'form_id' => $data[ 'form_id' ],
+                'diy_detail_id' => $data[ 'diy_detail_id' ],
                 'update_time' => time()
             ];
 
@@ -830,21 +838,40 @@ class GoodsService extends BaseAdminService
     public function editStatus($data)
     {
         $is_all = $data[ 'is_all' ];
+        $explode_goods_ids = [];
         if ($data[ 'status' ] == 0) {
             // 查询商品参与营销活动的数量
-            $active_goods_count = $this->getActiveGoodsCount($data[ 'goods_ids' ], $is_all, $data[ 'where' ]);
-            if ($active_goods_count > 0) {
-                throw new AdminException('SHOP_GOODS_PARTICIPATE_IN_ACTIVE_DISABLED_EDIT');
-            }
+            $explode_goods_ids = $this->getActiveGoodsIds($data[ 'goods_ids' ], $is_all, $data[ 'where' ]);
+
         }
         if (!$is_all) {
             $res = $this->model->where([
                 [ 'goods_id', 'in', $data[ 'goods_ids' ] ]
-            ])->update([ 'status' => $data[ 'status' ] ]);
+            ])->whereNotIn('goods_id', $explode_goods_ids)->update([ 'status' => $data[ 'status' ] ]);
         } else {
-            $res = $this->getBatchAllQuery($data[ 'where' ], $data[ 'goods_ids' ])->update([ 'goods.status' => $data[ 'status' ] ]);
+            $explode_goods_ids = array_merge($explode_goods_ids, $data[ 'goods_ids' ]);
+            $res = $this->getBatchAllQuery($data[ 'where' ], $explode_goods_ids)->update([ 'goods.status' => $data[ 'status' ] ]);
         }
         return $res;
+    }
+
+    /**
+     * 修改商品上下架状态（单商品）
+     * @param $data
+     * @return bool
+     */
+    public function editSingleStatus($data)
+    {
+        if ($data[ 'status' ] == 0) {
+            // 查询商品参与营销活动的数量
+            $explode_goods_ids = $this->getActiveGoodsIds($data[ 'goods_id' ]);
+        }
+        if (!empty($explode_goods_ids)) throw new AdminException('SHOP_GOODS_PARTICIPATE_IN_ACTIVE_DISABLED_EDIT');
+
+        $this->model->where([
+            [ 'goods_id', '=', $data[ 'goods_id' ] ]
+        ])->update([ 'status' => $data[ 'status' ] ]);
+        return true;
     }
 
     /**
@@ -945,7 +972,7 @@ class GoodsService extends BaseAdminService
      */
     public function getSelectPage(array $where = [])
     {
-        $field = 'goods_id, goods_name, goods_type, goods_cover,goods_image, stock,sub_title,goods_desc,is_gift';
+        $field = ' goods_id, goods_name, goods_type, goods_cover,goods_image, stock,sub_title,goods_desc,is_gift';
         $order = 'sort desc,create_time desc';
 
         $sku_where = [
@@ -1048,7 +1075,7 @@ class GoodsService extends BaseAdminService
      */
     public function getSelectSku(array $where = [])
     {
-        $field = 'goods_id, goods_name, goods_type, goods_cover, stock,is_gift';
+        $field = ' goods_id, goods_name, goods_type, goods_cover, stock,is_gift';
         $order = 'sort desc,create_time desc';
 
         $select_goods_list = [];// 已选商品列表
@@ -1162,7 +1189,7 @@ class GoodsService extends BaseAdminService
                     $v[ 'goodsSku' ][ 'member_price' ] = $this->getMemberPrice($member_info, $v[ 'member_discount' ], $v[ 'goodsSku' ][ 'member_price' ], $v[ 'goodsSku' ][ 'price' ]);
                 }
                 // 限购查询当前会员已购数量
-                $has_buy = ( new CoreGoodsLimitBuyService() )->getGoodsHasBuyNumber($where[ 'member_id' ], $v[ 'goods_id' ]);
+                $has_buy = ( new CoreGoodsLimitBuyService() )->getGoodsHasBuyNumber( $where[ 'member_id' ], $v[ 'goods_id' ]);
                 $v[ 'has_buy' ] = $has_buy;
                 // 满减活动
                 $manjian_info = ( new ManjianService() )->getManjianInfo([ 'goods_id' => $v[ 'goods_id' ], 'sku_id' => $v[ 'goodsSku' ][ 'sku_id' ], 'member_id' => $where[ 'member_id' ] ]);
@@ -1191,7 +1218,7 @@ class GoodsService extends BaseAdminService
                     $v[ 'member_price' ] = $this->getMemberPrice($member_info, $v[ 'goods' ][ 'member_discount' ], $v[ 'member_price' ], $v[ 'price' ]);
                 }
                 // 限购查询当前会员已购数量
-                $has_buy = ( new CoreGoodsLimitBuyService() )->getGoodsHasBuyNumber($where[ 'member_id' ], $v[ 'goods_id' ]);
+                $has_buy = ( new CoreGoodsLimitBuyService() )->getGoodsHasBuyNumber( $where[ 'member_id' ], $v[ 'goods_id' ]);
                 $v[ 'has_buy' ] = $has_buy;
                 // 满减活动
                 $manjian_info = ( new ManjianService() )->getManjianInfo([ 'goods_id' => $v[ 'goods_id' ], 'sku_id' => $v[ 'sku_id' ], 'member_id' => $where[ 'member_id' ] ]);
@@ -1239,7 +1266,7 @@ class GoodsService extends BaseAdminService
 
             $this->getMemberPriceByList($member_info, $info[ 'goods' ][ 'member_discount' ], $info[ 'skuList' ]);
             // 限购查询当前会员已购数量
-            $has_buy = ( new CoreGoodsLimitBuyService() )->getGoodsHasBuyNumber($data[ 'member_id' ], $info[ 'goods_id' ]);
+            $has_buy = ( new CoreGoodsLimitBuyService() )->getGoodsHasBuyNumber( $data[ 'member_id' ], $info[ 'goods_id' ]);
             $info[ 'has_buy' ] = $has_buy;
             // 满减活动
             $manjian_info = ( new ManjianService() )->getManjianInfo([ 'goods_id' => $info[ 'goods_id' ], 'sku_id' => $info[ 'sku_id' ], 'member_id' => $data[ 'member_id' ] ]);
@@ -1271,11 +1298,6 @@ class GoodsService extends BaseAdminService
      */
     public function getGoodsCount()
     {
-        $data = [
-            "sale_goods_num" => 0, //销售
-            "warehouse_goods_num" => 0, //仓库
-        ];
-
         $data[ 'sale_goods_num' ] = $this->model->where([ [ 'status', '=', 1 ] ])->count();
         $data[ 'warehouse_goods_num' ] = $this->model->where([ [ 'status', '=', 0 ] ])->count();
         return $data;
@@ -1292,7 +1314,7 @@ class GoodsService extends BaseAdminService
             Db::startTrans();
 
             $goods_info = $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ],
+                [ 'goods_id', '=', $params[ 'goods_id' ] ]
             ])->field('goods_type')->findOrEmpty()->toArray();
 
             if (empty($goods_info)) {
@@ -1340,7 +1362,7 @@ class GoodsService extends BaseAdminService
             Db::startTrans();
 
             $goods_info = $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ],
+                [ 'goods_id', '=', $params[ 'goods_id' ] ]
             ])->field('goods_id,goods_type')->findOrEmpty()->toArray();
 
             if (empty($goods_info)) {
@@ -1389,7 +1411,7 @@ class GoodsService extends BaseAdminService
             Db::startTrans();
 
             $goods_info = $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ],
+                [ 'goods_id', '=', $params[ 'goods_id' ] ]
             ])->field('goods_type')->findOrEmpty()->toArray();
 
             if (empty($goods_info)) {
@@ -1398,7 +1420,7 @@ class GoodsService extends BaseAdminService
 
             // 修改商品的会员等级折扣
             $this->model->where([
-                [ 'goods_id', '=', $params[ 'goods_id' ] ],
+                [ 'goods_id', '=', $params[ 'goods_id' ] ]
             ])->update([
                 'member_discount' => $params[ 'member_discount' ]
             ]);
@@ -1444,6 +1466,31 @@ class GoodsService extends BaseAdminService
             'where' => $where,
         ]);
         return array_sum($join_list);
+    }
+
+    /**
+     * 查询商品参与营销活动的数量
+     * @param $goods_id
+     * @return mixed
+     */
+    public function getActiveGoodsIds($goods_id, $is_all = 0, $where = [])
+    {
+        // 判断 $goods_id 类型
+        if (!is_array($goods_id)) {
+            $goods_id = [ $goods_id ];
+        }
+
+        $join_list = event('GetGoodsJoinInfo', [
+            'goods_ids' => $goods_id,
+            'is_get_count' => 0,
+            'is_all' => $is_all,
+            'where' => $where,
+        ]);
+        $goods_ids = [];
+        foreach ($join_list as $item) {
+            $goods_ids = array_merge($goods_ids, array_keys($item));
+        }
+        return $goods_ids;
     }
 
     public function getMemberInfo($member_id)
@@ -1630,6 +1677,12 @@ class GoodsService extends BaseAdminService
                 $filed_data[ 'delivery' ][ 'delivery_money' ] = $data[ 'set_value' ][ 'delivery_money' ] ?? 0;
                 $filed_data[ 'delivery' ][ 'delivery_template_id' ] = $data[ 'set_value' ][ 'delivery_template_id' ] ?? 0;
                 break;
+            case GoodsDict::MEMBER_DISCOUNT :
+                $filed_data[ 'member_discount' ][ 'member_discount' ] = $data[ 'set_value' ][ 'member_discount' ];
+                break;
+            case GoodsDict::DIY_DETAIL :
+                $filed_data[ 'diy_detail' ][ 'diy_detail_id' ] = $data[ 'set_value' ][ 'diy_detail_id' ];
+                break;
             case GoodsDict::STOCK :
                 if (!isset($data[ 'set_value' ][ 'stock_type' ]) || empty($data[ 'set_value' ][ 'stock_type' ]) || !isset($data[ 'set_value' ][ 'stock' ]) || $data[ 'set_value' ][ 'stock' ] <= 0) break;
                 $update_stock = (int) $data[ 'set_value' ][ 'stock' ];
@@ -1661,12 +1714,12 @@ class GoodsService extends BaseAdminService
                 if ($is_all) {
                     $query = $this->getBatchAllQuery($data[ 'where' ], $goods_ids);
                     $query->update([
-                        'goods.stock' => Db::raw("(SELECT COALESCE(SUM(stock), 0)  FROM " . ( new GoodsSku() )->getTable() . "  WHERE goods_id = goods.goods_id)")
+                        'goods.stock' => Db::raw("(SELECT COALESCE(SUM(stock), 0)  FROM " . ( new GoodsSku() )->getTable() . "  WHERE goods_id = goods.goods_id ")
                     ]);
                 } else {
-                    $query = Goods::alias('goods')->whereIn('goods.goods_id', $goods_ids);
-                    $query->update([
-                        'stock' => Db::raw("(SELECT COALESCE(SUM(stock), 0)  FROM " . ( new GoodsSku() )->getTable() . "  WHERE goods_id = goods.goods_id)")
+                    Goods::alias('goods')->whereIn('goods.goods_id', $goods_ids)
+                        ->update([
+                        'stock' => Db::raw("(SELECT COALESCE(SUM(stock), 0)  FROM " . ( new GoodsSku() )->getTable() . "  WHERE goods_id = goods.goods_id ")
                     ]);
                 }
 
@@ -1677,18 +1730,30 @@ class GoodsService extends BaseAdminService
             $field = array_keys($filed_data)[ 0 ];
             if ($is_all) {
                 $update = $filed_data[ $field ];
-
                 $update_data = [];
                 foreach ($update as $column => $value) {
                     $update_data[ 'goods.' . $column ] = is_array($value) ? json_encode($value) : $value;
                 }
-                $res = $this->getBatchAllQuery($data[ 'where' ], $goods_ids)->update($update_data);
+                $query = $this->getBatchAllQuery($data[ 'where' ], $goods_ids);
+                if ($data[ 'set_type' ] == GoodsDict::DELIVERY) {
+                    $query = $query->where([ [ 'goods_type', '=', GoodsDict::REAL ] ]);
+                }
+                $res = $query->update($update_data);
+                if ($data[ 'set_type' ] == GoodsDict::MEMBER_DISCOUNT) {
+                    $goods_ids = $query->column('goods.goods_id');
+                }
             } else {
+                if ($data[ 'set_type' ] == GoodsDict::DELIVERY) {
+                    $goods_ids = $this->model->where([ [ 'goods_id', 'in', $goods_ids ], [ 'goods_type', '=', GoodsDict::REAL ] ])->column('goods_id');
+                }
                 foreach ($goods_ids as $k => $v) {
                     $save_data[ $k ] = $filed_data[ $field ];
                     $save_data[ $k ][ 'goods_id' ] = $v;
                 }
                 $this->model->saveAll($save_data);
+            }
+            if ($data[ 'set_type' ] == GoodsDict::MEMBER_DISCOUNT && !empty($goods_ids)) {
+                ( new GoodsSku() )->where([ [ 'goods_id', 'in', $goods_ids ] ])->update([ 'member_price' => '' ]);
             }
         }
 

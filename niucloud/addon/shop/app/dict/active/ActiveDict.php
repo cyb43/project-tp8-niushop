@@ -35,6 +35,8 @@ class ActiveDict
     const MANJIANSONG = 'manjiansong'; // 满减送
     const NEWCOMER_DISCOUNT = 'newcomer_discount'; // 新人专享
     const GIFTCARD = 'giftcard'; // 礼品卡
+    const PINTUAN = 'pintuan'; // 拼团
+    //const SECKILL = 'seckill'; // 秒杀
 
 
     /**
@@ -66,6 +68,8 @@ class ActiveDict
             self::EXCHANGE => get_lang('dict_shop_active_class.exchange'),
             self::MANJIANSONG => get_lang('dict_shop_active_class.manjiansong'),
             self::NEWCOMER_DISCOUNT => get_lang('dict_shop_active_class.newcomer_discount'),
+            self::GIFTCARD => get_lang('dict_shop_active_class.newcomer_discount'),
+            self::PINTUAN => get_lang('dict_shop_active_class.newcomer_discount'),
         ];
         if ($type == '') return $list;
         return $list[ $type ] ?? '';

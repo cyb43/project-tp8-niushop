@@ -103,9 +103,9 @@
                             </el-form-item>
                             <el-form-item v-if="formData.goodsSkuList && formData.goodsSkuList.length">
                                 <div>
-                                    <el-table class="sku_list !w-[1400px]"  ref="goods_listTableRef" :data="formData.goodsSkuList" size="large" max-height="480" @selection-change="handleSelectionChange">
+                                    <el-table class="sku_list" ref="goods_listTableRef" :data="formData.goodsSkuList" size="large" max-height="480" @selection-change="handleSelectionChange">
                                         <el-table-column type="selection" width="55" />
-                                        <el-table-column :label="t('goodsSelectPopupGoodsInfo')" min-width="300">
+                                        <el-table-column :label="t('goodsSelectPopupGoodsInfo')" min-width="550">
                                             <template #default="{ row }">
                                                 <div class="flex items-center cursor-pointer">
                                                     <div class="min-w-[60px] h-[60px] flex items-center justify-center">
@@ -129,12 +129,12 @@
                                                 </div>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column :label="t('oldPrice')" min-width="120">
+                                        <el-table-column :label="t('oldPrice')" min-width="160">
                                             <template #default="{ row }">
                                                 <div>￥{{ row.price }}</div>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column :label="t('newcomerPrice')" min-width="120">
+                                        <el-table-column :label="t('newcomerPrice')" min-width="160">
                                             <template #default="{ row,$index }">
                                                 <el-form-item :prop="'goodsSkuList.'+ $index + '.newcomer_price'" :rules="[{
                                                         trigger: 'blur',
@@ -156,8 +156,8 @@
                                                 </el-form-item>
                                             </template>
                                         </el-table-column>
-                                        <el-table-column prop="stock" :label="t('goodsSelectPopupStock')" min-width="120" align="right" />
-                                        <el-table-column :label="t('operation')"  align="right" min-width="160">
+                                        <el-table-column prop="stock" :label="t('goodsSelectPopupStock')" min-width="160" align="right" />
+                                        <el-table-column :label="t('operation')" align="right" min-width="160">
                                             <template #default="{ row,$index }">
                                                 <el-button type="primary" link @click="deleteGoodsEvent(row,$index)">{{ t('delete') }}</el-button>
                                             </template>
@@ -171,6 +171,7 @@
                                         <label>{{ t('batchOperation') }}</label>
                                         <el-input v-model.trim="newcomer_price" clearable class="!w-[130px] ml-[10px]" :placeholder="t('newcomerPricePlaceholder')" maxlength="8" />
                                         <el-button class="ml-[10px]" type="primary" @click="saveBatch">{{ t('confirm') }}</el-button>
+                                        <el-button class="ml-[10px]" type="primary" @click="deleteBatch">{{ t('批量删除') }}</el-button>
                                     </div>
                                 </div>
                             </el-form-item>
@@ -395,6 +396,21 @@ const saveBatch = () => {
             item.newcomer_price = newcomer_price.value
         }
     })
+}
+const deleteBatch = () => {
+  if (!multipleSelection.value.length) {
+    ElMessage({
+      type: 'warning',
+      message: `${t('batchEmptySelectedGoodsTips')}`
+    })
+    return
+  }
+  formData.value.goodsSkuList = formData.value.goodsSkuList.filter(item => !multipleSelection.value.some(selected => selected.sku_id === item.sku_id))
+  formData.value.goodsSkuIds = formData.value.goodsSkuList.map(item => item.sku_id)
+  multipleSelection.value = []
+  toggleCheckbox.value = false
+  isIndeterminate.value = false
+  ElMessage.success(t('删除成功'))
 }
 // 删除商品
 const deleteGoodsEvent = (row: any, index: any) => {

@@ -12,6 +12,7 @@
 namespace addon\shop\app\service\core\order;
 
 
+use addon\shop\app\dict\active\ActiveDict;
 use addon\shop\app\dict\coupon\CouponDict;
 use addon\shop\app\dict\goods\GoodsDict;
 use addon\shop\app\dict\order\OrderDeliveryDict;
@@ -27,6 +28,7 @@ use addon\shop\app\service\core\delivery\CoreLocalDeliveryService;
 use addon\shop\app\service\core\delivery\CoreStoreService;
 use addon\shop\app\service\core\goods\CoreGoodsLimitBuyService;
 use addon\shop\app\service\core\marketing\CoreManjianService;
+use addon\shop_impulse_buy\app\service\api\impulse_buy\ImpulseBuyGoodsService;
 use app\service\core\diy_form\CoreDiyFormRecordsService;
 use app\service\core\member\CoreMemberAddressService;
 use core\exception\CommonException;
@@ -69,6 +71,7 @@ trait CoreOrderCreateTrait
 
     public $order_key;
     public $error = [];
+    public $join_manjian = true;
 
     public function createOrder(array $data)
     {
@@ -101,6 +104,9 @@ trait CoreOrderCreateTrait
             // 添加万能表单
             $this->addFormData($this->order_id);
 
+            //处理限时折扣
+            $this->useDiscountActive();
+
             $order_data[ 'order_id' ] = $this->order_id;
 
             // 订单创建后事件
@@ -113,7 +119,7 @@ trait CoreOrderCreateTrait
 
             // 订单创建后事件
             CoreOrderEventService::orderCreateAfter([ 'order_id' => $this->order_id, 'order_data' => $order_data, 'order_goods_data' => $order_goods_data, 'cart_ids' => $this->cart_ids, 'basic' => get_object_vars($this), 'main_type' => $main_type, 'main_id' => $main_id, 'time' => time() ]);
-//            event('AfterShopOrderCreate', ['order_id' => $this->order_id, 'order_data' => $order_data, 'order_goods_data' => $order_goods_data, 'cart_ids' => $this->cart_ids, 'basic' => get_object_vars($this), 'main_type' => $main_type, 'main_id' => $main_id, 'time' => time()]);
+//            event('AfterShopOrderCreate', [ 'order_id' => $this->order_id, 'order_data' => $order_data, 'order_goods_data' => $order_goods_data, 'cart_ids' => $this->cart_ids, 'basic' => get_object_vars($this), 'main_type' => $main_type, 'main_id' => $main_id, 'time' => time()]);
 
             // 订单金额为0的话,要直接支付
             if ($order_data[ 'order_money' ] == 0) {
@@ -261,7 +267,7 @@ trait CoreOrderCreateTrait
                         'discount_type' => $v[ 'discount_type' ],
                         'discount_type_id' => $v[ 'discount_type_id' ],
                         'content' => $v[ 'content' ] ?? $v[ 'title' ] ?? "",
-                        'order_id' => $this->order_id,
+                        'order_id' => $this->order_id
                     ];
                 } else {
                     foreach ($v as $vv) {
@@ -272,7 +278,7 @@ trait CoreOrderCreateTrait
                             'discount_type' => $vv[ 'discount_type' ],
                             'discount_type_id' => $vv[ 'discount_type_id' ],
                             'content' => $vv[ 'content' ] ?? $vv[ 'title' ] ?? "",
-                            'order_id' => $this->order_id,
+                            'order_id' => $this->order_id
                         ];
                     }
                 }
@@ -385,6 +391,7 @@ trait CoreOrderCreateTrait
     public function setParam($param)
     {
         $this->param = $param;
+        $this->extend_data = $this->param[ 'extend_data' ] ?? [];
         return true;
     }
 
@@ -398,7 +405,9 @@ trait CoreOrderCreateTrait
         //查询积分优惠
 //        $this->getPoint();
         //满减送优惠计算
-        $this->calculateManjian();
+        if($this->join_manjian){
+            $this->calculateManjian();
+        }
         //查询可用优惠券
         $this->calculateCoupon();
     }
@@ -889,7 +898,7 @@ trait CoreOrderCreateTrait
             $goods_form = $this->form_data[ 'goods' ] ?? [];
             if (!empty($goods_form)) {
                 $order_goods_model = new OrderGoods();
-                $order_goods_list = $data = $order_goods_model->where([ [ 'order_id', '=', $order_id ] ])
+                $order_goods_list = $data = $order_goods_model->where([  [ 'order_id', '=', $order_id ] ])
                     ->field('order_goods_id,sku_id')->select()->toArray();
                 foreach ($goods_form as $k => $v) {
                     foreach ($order_goods_list as $ck => $cv) {
@@ -907,5 +916,36 @@ trait CoreOrderCreateTrait
                 }
             }
         }
+    }
+
+    /**
+     * 处理限时折扣
+     */
+    public function useDiscountActive()
+    {
+        if (!empty($this->goods_data)){
+            $insert_discount_data = [];
+            $discount_service = new CoreOrderDiscountService();
+            foreach ($this->goods_data as $k => $v) {
+                //排除赠品
+                if (empty($v['is_gift']) && isset($v['show_type']) && $v['show_type'] == GoodsDict::DISCOUNT_PRICE) {
+                    $insert_discount_data[] = [
+                        'order_id' => $this->order_id,
+                        'member_id' => $this->member_id,
+                        'goods_id' => $v['goods_id'],
+                        'sku_id' => $v['sku_id'],
+                        'type' => 'discount',
+                        'num' => $v[ 'num' ],
+                        'money' => $v[ 'goods_money' ],
+                        'discount_type' => ActiveDict::DISCOUNT,
+                        'discount_type_id' => $v[ 'active_id' ],
+                        'content' => "",
+                    ];
+                }
+            }
+
+            $discount_service->addAll($insert_discount_data);
+        }
+        return true;
     }
 }

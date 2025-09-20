@@ -451,10 +451,10 @@
 <script lang="ts" setup>
 import { ref, computed, onMounted, reactive } from 'vue'
 import { t } from '@/lang'
-import { img,deepClone } from '@/utils/common'
-import { FormInstance,ElMessage } from 'element-plus'
+import { img, deepClone } from '@/utils/common'
+import { FormInstance, ElMessage } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { getActiveExchangeInfo,editActiveExchange } from "@/addon/shop/api/marketing";
+import { getActiveExchangeInfo, editActiveExchange } from '@/addon/shop/api/marketing'
 import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
@@ -464,7 +464,7 @@ const pageName = route.meta.title
 const loading = ref(true)
 // 商品类型
 const goodsType = reactive([
-    {name:'商品',type:'goods'},
+    { name: '商品', type: 'goods' }
     // {name:'优惠券',type:'coupon'},
     // {name:'余额',type:'balance'},
 ])
@@ -507,11 +507,11 @@ const formRules = computed(() => {
         ],
         product_list: [
             { required: true, message: t('goodsSkuPlaceholder'), trigger: 'change' }
-        ],
+        ]
     }
 })
-//获取详情
-const getActiveExchangeInfoFn=(id:number)=> {
+// 获取详情
+const getActiveExchangeInfoFn = (id:number) => {
     loading.value = true
     getActiveExchangeInfo(id).then((res: any) => {
         formData.value = Object.assign(formData.value, res.data)
@@ -530,24 +530,24 @@ const getActiveExchangeInfoFn=(id:number)=> {
     })
 }
 onMounted(() => {
-    if(route.query.id) getActiveExchangeInfoFn(Number(route.query.id))
+    if (route.query.id) getActiveExchangeInfoFn(Number(route.query.id))
 })
-/********* 商品 **********/
-//设置商品sku是否参与
+/** ******* 商品 **********/
+// 设置商品sku是否参与
 const enabledEvent = (row:any) => {
     row.is_enabled = row.is_enabled ? 0 : 1
     if (formData.value.product_list.every((el: any) => el.is_enabled === 0)) {
         row.is_enabled = 1
         ElMessage({
             type: 'warning',
-            message: `${ t('noEnabledTip') }`
+            message: `${t('noEnabledTip')}`
         })
         return
     }
-    row.stock = '';
-    row.limit_num = '';
-    row.point = '';
-    row.price = '';
+    row.stock = ''
+    row.limit_num = ''
+    row.point = ''
+    row.price = ''
 }
 interface batchOperationInterface {
     stock:any,
@@ -556,10 +556,10 @@ interface batchOperationInterface {
     price:any,
 }
 const batchOperation = ref<batchOperationInterface>({
-    stock:'',
-    limit_num:'',
-    point:'',
-    price:'',
+    stock: '',
+    limit_num: '',
+    point: '',
+    price: ''
 })
 // 批量复选框
 const toggleCheckbox = ref()
@@ -592,8 +592,8 @@ const handleSelectionChange = (val: []) => {
         toggleCheckbox.value = true
     }
 }
-//批量设置确认按钮
-const saveBatch = ()=> {
+// 批量设置确认按钮
+const saveBatch = () => {
     if (!multipleSelection.value.length) {
         ElMessage({
             type: 'warning',
@@ -664,10 +664,10 @@ const saveBatch = ()=> {
     formData.value.product_list.forEach((el: any, index: number) => {
         multipleSelection.value.forEach((v: any) => {
             if (v.sku_id === el.sku_id) {
-                if(batchOperation.value.stock) el.stock = batchOperation.value.stock+''
-                if(batchOperation.value.limit_num) el.limit_num = batchOperation.value.limit_num+''
-                if(batchOperation.value.point) el.point = batchOperation.value.point+''
-                if(batchOperation.value.price) el.price = batchOperation.value.price+''
+                if (batchOperation.value.stock) el.stock = batchOperation.value.stock + ''
+                if (batchOperation.value.limit_num) el.limit_num = batchOperation.value.limit_num + ''
+                if (batchOperation.value.point) el.point = batchOperation.value.point + ''
+                if (batchOperation.value.price) el.price = batchOperation.value.price + ''
                 if (formRef.value) {
                     formRef.value.validateField('product_list.' + index + '.stock')
                     formRef.value.validateField('product_list.' + index + '.limit_num')
@@ -676,7 +676,6 @@ const saveBatch = ()=> {
                 }
             }
         })
-
     })
     isIndeterminate.value = false
     toggleCheckbox.value = false
@@ -688,8 +687,8 @@ const saveBatch = ()=> {
     }
     productListTableRef.value.clearSelection()
 }
-/********** 优惠券 ***********/
-/**** 提交 ****/
+/** ******** 优惠券 ***********/
+/** ** 提交 ****/
 const onSave = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return
     await formEl.validate(async (valid) => {
@@ -710,7 +709,7 @@ const onSave = async (formEl: FormInstance | undefined) => {
             } else if (formData.value.type == 'coupon') {
                 formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el: any) => {
                     return {
-                        coupon_id: el.id,
+                        coupon_id: el.id
                     }
                 }))
             } else {

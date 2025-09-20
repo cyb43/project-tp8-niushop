@@ -14,12 +14,11 @@
                     <view class="mb-[var(--top-m)] card-template">
                         <view @click.stop="toLink(item)">
                             <view class="flex justify-between items-center">
-                                <view class="text-[#303133] text-[26rpx] font-400 leading-[36rpx]">
-                                    <text>{{ t('orderNo') }}:</text>
-                                    <text class="ml-[10rpx]">{{ item.order_no }}</text>
-                                    <text class="text-[#303133] text-[26rpx] font-400 nc-iconfont nc-icon-fuzhiV6xx1 ml-[11rpx]" @click.stop="copy(item.order_no)"></text>
+                                <view class="text-[#303133] text-[24rpx] font-400 leading-[36rpx] flex items-center">
+                                    <view v-if="item.activity_type_name" class="text-primary text-[18rpx] border-primary border-[2rpx] border-solid rounded-[4rpx] leading-[24rpx] px-[3rpx]">{{ item.activity_type_name }}</view>
+                                    <view class="ml-[10rpx] text-[24rpx] font-400 text-[#303133]">{{ item.create_time }}</view> 
                                 </view>
-								<view v-if="item.status  == -1" class="text-[#303133] text-[26rpx] max-w-[85px] leading-[34rpx] truncate" :class="{'text-primary': item.status  == 1,'!text-[var(--text-color-light9)]' :item.status  == 5 || item.status  == -1}">{{ item.close_type_name }}</view>
+								<view v-if="item.status  == -1" class="text-[#303133] text-[26rpx] max-w-[150px] leading-[34rpx] truncate" :class="{'text-primary': item.status  == 1,'!text-[var(--text-color-light9)]' :item.status  == 5 || item.status  == -1}">{{ item.close_type_name }}</view>
                                 <view v-else class="text-[#303133] text-[26rpx] leading-[34rpx]" :class="{'text-primary': item.status  == 1,'!text-[var(--text-color-light9)]' :item.status  == 5 || item.status  == -1}">{{ item.status_name.name }}</view>
                             </view>
                             <template v-for="(subItem, index) in item.order_goods" :key="index">
@@ -58,7 +57,6 @@
                                             <view>
                                                 <view class="text-[24rpx] text-[var(--text-color-light6)] font-400 truncate leading-[34rpx] max-w-[369rpx] mb-[10rpx]" v-if="subItem.sku_name">{{ subItem.sku_name }}</view>
                                                 <view class="text-[24rpx] font-400 leading-[34rpx] text-[var(--text-color-light6)]" v-if="item.delivery_type != 'virtual'">{{ t('deliveryType') }} ： {{ item.delivery_type_name }}</view>
-                                                <view class="text-[24rpx] font-400 leading-[34rpx] text-[var(--text-color-light6)]" v-else>{{ t('createTime') }} ：{{ item.create_time }}</view>
                                             </view>
                                             <text class="text-right text-[26rpx] font-400 w-[90rpx] leading-[36rpx]">x{{ subItem.num }}</text>
                                         </view>
@@ -93,10 +91,10 @@
                             </view>
                         </view>
                         <view class="flex justify-end text-[28rpx] mt-[20rpx] items-center" v-if="(item.status == 1) || (item.status == 3) || (item.status == 5 && evaluateConfig.evaluate_is_show && evaluateConfig.is_evaluate == 1)">
-                            <view class="text-[24rpx] font-500 leading-[52rpx] h-[56rpx] min-w-[150rpx] text-center border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full text-[var(--text-color-light6)] box-border" v-if="item.status == 1" @click.stop="orderBtnFn(item, 'close')">{{ t('orderClose') }}</view>
+                            <view class="text-[24rpx] font-500 leading-[52rpx] h-[56rpx] min-w-[150rpx] text-center border-[2rpx] border-solid border-[#ccc] rounded-full text-[var(--text-color-light3)] box-border" v-if="item.status == 1" @click.stop="orderBtnFn(item, 'close')">{{ t('orderClose') }}</view>
                             <view class="text-[24rpx] font-500 flex-center h-[56rpx] min-w-[150rpx] text-center border-[0] text-[#fff] primary-btn-bg rounded-full ml-[20rpx] box-border" v-if="item.status == 1" @click.stop="orderBtnFn(item, 'pay')">{{ t('topay') }}</view>
                             <view class="text-[24rpx] font-500 flex-center h-[56rpx] min-w-[150rpx] text-center border-[0] text-[#fff] primary-btn-bg rounded-full ml-[20rpx] box-border" v-if="item.status == 3" @click.stop="orderBtnFn(item, 'finish')">{{ t('orderFinish') }}</view>
-                            <view class="text-[24rpx] font-500 leading-[52rpx] h-[56rpx] min-w-[150rpx] text-center border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full ml-[20rpx]  text-[var(--text-color-light6)] box-border"
+                            <view class="text-[24rpx] font-500 leading-[52rpx] h-[56rpx] min-w-[150rpx] text-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx]  text-[var(--text-color-light3)] box-border"
                                 v-if="item.status == 5 && evaluateConfig.evaluate_is_show && evaluateConfig.is_evaluate == 1"
                                 @click.stop="orderBtnFn(item, 'evaluate')">{{ item.is_evaluate == 1 ? t('selectedEvaluate') : t('evaluate') }}</view>
                         </view>

@@ -195,6 +195,7 @@ const goodsDetail = computed(() => {
         // 当前详情内容
         if (data.skuList && Object.keys(data.skuList).length) {
             data.skuList.forEach((idItem: any, idIndex: any) => {
+                idItem.sku_image = idItem.sku_image ? idItem.sku_image : data.goods.goods_cover
                 if (idItem.sku_id == currSpec.value.skuId) {
                     data.detail = idItem;
                     data.is_join_exchange = idItem.is_join_exchange;
@@ -264,7 +265,7 @@ const confirm = () => {
     }
 
     // 立即购买
-    var data = {
+    const data = {
         sku_id: goodsDetail.value.sku_id,
         num: buyNum.value
     };
@@ -288,7 +289,7 @@ const confirm = () => {
 //预览图片
 const imgListPreview = (item: any) => {
     if (item === '') return false
-    var urlList = []
+    const urlList = [];
     urlList.push(img(item))  //push中的参数为 :src="item.img_url" 中的图片地址
     uni.previewImage({
         indicator: "number",

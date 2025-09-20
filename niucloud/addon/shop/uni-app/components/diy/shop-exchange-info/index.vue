@@ -23,9 +23,10 @@ import { getExchangePoint } from '@/addon/shop/api/point';
 import { img, getToken } from '@/utils/common';
 import { t } from '@/locale'
 import useDiyStore from '@/app/stores/diy'
+import useSystemStore from "@/stores/system";
 
 const props = defineProps(['component', 'index', 'global']);
-
+const systemStore = useSystemStore()
 const diyStore = useDiyStore();
 const loading = ref(true)
 const diyComponent = computed(() => {
@@ -37,7 +38,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.bgUrl) {
         style += 'background-image:url(' + img(diyComponent.value.bgUrl) + ');';
         style += 'background-size: 100%;';
@@ -87,20 +88,14 @@ const getExchangePointFn = async() => {
     loading.value = false
 }
 
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
-
 // 导航栏内部盒子的样式
 const navbarInnerStyle = computed(() => {
     let style = '';
     // 导航栏宽度，如果在小程序下，导航栏宽度为胶囊的左边到屏幕左边的距离
     // #ifdef MP
     if (props.global.topStatusBar.isShow == false) {
-        style += 'height:' + menuButtonInfo.height + 'px;';
-        style += 'padding-top:' + menuButtonInfo.top + 'px;';
+        style += 'height:' + systemStore.menuButtonInfo.height + 'px;';
+        style += 'padding-top:' + systemStore.menuButtonInfo.top + 'px;';
     }
     // #endif
     return style;

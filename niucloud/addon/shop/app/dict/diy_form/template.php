@@ -19,6 +19,7 @@ return [
                     "imgWidth" => "",
                     "imgHeight" => "",
                     "topStatusBar" => [
+                        'control' => true,
                         "isShow" => true,
                         "bgColor" => "#ffffff",
                         "style" => "style-1",
@@ -33,7 +34,10 @@ return [
                             "name" => ""
                         ]
                     ],
-                    "bottomTabBarSwitch" => true,
+                    "bottomTabBar" => [
+                        'control' => true,
+                        'isShow' => true
+                    ],
                     "popWindow" => [
                         "imgUrl" => "",
                         "imgWidth" => "",
@@ -241,6 +245,7 @@ return [
                     "imgWidth" => "",
                     "imgHeight" => "",
                     "topStatusBar" => [
+                        'control' => true,
                         "isShow" => true,
                         "bgColor" => "#ffffff",
                         "style" => "style-1",
@@ -255,7 +260,10 @@ return [
                             "name" => ""
                         ]
                     ],
-                    "bottomTabBarSwitch" => true,
+                    "bottomTabBar" => [
+                        'control' => true,
+                        'isShow' => true
+                    ],
                     "popWindow" => [
                         "imgUrl" => "",
                         "imgWidth" => "",

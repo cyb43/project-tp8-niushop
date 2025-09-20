@@ -88,4 +88,16 @@ class Discount extends BaseModel
             $query->where("status", '=', $value);
         }
     }
+
+    /**
+     * 搜索器:id
+     * @param $value
+     * @param $data
+     */
+    public function searchActiveIdAttr($query, $value, $data)
+    {
+        if (!empty($value)) {
+            $query->where("discount_id", 'in', $value);
+        }
+    }
 }

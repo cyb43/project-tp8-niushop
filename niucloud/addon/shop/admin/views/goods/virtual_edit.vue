@@ -37,7 +37,7 @@
                             <el-input v-model.trim="goodsEdit.formData.goods_name" clearable :placeholder="t('goodsNamePlaceholder')" class="input-width" maxlength="60" show-word-limit />
                         </el-form-item>
                         <el-form-item :label="t('subTitle')" prop="sub_title">
-                            <el-input v-model.trim="goodsEdit.formData.sub_title" clearable :placeholder="t('subTitlePlaceholder')" class="input-width" maxlength="30" show-word-limit />
+                            <el-input v-model.trim="goodsEdit.formData.sub_title" clearable :placeholder="t('subTitlePlaceholder')" class="input-width" maxlength="100" show-word-limit />
                         </el-form-item>
                         <el-form-item :label="t('goodsImage')" prop="goods_image">
                             <upload-image v-model="goodsEdit.formData.goods_image" :limit="10" />
@@ -65,34 +65,12 @@
                         </el-form-item>
 
                         <el-form-item :label="t('brand')">
-                            <el-select v-model="goodsEdit.formData.brand_id" :placeholder="t('brandPlaceholder')" clearable>
+                            <el-select v-model="goodsEdit.formData.brand_id" :placeholder="t('brandPlaceholder')" clearable filterable remote reserve-keyword :remote-method="goodsEdit.refreshGoodsBrand">
                                 <el-option v-for="item in goodsEdit.brandOptions" :key="item.brand_id" :label="item.brand_name" :value="item.brand_id" />
                             </el-select>
                             <div class="ml-[10px]">
                                 <span class="cursor-pointer text-primary mr-[10px]" @click="goodsEdit.refreshGoodsBrand(true)">{{ t('refresh') }}</span>
                                 <span class="cursor-pointer text-primary" @click="goodsEdit.toGoodsBrandEvent">{{ t('addGoodsBrand') }}</span>
-                            </div>
-                        </el-form-item>
-
-                        <el-form-item :label="t('poster')">
-                            <el-select v-model="goodsEdit.formData.poster_id" :placeholder="t('posterPlaceholder')" clearable>
-                                <el-option v-for="item in goodsEdit.posterOptions" :key="item.id" :label="item.name" :value="item.id" />
-                            </el-select>
-                            <div class="ml-[10px]">
-                                <span class="cursor-pointer text-primary mr-[10px]" @click="goodsEdit.refreshGoodsPoster(true)">{{ t('refresh') }}</span>
-                                <span class="cursor-pointer text-primary" @click="goodsEdit.toPosterEvent">{{ t('addGoodsPoster') }}</span>
-                            </div>
-                        </el-form-item>
-
-                        <div class="ml-[120px] mb-[10px] text-[12px] text-[#999] leading-[20px]">{{ t('posterTips') }}</div>
-
-                        <el-form-item :label="t('diyForm')">
-                            <el-select v-model="goodsEdit.formData.form_id" :placeholder="t('diyFormPlaceholder')" clearable>
-                                <el-option v-for="item in goodsEdit.diyFormOptions" :key="item.form_id" :label="item.page_title" :value="item.form_id" />
-                            </el-select>
-                            <div class="ml-[10px]">
-                                <span class="cursor-pointer text-primary mr-[10px]" @click="goodsEdit.refreshDiyForm(true)">{{ t('refresh') }}</span>
-                                <span class="cursor-pointer text-primary" @click="goodsEdit.toDiyFormEvent">{{ t('addDiyForm') }}</span>
                             </div>
                         </el-form-item>
 
@@ -552,6 +530,39 @@
                     <el-form :model="goodsEdit.formData" label-width="120px" ref="detailFormRef" :rules="goodsEdit.formRules" class="page-form">
                         <el-form-item :label="t('goodsDesc')" prop="goods_desc">
                             <editor v-model="goodsEdit.formData.goods_desc" :height="600" class="editor-width" @handleBlur="goodsEdit.handleBlur" />
+                        </el-form-item>
+                    </el-form>
+                </el-tab-pane>
+                <el-tab-pane :label="t('advancedSetup')" name="diy">
+                    <el-form :model="goodsEdit.formData" label-width="120px" class="page-form">
+                        <el-form-item :label="t('diyDetailTemplate')">
+                            <el-select v-model="goodsEdit.formData.diy_detail_id" :placeholder="t('diyDetailTemplatePlaceholder')" clearable>
+                                <el-option v-for="item in goodsEdit.detailTemplateOptions" :key="item.id" :label="item.page_title" :value="item.id" />
+                            </el-select>
+                            <div class="ml-[10px]">
+                                <span class="cursor-pointer text-primary mr-[10px]" @click="goodsEdit.refreshDetailTemplate(true)">{{ t('refresh') }}</span>
+                                <span class="cursor-pointer text-primary" @click="goodsEdit.toDetailTemplateEvent">{{t('addDetailTemp')}}</span>
+                            </div>
+                        </el-form-item>
+                        <div class="ml-[120px] mb-[10px] text-[12px] -mt-[10px] text-[#999] leading-[20px]">{{t('detailTempTip')}}</div>
+                        <el-form-item :label="t('poster')">
+                            <el-select v-model="goodsEdit.formData.poster_id" :placeholder="t('posterPlaceholder')" clearable>
+                                <el-option v-for="item in goodsEdit.posterOptions" :key="item.id" :label="item.name" :value="item.id" />
+                            </el-select>
+                            <div class="ml-[10px]">
+                                <span class="cursor-pointer text-primary mr-[10px]" @click="goodsEdit.refreshGoodsPoster(true)">{{ t('refresh') }}</span>
+                                <span class="cursor-pointer text-primary" @click="goodsEdit.toPosterEvent">{{ t('addGoodsPoster') }}</span>
+                            </div>
+                        </el-form-item>
+                        <div class="-mt-[10px] ml-[120px] mb-[10px] text-[12px] text-[#999] leading-[20px]">{{ t('posterTips') }}</div>
+                        <el-form-item :label="t('diyForm')">
+                            <el-select v-model="goodsEdit.formData.form_id" :placeholder="t('diyFormPlaceholder')" clearable>
+                                <el-option v-for="item in goodsEdit.diyFormOptions" :key="item.form_id" :label="item.page_title" :value="item.form_id" />
+                            </el-select>
+                            <div class="ml-[10px]">
+                                <span class="cursor-pointer text-primary mr-[10px]" @click="goodsEdit.refreshDiyForm(true)">{{ t('refresh') }}</span>
+                                <span class="cursor-pointer text-primary" @click="goodsEdit.toDiyFormEvent">{{ t('addDiyForm') }}</span>
+                            </div>
                         </el-form-item>
                     </el-form>
                 </el-tab-pane>

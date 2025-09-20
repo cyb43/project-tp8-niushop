@@ -79,24 +79,24 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive } from "vue";
-import { t } from "@/lang";
-import { useRoute, useRouter } from "vue-router";
+import { ref, reactive } from 'vue'
+import { t } from '@/lang'
+import { useRoute, useRouter } from 'vue-router'
 import {
     getRankPageList,
     deleteGoodRank,
     batchDelete,
     modifyGoodsRankSort,
     editRankStatus
-} from "@/addon/shop/api/marketing";
-import { FormInstance, ElMessage, ElMessageBox } from "element-plus";
-import { debounce, setTablePageStorage, getTablePageStorage } from "@/utils/common";
+} from '@/addon/shop/api/marketing'
+import { FormInstance, ElMessage, ElMessageBox } from 'element-plus'
+import { debounce, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
-const router = useRouter();
-const route = useRoute();
-const pageName = route.meta.title;
-const repeat = ref(false);
-const searchFormRef = ref<FormInstance>();
+const router = useRouter()
+const route = useRoute()
+const pageName = route.meta.title
+const repeat = ref(false)
+const searchFormRef = ref<FormInstance>()
 
 // 表单内容
 const tableData = reactive({
@@ -106,28 +106,28 @@ const tableData = reactive({
     loading: false,
     data: [],
     searchParam: {
-        name: "",
+        name: '',
         order: '',
         sort: ''
-    },
-});
+    }
+})
 
 // 获取列表
 const loadRankList = (page: number = 1) => {
-    tableData.loading = true;
-    tableData.page = page;
+    tableData.loading = true
+    tableData.page = page
 
     getRankPageList({
         page: tableData.page,
         limit: tableData.limit,
-        ...tableData.searchParam,
+        ...tableData.searchParam
     }).then((res) => {
-        tableData.loading = false;
-        tableData.data = res.data.data;
-        tableData.total = res.data.total;
+        tableData.loading = false
+        tableData.data = res.data.data
+        tableData.total = res.data.total
         setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam)
     }).catch(() => {
-        tableData.loading = false;
+        tableData.loading = false
     })
 }
 
@@ -136,17 +136,17 @@ loadRankList(getTablePageStorage(tableData.searchParam).page)
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
-    tableData.searchParam.name = ""
+    tableData.searchParam.name = ''
     loadRankList()
 }
 
 // 添加榜单
 const handleChange = () => {
-    router.push("/shop/marketing/goods_rank/edit")
+    router.push('/shop/marketing/goods_rank/edit')
 }
 
 const editEvent = (data: any) => {
-    router.push("/shop/marketing/goods_rank/edit?rank_id=" + data.rank_id)
+    router.push('/shop/marketing/goods_rank/edit?rank_id=' + data.rank_id)
 }
 
 const showClick = (row: any) => {
@@ -160,10 +160,10 @@ const showClick = (row: any) => {
 
 // 删除
 const deleteEvent = (id: number) => {
-    ElMessageBox.confirm(t("deleteTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('deleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         deleteGoodRank(id).then(() => {
             loadRankList()
@@ -187,16 +187,16 @@ const sortChange = (event: any) => {
 }
 
 // 批量复选框
-const toggleCheckbox = ref();
+const toggleCheckbox = ref()
 
 // 复选框中间状态
-const isIndeterminate = ref(false);
+const isIndeterminate = ref(false)
 
 // 监听批量复选框事件
 const toggleChange = (value: any) => {
-    isIndeterminate.value = false;
+    isIndeterminate.value = false
     goodBankListTableRef.value.toggleAllSelection()
-};
+}
 
 const goodBankListTableRef = ref()
 
@@ -220,22 +220,22 @@ const handleSelectionChange = (val: []) => {
     if (multipleSelection.value.length == tableData.data.length) {
         toggleCheckbox.value = true
     }
-};
+}
 
 // 批量删除
 const batchDeleteGoods = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchGoodsDeleteTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchGoodsDeleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         if (repeat.value) return
         repeat.value = true
@@ -259,15 +259,15 @@ const batchDeleteGoods = () => {
 // 正则表达式
 const regExp = {
     number: /^\d{0,10}$/,
-    digit: /^\d{0,10}(.?\d{0,2})$/,
+    digit: /^\d{0,10}(.?\d{0,2})$/
 }
 
 // 修改排序号
 const sortInputListener = debounce((sort, row) => {
     if (isNaN(sort) || !regExp.number.test(sort)) {
         ElMessage({
-            type: "warning",
-            message: `${ t("sortTips") }`,
+            type: 'warning',
+            message: `${t('sortTips')}`
         })
         return
     }

@@ -241,13 +241,13 @@ import { cloneDeep } from 'lodash-es'
 const showDialog = ref(false)
 const loading = ref(false)
 const repeat = ref(false)
-let popTitle: string = '订单详情'
-let orderId = '';
+const popTitle: string = '订单详情'
+let orderId = ''
 
 const emit = defineEmits(['load', 'close-event'])
 
 const handleClose = (done: () => void) => {
-    showDialog.value = false;
+    showDialog.value = false
     emit('close-event')
 }
 
@@ -258,19 +258,19 @@ const activeName = ref('order')
  */
 const formData: Record<string, any> | null = ref(null)
 
-const getOrderInfoFn = async() => {
+const getOrderInfoFn = async () => {
     loading.value = true
     if (orderId) {
         await getOrderDetail(orderId).then(({ data }) => {
             formData.value = data
-            let refundOrderNum = 0;
+            let refundOrderNum = 0
             formData.value.order_goods.forEach((orderItem, orderIndex) => {
                 if (orderItem.is_enable_refund == 1) {
-                    refundOrderNum++;
+                    refundOrderNum++
                 }
-            });
-            formData.value.is_refund_show = refundOrderNum > 0 ? true : false;
-            loading.value = false;
+            })
+            formData.value.is_refund_show = refundOrderNum > 0
+            loading.value = false
         }).catch(() => {
         })
     } else {
@@ -318,10 +318,10 @@ const setNotes = () => {
 // 订单完成
 const finish = () => {
     ElMessageBox.confirm(t('orderFinishTips'), t('warning'), {
-            confirmButtonText: t('confirm'),
-            cancelButtonText: t('cancel'),
-            type: 'warning'
-        }
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
+    }
     ).then(() => {
         orderFinish(orderId).then(() => {
             setFormData(orderId)
@@ -342,9 +342,9 @@ const packageEvent = (id: number, mobile: number) => {
 const electronicSheetPrintDialog: Record<string, any> | null = ref(null)
 
 const openElectronicSheetPrintDialog = () => {
-    let data = {
+    const data = {
         print_type: 'single'
-    };
+    }
 
     Object.assign(data, cloneDeep(formData.value))
     electronicSheetPrintDialog.value.setFormData(data)
@@ -355,8 +355,8 @@ const openElectronicSheetPrintDialog = () => {
  * 修改地址
  */
 const orderEditAddressDialog: Record<string, any> | null = ref(null)
-const orderEditAddressFn = async() => {
-    let data = cloneDeep(formData.value);
+const orderEditAddressFn = async () => {
+    const data = cloneDeep(formData.value)
     orderEditAddressDialog.value.showDialog = true
     orderEditAddressDialog.value.setFormData(data)
 }
@@ -365,7 +365,7 @@ const orderEditAddressFn = async() => {
  * 打印小票
  */
 const printTicketEvent = () => {
-    if (!formData.value.order_id) return;
+    if (!formData.value.order_id) return
 
     if (repeat.value) return
     repeat.value = true
@@ -393,16 +393,16 @@ const refundEvent = () => {
     shopActiveRefundDialog.value.showDialog = true
 }
 
-const setFormData = async(row: any = null) => {
-    orderId = row.id;
-    formData.value = null;
-    activeName.value = 'order';
-    getOrderInfoFn();
+const setFormData = async (row: any = null) => {
+    orderId = row.id
+    formData.value = null
+    activeName.value = 'order'
+    getOrderInfoFn()
 }
 
 const resetFn = () => {
-    showDialog.value = false;
-    emit('load');
+    showDialog.value = false
+    emit('load')
 }
 
 defineExpose({

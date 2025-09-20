@@ -68,7 +68,7 @@ import { getCategoryTree, deleteCategory, updateCategory, editCategory } from '@
 import { img } from '@/utils/common'
 import { ElMessageBox } from 'element-plus'
 import categoryEdit from '@/addon/shop/views/goods/components/category-edit.vue'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import Sortable from 'sortablejs'
 import { useTemplateRefsList } from '@vueuse/core'
 import { cloneDeep } from 'lodash-es'
@@ -143,11 +143,11 @@ const rowDrop = () => {
 }
 
 /**
-  * 将树数据转化为平铺数据
-  * @param <Array> treeData当前要转的id
-  * @param <String> childKey 子级字段
-  * @return <Array> 返回数据
-  */
+ * 将树数据转化为平铺数据
+ * @param childKey
+ * @param treeData
+ * @param childKey
+ */
 const treeToTile = (treeData:any, childKey = 'child_list') => {
     const arr:Array<any> = []
     const expanded = (data:any) => {
@@ -228,13 +228,13 @@ const deleteEvent = (row: any) => {
 const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    const pagePath = "/addon/shop/pages/goods/list"
-    const columnName = "curr_goods_category"
-    const columnValue = data.category_id
-    const title = "商品分类推广"
-    const folder = "goods_category"
-
-    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
+    const pagePath = '/addon/shop/pages/goods/list'
+    const paramsArr = [
+        { name: 'curr_goods_category', value: data.category_id },
+    ];
+    const title = '商品分类推广'
+    const folder = 'goods_category'
+    spreadPopupRef.value?.show(pagePath, paramsArr, title, folder);
 }
 
 const router = useRouter()

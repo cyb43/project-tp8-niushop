@@ -23,7 +23,7 @@
                     </el-form-item>
 
                     <el-form-item :label="t('brand')" prop="brand_id">
-                        <el-select v-model="goodsTable.searchParam.brand_id" :placeholder="t('brandPlaceholder')" clearable>
+                        <el-select v-model="goodsTable.searchParam.brand_id" :placeholder="t('brandPlaceholder')" clearable filterable remote reserve-keyword :remote-method="getBrandListFn">
                             <el-option v-for="item in brandOptions" :key="item.brand_id" :label="item.brand_name" :value="item.brand_id" />
                         </el-select>
                     </el-form-item>
@@ -63,10 +63,10 @@
                 </el-tabs>
 
                 <div class="mb-[10px] flex items-center">
-                    <el-dropdown class="mr-[20px] !text-primary">
+                    <el-dropdown class="mr-[20px] !text-primary w-[125px]">
                         <span class="el-dropdown-link">
-                            <span>{{ currentSelectMode === 'all' ? t('全选所有页') : t('全选当前页')}}</span>({{ selectedCount }})
-                            <el-icon class="">
+                            <span>{{ currentSelectMode === 'all' ? t('全选所有页') : t('全选当前页')}}</span>(<span class="text-center inline-block">{{ selectedCount }}</span>)
+                            <el-icon> 
                                 <arrow-down />
                             </el-icon>
                         </span>
@@ -76,13 +76,12 @@
                                     全选所有页
                                 </el-dropdown-item>
                                 <el-dropdown-item class="select-wrap"  :class="{ active: currentSelectMode === 'page' }" @click="toggleChange">
-                                    全选当前页 
+                                    全选当前页
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
                     </el-dropdown>
 
-                    
                     <!-- <el-checkbox v-model="toggleCheckbox" size="large" class="px-[14px]" @change="toggleChange" :indeterminate="isIndeterminate" /> -->
                     <el-button @click="batchGoodsStatus(1)" size="small" v-if="goodsTable.searchParam.status != '1'">{{ t('batchOnGoods') }}</el-button>
                     <el-button @click="batchGoodsStatus(0)" size="small" v-if="goodsTable.searchParam.status != '0'">{{ t('batchOffGoods') }}</el-button>
@@ -113,14 +112,14 @@
                                     <span :title="row.goods_name" class="multi-hidden">{{ row.goods_name }}</span>
                                     <span class="text-primary text-[12px]">{{ row.goods_type_name }}</span>
                                     <span class="px-[4px]  text-[12px] text-[#fff] rounded-[4px] bg-primary leading-[18px]" v-if="row.is_gift == 1">赠品</span>
-                                    <div class="flex flex-wrap mt-[4px] gap-[4px]" @click.stop="activeclick()">
+                                    <div class="flex flex-wrap mt-[4px] gap-[4px]">
                                         <el-tooltip v-for="(item, index) in row.active" :key="index" placement="top">
                                             <template #content>
                                                 <div style="white-space: pre-wrap">
                                                     {{item.name.trim() || item.short?.active_name }}
-                                                </div>    
+                                                </div>
                                             </template>
-                                            <span class="text-[12px] text-white rounded-[4px] px-[4px] leading-[18px]" :style="{ backgroundColor: item.short?.bg_color || '#333' }">
+                                            <span class="text-[12px] text-white rounded-[4px] px-[4px] leading-[18px]"  @click.stop="activeclick(item)" :style="{ backgroundColor: item.short?.bg_color || '#333' }">
                                                 {{ item.short?.name }}
                                             </span>
                                         </el-tooltip>
@@ -218,7 +217,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref ,nextTick ,computed} from 'vue'
+import { reactive, ref, nextTick, computed } from 'vue'
 import { t } from '@/lang'
 import { debounce, img, filterDigit, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
@@ -228,7 +227,7 @@ import goodsMemberPricePopup from '@/addon/shop/views/goods/components/goods-mem
 import goodsStockEditPopup from '@/addon/shop/views/goods/components/goods-stock-edit-popup.vue'
 import goodsPriceEditPopup from '@/addon/shop/views/goods/components/goods-price-edit-popup.vue'
 import goodsBatchSettingsPopup from '@/addon/shop/views/goods/components/goods-batch-settings-popup.vue'
-import { getGoodsPageList, getCategoryTree, getGoodsType, getBrandList, getLabelList, editGoodsSort, editGoodsStatus, copyGoods, deleteGoods } from '@/addon/shop/api/goods'
+import { getGoodsPageList, getCategoryTree, getGoodsType, getBrandList, getLabelList, editGoodsSort, editGoodsStatus, copyGoods, deleteGoods,editGoodssingleStatus } from '@/addon/shop/api/goods'
 import { getMemberLevelAll } from '@/app/api/member'
 import spreadPopup from '@/components/spread-popup/index.vue'
 
@@ -277,7 +276,7 @@ const goodsCategoryProps = {
 const goodsType: any = reactive([])
 
 // 品牌列表下拉框
-const brandOptions: any = reactive([])
+const brandOptions: any = ref([])
 
 // 标签组列表下拉框
 const labelOptions: any = reactive([])
@@ -329,14 +328,6 @@ const initData = () => {
         }
     })
 
-    // 商品品牌
-    getBrandList({}).then((res) => {
-        const data = res.data
-        if (data) {
-            brandOptions.push(...data)
-        }
-    })
-
     // 商品标签
     getLabelList({}).then((res) => {
         const data = res.data
@@ -347,6 +338,12 @@ const initData = () => {
 }
 
 initData()
+// 商品品牌
+const getBrandListFn = (query = '') => {
+    getBrandList({brand_name: query}).then((res) => {
+        brandOptions.value = res.data
+    })
+}
 
 // 当前选中tab页面
 const tabHandleClick = (tab: any, event: Event) => {
@@ -356,7 +353,7 @@ const tabHandleClick = (tab: any, event: Event) => {
 }
 
 // 全选所有页时排除的 ID
-const excludedIds = ref<number[]>([])         
+const excludedIds = ref<number[]>([])
 // 是否全选所有页
 const isSelectAllPages = ref(false)
 
@@ -385,7 +382,6 @@ const toggleChange = () => {
             goodsListTableRef.value.toggleRowSelection(row, true)
         })
         multipleSelection.value = [...goodsTable.data]
-        
     }
     nextTick(() => {
         restoringSelection.value = false // 解锁
@@ -482,8 +478,56 @@ const previewEvent = (data: any) => {
     window.open(url.href)
 }
 
-const activeclick = (row: any) => {
-    
+const activeclick = (data: any) => {
+    if (data.list[0].join_type == 'impulse_buy') {
+        const routeUrl = router.resolve({
+            path: '/shop_impulse_buy/list',
+            query: {
+                active_id: data.list[0].join_id
+            }
+        })
+        window.open(routeUrl.href, '_blank')
+    } else if (data.list[0].join_type == 'discount') {
+        const routeUrl = router.resolve({
+            path: '/shop/marketing/discount/list',
+            query: {
+                active_id: data.list[0].join_id
+            }
+        })
+        window.open(routeUrl.href, '_blank')
+    } else if (data.list[0].join_type == 'gift_card') {
+        const routeUrl = router.resolve({
+            path: '/shop_giftcard/giftcard/list',
+            query: {
+                active_id: data.list[0].join_id
+            }
+        })
+        window.open(routeUrl.href, '_blank')
+    } else if (data.list[0].join_type == 'active_exchange') {
+        const routeUrl = router.resolve({
+            path: '/shop/marketing/exchange/goods_list',
+            query: {
+                active_id: data.list[0].join_id
+            }
+        })
+        window.open(routeUrl.href, '_blank')
+    } else if (data.list[0].join_type == 'active_newcomer_discount') {
+        const routeUrl = router.resolve({
+            path: '/shop/marketing/newcomer/config'
+            // query: {
+            //     active_id: data.list[0].join_id
+            // }
+        })
+        window.open(routeUrl.href, '_blank')
+    } else if (data.list[0].join_type == 'manjian') {
+        const routeUrl = router.resolve({
+            path: '/shop/marketing/manjian/list',
+            query: {
+                active_id: data.list[0].join_id
+            }
+        })
+        window.open(routeUrl.href, '_blank')
+    }
 }
 
 // 监听排序
@@ -504,8 +548,8 @@ const sortChange = (event: any) => {
 // 修改商品上下架状态
 const statusChange = (row: any, value: any) => {
     if (value) {
-        editGoodsStatus({
-            goods_ids: row.goods_id,
+        editGoodssingleStatus({
+            goods_id: row.goods_id,
             status: value
         }).then((res) => {
             loadGoodsList()
@@ -518,8 +562,8 @@ const statusChange = (row: any, value: any) => {
                 type: 'warning'
             }
         ).then(() => {
-            editGoodsStatus({
-                goods_ids: row.goods_id,
+            editGoodssingleStatus({
+                goods_id: row.goods_id,
                 status: value
             }).then((res) => {
                 loadGoodsList()
@@ -537,7 +581,7 @@ const batchGoodsStatus = (status: any) => {
     if (isNoneSelected) {
         ElMessage({
             type: 'warning',
-            message: `${ t('batchEmptySelectedGoodsTips') }`
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
@@ -598,7 +642,7 @@ const batchDeleteGoods = () => {
         deleteGoods({
             is_all: info.is_all,
             goods_ids: info.ids,
-            where:info.where,
+            where: info.where
         }).then(() => {
             isReset.value = true
             loadGoodsList()
@@ -614,7 +658,7 @@ const sortInputListener = debounce((sort, row) => {
     if (isNaN(sort) || !regExp.number.test(sort)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('sortTips') }`
+            message: `${t('sortTips')}`
         })
         return
     }
@@ -637,42 +681,42 @@ const loadGoodsList = (page: number = 1) => {
     if (goodsTable.searchParam.start_sale_num && !regExp.digit.test(goodsTable.searchParam.start_sale_num)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('startSaleNumTips') }`
+            message: `${t('startSaleNumTips')}`
         })
         return
     }
     if (goodsTable.searchParam.end_sale_num && !regExp.digit.test(goodsTable.searchParam.end_sale_num)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('endSaleNumTips') }`
+            message: `${t('endSaleNumTips')}`
         })
         return
     }
     if (Number(goodsTable.searchParam.start_sale_num) > Number(goodsTable.searchParam.end_sale_num)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('shopSaleNumTips') }`
+            message: `${t('shopSaleNumTips')}`
         })
         return
     }
     if (goodsTable.searchParam.start_price && !regExp.digit.test(goodsTable.searchParam.start_price)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('startPriceTips') }`
+            message: `${t('startPriceTips')}`
         })
         return
     }
     if (goodsTable.searchParam.end_price && !regExp.digit.test(goodsTable.searchParam.end_price)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('endPriceTips') }`
+            message: `${t('endPriceTips')}`
         })
         return
     }
     if (Number(goodsTable.searchParam.start_price) > Number(goodsTable.searchParam.end_price)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('shopPriceTips') }`
+            message: `${t('shopPriceTips')}`
         })
         return
     }
@@ -761,13 +805,13 @@ const editStockEvent = (data: any) => {
 const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    const pagePath = "/addon/shop/pages/goods/detail"
-    const columnName = "goods_id"
-    const columnValue = data.goods_id
-    const title = "商品推广"
-    const folder = "goods"
-
-    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
+    const pagePath = '/addon/shop/pages/goods/detail'
+    const paramsArr = [
+        { name: 'goods_id', value: data.goods_id },
+    ];
+    const title = '商品推广'
+    const folder = 'goods'
+    spreadPopupRef.value?.show(pagePath, paramsArr, title, folder);
 }
 
 /** ***************** 会员价-start *************************/
@@ -835,7 +879,9 @@ const deleteEvent = (id: number) => {
 
 // 批量重置全选状态
 const loadGoodsListReset = () => {
+    console.log('loadGoodsListReset')
     isReset.value = true
+    goodsBatchSettingPopupRef.value.showDialog = false
     loadGoodsList()
 }
 

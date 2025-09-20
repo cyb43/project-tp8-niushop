@@ -12,6 +12,11 @@
                     <el-form-item :label="t('goodsName')" prop="goods_name">
                         <el-input v-model.trim="evaluateTable.searchParam.goods_name" :placeholder="t('goodsNamePlaceholder')" class="input-width" maxlength="60" />
                     </el-form-item>
+                    <el-form-item :label="t('status')" prop="status">
+                        <el-select v-model="evaluateTable.searchParam.status" :placeholder="t('statusPlaceholder')" clearable>
+                            <el-option v-for="(item, index) in statusList" :key="index" :label="item" :value="index" />                        
+                        </el-select>
+                    </el-form-item>
                     <el-form-item>
                         <el-button type="primary" @click="loadEvaluateList()">{{ t('search') }}</el-button>
                         <el-button @click="resetForm(searchFormRef)">{{ t('reset') }}</el-button>
@@ -20,10 +25,17 @@
             </el-card>
 
             <div class="mt-[10px]">
-                <el-table :data="evaluateTable.data" size="large" v-loading="evaluateTable.loading">
+                <div class="mb-[10px] flex items-center">
+                    <el-checkbox v-model="toggleCheckbox" size="large" class="px-[14px]" @change="toggleChange" :indeterminate="isIndeterminate" />
+                    <el-button @click="batchDeleteEvent" size="small" >{{t("batchDelete")}}</el-button>
+                    <el-button @click="batchAdoptEvent" size="small"  >{{t("batchAdopt")}}</el-button>
+                    <el-button @click="batchRefuseEvent" size="small"  >{{t("batchRefuse")}}</el-button>
+                </div>
+                <el-table :data="evaluateTable.data" size="large" v-loading="evaluateTable.loading" ref="evaluateTableRef" @selection-change="handleSelectionChange">
                     <template #empty>
                         <span>{{ !evaluateTable.loading ? t('emptyData') : '' }}</span>
                     </template>
+                    <el-table-column type="selection" width="55" />
                     <el-table-column :label="t('goodsInfo')" min-width="120" align="left">
                         <template #default="{ row }">
                             <div class="flex cursor-pointer">
@@ -115,7 +127,7 @@
 <script lang="ts" setup>
 import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
-import { getEvaluateList, deleteEvaluate, adoptEvaluate, refuseEvaluate, replyEvaluate, toppingEvaluate, cancelToppingEvaluate } from '@/addon/shop/api/goods'
+import { getEvaluateList, deleteEvaluate, adoptEvaluate, refuseEvaluate, replyEvaluate, toppingEvaluate, cancelToppingEvaluate ,getEvaluateStatus,batchDelEvaluate,batchAdoptEvaluate,batchRefuseEvaluate} from '@/addon/shop/api/goods'
 import EvaluateAdd from '@/addon/shop/views/goods/components/evaluate-add.vue'
 import { img, setTablePageStorage,getTablePageStorage} from '@/utils/common'
 import { ElMessageBox, FormInstance } from 'element-plus'
@@ -131,7 +143,8 @@ const evaluateTable = reactive({
     loading: true,
     data: [],
     searchParam: {
-        goods_name: ''
+        goods_name: '',
+        status: ''
     }
 })
 
@@ -165,6 +178,14 @@ const loadEvaluateList = (page: number = 1) => {
 }
 loadEvaluateList(getTablePageStorage(evaluateTable.searchParam).page)
 
+const statusList = ref([])
+const getEvaluateStatusFn = () => {
+    getEvaluateStatus().then(res => {
+       statusList.value = res.data
+    })
+}
+getEvaluateStatusFn()
+
 const editEvaluateDialog: Record<string, any> | null = ref(null)
 /**
  * 添加商品评价
@@ -173,6 +194,129 @@ const addEvent = () => {
     editEvaluateDialog.value.setFormData()
     editEvaluateDialog.value.showDialog = true
 }
+
+
+// 批量复选框
+const toggleCheckbox = ref()
+
+// 复选框中间状态
+const isIndeterminate = ref(false)
+
+// 监听批量复选框事件
+const toggleChange = (value: any) => {
+    isIndeterminate.value = false
+    evaluateTableRef.value.toggleAllSelection()
+}
+
+const evaluateTableRef = ref()
+
+// 选中数据
+const multipleSelection: any = ref([])
+
+// 监听表格单行选中
+const handleSelectionChange = (val: []) => {
+    multipleSelection.value = val
+
+    toggleCheckbox.value = false
+    if (multipleSelection.value.length > 0 && multipleSelection.value.length < evaluateTable.data.length) {
+        isIndeterminate.value = true
+    } else {
+        isIndeterminate.value = false
+    }
+
+    if (multipleSelection.value.length == evaluateTable.data.length && evaluateTable.data.length && multipleSelection.value.length) {
+        toggleCheckbox.value = true
+    }
+}
+
+// 批量删除
+const batchDeleteEvent = () => {
+    if (multipleSelection.value.length == 0) {
+        ElMessage({
+            type: 'warning',
+            message: `${t('batchEmptySelectedCommentsTips')}`
+        })
+        return
+    }
+
+    ElMessageBox.confirm(t('batchDeleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
+    }).then(() => {
+        const evaluate_ids: any = []
+        multipleSelection.value.forEach((item: any) => {
+            evaluate_ids .push(item.evaluate_id)
+        })
+
+        batchDelEvaluate({
+            evaluate_ids: evaluate_ids
+        }).then(() => {
+            loadEvaluateList()
+        }).catch(() => {
+        })
+    })
+}
+
+// 批量审核通过
+const batchAdoptEvent = (status: number) => {
+    if (multipleSelection.value.length == 0) {
+        ElMessage({
+            type: 'warning',
+            message: t('batchEmptySelectedCommentsTips')
+        })
+        return
+    }
+
+    ElMessageBox.confirm(t('batchAdoptTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
+    }).then(() => {
+        const evaluate_ids: any = []
+        multipleSelection.value.forEach((item: any) => {
+            evaluate_ids .push(item.evaluate_id)
+        })
+
+        batchAdoptEvaluate({
+            evaluate_ids: evaluate_ids
+        }).then(() => {
+            loadEvaluateList()
+        }).catch(() => {
+        })
+    })
+}
+
+
+// 批量审核拒绝
+const batchRefuseEvent = (status: number) => {
+    if (multipleSelection.value.length == 0) {
+        ElMessage({
+            type: 'warning',
+            message: t('batchEmptySelectedCommentsTips')
+        })
+        return
+    }
+
+    ElMessageBox.confirm(t('batchRefuseTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
+    }).then(() => {
+        const evaluate_ids: any = []
+        multipleSelection.value.forEach((item: any) => {
+            evaluate_ids .push(item.evaluate_id)
+        })
+
+        batchRefuseEvaluate({
+            evaluate_ids: evaluate_ids
+        }).then(() => {
+            loadEvaluateList()
+        }).catch(() => {
+        })
+    })
+}
+
 
 /**
  * 删除商品评价

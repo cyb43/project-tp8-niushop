@@ -30,13 +30,13 @@
                         </el-form-item>
                         <template v-if="formData.delivery_type == 'store'">
                             <el-form-item :label="t('storeTakerName')">
-                                <div class="input-width">{{ formData.taker_name }}</div>
+                                <div class="input-width">{{ formData.taker_name || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('buyersReserveMobile')">
-                                <div class="input-width">{{ formData.taker_mobile }}</div>
+                                <div class="input-width">{{ formData.taker_mobile || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('verifyCode')" v-if="formData.verify_code">
-                                <div class="input-width">{{ formData.verify_code }}</div>
+                                <div class="input-width">{{ formData.verify_code || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('verifierMember')" v-if="formData.verifier_member">
                                 <div class="input-width text-primary cursor-pointer" @click="memberEvent(formData.verifier_member.member_id)">{{ formData.verifier_member.nickname }}</div>
@@ -56,13 +56,13 @@
                         </el-form-item>
                         <div v-if="formData.delivery_type == 'express' || formData.delivery_type == 'local_delivery'">
                             <el-form-item :label="t('takerName')">
-                                <div class="input-width">{{ formData.taker_name }}</div>
+                                <div class="input-width">{{ formData.taker_name || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('takerMobile')">
-                                <div class="input-width">{{ formData.taker_mobile }}</div>
+                                <div class="input-width">{{ formData.taker_mobile || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('takerFullAddress')">
-                                <div class="input-width">{{ formData.taker_full_address }}</div>
+                                <div class="input-width">{{ formData.taker_full_address || '--' }}</div>
                             </el-form-item>
                         </div>
                         <div v-if="formData.delivery_type == 'local_delivery' && formData.buyer_ask_delivery_time">
@@ -72,13 +72,13 @@
                         </div>
                         <div v-if="formData.delivery_type == 'store'">
                             <el-form-item :label="t('storeName')">
-                                <div class="input-width">{{ formData.store.store_name }}</div>
+                                <div class="input-width">{{ formData.store.store_name || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('storeAddress')">
-                                <div class="input-width">{{ formData.store.full_address }}</div>
+                                <div class="input-width">{{ formData.store.full_address || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('storeMobile')">
-                                <div class="input-width">{{ formData.store.store_mobile }}</div>
+                                <div class="input-width">{{ formData.store.store_mobile || '--'  }}</div>
                             </el-form-item>
                             <el-form-item :label="t('tradeTime')">
                                 <div class="input-width">{{ formData.store.trade_time }}</div>
@@ -94,6 +94,9 @@
                         </el-form-item>
                         <el-form-item :label="t('notes')">
                             <div class="input-width line-feed">{{ formData.shop_remark ?? '--' }}</div>
+                        </el-form-item>
+                        <el-form-item :label="t('来源记录')">
+                            <div class="input-width line-feed">{{formData.activity_type=='giftcard'?'礼品卡':formData.activity_type=='exchange'?'积分商城':formData.activity_type=='discount'?'限时折扣':formData.activity_type=='seckill'?'秒杀':formData.activity_type=='pintuan'?'拼团':formData.activity_type=='newcomer_discount'?'新人专享':formData.activity_type=='manjiansong'?'满减送':'商品'}}</div>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -165,7 +168,7 @@
                 <el-table :data="formData.order_goods" size="large">
                     <el-table-column :label="t('goodsName')" align="left" width="300">
                         <template #default="{ row }">
-                            <div class="flex">
+                            <div class="flex cursor-pointer" @click="previewEvent(row)">
                                 <div class="flex items-center shrink-0">
                                     <img class="w-[50px] h-[50px] mr-[10px]" :src="img(row.goods_image)" />
                                 </div>
@@ -485,6 +488,17 @@ const memberEvent = (id: number) => {
         query: { id }
     })
     window.open(routeUrl.href, '_blank')
+}
+
+// 商品预览
+const previewEvent = (data: any) => {
+    const url = router.resolve({
+        path: '/preview/wap',
+        query: {
+            page: `/addon/shop/pages/goods/detail?goods_id=${data.goods_id}`
+        }
+    })
+    window.open(url.href)
 }
 </script>
 

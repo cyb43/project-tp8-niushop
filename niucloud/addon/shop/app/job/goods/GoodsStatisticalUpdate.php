@@ -25,7 +25,7 @@ class GoodsStatisticalUpdate extends BaseJob
      */
     public function doJob()
     {
-        Log::write(' 商品统计更新');
+        //Log::write(' 商品统计更新');
         try {
             (new StatisticsService())->syncStatGoods();
             return true;

@@ -30,4 +30,21 @@ class ElectronicSheetDict
         return $type_list[ $type ] ?? '';
     }
 
+
+    /**
+     * 快递100 支付方式类型
+     * @param $type
+     * @return string|string[]
+     */
+    public static function getKd100PayType($type = '')
+    {
+        $type_list = [
+            1 =>"SHIPPER",
+            2 =>"CONSIGNEE",
+            3 =>"THIRDPARTY"
+        ];
+        if ($type == '') return $type_list;
+        return $type_list[ $type ] ?? '';
+    }
+
 }

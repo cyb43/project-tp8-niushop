@@ -57,6 +57,15 @@ export function orderClose(order_id: number) {
 }
 
 /**
+ * 订单删除
+ * @return
+ */
+export function orderDelete(params: Record<string, any>) {
+    return request.post(`shop/order/delete`,params, { showSuccessMessage: true })
+}
+
+
+/**
  * 获取订单配送方式
  * @return
  */

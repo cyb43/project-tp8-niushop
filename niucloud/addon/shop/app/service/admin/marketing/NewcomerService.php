@@ -76,7 +76,7 @@ class NewcomerService extends BaseAdminService
             $data[ 'active_class' ] = ActiveDict::NEWCOMER_DISCOUNT;
             $data[ 'active_value' ] = $active_value;
 
-            $info = $this->model->where([ [ 'active_class', '=', ActiveDict::NEWCOMER_DISCOUNT ] ])->findOrEmpty();
+            $info = $this->model->where([[ 'active_class', '=', ActiveDict::NEWCOMER_DISCOUNT ] ])->findOrEmpty();
             if ($info->isEmpty()) {
                 ( new CoreActiveService() )->add($data);
             } else {
@@ -98,10 +98,10 @@ class NewcomerService extends BaseAdminService
         if (!empty($value[ 'active_id' ])) {
             $active_goods = ( new ActiveGoods() )->field('goods_id,sku_id,active_goods_value')->where([ [ 'active_id', '=', $value[ 'active_id' ] ], [ 'active_class', '=', ActiveDict::NEWCOMER_DISCOUNT ] ])
                 ->with([
-                    'goods' => function($query) {
-                        $query->field('goods_id,goods_name,goods_type')->append([ 'goods_type_name' ]);
+                    'goods' => function ($query) {
+                        $query->field('goods_id,goods_name,goods_type,goods_cover')->append([ 'goods_type_name', 'goods_cover_thumb_mid' ]);
                     },
-                    'goodsSkuOne' => function($query) {
+                    'goodsSkuOne' => function ($query) {
                         $query->field('sku_id,sku_name,sku_image,goods_id,price,stock');
                     }
                 ])
@@ -113,6 +113,9 @@ class NewcomerService extends BaseAdminService
                     $item[ 'goods_type_name' ] = $item[ 'goods' ][ 'goods_type_name' ];
                     $item[ 'sku_name' ] = $item[ 'goodsSkuOne' ][ 'sku_name' ];
                     $item[ 'sku_image' ] = $item[ 'goodsSkuOne' ][ 'sku_image' ];
+                    if (empty($item[ 'sku_image' ])) {
+                        $item[ 'sku_image' ] = $item[ 'goods' ][ 'goods_cover_thumb_mid' ];
+                    }
                     $item[ 'price' ] = $item[ 'goodsSkuOne' ][ 'price' ];
                     $item[ 'stock' ] = $item[ 'goodsSkuOne' ][ 'stock' ];
                     $item[ 'active_goods_value' ] = json_decode($item[ 'active_goods_value' ], true);
@@ -224,7 +227,7 @@ class NewcomerService extends BaseAdminService
                 'goodsSku' => [ 'sku_id', 'sku_name', 'goods_id', 'price', 'stock', 'sku_spec_format' ],
             ])
             ->with([
-                'skuList' => function(Query $query) use ($active_sku_ids) {
+                'skuList' => function (Query $query) use ($active_sku_ids) {
                     $query->where([ [ 'sku_id', 'in', $active_sku_ids ] ]);
                 }
             ])
@@ -294,7 +297,7 @@ class NewcomerService extends BaseAdminService
             $select_goods_list = $goods_model
                 ->field($field)
                 ->with([
-                    'skuList' => function(Query $query) use ($active_sku_ids) {
+                    'skuList' => function (Query $query) use ($active_sku_ids) {
                         $query->where([ [ 'sku_id', 'in', $active_sku_ids ] ]);
                     }
                 ])
@@ -349,7 +352,7 @@ class NewcomerService extends BaseAdminService
             $select_goods_list = $goods_model
                 ->field($field)
                 ->with([
-                    'skuList' => function(Query $query) use ($verify_sku_ids) {
+                    'skuList' => function (Query $query) use ($verify_sku_ids) {
                         $query->where([ [ 'sku_id', 'in', $verify_sku_ids ] ]);
                     }
                 ])

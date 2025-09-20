@@ -39,16 +39,24 @@
             </view>
         </view>
         <u-popup :show="labelPopup" mode="top" @close="labelPopup = false">
-            <view @touchmove.prevent.stop>
-                <view class="text-[28rpx] px-[30rpx] mt-[40rpx]">全部分类</view>
-                <view class="flex flex-wrap pl-[30rpx] pt-[30rpx]">
-                    <text @click="loadCategory(item.category_id)" v-for="(item, index) in categoryList"
-                          :key="item.category_id"
-                          :class="{ 'label-select': currGoodsCategory == item.category_id }"
-                          class="truncate text-[#333] px-[10rpx] border-[2rpx] border-solid border-transparent w-[184rpx] h-[56rpx] flex items-center justify-center mr-[30rpx] mb-[30rpx] box-border bg-[var(--temp-bg)] rounded-[50rpx] text-[24rpx]">
-                        {{ item.category_name }}
-                    </text>
-                </view>
+            <view @touchmove.prevent.stop class="h-[50vh] overflow-auto mt-[30rpx]">
+				<view v-for="(item, index) in categoryList" :key="index">
+					<view class="text-[28rpx] px-[20rpx] mt-[10rpx]">{{item.category_name}}</view>
+					<view class="flex flex-wrap pl-[20rpx] pt-[20rpx]">
+						<text @click="loadCategory(item.category_id)"
+						       :key="item.category_id"
+						       :class="{ 'label-select': currGoodsCategory == item.category_id }"
+						       class="truncate text-[#333] border-[2rpx] border-solid border-transparent w-[162rpx] h-[56rpx] flex items-center justify-center mr-[20rpx] mb-[30rpx] box-border bg-[var(--temp-bg)] rounded-[50rpx] text-[24rpx]">
+						    全部
+						</text>
+					   <text @click="loadCategory(subItem.category_id)"  v-for="(subItem,index) in item.child_list"
+					          :key="subItem.category_id"
+					          :class="{ 'label-select': currGoodsCategory == subItem.category_id }"
+					          class="truncate text-[#333] border-[2rpx] border-solid border-transparent w-[162rpx] h-[56rpx] flex items-center justify-center mr-[20rpx] mb-[30rpx] box-border bg-[var(--temp-bg)] rounded-[50rpx] text-[24rpx]">
+					        {{ subItem.category_name }}
+					    </text>
+					</view>
+				</view>
             </view>
         </u-popup>
 
@@ -58,10 +66,15 @@
                     <view v-for="(item, index) in goodsList" :key="index"
                           class="bg-white flex px-[20rpx] py-[24rpx] rounded-[var(--rounded-small)] overflow-hidden top-mar"
                           :class="{ 'mb-[20rpx]': (index+1) == goodsList.length}" @click="toDetail(item.goods_id)">
+
+<!--                        <easy-image class="w-[190rpx] h-[190rpx]" image-class="rounded-[var(&#45;&#45;rounded-mid)]"-->
+<!--                            :image-src="item.goods_cover_thumb_small" />-->
+
                         <image v-if="item.goods_cover_thumb_mid" class="w-[190rpx] h-[190rpx] rounded-[var(--rounded-mid)]"
                                :src="img(item.goods_cover_thumb_mid)" :mode="'aspectFill'"
                                @error="item.goods_cover_thumb_mid='static/resource/images/diy/shop_default.jpg'"/>
                         <image v-else class="w-[190rpx] h-[190rpx] rounded-[var(--rounded-mid)]" :src="img('static/resource/images/diy/shop_default.jpg')" :mode="'aspectFill'"/>
+
                         <view class="flex-1 flex flex-col ml-[20rpx] py-[6rpx]">
                             <view class="text-[28rpx] text-[#333] leading-[40rpx] multi-hidden mb-[10rpx]">
                                 <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
@@ -107,6 +120,9 @@
                         <template v-for="(item, index) in goodsList">
                             <view v-if="(index%2) == 0" class="flex flex-col bg-[#fff] box-border rounded-[var(--rounded-mid)] overflow-hidden mt-[var(--top-m)]"
                                   @click="toDetail(item.goods_id)">
+
+<!--                                <easy-image class="w-[100%] h-[344rpx]" image-class="rounded-tl-[var(&#45;&#45;rounded-mid)] rounded-tr-[var(&#45;&#45;rounded-mid)]"-->
+<!--                                                :image-src="item.goods_cover_thumb_small" />-->
                                 <image v-if="item.goods_cover_thumb_mid"
                                        class="w-[100%] h-[344rpx] rounded-tl-[var(--rounded-mid)] rounded-tr-[var(--rounded-mid)]"
                                        :src="img(item.goods_cover_thumb_mid)" :mode="'aspectFill'"
@@ -115,6 +131,7 @@
                                        class="w-[100%] h-[344rpx] rounded-tl-[var(--rounded-mid)] rounded-tr-[var(--rounded-mid)]"
                                        :src="img('static/resource/images/diy/shop_default.jpg')"
                                        :mode="'aspectFill'"/>
+
                                 <view class="px-[20rpx] flex-1 pt-[16rpx] pb-[24rpx] flex flex-col justify-between">
                                     <view class="text-[#303133] leading-[40rpx] text-[28rpx] multi-hidden">
                                         <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
@@ -149,6 +166,8 @@
                     <view>
                         <template v-for="(item, index) in goodsList">
                             <view v-if="(index%2) == 1" class="flex flex-col bg-[#fff] box-border rounded-[var(--rounded-mid)] overflow-hidden mt-[var(--top-m)]" @click="toDetail(item.goods_id)">
+<!--                                <easy-image class="w-[100%] h-[344rpx]" image-class="rounded-tl-[var(&#45;&#45;rounded-mid)] rounded-tr-[var(&#45;&#45;rounded-mid)]"-->
+<!--                                                :image-src="item.goods_cover_thumb_small" />-->
                                 <image v-if="item.goods_cover_thumb_mid"
                                        class="w-[100%] h-[344rpx] rounded-tl-[var(--rounded-mid)] rounded-tr-[var(--rounded-mid)]"
                                        :src="img(item.goods_cover_thumb_mid)" :mode="'aspectFill'"
@@ -246,7 +265,6 @@ interface mescrollStructure {
     num: number,
     size: number,
     endSuccess: Function,
-
     [propName: string]: any
 }
 
@@ -275,6 +293,10 @@ const getAllAppListFn = (mescroll: mescrollStructure) => {
         mescroll.endErr(); // 请求失败, 结束加载
     })
 }
+
+onPageScroll((e)=> {
+    // uni.$emit('scroll')
+})
 
 const loadCategory = (id: string) => {
     currGoodsCategory.value = id;

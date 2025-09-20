@@ -32,6 +32,7 @@
                                             <image class="w-[130rpx] h-[130rpx] rounded-[var(--goods-rounded-big)] overflow-hidden" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                         </template>
                                     </u--image>
+<!--                                    <easy-image class="w-[130rpx] h-[130rpx]" image-class="rounded-[var(&#45;&#45;goods-rounded-big)]" :image-src="goods.goods_cover_thumb_small" />-->
                                 </view>
                                 <view class="flex flex-col">
                                     <view class="leading-[1.3] multi-hidden w-[290rpx] text-[28rpx] whitespace-normal">{{ goods.goods_name }}</view>
@@ -77,7 +78,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -92,7 +93,7 @@ const warpCss = computed(() => {
 })
 
 const swiperItemCss = (data: any) => {
-    var style = '';
+    let style = '';
     if (data.listFrame.startColor) {
         if (data.listFrame.startColor && data.listFrame.endColor) style += 'background: linear-gradient(90deg, ' + data.listFrame.startColor + ', ' + data.listFrame.endColor + ');';
         else style = 'background-color:' + data.listFrame.startColor + ';';

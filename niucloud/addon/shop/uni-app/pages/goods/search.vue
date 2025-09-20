@@ -211,7 +211,7 @@ const rankingComponent = {
         width: 100%;
         height: 100%;
         background: #ffffff;
-        padding: 16rpx 20rpx 0rpx 20rpx;
+        padding: 16rpx 20rpx 0 20rpx;
 
         box-sizing: border-box;
         overflow: hidden;
@@ -248,7 +248,7 @@ const rankingComponent = {
                     background: var(--temp-bg) !important;
                     height: 56rpx;
                     color: #333 !important;
-                    margin: 0 0rpx 4rpx 0 !important;
+                    margin: 0 0 4rpx 0 !important;
                     padding: 0 24rpx;
                     overflow: hidden;
                     white-space: nowrap;

@@ -170,6 +170,7 @@ const show = (data: any, levelData: any) => {
     })
     loadGoodsList()
     showDialog.value = true
+    saveLoad = false
 }
 
 /** ******* 批量复选框-start *************/
@@ -270,7 +271,6 @@ const save = () => {
     }).then(res => {
         showDialog.value = false
         emit('load')
-        saveLoad = false
     }).catch(() => {
         saveLoad = false
         showDialog.value = false

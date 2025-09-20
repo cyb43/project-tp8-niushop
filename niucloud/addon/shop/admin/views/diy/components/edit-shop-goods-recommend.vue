@@ -145,9 +145,9 @@ onMounted(() => {
             }
         })
 
-        let listNum = diyStore.editComponent.list.length;
-        let goodsIdNum = diyStore.editComponent.goods_ids.length;
-        diyStore.editComponent.goods_ids.splice(listNum, goodsIdNum);
+        const listNum = diyStore.editComponent.list.length
+        const goodsIdNum = diyStore.editComponent.goods_ids.length
+        diyStore.editComponent.goods_ids.splice(listNum, goodsIdNum)
     })
 })
 
@@ -168,17 +168,17 @@ const addItem = () => {
             endColor: '#FFF5F0'
         },
         button: {
-            text: "首单",
-            textColor: "#FFFFFF",
-            color: "#FF1128",
+            text: '首单',
+            textColor: '#FFFFFF',
+            color: '#FF1128'
         },
-        goodsId: [],
+        goodsId: []
     })
 }
 
 const deleteTempFn = (index) => {
-    diyStore.editComponent.list.splice(index, 1);
-    diyStore.editComponent.goods_ids.splice(index, 1);
+    diyStore.editComponent.list.splice(index, 1)
+    diyStore.editComponent.goods_ids.splice(index, 1)
 }
 
 defineExpose({})

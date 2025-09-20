@@ -42,16 +42,16 @@ const importData = ref({
 })
 
 // 重置数据
-const initDataFn = ()=>{
-    importData.value.type = 'order';
-    importData.value.path = '';
-    refundDialogLoading.value = false;
+const initDataFn = () => {
+    importData.value.type = 'order'
+    importData.value.path = ''
+    refundDialogLoading.value = false
 }
 
 // 打开弹窗
 const open = () => {
-    initDataFn();
-    importDialog.value = true;
+    initDataFn()
+    importDialog.value = true
 }
 const refundDialogLoading = ref(false)
 
@@ -61,10 +61,10 @@ const refundDialogConfirm = async (formEl: FormInstance | undefined) => {
     await formEl.validate(async (valid) => {
         if (valid) {
             refundDialogLoading.value = true
-            const data = {'data': importData.value}
+            const data = { data: importData.value }
             addBatchOrderDelivery(data).then((res) => {
-                emit('complete');
-                importDialog.value = false;
+                emit('complete')
+                importDialog.value = false
             }).catch(() => {
                 refundDialogLoading.value = false
             })
@@ -74,9 +74,9 @@ const refundDialogConfirm = async (formEl: FormInstance | undefined) => {
 const importDataFormRef = ref<FormInstance>()
 
 const examineTemplate = () => {
-    let url = `${ import.meta.env.VITE_IMG_DOMAIN || location.origin }/addon/shop/batch/batch_delivery_order.xls`;
+    let url = `${import.meta.env.VITE_IMG_DOMAIN || location.origin}/addon/shop/batch/batch_delivery_order.xls`
     if (importData.value.type == 'order_goods') {
-        url = `${ import.meta.env.VITE_IMG_DOMAIN || location.origin }/addon/shop/batch/batch_delivery_order_goods.xls`;
+        url = `${import.meta.env.VITE_IMG_DOMAIN || location.origin}/addon/shop/batch/batch_delivery_order_goods.xls`
     }
     window.open(url)
 }

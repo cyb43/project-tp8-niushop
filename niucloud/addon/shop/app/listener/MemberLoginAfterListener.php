@@ -23,7 +23,7 @@ class MemberLoginAfterListener
 {
     public function handle(array $params)
     {
-        Log::write('MemberLoginAfterListener:' . json_encode($params));
+        //Log::write('MemberLoginAfterListener:' . json_encode($params));
         //登录后判断是否是新人专享活动新人，如果未参与过，给与参与资格
         $core_newcomer_service = new CoreNewcomerService();
         $core_newcomer_service->checkIfNewcomer($params[ 'member_id' ]);

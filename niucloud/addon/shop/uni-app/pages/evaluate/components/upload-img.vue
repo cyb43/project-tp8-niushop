@@ -85,7 +85,7 @@ const deleteImg = (index: number) => {
 //预览图片
 const imgListPreview = (item: any) => {
     if (item === '') return false
-    var urlList = []
+    const urlList = [];
     urlList.push(img(item))  //push中的参数为 :src="item.img_url" 中的图片地址
     uni.previewImage({
         indicator: "number",

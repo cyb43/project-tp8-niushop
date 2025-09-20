@@ -138,11 +138,11 @@ const tableData = reactive({
     searchParam: {
         names: '',
         status: '',
-        create_time: []
+        create_time: [],
+        active_id: route.query.active_id || ''
     }
 })
 const searchFormRef = ref<FormInstance>()
-
 
 const tabHandleClick = (tab: any, event: Event) => {
     tableData.searchParam.status = tab.props.name
@@ -193,12 +193,12 @@ const loadExchangeGoodsList = (page: number = 1) => {
         tableData.loading = false
         tableData.data = res.data.data
         tableData.total = res.data.total
-        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam);
+        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam)
     }).catch(() => {
         tableData.loading = false
     })
 }
-loadExchangeGoodsList(getTablePageStorage(tableData.searchParam).page);
+loadExchangeGoodsList(getTablePageStorage(tableData.searchParam).page)
 // 获取状态列表
 const statusOption = ref([])
 const getActiveExchangeStatusFn = () => {
@@ -220,12 +220,13 @@ const editEvent = (id: number) => {
 const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    const pagePath = "/addon/shop/pages/point/detail"
-    const columnName = "id"
-    const columnValue = data.id
-    const title = "积分商品推广"
-    const folder = "goods"
-    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
+    const pagePath = '/addon/shop/pages/point/detail'
+    const paramsArr = [
+        { name: 'id', value: data.id },
+    ];
+    const title = '积分商品推广'
+    const folder = 'goods'
+    spreadPopupRef.value?.show(pagePath, paramsArr, title, folder);
 }
 // 上下架
 const statusEvent = (id: number, status: number) => {
@@ -262,16 +263,16 @@ const deleteEvent = (id: number) => {
 const batchDeleteEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchDeleteTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchDeleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const exchange_ids: any = []
         multipleSelection.value.forEach((item: any) => {
@@ -291,16 +292,16 @@ const batchDeleteEvent = () => {
 const batchDownEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchDownTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchDownTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const exchange_ids: any = []
         multipleSelection.value.forEach((item: any) => {
@@ -320,16 +321,16 @@ const batchDownEvent = () => {
 const batchUpEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchUpTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchUpTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const exchange_ids: any = []
         multipleSelection.value.forEach((item: any) => {

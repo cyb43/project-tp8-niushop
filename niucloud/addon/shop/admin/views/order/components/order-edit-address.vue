@@ -159,7 +159,7 @@ const companyPass = (rule: any, value: any, callback: any) => {
 }
 
 const ContactInformation = (rule: any, value: any, callback: any) => {
-    if (formData.delivery_type == 'express' || formData.delivery_type =='local_delivery') {
+    if (formData.delivery_type == 'express' || formData.delivery_type == 'local_delivery') {
         const reg = /^1[3-9]\d{9}$/
         if (value === '') {
             callback(new Error(t('ContactInformationPlaceholder')))
@@ -307,14 +307,13 @@ const initMap = () => {
         })
         latLngChange(evt.latLng.lat, evt.latLng.lng)
     })
-    if(changeDeliveryType.value =='local_delivery'){
+    if (changeDeliveryType.value == 'local_delivery') {
         latLngChange(center.lat, center.lng)
     }
 }
 
 const latLngChange = (lat: number, lng: number) => {
     latLngToAddress({ mapKey, lat, lng }).then(({ message, result }) => {
-
         if (message == 'query ok' || message == 'Success') {
             formData.taker_latitude = result.location.lat
             formData.taker_longitude = result.location.lng
@@ -531,9 +530,9 @@ const initData = () => {
     })
 }
 
-const addressName = (data,id)=>{
-    const address = data.find(item => item.id === id);
-    return address.name;
+const addressName = (data, id) => {
+    const address = data.find(item => item.id === id)
+    return address.name
 }
 
 defineExpose({

@@ -39,7 +39,7 @@ class CoreElectronicSheetService extends BaseCoreService
      */
     public function setElectronicSheetConfig($data)
     {
-        return ( new ConfigService() )->setConfig('ELECTRONIC_SHEET_CONFIG', $data);
+        return ( new ConfigService() )->setConfig( 'ELECTRONIC_SHEET_CONFIG', $data);
     }
 
     /**
@@ -68,7 +68,7 @@ class CoreElectronicSheetService extends BaseCoreService
      * @param $data
      * @return bool
      */
-    public function add($data)
+    public function add( $data)
     {
         ( new ElectronicSheet() )->create($data);
         return true;
@@ -91,11 +91,11 @@ class CoreElectronicSheetService extends BaseCoreService
      * @param string $field
      * @return array
      */
-    public function getInfo($condition = [], $field = 'id,template_name,express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,status,exp_type,print_style,is_default')
+    public function getInfo($condition = [], $field = 'id,template_name,express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,status,exp_type,print_style,is_default,interface_data,temp_id,child_temp_id,back_temp_id')
     {
         $info = ( new ElectronicSheet() )->field($field)->where($condition)->withJoin([
-            'company' => [ 'company_name', 'express_no_electronic_sheet' ]
-        ])->findOrEmpty()
+            'company' => [ 'company_name', 'express_no_electronic_sheet' ,'kd100_express_no_electronic_sheet']
+        ])->append(['kdbird_config', 'kd100_config'])->findOrEmpty()
             ->toArray();
         return $info;
     }
@@ -107,11 +107,7 @@ class CoreElectronicSheetService extends BaseCoreService
      */
     public function printElectronicSheet($params)
     {
-
         $es_config = $this->getElectronicSheetConfig();
-        if (empty($es_config[ 'kdniao_id' ]) || empty($es_config[ 'kdniao_api_key' ])) {
-            throw new CommonException('SHOP_ELECTRONIC_SHEET_API_EMPTY');
-        }
 
         // 查询订单信息
         $order_model = new Order();
@@ -157,6 +153,7 @@ class CoreElectronicSheetService extends BaseCoreService
         $result = [];
 
         // 打印方式，single：单订单，multiple：多订单
+
         if ($params[ 'print_type' ] == 'single') {
             // 单订单打印，按照包裹拆分打印
 
@@ -165,7 +162,7 @@ class CoreElectronicSheetService extends BaseCoreService
                 $es_template_info = $this->getInfo([
                     [ 'id', '=', $v[ 'electronic_sheet_id' ] ],
                     [ 'status', '=', 1 ]
-                ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style');
+                ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style,interface_data,temp_id,child_temp_id,back_temp_id');
 
                 if (empty($es_template_info)) {
                     // 电子面单模板不存在
@@ -251,20 +248,19 @@ class CoreElectronicSheetService extends BaseCoreService
 
                     $api_data = [
                         'cache_key' => $key,
+//                        'ShipperCode' => $es_template_info[ 'company' ][ 'express_no_electronic_sheet' ], // 快递公司编码
+//                        'CustomerName' => $es_template_info[ 'customer_name' ], // 电子面单账号，申请：https://www.yuque.com/kdnjishuzhichi/rg4owd
+//                        'CustomerPwd' => $es_template_info[ 'customer_pwd' ], // 电子面单密码，电子面单账号对照表：https://www.yuque.com/kdnjishuzhichi/dfcrg1/hrfw43
+//                        'SendSite' => $es_template_info[ 'send_site' ],
+//                        'SendStaff' => $es_template_info[ 'send_staff' ],
+//                        'MonthCode' => $es_template_info[ 'month_code' ], // 月结账号
+//                        'PayType' => $es_template_info[ 'pay_type' ], // 运费支付方式（1：现付，2：到付，3：月结）
+//                        'ExpType' => $es_template_info[ 'exp_type' ], // 快递业务类型，https://www.yuque.com/kdnjishuzhichi/dfcrg1/hgx758hom5p6wz0l
+//                        'TemplateSize' => $es_template_info[ 'print_style' ], // 模板规格，https://www.yuque.com/kdnjishuzhichi/dfcrg1/vpptucr1q5ahcxa7#iZvLV
+//                        'IsNotice' => $es_template_info[ 'is_notice' ], // 是否通知快递员上门揽件跨越速运，京东快运必填
 
-                        'ShipperCode' => $es_template_info[ 'company' ][ 'express_no_electronic_sheet' ], // 快递公司编码
-
-                        'CustomerName' => $es_template_info[ 'customer_name' ], // 电子面单账号，申请：https://www.yuque.com/kdnjishuzhichi/rg4owd
-                        'CustomerPwd' => $es_template_info[ 'customer_pwd' ], // 电子面单密码，电子面单账号对照表：https://www.yuque.com/kdnjishuzhichi/dfcrg1/hrfw43
-                        'SendSite' => $es_template_info[ 'send_site' ],
-                        'SendStaff' => $es_template_info[ 'send_staff' ],
-                        'MonthCode' => $es_template_info[ 'month_code' ], // 月结账号
-
+                        'es_template_info'=>$es_template_info,
                         'OrderCode' => $cv[ 'order_no' ] . $k, // 订单编号，多包裹防重复，要增加下标
-
-                        'PayType' => $es_template_info[ 'pay_type' ], // 运费支付方式（1：现付，2：到付，3：月结）
-                        'ExpType' => $es_template_info[ 'exp_type' ], // 快递业务类型，https://www.yuque.com/kdnjishuzhichi/dfcrg1/hgx758hom5p6wz0l
-
                         // 发件人信息
                         'Sender' => [
                             'Name' => $default_shop_address[ 'contact_name' ], // 发件人
@@ -275,7 +271,6 @@ class CoreElectronicSheetService extends BaseCoreService
                             'Address' => $default_shop_address[ 'address' ], // 发件人详细地址
                             'PostCode' => '000000' // 发件地邮编邮政/EMS 必填可填000000
                         ],
-
                         // 收件人信息
                         'Receiver' => [
                             'Name' => $cv[ 'taker_name' ], // 收件人
@@ -286,23 +281,17 @@ class CoreElectronicSheetService extends BaseCoreService
                             'Address' => mb_substr($cv[ 'taker_address' ], 0, 100, 'UTF-8'), // 收件人详细地址
                             'PostCode' => '000000' // 收件地邮编邮政/EMS 必填可填000000
                         ],
-
                         'Quantity' => count($cv[ 'order_goods' ]) > 50 ? 50 : count($cv[ 'order_goods' ]), // 包裹数  (至少填1,最多50)
-
                         // 商品信息
                         'Commodity' => $commodity,
                         'Weight' => $weight_total, // 包裹总重量kg，京东、快运类必填
                         'Volume' => $volume_total, // 包裹总体积 m³，京东、快运类必填
                         'Cost' => $cv[ 'delivery_money' ], // 快递运费
                         'Remark' => '', // '<br>' . mb_substr(implode('<br>', $remark), 0, 80, 'UTF-8'), // 备注
-
                         'IsReturnPrintTemplate' => 1, // 是否返回电子面单模板：（不填默认为0）0：不需要，1：需要
-
-                        'TemplateSize' => $es_template_info[ 'print_style' ], // 模板规格，https://www.yuque.com/kdnjishuzhichi/dfcrg1/vpptucr1q5ahcxa7#iZvLV
-                        'IsNotice' => $es_template_info[ 'is_notice' ] // 是否通知快递员上门揽件跨越速运，京东快运必填
                     ];
 
-                    $class = new ElectronicSheetSearchLoader("KdniaoSearch", $es_config);
+                    $class = new ElectronicSheetSearchLoader();
                     $temp_result = $class->electronicSheet($api_data);
                     $temp_result[ 'order_no' ] = $cv[ 'order_no' ]; // 记录打印的 订单号
                     $temp_result[ 'delivery_id' ] = $v[ 'delivery_id' ]; // 记录打印的 包裹id
@@ -316,18 +305,17 @@ class CoreElectronicSheetService extends BaseCoreService
 
         } elseif ($params[ 'print_type' ] == 'multiple') {
             // 多订单打印，一个订单一个电子面单
-
             // 查询电子面单模板
             if (!empty($params[ 'electronic_sheet_id' ])) {
                 $es_template_info = $this->getInfo([
                     [ 'id', '=', $params[ 'electronic_sheet_id' ] ],
                     [ 'status', '=', 1 ]
-                ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style');
+                ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style,interface_data,temp_id,child_temp_id,back_temp_id');
             } else {
                 $es_template_info = $this->getInfo([
                     [ 'is_default', '=', 1 ],
                     [ 'status', '=', 1 ]
-                ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style');
+                ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style,interface_data,temp_id,child_temp_id,back_temp_id');
             }
 
             if (empty($es_template_info)) {
@@ -431,15 +419,13 @@ class CoreElectronicSheetService extends BaseCoreService
 
                 $api_data = [
                     'cache_key' => $key,
-
-                    'ShipperCode' => $es_template_info[ 'company' ][ 'express_no_electronic_sheet' ], // 快递公司编码
-
-                    'CustomerName' => $es_template_info[ 'customer_name' ], // 电子面单账号，申请：https://www.yuque.com/kdnjishuzhichi/rg4owd
-                    'CustomerPwd' => $es_template_info[ 'customer_pwd' ], // 电子面单密码，电子面单账号对照表：https://www.yuque.com/kdnjishuzhichi/dfcrg1/hrfw43
-                    'SendSite' => $es_template_info[ 'send_site' ],
-                    'SendStaff' => $es_template_info[ 'send_staff' ],
-                    'MonthCode' => $es_template_info[ 'month_code' ], // 月结账号
-
+//                  'ShipperCode' => $es_template_info[ 'company' ][ 'express_no_electronic_sheet' ], // 快递公司编码
+//                  'CustomerName' => $es_template_info[ 'customer_name' ], // 电子面单账号，申请：https://www.yuque.com/kdnjishuzhichi/rg4owd
+//                  'CustomerPwd' => $es_template_info[ 'customer_pwd' ], // 电子面单密码，电子面单账号对照表：https://www.yuque.com/kdnjishuzhichi/dfcrg1/hrfw43
+//                  'SendSite' => $es_template_info[ 'send_site' ],
+//                  'SendStaff' => $es_template_info[ 'send_staff' ],
+//                  'MonthCode' => $es_template_info[ 'month_code' ], // 月结账号
+                    'es_template_info'=> $es_template_info,
                     'OrderCode' => $v[ 'order_no' ] . $order_goods_delivery_count, // 订单编号，多包裹防重复，要增加下标
 
                     'PayType' => $es_template_info[ 'pay_type' ], // 运费支付方式（1：现付，2：到付，3：月结）
@@ -482,7 +468,7 @@ class CoreElectronicSheetService extends BaseCoreService
                     'IsNotice' => $es_template_info[ 'is_notice' ] // 是否通知快递员上门揽件跨越速运，京东快运必填
                 ];
 
-                $class = new ElectronicSheetSearchLoader("KdniaoSearch", $es_config);
+                $class = new ElectronicSheetSearchLoader();
 
                 $temp_result = $class->electronicSheet($api_data);
                 $temp_result[ 'order_no' ] = $v[ 'order_no' ]; // 记录打印的 订单号
@@ -499,12 +485,7 @@ class CoreElectronicSheetService extends BaseCoreService
      */
     public function printElectronicSheetByDelivery($params)
     {
-
         $es_config = $this->getElectronicSheetConfig();
-        if (empty($es_config[ 'kdniao_id' ]) || empty($es_config[ 'kdniao_api_key' ])) {
-            throw new CommonException('SHOP_ELECTRONIC_SHEET_API_EMPTY');
-        }
-
         // 查询订单信息
         $order_model = new Order();
         $field = 'order_id, order_no, member_id, taker_name, taker_mobile, taker_province, taker_city, taker_district, taker_address,delivery_money';
@@ -529,7 +510,7 @@ class CoreElectronicSheetService extends BaseCoreService
         $shop_address_model = new ShopAddress();
         $default_shop_address = $shop_address_model->where([
             [ 'is_delivery_address', '=', 1 ],
-            [ 'is_default_delivery', '=', 1 ],
+            [ 'is_default_delivery', '=', 1 ]
         ])->field('contact_name,mobile,province_id,city_id,district_id,address')->findOrEmpty()->toArray();
 
         if (empty($default_shop_address)) {
@@ -550,12 +531,12 @@ class CoreElectronicSheetService extends BaseCoreService
             $es_template_info = $this->getInfo([
                 [ 'id', '=', $params[ 'electronic_sheet_id' ] ],
                 [ 'status', '=', 1 ]
-            ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style');
+            ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style,exp_type_name,interface_data,temp_id,child_temp_id,back_temp_id');
         } else {
             $es_template_info = $this->getInfo([
                 [ 'is_default', '=', 1 ],
                 [ 'status', '=', 1 ]
-            ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style');
+            ], 'express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,exp_type,print_style,exp_type_name,interface_data,temp_id,child_temp_id,back_temp_id');
         }
 
         if (empty($es_template_info)) {
@@ -615,17 +596,17 @@ class CoreElectronicSheetService extends BaseCoreService
         $receiver_city_name = $sys_area_model->where([ [ 'id', '=', $order_info[ 'taker_city' ] ] ])->field('name')->findOrEmpty()->toArray()[ 'name' ] ?? '';
         $receiver_exp_area_name = $sys_area_model->where([ [ 'id', '=', $order_info[ 'taker_district' ] ] ])->field('name')->findOrEmpty()->toArray()[ 'name' ] ?? '';
 
+
+//        $ShipperCode = $es_config['interface_type'] == 'kdbird' ? $es_template_info[ 'company' ][ 'express_no_electronic_sheet' ] : $es_template_info[ 'company' ][ 'kd100_express_no_electronic_sheet' ];
         $api_data = [
             'cache_key' => $key,
-
-            'ShipperCode' => $es_template_info[ 'company' ][ 'express_no_electronic_sheet' ], // 快递公司编码
-
-            'CustomerName' => $es_template_info[ 'customer_name' ], // 电子面单账号，申请：https://www.yuque.com/kdnjishuzhichi/rg4owd
-            'CustomerPwd' => $es_template_info[ 'customer_pwd' ], // 电子面单密码，电子面单账号对照表：https://www.yuque.com/kdnjishuzhichi/dfcrg1/hrfw43
-            'SendSite' => $es_template_info[ 'send_site' ],
-            'SendStaff' => $es_template_info[ 'send_staff' ],
-            'MonthCode' => $es_template_info[ 'month_code' ], // 月结账号
-
+//            'ShipperCode' => $ShipperCode, // 快递公司编码
+//            'CustomerName' => $es_template_info[ 'customer_name' ], // 电子面单账号，申请：https://www.yuque.com/kdnjishuzhichi/rg4owd
+//            'CustomerPwd' => $es_template_info[ 'customer_pwd' ], // 电子面单密码，电子面单账号对照表：https://www.yuque.com/kdnjishuzhichi/dfcrg1/hrfw43
+//            'SendSite' => $es_template_info[ 'send_site' ],
+//            'SendStaff' => $es_template_info[ 'send_staff' ],
+//            'MonthCode' => $es_template_info[ 'month_code' ], // 月结账号
+            'es_template_info'=>$es_template_info,
             'OrderCode' => $order_info[ 'order_no' ] . $order_goods_delivery_count, // 订单编号，多包裹防重复，要增加下标
 
             'PayType' => $es_template_info[ 'pay_type' ], // 运费支付方式（1：现付，2：到付，3：月结）
@@ -668,7 +649,7 @@ class CoreElectronicSheetService extends BaseCoreService
             'IsNotice' => $es_template_info[ 'is_notice' ] // 是否通知快递员上门揽件跨越速运，京东快运必填
         ];
 
-        $class = new ElectronicSheetSearchLoader("KdniaoSearch", $es_config);
+        $class = new ElectronicSheetSearchLoader();
         $result = $class->electronicSheet($api_data);
         $result[ 'order_no' ] = $order_info[ 'order_no' ]; // 记录打印的 订单号
 

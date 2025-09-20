@@ -1,5 +1,5 @@
 <template>
-    <el-drawer v-model="showDialog" title="活动详情" direction="rtl" :before-close="handleClose" class="member-detail-drawer">
+    <el-drawer v-model="showDialog" title="活动详情" direction="rtl" :before-close="handleClose" size="1300px">
         <div class="main-container" v-loading="loading">
             <el-tabs v-model="activeName" class="pb-[10px]" @tab-change="handleClick">
                 <el-tab-pane label="基础信息" name="basicInfo" />
@@ -9,7 +9,7 @@
             </el-tabs>
             <div v-if="activeName == 'basicInfo'">
                 <el-form class="mt-[15px]" :model="formData" label-width="100px" ref="formRef" label-position="left" v-if="Object.keys(formData).length">
-                    <div class="relative" shadow="never" v-if="formData">
+                    <div class="relative" v-if="formData">
                         <el-row>
                             <el-col :span="8">
                                 <el-form-item :label="t('activeName')">
@@ -403,8 +403,5 @@ defineExpose({
     setFormData
 })
 </script>
-<style lang="scss">
-.member-detail-drawer{
-    width: 1300px !important;
-}
+<style lang="scss" scoped>
 </style>

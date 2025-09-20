@@ -1,5 +1,8 @@
 <template>
     <view :style="themeColor()">
+        <!-- #ifdef MP-WEIXIN -->
+        <top-tabbar :data="topTabbarData" scrollBool="1" :isBack="false"/>
+        <!-- #endif -->
         <view class="bg-page min-h-[100vh] overflow-hidden flex flex-col" v-if="!loading">
             <view v-if="!info" class="pb-[100rpx]">
                 <view class="empty-page">
@@ -53,7 +56,7 @@
                                                         <view class="w-[100%] flex flex-col items-baseline">
                                                             <view class="text-[#333] text-[28rpx] max-h-[80rpx] leading-[40rpx] multi-hidden font-400">{{ item.goods.goods_name }}</view>
                                                             <view class="box-border max-w-[376rpx] mt-[10rpx] px-[14rpx] h-[36rpx] leading-[36rpx] truncate text-[var(--text-color-light6)] bg-[#F5F5F5] text-[22rpx] rounded-[20rpx]"
-                                                                v-if="item.goodsSku && item.goodsSku.sku_spec_format">{{ item.goodsSku.sku_spec_format }}</view>
+                                                                v-if="item.goodsSku && item.goodsSku.sku_name">{{ item.goodsSku.sku_name }}</view>
                                                         </view>
                                                         <view v-if="item.goods && item.goods.goods_label_name && item.goods.goods_label_name.length"
                                                             class="flex flex-wrap mb-[auto]">
@@ -139,8 +142,8 @@
                                             <view class="w-[100%] flex flex-col items-baseline">
                                                 <view class="text-[#333] text-[28rpx] max-h-[80rpx] leading-[40rpx] font-400 multi-hidden">{{ item.goods.goods_name }}</view>
                                                 <view class="box-border max-w-[376rpx] mt-[10rpx] px-[14rpx] h-[36rpx] leading-[36rpx] truncate text-[var(--text-color-light6)] bg-[#F5F5F5] text-[22rpx] rounded-[20rpx]"
-                                                    v-if="item.goodsSku && item.goodsSku.sku_spec_format">
-                                                    {{ item.goodsSku.sku_spec_format }}
+                                                    v-if="item.goodsSku && item.goodsSku.sku_name">
+                                                    {{ item.goodsSku.sku_name }}
                                                 </view>
                                             </view>
                                             <view class="flex justify-between items-end self-end w-[100%]">
@@ -271,6 +274,13 @@ import { t } from "@/locale";
 import { useGoods } from '@/addon/shop/hooks/useGoods'
 import nsGoodsManjian from '@/addon/shop/components/ns-goods-manjian/ns-goods-manjian.vue';
 import nsGoodsRecommend from '@/addon/shop/components/ns-goods-recommend/ns-goods-recommend.vue';
+import { topTabar } from '@/utils/topTabbar';
+import { useShare } from '@/hooks/useShare'
+const { setShare } = useShare()
+/********* 自定义头部 - start ***********/
+const topTabarObj = topTabar()
+let topTabbarData = topTabarObj.setTopTabbarParam({ title: '购物车', topStatusBar: { textColor: '#333' }})
+/********* 自定义头部 - end ***********/
 
 const diyGoods = useGoods();
 const memberStore = useMemberStore()
@@ -326,8 +336,25 @@ const getCartGoodsListFn = () => {
 }
 
 onShow(() => {
+    console.log('购物车')
+       
+       setTimeout(() => {
+            let share = {
+                title: '购物车',
+                desc: '',
+                // url: img(detail.value.material_list[activeIndex.value].url)
+            }
+
+            setShare({
+                wechat: {
+                    ...share
+                },
+                weapp: {
+                    ...share
+                }
+            });
+    }, 600);
     getCartGoodsListFn()
-    cartStore.getList();
 })
 
 const goodsSkuInputFn = (data) => {
@@ -499,9 +526,7 @@ const numLimit = (data: any) => {
     // 限购 - 是否开启限购
     if (data.goods.is_limit) {
         if (data.goods.max_buy) {
-            let max_buy = 0;
-            max_buy = data.goods.max_buy;
-
+            let max_buy = data.goods.max_buy;
             if (max_buy > data.goods.stock) {
                 obj.max = data.goods.stock
             } else if (max_buy <= data.goods.stock) {
@@ -529,7 +554,6 @@ const cartOptions = ref([
     }
 ]);
 
-
 const swipeActive = ref()
 const swipeClick = (index: any, item: any) => {
     if (optionLoading.value) return
@@ -543,6 +567,7 @@ const swipeClick = (index: any, item: any) => {
         optionLoading.value = false
     })
 }
+
 /**
  * 选择单个商品
  */
@@ -636,9 +661,7 @@ const deleteInvalidList = () => {
 
 // 商品价格
 const goodsPrice = (data: any) => {
-    let price = "0.00";
-	price = data.goodsSku.show_price
-    return price;
+    return data.goodsSku.show_price
 }
 
 watch(

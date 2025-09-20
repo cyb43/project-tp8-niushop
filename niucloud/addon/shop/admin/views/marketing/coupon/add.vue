@@ -201,7 +201,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { getGoodsCategoryList, addCoupon } from '@/addon/shop/api/marketing'
 import type { FormInstance } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { filterNumber, filterDigit,deepClone,img } from '@/utils/common'
+import { filterNumber, filterDigit, deepClone, img } from '@/utils/common'
 import goodsSelectPopup from '@/addon/shop/views/goods/components/goods-select-popup.vue'
 import { cloneDeep } from 'lodash-es'
 
@@ -248,7 +248,7 @@ const formData = ref<FormDataType>({
     // status: 1,  //状态 1 正常 2 未开启 3 已无效
     min_condition_money: 1, // 商品最低多少金额可用优惠券
     length: 30, // 有效期时长(天)
-    goods_ids: [], // 关联商品id 
+    goods_ids: [], // 关联商品id
     goods_category_ids: [], // 关联商品分类id
     receive_type_time: 2,
     valid_type: 1, // 有效方式，1=时长，2=范围
@@ -277,10 +277,10 @@ const formRules = computed(() => {
         min_condition_money: [
             { required: true, validator: minConditionMoney, trigger: 'blur' }
         ],
-        valid_time:[
+        valid_time: [
             { required: true, validator: validTime, trigger: 'blur' }
         ],
-        receive_time:[
+        receive_time: [
             { required: true, validator: receiveTime, trigger: 'blur' }
         ],
         remain_count: [
@@ -291,9 +291,9 @@ const formRules = computed(() => {
         ]
     }
 })
- 
+
 const receiveTime = (rule: any, value: any, callback: any) => {
-    if(formData.value.receive_type_time == 1 && formData.value.receive_type == 1){
+    if (formData.value.receive_type_time == 1 && formData.value.receive_type == 1) {
         if (!formData.value.receive_time[0] || timestampFn(formData.value.receive_time[0]) <= Date.now()) {
             callback(new Error(t('领取开始时间不能小于等于当前时间')))
         }
@@ -317,7 +317,7 @@ const validTime = (rule: any, value: any, callback: any) => {
 }
 
 const minConditionMoney = (rule: any, value: any, callback: any) => {
-    if (formData.value.threshold == 1 && formData.value.min_condition_money <= 0 ) {
+    if (formData.value.threshold == 1 && formData.value.min_condition_money <= 0) {
         callback(new Error(t('使用门槛最低不能小于0元')))
     }
     callback()
@@ -350,9 +350,9 @@ const limitCountRule = (rule: any, value: any, callback: any) => {
 }
 
 // 时间格式转换时间戳
-const timestampFn = (data)=>{
-    var dateObject = new Date(data);
-    return dateObject.getTime();
+const timestampFn = (data) => {
+    const dateObject = new Date(data)
+    return dateObject.getTime()
 }
 
 // 优惠券类型
@@ -369,14 +369,14 @@ const onSave = async (formEl: FormInstance | undefined) => {
     await formEl.validate(async (valid) => {
         if (valid) {
             loading.value = true
-            let data = cloneDeep(formData.value);
-            if(data.type == 1){
-                delete data.goods_category_ids;
-                delete data.goods_ids;
-            }else if(data.type == 2){
-                delete data.goods_ids;
-            }else if(data.type == 3){
-                delete data.goods_category_ids;
+            const data = cloneDeep(formData.value)
+            if (data.type == 1) {
+                delete data.goods_category_ids
+                delete data.goods_ids
+            } else if (data.type == 2) {
+                delete data.goods_ids
+            } else if (data.type == 3) {
+                delete data.goods_category_ids
             }
             const save = addCoupon
             save(data).then(res => {
@@ -395,34 +395,33 @@ const back = () => {
 // 删除商品
 
 const deleteGoodsEvent = (row: any, index: any) => {
-    formData.value.goods_list.splice(index, 1);
-    formData.value.goods_ids.splice(formData.value.goods_ids.indexOf(row.goods_id), 1);
-};
-//选择商品
+    formData.value.goods_list.splice(index, 1)
+    formData.value.goods_ids.splice(formData.value.goods_ids.indexOf(row.goods_id), 1)
+}
+// 选择商品
 const goodsSelect = (value: any) => {
-    let arr = [];
-    for (let key in value) {
-        let goods_sku: any = value[key];
+    const arr = []
+    for (const key in value) {
+        const goods_sku: any = value[key]
         let sku: any = {
             goods_id: goods_sku.goods_id,
             price: goods_sku.goodsSku.price,
             goods_type_name: goods_sku.goods_type_name,
             goods_image: goods_sku.goods_cover,
             goods_name: goods_sku.goods_name,
-            stock: goods_sku.stock,
-        };
-    if (formData.value.goods_list.length) {
-        formData.value.goods_list.forEach((el: any) => {
-            if (el.goods_id == sku.goods_id) {
-                sku = Object.assign(sku, el)
-            }
-        })
-    }
+            stock: goods_sku.stock
+        }
+        if (formData.value.goods_list.length) {
+            formData.value.goods_list.forEach((el: any) => {
+                if (el.goods_id == sku.goods_id) {
+                    sku = Object.assign(sku, el)
+                }
+            })
+        }
         arr.push(deepClone(sku))
     }
-    formData.value.goods_list = arr;
-};
-
+    formData.value.goods_list = arr
+}
 
 </script>
 

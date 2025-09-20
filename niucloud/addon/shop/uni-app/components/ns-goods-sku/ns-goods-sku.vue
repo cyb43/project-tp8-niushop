@@ -33,7 +33,7 @@
                           v-if="goodsDetail.is_newcomer && goodsDetail.newcomer_price != goodsDetail.price && (Object.keys(cartSkuList).length?parseInt(cartSkuList.num)+buyNum:buyNum)>1">
                         <image class="h-[24rpx] w-[56rpx]" :src="img('addon/shop/newcomer.png')" mode="aspectFit" />
                         <view class="text-[24rpx] text-[#FFB000] leading-[34rpx] ml-[8rpx]">
-                            第1{{ goodsDetail.goods.unit }}，￥{{ parseFloat(goodsDetail.newcomer_price).toFixed(2) }}/{{ goodsDetail.goods.unit }}；第{{ (parseInt(cartSkuList.num || 0) + buyNum) > 2 ? '2~' + (parseInt(cartSkuList.num || 0) + buyNum) : '2' }}{{ goodsDetail.goods.unit }}，￥{{ parseFloat(parseFloat(goodsPrice)).toFixed(2) }}/{{ goodsDetail.goods.unit }}
+                            第1{{ goodsDetail.goods.unit }}，￥{{ parseFloat(goodsDetail.newcomer_price).toFixed(2) }}/{{ goodsDetail.goods.unit }}；第{{ (parseInt(cartSkuList.num || 0) + buyNum) > 2 ? '2~' + (parseInt(cartSkuList.num || 0) + buyNum) : '2' }}{{ goodsDetail.goods.unit }}，￥{{ parseFloat(parseFloat(goodsDetail.show_price)).toFixed(2) }}/{{ goodsDetail.goods.unit }}
                         </view>
                     </view>
                     <scroll-view class="h-[500rpx] px-[32rpx] box-border mb-[60rpx]" scroll-y="true">
@@ -76,11 +76,11 @@
                     </scroll-view>
                     <view class="px-[20rpx]">
 
-                        <!-- #ifdef H5 -->
+                        <!-- #ifndef MP -->
                         <button v-if="goodsDetail.detail.stock > 0" hover-class="none" class="!h-[80rpx] leading-[80rpx] text-[26rpx] font-500 rounded-[50rpx] primary-btn-bg" type="primary" @click="confirm">确定</button>
                         <!-- #endif -->
 
-                        <!-- #ifdef MP-WEIXIN -->
+                        <!-- #ifdef MP -->
                         <template v-if="goodsDetail.detail.stock > 0">
                             <!--<button v-if="isBindMobile && userInfo && !userInfo.mobile" hover-class="none" class="!h-[80rpx] leading-[80rpx] text-[26rpx] font-500 rounded-[50rpx] primary-btn-bg" type="primary" open-type="getPhoneNumber" @getphonenumber="memberStore.bindMobile">确定</button>-->
                             <!--<button v-else hover-class="none" class="!h-[80rpx] leading-[80rpx] text-[26rpx] font-500 rounded-[50rpx] primary-btn-bg" type="primary" @click="confirm">确定</button>-->
@@ -108,6 +108,7 @@ import bindMobile from '@/components/bind-mobile/bind-mobile.vue';
 import { cloneDeep } from 'lodash-es'
 import { t } from '@/locale'
 import diyForm from '@/addon/components/diy-form/index.vue'
+import useGoodsDetailStore from '@/addon/shop/stores/goodsDetail'
 
 const props = defineProps(['goodsDetail']);
 const goodsSkuPop = ref(false);
@@ -127,18 +128,18 @@ const minBuyShow = ref(0); // 起售
 // 商品价格
 const goodsPrice = computed(() => {
     let price = "0.00";
-	if(goodsDetail.value.type == 'newcomer_discount' &&getToken()&&goodsDetail.value.newcomer_price){
-		price=goodsDetail.value.newcomer_price
-	}else{
-		price = goodsDetail.value.show_price
-	}
+    if (goodsDetail.value.detail.type == 'newcomer_discount' && goodsDetail.value.detail.newcomer_price) {
+        price = goodsDetail.value.detail.newcomer_price
+    }else{
+        price = goodsDetail.value.show_price
+    }
     return price;
 })
 
 // 价格类型
 const priceType = () => {
     let type = "";
-	if(goodsDetail.value.type == 'newcomer_discount' &&getToken()&&goodsDetail.value.newcomer_price){
+	if(goodsDetail.value.detail.type == 'newcomer_discount' && goodsDetail.value.detail.newcomer_price){
 		type='newcomer_price'
 	}else{
 		type = goodsDetail.value.show_type
@@ -206,11 +207,11 @@ const goodsSkuBlurFn = () => {
 
 const closeFn = () => {
     goodsSkuPop.value = false
+    useGoodsDetailStore().setGoodsDetail({isOpenSkuBuy: false});
 }
 
 const goodsDetail = computed(() => {
     let data = cloneDeep(props.goodsDetail);
-
     // 重组数据结构
     if (Object.keys(data).length) {
 
@@ -239,49 +240,50 @@ const goodsDetail = computed(() => {
         if (data.skuList && Object.keys(data.skuList).length) {
             data.skuList.forEach((idItem: any, idIndex: any) => {
                 if (idItem.sku_id == currSpec.value.skuId) {
+                    idItem.sku_image = idItem.sku_image ? idItem.sku_image : data.goods.goods_cover
                     data.detail = idItem;
                 }
             })
         }
-    }
 
-    // 限购 - 是否开启限购
-    if (data.goods.is_limit) {
-        if (data.goods.max_buy) {
-            let max_buy = 0;
-            if (data.goods.limit_type == 1) { //单次限购
-                max_buy = data.goods.max_buy;
-            } else { // 单人限购
-                let buyVal = data.goods.max_buy - (data.goods.has_buy || 0);
-                max_buy = buyVal > 0 ? buyVal : 0;
-            }
-            if (max_buy > data.detail.stock) {
-                maxBuy.value = data.detail.stock
-            } else if (max_buy <= data.detail.stock) {
-                maxBuy.value = max_buy;
-            }
+        // 限购 - 是否开启限购
+        if (data.goods.is_limit) {
+            if (data.goods.max_buy) {
+                let max_buy = 0;
+                if (data.goods.limit_type == 1) { //单次限购
+                    max_buy = data.goods.max_buy;
+                } else { // 单人限购
+                    let buyVal = data.goods.max_buy - (data.goods.has_buy || 0);
+                    max_buy = buyVal > 0 ? buyVal : 0;
+                }
+                if (max_buy > data.detail.stock) {
+                    maxBuy.value = data.detail.stock
+                } else if (max_buy <= data.detail.stock) {
+                    maxBuy.value = max_buy;
+                }
 
-            // 限购开启且最大购买变为零时，初始值也应该是零
-            if (maxBuy.value == 0) {
-                buyNum.value = 0;
+                // 限购开启且最大购买变为零时，初始值也应该是零
+                if (maxBuy.value == 0) {
+                    buyNum.value = 0;
+                }
             }
+            // 仅用于展示
+            maxBuyShow.value = data.goods.max_buy; // 限购
+        } else {
+            maxBuy.value = data.detail.stock;
+        }
+
+        // 起售
+        minBuy.value = data.goods.min_buy > 0 ? data.goods.min_buy : 1;
+        // 起售大于库存，初始值也应该是零
+        if (minBuy.value > data.detail.stock) {
+            buyNum.value = 0;
+        } else {
+            buyNum.value = minBuy.value;
         }
         // 仅用于展示
-        maxBuyShow.value = data.goods.max_buy; // 限购
-    } else {
-        maxBuy.value = data.detail.stock;
+        minBuyShow.value = data.goods.min_buy;
     }
-
-    // 起售
-    minBuy.value = data.goods.min_buy > 0 ? data.goods.min_buy : 1;
-    // 起售大于库存，初始值也应该是零
-    if (minBuy.value > data.detail.stock) {
-        buyNum.value = 0;
-    } else {
-        buyNum.value = minBuy.value;
-    }
-    // 仅用于展示
-    minBuyShow.value = data.goods.min_buy;
     return data;
 })
 
@@ -416,10 +418,21 @@ const confirm = () => {
 
     } else if (openType.value == 'buy_now') {
         // 立即购买
-        var data = {
+        const data = {
             sku_id: goodsDetail.value.sku_id,
             num: buyNum.value
         };
+
+        let extend_data = {}
+
+        // 新人专区进入且满足新人条件，需要传新人价类型
+        if(goodsDetail.value.detail.type == 'newcomer_discount' && goodsDetail.value.detail.newcomer_price){
+            extend_data.relate_id = ''
+            extend_data.activity_type = 'newcomer_discount'
+        }else{
+            extend_data.relate_id = goodsDetail.value.show_type == 'discount_price'?goodsDetail.value.discount_info.discount_id:''
+            extend_data.activity_type = goodsDetail.value.show_type == 'discount_price'?'discount': goodsDetail.value.detail.type
+        }
 
         uni.setStorage({
             key: 'orderCreateData',
@@ -427,10 +440,7 @@ const confirm = () => {
                 sku_data: [
                     data
                 ],
-                extend_data: {
-                    relate_id: goodsDetail.value.show_type == 'discount_price'?goodsDetail.value.discount_info.discount_id:'',
-                    activity_type: goodsDetail.value.show_type == 'discount_price'?'discount':''
-                }
+                extend_data
             },
             success: () => {
                 redirect({ url: '/addon/shop/pages/order/payment' })
@@ -444,7 +454,7 @@ const confirm = () => {
 //预览图片
 const imgListPreview = (item: any) => {
     if (item === '') return false
-    var urlList = []
+    const urlList = [];
     urlList.push(img(item))  //push中的参数为 :src="item.img_url" 中的图片地址
     uni.previewImage({
         indicator: "number",

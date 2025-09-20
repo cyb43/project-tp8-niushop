@@ -27,7 +27,7 @@ class ActiveStart extends BaseJob
      */
     public function doJob()
     {
-        Log::write('活动自动开启');
+        //Log::write('活动自动开启');
         try {
 
             $ids = (new Active())->where([

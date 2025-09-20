@@ -89,7 +89,7 @@ import { FormInstance } from 'element-plus'
 import InvoiceDetail from '@/addon/shop/views/order/components/invoice-detail.vue'
 import InvoiceDialog from '@/addon/shop/views/order/components/invoice-dialog.vue'
 import { useRouter, useRoute } from 'vue-router'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()
@@ -137,13 +137,13 @@ const loadInvoiceList = (page: number = 1) => {
         invoiceManagementTableData.loading = false
         invoiceManagementTableData.data = res.data.data
         invoiceManagementTableData.total = res.data.total
-        setTablePageStorage(invoiceManagementTableData.page, invoiceManagementTableData.limit, invoiceManagementTableData.searchParam);
+        setTablePageStorage(invoiceManagementTableData.page, invoiceManagementTableData.limit, invoiceManagementTableData.searchParam)
     }).catch(() => {
         invoiceManagementTableData.loading = false
     })
 }
 
-loadInvoiceList(getTablePageStorage(invoiceManagementTableData.searchParam).page);
+loadInvoiceList(getTablePageStorage(invoiceManagementTableData.searchParam).page)
 
 const invoiceDetailDialog: Record<string, any> | null = ref(null)
 /**

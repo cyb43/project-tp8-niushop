@@ -1,7 +1,7 @@
 <template>
     <view class="bg-[var(--page-bg-color)] min-h-[100vh] overflow-hidden" :style="themeColor()">
         <view class="coupon-header fixed  left-0 right-0 top-0 z-10080">
-            <!-- #ifdef MP-WEIXIN -->
+            <!-- #ifdef MP-WEIXIN || APP-PLUS -->
             <view :style="{height: headStyle, backgroundImage: 'url(' + img('addon/shop/coupon/coupon_uniapp.png') + ')',backgroundSize: '100%', backgroundPosition: 'bottom', backgroundRepeat: 'no-repeat'}">
                 <top-tabbar :data="param" class="top-header" />
             </view>
@@ -135,14 +135,10 @@ import { onLoad, onPageScroll, onReachBottom, onShow } from '@dcloudio/uni-app'
 import useMemberStore from '@/stores/member'
 import { useLogin } from '@/hooks/useLogin'
 import { t } from '@/locale'
+import useSystemStore from "@/stores/system";
 
+const systemStore = useSystemStore()
 const { mescrollInit, downCallback, getMescroll } = useMescroll(onPageScroll, onReachBottom)
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '优惠券列表' })
@@ -150,12 +146,17 @@ let param = topTabarObj.setTopTabbarParam({ title: '优惠券列表' })
 
 // 头部图片的高度
 const headStyle = computed(() => {
-    let style = (pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 364) + 'rpx'
+    // #ifdef MP
+    let style = (pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 364) + 'rpx'
+    // #endif
+    // #ifdef APP-PLUS
+    let style = (pxToRpx(Number(systemStore.systemInfo.statusBarHeight)) + pxToRpx(8) + 364) + 'rpx'
+    // #endif
     return style
 })
 
 const mescrollTop = computed(() => {
-    let style = Object.keys(menuButtonInfo).length ? (pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 416) + 'rpx' : '416rpx'
+    let style = Object.keys(systemStore.menuButtonInfo).length ? (pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 416) + 'rpx' : '416rpx'
     return style
 })
 

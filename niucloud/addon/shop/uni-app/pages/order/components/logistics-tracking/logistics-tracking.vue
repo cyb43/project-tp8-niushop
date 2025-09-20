@@ -28,7 +28,7 @@
                 </view>
                 <view class="parcel" style="height: 53vh;" v-if="showList.sub_delivery_type == 'express'">
                     <view class="h-[56vh] flex flex-col items-center justify-center"
-                          v-if="showList.traces.success == false">
+                          v-if="!Object.keys(showList.traces).length || showList.traces.success == false">
                         <text class="nc-iconfont nc-icon-daishouhuoV6xx text-[180rpx] text-[#bfbfbf]"></text>
                         <view class="text-[28rpx] text-[#bfbfbf] leading-8">暂无物流信息～～</view>
                     </view>

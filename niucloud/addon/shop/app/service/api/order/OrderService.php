@@ -82,7 +82,7 @@ class OrderService extends BaseApiService
                         $query->field('store_id, store_name, store_mobile');
                     }
                 ]
-            )->order($order)->append([ 'order_from_name', 'order_type_name', 'status_name', 'delivery_type_name' ]);
+            )->order($order)->append([ 'order_from_name', 'order_type_name', 'activity_type_name', 'status_name', 'delivery_type_name' ]);
         $order_status_list = OrderDict::getStatus();
         $order_close_list = OrderDict::getCloseType();
         $list = $this->pageQuery($search_model, function ($item, $key) use ($order_status_list, $order_close_list) {
@@ -174,7 +174,7 @@ class OrderService extends BaseApiService
                     ->findOrEmpty()->toArray();
                 if (!empty($info[ 'pay' ])) {
                     if ($info[ 'member_id' ] != $info[ 'pay' ][ 'main_id' ]) {
-                        $member_info = ( new Member() )->field('nickname,headimg')->where([ [ 'member_id', '=', $info[ 'pay' ][ 'main_id' ] ] ])->findOrEmpty()->toArray();
+                        $member_info = ( new Member() )->field('nickname,headimg')->where([  [ 'member_id', '=', $info[ 'pay' ][ 'main_id' ] ] ])->findOrEmpty()->toArray();
                         if (!empty($member_info)) {
                             $info[ 'pay' ][ 'pay_member' ] = $member_info[ 'nickname' ];
                             $info[ 'pay' ][ 'pay_member_headimg' ] = $member_info[ 'headimg' ];

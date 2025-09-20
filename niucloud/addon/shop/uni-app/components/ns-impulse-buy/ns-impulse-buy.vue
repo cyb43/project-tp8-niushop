@@ -35,7 +35,6 @@
                             </view>
                             <view class="h-[50rpx] flex items-center">
                                 <button v-if="!item.num" @click="handleBuy(item)" class="!rounded-[30rpx] !bg-transparent !text-[var(--primary-color)] text-[22rpx] border-[2rpx] border-solid border-[var(--primary-color)] min-w-[130rpx] h-[50rpx] flex items-center" :disabled="props.calculateLoading" :class="{'opacity-80': props.calculateLoading}" hover-class="none">{{ t('buyWithOneClick') }}</button>
-                            
                                 <u-number-box v-else v-model="item.num" :min="0" :max="numLimit(item).max" integer :step="1" input-width="68rpx" :disabled="props.calculateLoading" input-height="52rpx" button-size="52rpx" disabledInput @change="numChange($event, index)">
                                     <template #minus>
                                         <view class="relative w-[26rpx] h-[26rpx]" @click="reduceNumChange(item)">

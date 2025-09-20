@@ -35,6 +35,7 @@ class Manjian extends BaseAdminController
             [ "manjian_name", "" ],
             [ "status", "" ],
             [ "create_time", [] ],
+            [ "active_id", [] ],
         ]);
         return success(( new ManjianService() )->getPage($data));
     }

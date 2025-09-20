@@ -17,7 +17,9 @@ use addon\shop\app\dict\order\OrderGoodsDict;
 use addon\shop\app\model\cart\Cart;
 use addon\shop\app\model\goods\GoodsSku;
 use addon\shop\app\model\order\Order;
+use addon\shop\app\service\api\marketing\NewcomerService;
 use addon\shop\app\service\core\goods\CoreGoodsActivePriceService;
+use addon\shop\app\service\core\marketing\CoreNewcomerService;
 use app\dict\member\MemberDict;
 use app\model\member\MemberLevel;
 use app\service\core\member\CoreMemberService;
@@ -188,10 +190,11 @@ class CoreOrderCreateService extends BaseCoreService
         //查看会员信息
         $member_id = $this->param[ 'member_id' ];
         $this->member_id = $member_id;
-        $member_info = ( new CoreMemberService() )->getInfoByMemberId($member_id, 'nickname, headimg, balance, point, member_level');
+        $member_info = ( new CoreMemberService() )->getInfoByMemberId($member_id, 'nickname, headimg, balance, point, member_level,member_label');
         if (empty($member_info)) throw new CommonException('SHOP_ORDER_BUYER_NOT_FOUND');//无效的账号
 
         // 查询会员等级信息
+        $member_info['member_level_id'] = $member_info[ 'member_level' ];
         $member_info[ 'member_level' ] = ( new MemberLevel() )->where([ [ 'level_id', '=', $member_info[ 'member_level' ] ] ])->field('level_id,level_benefits')->findOrEmpty()->toArray();
 
         //会员账户信息
@@ -246,6 +249,11 @@ class CoreOrderCreateService extends BaseCoreService
             [ 'sku_id', 'in', $sku_ids ]
         );
         $sku_list = ( new  GoodsSku() )->where($sku_condition)->with([ 'goods' ])->field('sku_id, sku_name, sku_image, goods_id, price, stock, weight, volume,sku_id, sku_spec_format,member_price, sale_price')->select()->toArray();
+        foreach ($sku_list as &$value){
+            if (empty($value['sku_image']) && isset($value['goods']['goods_cover'])){
+                $value['sku_image'] = $value['goods']['goods_cover'];
+            }
+        }
         $sku_list = array_column($sku_list, null, 'sku_id');
         //商品数据  查询商品列表
         $order_data = [];
@@ -269,21 +277,17 @@ class CoreOrderCreateService extends BaseCoreService
             //商品原价
             $sku_info[ 'original_price' ] = $sku_info[ 'price' ];
             //获取活动价格
+            //todo 需仔细看看
             $sku_info[ 'show_type' ] = 'original_price';
             $sku_info[ 'active_id' ] = '';
-            if ($activity_type != ActiveDict::NEWCOMER_DISCOUNT){
-                $goods_active_price_service = (new CoreGoodsActivePriceService());
-                $show_price_data = $goods_active_price_service->getActivePrice($sku_info, $this->member_id);
-                $sku_info[ 'show_type' ] = $show_price_data[ 'show_type' ];
-                $sku_info[ 'price' ] = $show_price_data[ 'show_price' ];
-                $sku_info[ 'active_id' ] = $show_price_data[ 'discount_id' ] ?? '';
-            }else{
-                $sku_info[ 'member_price' ] = $this->getMemberPrice($sku_info);
-                $sku_info[ 'price' ] = $sku_info[ 'member_price' ];
-                if ($sku_info[ 'member_price' ] < $sku_info[ 'price' ]){
-                    $sku_info[ 'show_type' ] = 'member_price';
-                }
-            }
+            $sku_info[ 'member_price' ] = $this->getMemberPrice($sku_info);
+          //  $sku_info[ 'price' ] = $sku_info[ 'member_price' ];
+            $goods_active_price_service = (new CoreGoodsActivePriceService());
+            $show_price_data = $goods_active_price_service->getActivePrice($sku_info, $this->member_id);
+            $sku_info[ 'show_type' ] = $show_price_data[ 'show_type' ];
+            $sku_info[ 'price' ] = $show_price_data[ 'show_price' ];
+            $sku_info[ 'active_id' ] = $show_price_data[ 'discount_id' ] ?? '';
+
 
             //默认金额填充
             $sku_info[ 'discount_money' ] = 0;
@@ -334,10 +338,21 @@ class CoreOrderCreateService extends BaseCoreService
                 if (!empty($temp)) {
                     // 更新 SKU 信息
                     $sku_info = $temp[ 'sku_info' ];
+                    $sku_info['relate_id'] = $temp[ 'relate_id' ];
                     if (!empty($this->extend_data)) {
                         // 更新扩展数据中的关联 ID 和活动类型
                         $this->extend_data[ 'relate_id' ] = $temp[ 'relate_id' ] ?? 0;
                         $this->extend_data[ 'activity_type' ] = $temp[ 'activity_type' ] ?? '';
+                    }
+                    if (isset($temp['error']) && !empty($temp['error'])) {
+                        if(is_array($temp['error'])){
+                            foreach ($temp['error'] as $error){
+                                $this->setError($error);
+                            }
+                        }else{
+                            $this->setError($temp['error']);
+                        }
+
                     }
                 }
             }

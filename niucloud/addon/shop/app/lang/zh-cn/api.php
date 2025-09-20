@@ -38,6 +38,7 @@ return [
     'SHOP_GOODS_DELISTED' => '此商品已下架',
     'SHOP_GOODS_EVALUATE_SUCCESS' => '评价成功',
     'SHOP_GOODS_PARTICIPATE_IN_ACTIVE_DISABLED_EDIT' => '商品正在参与营销活动，禁止修改',
+    'SELECT_AUDIT_EVALUATE' => '请选择待审核评价',
 
 
     'SHOP_THE_LINE_ITEM_SUBTOTAL_CAN_T_BE_LESS_THAN_0' => '订单项小计总额不能小于0',
@@ -80,6 +81,7 @@ return [
     'SHOP_ORDER_DELIVERY_EXPRESS_NUMBER_EXITS' => '物流单号不能重复',
     'NOT_CONFIGURED_LOCAL_DELIVERY' => '商家未配置同城配送',
     'NOT_CONFIGURED_DELIVERY_TYPE' => '商家尚未配置配送方式',
+    'NOT_CONFIGURED_DELIVERY_KD100' => '快递100配送接口参数未配置',
 
     'SHOP_ELECTRONIC_SHEET_API_EMPTY' => '未配置电子面单接口',
     'SHOP_ELECTRONIC_SHEET_TEMPLATE_FOUND' => '电子面单模板不存在',
@@ -111,7 +113,7 @@ return [
     'SHOP_ORDER_BUYER_APPLY_REFUND' => '买家申请退款',
     'SHOP_ORDER_STORE_ACTIVE_REFUND' => '卖家主动退款',
     'SHOP_ORDER_REFUND_DELIVERY_NOT_ALLOW_REFUND_GOODS' => '待发货的商品项不允许退货退款',
-    'SHOP_ORDER_DELETE_STATUS_ERROR' => '删除订单中有未完成订单：%s',
+    'SHOP_ORDER_DELETE_STATUS_ERROR' => '删除订单中有未关闭订单：%s',
     /*********************************************  订单退款 end ****************************************************/
 
 

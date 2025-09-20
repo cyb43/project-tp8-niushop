@@ -15,10 +15,10 @@
                     </el-checkbox-group> -->
                     <el-radio-group v-model="formData.delivery_type">
                         <el-radio :label="'business'">{{ t('business') }}</el-radio>
-                        <el-radio :label="'third'">{{ t('三方配送') }}</el-radio>
+                        <el-radio :label="'third'">{{ t('thrid') }}</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <el-form-item :label="t('三方配送')" prop="time_is_open" v-if="formData.delivery_type=='third'">
+                <el-form-item :label="t('thrid')" prop="time_is_open" v-if="formData.delivery_type=='third'">
                     <div v-for="(service, index) in thirdPartyData" :key="service.type">
                         <div class="flex items-center mr-[20px]">
                             <span class="mr-[10px]">{{ service.name }}</span>
@@ -28,16 +28,16 @@
                 </el-form-item>
                 <template v-if="activeService && formData.delivery_type=='third'">
                     <el-form-item :label="t('AppKey')" prop="app_key">
-                        <el-input v-model="activeService.config.app_key" clearable :placeholder="t('请输入AppKey')" class="input-width" maxlength="100" show-word-limit />
+                        <el-input v-model="activeService.config.app_key" clearable :placeholder="t('AppKeyRequire')" class="input-width" maxlength="100" show-word-limit />
                     </el-form-item>
                     <el-form-item :label="t('AppSecret')" prop="app_secret">
-                        <el-input v-model="activeService.config.app_secret" clearable :placeholder="t('请输入AppSecret')" class="input-width" maxlength="100" show-word-limit />
+                        <el-input v-model="activeService.config.app_secret" clearable :placeholder="t('AppSecretRequire')" class="input-width" maxlength="100" show-word-limit />
                     </el-form-item>
-                    <el-form-item :label="t('商户ID')" prop="shop_id">
-                        <el-input v-model="activeService.config.shop_id" clearable :placeholder="t('请输入商户ID')" class="input-width" maxlength="100" show-word-limit />
+                    <el-form-item :label="t('shopId')" prop="shop_id">
+                        <el-input v-model="activeService.config.shop_id" clearable :placeholder="t('shopIdRequire')" class="input-width" maxlength="100" show-word-limit />
                     </el-form-item>
-                    <el-form-item :label="t('商户门店编号')" prop="shop_store_no">
-                        <el-input v-model="activeService.config.shop_store_no" clearable :placeholder="t('请输入商户门店编号')" class="input-width" maxlength="100" show-word-limit />
+                    <el-form-item :label="t('shopStoreNo')" prop="shop_store_no">
+                        <el-input v-model="activeService.config.shop_store_no" clearable :placeholder="t('shopStoreNoRequire')" class="input-width" maxlength="100" show-word-limit />
                     </el-form-item>
                 </template>
                 <el-form-item :label="t('timeIsOpen')" prop="time_is_open">
@@ -67,61 +67,61 @@
                             <el-checkbox label="0">{{ t('sunday') }}</el-checkbox>
                         </el-checkbox-group>
                     </el-form-item>
-                    <el-form-item :label="t('配送时段设置')" prop="delivery_time">
+                    <el-form-item :label="t('deliveryTime')" prop="delivery_time">
                         <div>
                             <div>
                                 <div v-for="(timeRange, index) in formData.delivery_time" :key="index" class="mb-3">
-                                    <el-time-picker v-model="timeRange.start_time" :placeholder="t('开始时间')"
+                                    <el-time-picker v-model="timeRange.start_time" :placeholder="t('startTime')"
                                         format="HH:mm" value-format="HH:mm"
                                         :picker-options="{selectableRange: '00:00 - 23:59'}" />
                                     <span class="mx-2">-</span>
-                                    <el-time-picker v-model="timeRange.end_time" :placeholder="t('结束时间')" format="HH:mm"
+                                    <el-time-picker v-model="timeRange.end_time" :placeholder="t('endTime')" format="HH:mm"
                                         value-format="HH:mm" :picker-options="{selectableRange: '00:00 - 23:59'}" />
                                     <span v-if="index > 0" class="text-primary cursor-pointer ml-[10px]"
                                         @click="removeTimeRange(index)"> {{ t('delete') }}</span>
                                 </div>
                                 <span class="text-primary cursor-pointer mr-[10px]" @click="addTimeRange"
-                                    v-if="formData.delivery_time.length < 3"> {{ t('添加配送时段') }}</span>
+                                    v-if="formData.delivery_time.length < 3"> {{ t('addTime') }}</span>
                             </div>
-                            <div class="text-[12px] text-[#999]">{{ t('配送时段设置，若不在配送时段内，则无法进行配送') }}</div>
+                            <div class="text-[12px] text-[#999]">{{ t('deliveryTimeTips') }}</div>
                         </div>
 
                     </el-form-item>
 
-                    <el-form-item :label="t('细分时段')" prop="time_interval">
+                    <el-form-item :label="t('timeInterval')" prop="time_interval">
                         <div>
                             <el-radio-group v-model="formData.time_interval">
-                                <el-radio :label="30">{{ t('30分钟') }}</el-radio>
-                                <el-radio :label="60">{{ t('一小时') }}</el-radio>
-                                <el-radio :label="90">{{ t('90分钟') }}</el-radio>
-                                <el-radio :label="120">{{ t('两小时') }}</el-radio>
+                                <el-radio :label="30">{{ t('30minute') }}</el-radio>
+                                <el-radio :label="60">{{ t('90minute') }}</el-radio>
+                                <el-radio :label="90">{{ t('oneHour') }}</el-radio>
+                                <el-radio :label="120">{{ t('twoHour') }}</el-radio>
                             </el-radio-group>
                             <!-- <p class="text-[12px] text-[#999]">{{ t('storeTimeIntervalTips') }}</p> -->
                         </div>
 
                     </el-form-item>
-                    <el-form-item :label="t('提前预约')" prop="advance_day">
+                    <el-form-item :label="t('advancaDay')" prop="advance_day">
                         <div>
                             <div class="flex">
-                                提前
+                                {{ t('advance') }}
                                 <div class="w-[100px] mx-[5px]">
                                     <el-input v-model.trim="formData.advance_day" />
                                 </div>
-                                天
+                                {{ t('day') }}
                             </div>
-                            <p class="text-[12px] text-[#999]">{{ t('若设置了提前预约,则用户在当前日期前多少天可以预约配送，不可以立即配送') }}</p>
+                            <p class="text-[12px] text-[#999]">{{ t('advanceTips') }}</p>
                         </div>
                     </el-form-item>
-                    <el-form-item :label="t('最长预约')" prop="most_day">
+                    <el-form-item :label="t('mostDays')" prop="most_day">
                         <div>
                             <div class="flex">
-                                可预约
+                               {{ t('reservationAvailable') }}
                                 <div class="w-[100px] mx-[5px]">
                                     <el-input v-model.trim="formData.most_day" />
                                 </div>
-                                天内
+                              {{ t('withinDays') }}
                             </div>
-                            <p class="text-[12px] text-[#999]">{{ t('预约配送最长可预约多少天内进行提货') }}</p>
+                            <p class="text-[12px] text-[#999]">{{ t('mostDaysTips') }}</p>
                         </div>
                     </el-form-item>
                 </template>
@@ -314,7 +314,6 @@ const buildThirdPartyConfig = () => {
             app_key: service.config.app_key,
             app_secret: service.config.app_secret,
             shop_id: service.config.shop_id,
-            shop_store_id: service.config.shop_store_id,
             shop_store_no: service.config.shop_store_no
         };
 
@@ -493,9 +492,9 @@ const formRules = computed(() => {
                     if (value === null || value === '') {
                         callback()
                     } else if (isNaN(value) || !regExp.number.test(value)) {
-                        callback(t('格式不正确'))
+                        callback(t('formatError'))
                     } else if (value < 0) {
-                        callback(t('不能小于0'))
+                        callback(t('notLessThanZero'))
                     } else {
                         callback();
                     }
@@ -509,9 +508,9 @@ const formRules = computed(() => {
                     if (value === null || value === '') {
                         callback()
                     } else if (isNaN(value) || !regExp.number.test(value)) {
-                        callback(t('格式不正确'))
+                        callback(t('formatError'))
                     } else if (value <= 0) {
-                        callback(t('必须大于0'))
+                        callback(t('mustBeGreaterThanZero'))
                     } else {
                         callback();
                     }
@@ -526,13 +525,13 @@ const validateThirdPartyConfig = () => {
 
     const active = thirdPartyData.value.find(item => item.isEnabled);
     if (!active) {
-        ElMessage.error('请选择一个三方配送服务');
+        ElMessage.error(t('thridRequire'));
         return false;
     }
 
-    const { app_key, app_secret, shop_id, shop_store_id ,shop_store_no} = active.config;
-    if (!app_key || !app_secret || !shop_id || !shop_store_id || !shop_store_no) {
-        ElMessage.error('请填写完整的三方配送配置');
+    const { app_key, app_secret, shop_id ,shop_store_no} = active.config;
+    if (!app_key || !app_secret || !shop_id || !shop_store_no) {
+        ElMessage.error(t('thridSeting'));
         return false;
     }
 

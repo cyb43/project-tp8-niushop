@@ -116,6 +116,9 @@ return [
                 {
                     "path": "pages/goods/cart",
                     "style": {
+                        // #ifndef H5
+                        "navigationStyle": "custom",
+                        // #endif
                         "navigationBarTitleText": "%shop.pages.goods.cart%"
                     }
                 },
@@ -136,6 +139,9 @@ return [
                 {
                     "path": "pages/goods/category",
                     "style": {
+                        // #ifndef H5
+                        "navigationStyle": "custom",
+                        // #endif
                         "navigationBarTitleText": "%shop.pages.goods.category%"
                     }
                 },

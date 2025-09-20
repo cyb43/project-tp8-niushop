@@ -51,7 +51,7 @@ class ManjianService extends BaseAdminService
         $order = 'create_time desc';
         $search_model = $this->model
             ->where([ [ 'manjian_id', '>', 0 ] ])
-            ->withSearch([ "manjian_name", "status", "create_time" ], $where)
+            ->withSearch([ "manjian_name", "status", "create_time","active_id" ], $where)
             ->append([ 'status_name' ])
             ->field($field)
             ->order($order);

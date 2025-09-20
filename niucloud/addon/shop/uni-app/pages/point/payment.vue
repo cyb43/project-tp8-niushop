@@ -79,7 +79,7 @@
                             </view>
                         </view>
                     </view>
-					<view class="" v-if="createData.delivery.delivery_type == 'local_delivery' && localConfig.time_is_open" >
+					<view v-if="createData.delivery.delivery_type == 'local_delivery'&& localConfig.time_is_open" >
 						<view class="flex justify-between items-center  px-[20rpx] pt-[14rpx] pb-[24rpx]"
 					    @click="handleTime">
 						    <view class="text-color text-[26rpx]">{{createData.delivery.local_delivery_type =='subscribe' ?'预约配送':''}}</view>
@@ -304,10 +304,10 @@ const getDate = (e) => {
 	}
 }
 const localConfig = ref({})
-onShow(() => {
-	getLocal().then((res:any)=>{
-		localConfig.value = res.data
-	})
+onShow(async () => {
+	const res = await getLocal();
+	localConfig.value = res.data;
+	calculate(); // 确保在 localConfig 赋值后执行
 })
 
 const openSelectStore = () => {
@@ -382,7 +382,7 @@ const calculate = () => {
             createData.value.delivery.taker_name = orderData.value.delivery.take_address.name
             createData.value.delivery.taker_mobile = orderData.value.delivery.take_address.mobile
         }
-		if(createData.value.delivery.delivery_type == 'local_delivery'){
+		if(orderData.value.delivery.delivery_type == 'local_delivery'){
 		    service_time.value = {
 		        time_interval: localConfig.value.time_interval,
 		        time_week: formatTimeWeek(localConfig.value.time_type, localConfig.value.time_week),
@@ -417,7 +417,7 @@ const calculate = () => {
         })
     }).catch()
 }
-calculate()
+
 
 // 改变配送方式
 watch(

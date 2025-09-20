@@ -27,7 +27,7 @@
                         </view>
                     </view>
                 </view>
-                <view class="sidebar-margin mt-[-86rpx] card-template" v-if="detail.delivery_type != 'virtual'">
+                <view class="sidebar-margin mt-[-86rpx] card-template" v-if="detail.delivery_type != 'virtual'&& detail.taker_name">
                     <view v-if="detail.delivery_type == 'express'">
                         <view class="text-[#303133] flex">
                             <text class="nc-iconfont nc-icon-dizhiguanliV6xx text-[40rpx] pt-[12rpx] mr-[20rpx]"></text>
@@ -110,7 +110,7 @@
 				</template>
                 <view class="sidebar-margin card-template p-[0] py-[var(--pad-top-m)] overflow-hidden"
                       :class="{'pb-[var(--pad-top-m)]': detail.gift_goods.length <= 0}"
-                      :style="detail.delivery_type == 'virtual' ? 'margin-top: -86rpx' : 'margin-top: 20rpx'">
+                      :style="detail.delivery_type == 'virtual' || detail.taker_name=='' ? 'margin-top: -86rpx' : 'margin-top: 20rpx'">
                     <view v-for="(goodsItem, goodsIndex) in detail.goods" :key="goodsIndex"
                           class="px-[var(--pad-sidebar-m)]">
                         <view class="order-goods-item flex justify-between flex-wrap mb-[20rpx]">
@@ -186,10 +186,10 @@
                         <view class="flex justify-end w-[100%] mt-[30rpx] mb-[20rpx]"
                               v-if="(goodsItem.status != '1') || (goodsItem.is_enable_refund == 1)">
                             <view v-if="goodsItem.status != '1'"
-                                  class="text-[22rpx] text-[#303133] leading-[50rpx] px-[20rpx] border-[2rpx] border-solid border-[#999] rounded-full"
+                                  class="order-grey-hollow-btn"
                                   @click="redirect({ url: '/addon/shop/pages/refund/detail', param: { order_refund_no : goodsItem.order_refund_no } })">查看退款</view>
                             <view v-else-if="goodsItem.is_enable_refund == 1"
-                                  class="text-[22rpx] text-[#303133]  leading-[50rpx] px-[20rpx] border-[2rpx] border-solid border-[#999] rounded-full ml-[20rpx]"
+                                  class="order-grey-hollow-btn ml-[20rpx]"
                                   @click="applyRefund(goodsItem.order_goods_id)">申请退款</view>
                         </view>
 
@@ -376,13 +376,13 @@
 
                 <view class="flex z-2 justify-between items-center bg-[#fff] fixed left-0 right-0 bottom-0 min-h-[100rpx] pl-[30rpx] pr-[20rpx] flex-wrap  pb-ios">
                     <view class="flex">
-                        <view class="flex  mr-[34rpx] flex-col justify-center items-center"
+                        <!-- <view class="flex  mr-[34rpx] flex-col justify-center items-center"
                               @click="orderBtnFn('index')">
                             <view class="nc-iconfont nc-icon-shouyeV6xx11 text-[36rpx]"></view>
                             <text class="text-[20rpx] mt-[10rpx]">{{ t('index') }}</text>
-                        </view>
+                        </view> -->
                         <!-- #ifdef MP-WEIXIN -->
-                        <view>
+                        <!-- <view>
                             <nc-contact :send-message-title="sendMessageTitle" :send-message-path="sendMessagePath" :send-message-img="sendMessageImg">
                                 <view class="flex flex-col justify-center items-center">
                                     <view class="w-[36rpx] h-[36rpx] flex-center">
@@ -391,18 +391,30 @@
                                     <text class="text-[20rpx] mt-[10rpx]">客服</text>
                                 </view>
                             </nc-contact>
-                        </view>
+                        </view> -->
                         <!-- #endif -->
                     </view>
                     <view class="flex justify-end">
-                        <view class="min-w-[180rpx]  box-border text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#999] rounded-full ml-[20rpx] text-[var(--text-color-light6)]"
+                        <view @click="orderBtnFn('index')" class="order-grey-hollow-btn ml-[20rpx]">
+                              {{ t('index') }}
+                        </view>
+                          <!-- #ifdef MP-WEIXIN -->
+                          <view>
+                            <nc-contact :send-message-title="sendMessageTitle" :send-message-path="sendMessagePath" :send-message-img="sendMessageImg">
+                                <view class="order-grey-hollow-btn ml-[20rpx]">
+                                    客服
+                                </view>
+                            </nc-contact>
+                        </view>
+                        <!-- #endif -->
+                        <view class="px-[35rpx]  box-border  text-[24rpx]  h-[60rpx] flex-center text-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] text-[var(--text-color-light3)]"
                             @click="orderBtnFn('logistics')" v-if="showLogistics(detail)">{{ t('logisticsTracking') }}</view>
-                        <view class="min-w-[180rpx] box-border text-[26rpx]  h-[70rpx] flex-center text-center border-[2rpx] border-solid border-[#999] rounded-full ml-[20rpx] text-[var(--text-color-light6)]" v-if="detail.status == 1" @click="orderBtnFn('close')">{{ t('orderClose') }}</view>
-                        <view class="min-w-[180rpx] box-border  text-[26rpx] h-[70rpx] flex-center text-center text-[#fff] primary-btn-bg rounded-full ml-[20rpx]" v-if="detail.status == 1" @click="orderBtnFn('pay')">{{ t('topay') }}</view>
-                        <view v-if="detail.status == 3" class="min-w-[180rpx] box-border  text-[26rpx] h-[70rpx] flex-center text-center  text-[#fff]  primary-btn-bg rounded-full ml-[20rpx]" @click="orderBtnFn('finish')">{{ t('orderFinish') }}</view>
+                        <view class="order-grey-hollow-btn ml-[20rpx]" v-if="detail.status == 1" @click="orderBtnFn('close')">{{ t('orderClose') }}</view>
+                        <view class="px-[35rpx] box-border  text-[24rpx] h-[60rpx] flex-center text-center text-[#fff] primary-btn-bg rounded-full ml-[20rpx]" v-if="detail.status == 1" @click="orderBtnFn('pay')">{{ t('topay') }}</view>
+                        <view v-if="detail.status == 3" class="px-[35rpx] box-border  text-[24rpx] h-[60rpx] flex-center text-center  text-[#fff]  primary-btn-bg rounded-full ml-[20rpx]" @click="orderBtnFn('finish')">{{ t('orderFinish') }}</view>
                         <template v-if="detail.status == 5 && isShowEvaluate">
                             <view v-if="detail.is_evaluate == 1 || (detail.is_evaluate != 1 && evaluateConfig.is_evaluate == 1)"
-                                class="min-w-[180rpx] box-border text-[26rpx]  h-[70rpx] flex-center border-[2rpx] border-solid border-[#999] rounded-full ml-[20rpx] !text-[var(--text-color-light6)]"
+                                class="px-[35rpx] box-border text-[24rpx]  h-[60rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] !text-[var(--text-color-light3)]"
                                 @click="orderBtnFn('evaluate')">{{ detail.is_evaluate == 1 ? t('selectedEvaluate') : t('evaluate') }}</view>
                         </template>
                     </view>
@@ -784,7 +796,7 @@ const getOrderDiyFormDetailCallback = (data: any) => {
 }
 
 .order-goods-item:nth-child(1) {
-    margin-top: 0rpx;
+    margin-top: 0;
 }
 
 .text-color {
@@ -809,10 +821,8 @@ const getOrderDiyFormDetailCallback = (data: any) => {
         height: 0;
         position: absolute;
         bottom: -40rpx;
-        border: 20rpx solid #EEF3FF;
-        border-left-color: transparent;
-        border-right-color: transparent;
-        border-bottom-color: transparent;
+        border: 20rpx solid transparent;
+        border-top-color: #EEF3FF;
     }
 }
 

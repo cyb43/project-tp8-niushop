@@ -70,7 +70,7 @@ import { t } from '@/lang'
 import { getShopAddressList, deleteShopAddress } from '@/addon/shop/api/shop_address'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
-import { setTablePageStorage, getTablePageStorage } from "@/utils/common"
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const pageName = route.meta.title

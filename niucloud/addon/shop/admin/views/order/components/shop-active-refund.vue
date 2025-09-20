@@ -40,7 +40,7 @@
                         <el-table-column min-width="60" :label="t('refundPayPrice')">
                             <template #default="{ row }">
                                 <div class="flex flex-col">
-                                    <span class="text-[13px]">￥{{ row.refund_money }}</span>
+                                    <span class="text-[13px]">￥{{ (row.refund_money).toFixed(2) }}</span>
                                 </div>
                             </template>
                         </el-table-column>

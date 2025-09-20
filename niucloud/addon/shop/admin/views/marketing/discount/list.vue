@@ -82,10 +82,10 @@
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, FormInstance } from 'element-plus'
-import { getActiveDiscountPageList,getActiveDiscountStatusList,closeActiveDiscount,deleteActiveDiscount,batchCloseActiveDiscount,batchDeleteActiveDiscount } from "@/addon/shop/api/marketing";
+import { getActiveDiscountPageList, getActiveDiscountStatusList, closeActiveDiscount, deleteActiveDiscount, batchCloseActiveDiscount, batchDeleteActiveDiscount } from '@/addon/shop/api/marketing'
 import { t } from '@/lang'
 import discountDetail from '@/addon/shop/views/marketing/discount/components/discount-detail.vue'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const router = useRouter()
 const route = useRoute()
@@ -100,7 +100,8 @@ const tableData = reactive({
     data: [],
     searchParam: {
         name: '',
-        status: ''
+        status: '',
+        active_id: route.query.active_id || ''
     }
 })
 const searchFormRef = ref<FormInstance>()
@@ -142,7 +143,6 @@ const handleSelectionChange = (val: []) => {
     }
 }
 
-
 const loadDiscountList = (page: number = 1) => {
     tableData.loading = true
     tableData.page = page
@@ -155,21 +155,21 @@ const loadDiscountList = (page: number = 1) => {
         tableData.loading = false
         tableData.data = res.data.data
         tableData.total = res.data.total
-        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam);
+        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam)
     }).catch(() => {
         tableData.loading = false
     })
 }
-loadDiscountList(getTablePageStorage(tableData.searchParam).page);
+loadDiscountList(getTablePageStorage(tableData.searchParam).page)
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
     loadDiscountList()
 }
-//获取状态列表
+// 获取状态列表
 const activeStatusOption = ref({})
-const getActiveDiscountStatusListFn=()=>{
-    getActiveDiscountStatusList().then(res=>{
+const getActiveDiscountStatusListFn = () => {
+    getActiveDiscountStatusList().then(res => {
         activeStatusOption.value = res.data
     })
 }
@@ -178,19 +178,19 @@ getActiveDiscountStatusListFn()
 const handleChange = () => {
     router.push('/shop/marketing/discount/add')
 }
-//详情
+// 详情
 const discountDetailDialog: Record<string, any> | null = ref(null)
-const detailEvent=(id:number)=>{
-    let data = {id: id};
-    discountDetailDialog.value.setFormData(data);
-    discountDetailDialog.value.showDialog = true;
+const detailEvent = (id:number) => {
+    const data = { id }
+    discountDetailDialog.value.setFormData(data)
+    discountDetailDialog.value.showDialog = true
 }
-//编辑折扣券
-const editEvent = (id:number)=>{
-    router.push({path:'/shop/marketing/discount/edit',query:{id}})
+// 编辑折扣券
+const editEvent = (id:number) => {
+    router.push({ path: '/shop/marketing/discount/edit', query: { id } })
 }
-//关闭
-const closeEvent = (id:number)=>{
+// 关闭
+const closeEvent = (id:number) => {
     ElMessageBox.confirm(t('closeTips'), t('warning'),
         {
             confirmButtonText: t('confirm'),
@@ -204,8 +204,8 @@ const closeEvent = (id:number)=>{
         })
     })
 }
-//删除
-const deleteEvent = (id:number)=>{
+// 删除
+const deleteEvent = (id:number) => {
     ElMessageBox.confirm(t('deleteTips'), t('warning'),
         {
             confirmButtonText: t('confirm'),
@@ -224,16 +224,16 @@ const deleteEvent = (id:number)=>{
 const batchDeleteEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchDeleteTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchDeleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const discount_ids: any = []
         multipleSelection.value.forEach((item: any) => {
@@ -253,16 +253,16 @@ const batchDeleteEvent = () => {
 const batchcloseEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchCloseTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchCloseTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const discount_ids: any = []
         multipleSelection.value.forEach((item: any) => {

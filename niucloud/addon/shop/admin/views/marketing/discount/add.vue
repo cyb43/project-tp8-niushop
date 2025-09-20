@@ -343,7 +343,7 @@ const validFn = (row: any) => {
 
 const onSave = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return
-    for (var i = 0; i < formData.value.goods_list.length; i++) {
+    for (let i = 0; i < formData.value.goods_list.length; i++) {
         let el = formData.value.goods_list[i]
         if (el.goodsSku.sku_spec_format) {
             if (!el.valid) {
@@ -487,8 +487,8 @@ const setGoodsList = (page = 1) => {
 
 //完整数据转分页数据
 const splitArray = (array: [], size: number) => {
-    var result = [];
-    for (var i = 0; i < array.length; i += size) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
         result.push(array.slice(i, i + size));
     }
     return result;

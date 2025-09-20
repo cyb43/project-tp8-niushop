@@ -28,7 +28,7 @@ class CoreConfigService extends BaseCoreService
      */
     public function setDeliverySearchConfig($data)
     {
-        return ( new ConfigService() )->setConfig('DELIVERY_INTERFACE', $data);
+        return ( new ConfigService() )->setConfig( 'DELIVERY_INTERFACE', $data);
     }
 
     /**
@@ -37,7 +37,7 @@ class CoreConfigService extends BaseCoreService
      */
     public function getDeliverySearchConfig()
     {
-        $info = ( new ConfigService() )->getConfig('DELIVERY_INTERFACE');
+        $info = ( new ConfigService() )->getConfig( 'DELIVERY_INTERFACE');
         if (empty($info)) {
             $info = [];
             $info[ 'value' ] = [
@@ -50,6 +50,28 @@ class CoreConfigService extends BaseCoreService
             ];
         } else {
             $info[ 'value' ][ 'interface_type' ] = intval($info[ 'value' ][ 'interface_type' ]);
+        }
+        return $info[ 'value' ];
+    }
+
+
+    /**
+     * 获取快递鸟、快递100电子面单配置
+     * @return array
+     */
+    public function getDeliveryElectronSheeticConfig()
+    {
+        $info = ( new ConfigService() )->getConfig( 'ELECTRONIC_SHEET_CONFIG');
+        if (empty($info)) {
+            $info = [];
+            $info[ 'value' ] = [
+                'interface_type' => 'kdbird', // 接口类型，kdbird：快递鸟，后期支持扩展
+                'kdniao_id' => '',
+                'kdniao_api_key' => '',
+                'server_port1' => '8000',
+                'server_port2' => '18000',
+                'https_port' => '8443'
+            ];
         }
         return $info[ 'value' ];
     }

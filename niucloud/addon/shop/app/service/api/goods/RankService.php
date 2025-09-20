@@ -74,7 +74,7 @@ class RankService extends BaseApiService
         $rank_info = $this->model->field('rank_id,name,rank_type,rule_type,goods_source,goods_json,category_ids,brand_ids,label_ids')->where([ [ 'rank_id', '>', 0 ] ])->find($rank_id);
         $list = [];
         if ($rank_info) {
-            $list = $this->getGoodsList($rank_info, 0,$data);
+            $list = $this->getGoodsList($rank_info, 0, $data);
         }
         return $list;
     }
@@ -117,7 +117,7 @@ class RankService extends BaseApiService
      * @return array
      * @throws \think\db\exception\DbException
      */
-    protected function getGoodsList($rank_info, $limit = 0,$data = [])
+    protected function getGoodsList($rank_info, $limit = 0, $data = [])
     {
         // 根据排行周期 获取时间区间
         $date_end = strtotime(date('Y-m-d 23:59:59'));
@@ -151,11 +151,11 @@ class RankService extends BaseApiService
             $list = $this->goodsModel
                 ->alias('goods')
                 ->field($field)
-                ->where([ [ 'goods.goods_id', 'in', $config_goods_ids ], [ 'goods.is_gift', '=', GoodsDict::NOT_IS_GIFT ], [ 'goods.status', '=', 1 ],[ 'goods.delete_time', '=', 0 ] ])
+                ->where([ [ 'goods.goods_id', 'in', $config_goods_ids ], [ 'goods.is_gift', '=', GoodsDict::NOT_IS_GIFT ], [ 'goods.status', '=', 1 ], [ 'goods.delete_time', '=', 0 ] ])
                 ->whereBetweenTime('date_time', $date_start, $date_end)
                 ->join('shop_goods_stat stat', 'goods.goods_id = stat.goods_id', 'left')
                 ->group('goods.goods_id')
-                ->append([ 'goods_cover_thumb_mid' ])
+                ->append([ 'goods_cover_thumb_small', 'goods_cover_thumb_mid' ])
                 ->select()
                 ->toArray();
             $sort_goods_json = array_column($goods_json, null, 'goods_id');
@@ -163,22 +163,22 @@ class RankService extends BaseApiService
                 $item[ 'sort' ] = $sort_goods_json[ $item[ 'goods_id' ] ][ 'sort' ] ?? 0;
             }
 
-            usort($list, function($list_one, $list_two)use ($rank_info) {
+            usort($list, function ($list_one, $list_two) use ($rank_info) {
                 // 按 排序号 排序
-                if ($list_one['sort'] != $list_two['sort']) {
-                    return $list_two['sort'] <=> $list_one['sort'];
+                if ($list_one[ 'sort' ] != $list_two[ 'sort' ]) {
+                    return $list_two[ 'sort' ] <=> $list_one[ 'sort' ];
                 }
                 // 如果 排序号 相等，则按 排序规则 排序
-                if ($list_one['stat_'.$rank_info[ 'rule_type' ].'_num'] != $list_two['stat_'.$rank_info[ 'rule_type' ].'_num']) {
-                    return $list_two['stat_'.$rank_info[ 'rule_type' ].'_num'] <=> $list_one['stat_'.$rank_info[ 'rule_type' ].'_num'];
+                if ($list_one[ 'stat_' . $rank_info[ 'rule_type' ] . '_num' ] != $list_two[ 'stat_' . $rank_info[ 'rule_type' ] . '_num' ]) {
+                    return $list_two[ 'stat_' . $rank_info[ 'rule_type' ] . '_num' ] <=> $list_one[ 'stat_' . $rank_info[ 'rule_type' ] . '_num' ];
                 }
                 //如果 排序规则 相等，则按 商品排序号 排序
-                if ($list_one['goods_sort'] != $list_two['goods_sort']) {
-                    return $list_two['goods_sort'] <=> $list_one['goods_sort'];
+                if ($list_one[ 'goods_sort' ] != $list_two[ 'goods_sort' ]) {
+                    return $list_two[ 'goods_sort' ] <=> $list_one[ 'goods_sort' ];
                 }
 
                 // 如果 商品排序号 也相等，则按 创建时间 排序
-                return $list_two['create_time'] <=> $list_one['create_time'];
+                return $list_two[ 'create_time' ] <=> $list_one[ 'create_time' ];
             });
 
             if ($limit == 0) {
@@ -205,7 +205,7 @@ class RankService extends BaseApiService
                 ->group('goods.goods_id')
                 ->limit($limit)
                 ->order($order)
-                ->append([ 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
+                ->append([ 'goods_cover_thumb_small', 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
             if ($limit == 0) {
                 $goods_list = $this->pageQuery($query);
             } else {
@@ -223,7 +223,7 @@ class RankService extends BaseApiService
                 ->group('goods.goods_id')
                 ->limit($limit)
                 ->order($order)
-                ->append([ 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
+                ->append([ 'goods_cover_thumb_small', 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
             if ($limit == 0) {
                 $goods_list = $this->pageQuery($query);
             } else {
@@ -241,7 +241,7 @@ class RankService extends BaseApiService
                 ->group('goods.goods_id')
                 ->limit($limit)
                 ->order($order)
-                ->append([ 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
+                ->append([ 'goods_cover_thumb_small', 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
             if ($limit == 0) {
                 $goods_list = $this->pageQuery($query);
             } else {
@@ -257,7 +257,7 @@ class RankService extends BaseApiService
                 ->group('goods.goods_id')
                 ->limit($limit)
                 ->order($order)
-                ->append([ 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
+                ->append([ 'goods_cover_thumb_small', 'goods_cover_thumb_mid', 'goods_label_name', 'goods_brand' ]);
             if ($limit == 0) {
                 $goods_list = $this->pageQuery($query);
             } else {
@@ -265,7 +265,7 @@ class RankService extends BaseApiService
             }
         }
         //获取商品SKU、会员价格信息
-        $goods_active_price_service = (new CoreGoodsActivePriceService());
+        $goods_active_price_service = ( new CoreGoodsActivePriceService() );
         if (isset($goods_list[ 'data' ])) {
             if (!empty($goods_list[ 'data' ])) {
                 foreach ($goods_list[ 'data' ] as $key => &$item) {
@@ -273,7 +273,7 @@ class RankService extends BaseApiService
                     $item[ 'goodsSku' ] = $this->getGoodsSku($item);
                     if (!empty($item[ 'goodsSku' ])) {
                         $item[ 'goodsSku' ][ 'member_discount' ] = $item[ 'member_discount' ];
-                        $show_price = $goods_active_price_service->getShowPrice($item[ 'goodsSku' ], $this->member_id);
+                        $show_price = $goods_active_price_service->getShowPrice($item[ 'goodsSku' ],$this->member_id);
                         $item[ 'goodsSku' ][ 'show_price' ] = $show_price[ 'show_price' ];
                         $item[ 'goodsSku' ][ 'show_type' ] = $show_price[ 'show_type' ];
                     }

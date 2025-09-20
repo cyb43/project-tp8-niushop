@@ -288,4 +288,13 @@ class GoodsSku extends BaseModel
             ->joinType('left');
     }
 
+    /**
+     * 关联商品主表（自定义字段）
+     * @return \think\model\relation\HasOne
+     */
+    public function goodsSingle()
+    {
+        return $this->hasOne(Goods::class, 'goods_id', 'goods_id')->joinType('left');
+    }
+
 }

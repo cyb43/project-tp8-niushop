@@ -25,7 +25,7 @@ class GoodsEvaluateStat extends BaseJob
      */
     public function doJob($evaluate_ids)
     {
-        Log::write('商品评价审核批量修改， 批量更新评价统计数据' . var_export($evaluate_ids, true));
+        //Log::write('商品评价审核批量修改， 批量更新评价统计数据' . var_export($evaluate_ids, true));
         try {
             //修改状态
             (new EvaluateService())->updateGoodsEvaluateNumBach($evaluate_ids);

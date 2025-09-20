@@ -107,7 +107,7 @@ isShowDots.value = false;
 // #endif
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -122,7 +122,7 @@ const warpCss = computed(() => {
 })
 
 const goodsTempCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.elementBgColor) style += 'background-color:' + diyComponent.value.elementBgColor + ';';
     if (diyComponent.value.topElementRounded) style += 'border-top-left-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     if (diyComponent.value.topElementRounded) style += 'border-top-right-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
@@ -135,13 +135,13 @@ const goodsTempCss = computed(() => {
 })
 
 const goodsImgCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.topElementRounded) style += 'border-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     return style;
 })
 
 const carouselCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.topCarouselRounded) style += 'border-top-left-radius:' + diyComponent.value.topCarouselRounded * 2 + 'rpx;';
     if (diyComponent.value.topCarouselRounded) style += 'border-top-right-radius:' + diyComponent.value.topCarouselRounded * 2 + 'rpx;';
     if (diyComponent.value.bottomCarouselRounded) style += 'border-bottom-left-radius:' + diyComponent.value.bottomCarouselRounded * 2 + 'rpx;';
@@ -245,8 +245,7 @@ const swiperChange = e => {
             width: 8rpx;
             height: 8rpx;
             border-radius: 8rpx;
-            margin: 0;
-            margin-right: 14rpx;
+            margin: 0 14rpx 0 0;
 
             &.last-of-type {
                 margin-right: 0;

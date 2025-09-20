@@ -22,7 +22,7 @@ class RefundSuccessListener
 {
     public function handle(array $params)
     {
-        if ($params[ 'trade_type' ] == OrderDict::TYPE) {
+        if ($params[ 'trade_type' ] == OrderDict::TYPE || (!empty($params[ 'refund_trade_type' ]) && $params[ 'refund_trade_type' ] == OrderDict::TYPE)) {
 
             ( new CoreRefundService() )->transferSuccess([
                 'refund_no' => $params[ 'refund_no' ],

@@ -2,7 +2,7 @@
     <view class="min-h-screen bg-[var(--page-bg-color)] overflow-hidden">
         <view class="mescroll-box bg-[#f6f6f6]" :class="{ 'cart': config.cart.control && config.cart.event === 'cart', 'detail': !(config.cart.control && config.cart.event === 'cart') }" v-if="tabsData.length">
             <mescroll-body ref="mescrollRef" :down="{ use: false }" @init="mescrollInit" @up="getListFn">
-                <view v-if="config.search.control" class="box-border search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[96rpx]">
+                <view v-if="config.search.control" class="box-border search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[96rpx]" :style="{'top': systemStore.topTabbarInfo.fullHeight || 0}">
                     <view class="flex-1 search-input">
                         <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                         <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" placeholderClass="text-[var(--text-color-light9)]" @confirm="searchNameFn">
@@ -24,8 +24,7 @@
                 <!--  #endif -->
 
                 <!--  #ifndef  H5 -->
-                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0"
-                      :class="{ 'top-[96rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
+                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0" :style="tabsBoxCss">
                     <scroll-view :scroll-y="true" class="scroll-height">
                         <view class="bg-[var(--temp-bg)]">
                             <view class="tab-item"
@@ -39,6 +38,7 @@
                 <!--  #endif -->
 
                 <view class="flex items-center h-[98rpx] pl-[24rpx] pr-[48rpx] py-[20rpx] z-10 bg-white fixed left-[168rpx] right-0 box-border top-0"
+                    :style="twoTabCss"
                       :class="{ '!top-[94rpx]': config.search.control }"
                       v-if="tabsData[tabActive]?.child_list && tabsData[tabActive]?.child_list.length">
                     <template v-if="!labelPopup">
@@ -63,7 +63,7 @@
                 </view>
                 <view class="labelPopup" :class="{ 'active': config.search.control }">
 					<u-popup :show="labelPopup" mode="top" @close="labelPopup = false">
-                        <view class="flex flex-wrap pt-[20rpx] pb-[24rpx]" @touchmove.prevent.stop>
+                        <view class="flex flex-wrap pb-[24rpx]" :style="labelPopupCss" @touchmove.prevent.stop>
                             <text
                                 class="px-[14rpx] flex-shrink-0 w-[160rpx] box-border ml-[20rpx] mb-[26rpx] h-[60rpx] text-center leading-[56rpx] text-[24rpx] border-[2rpx] border-solid !rounded-[100rpx] text-[#333] truncate"
                                 :class="{ 'bg-[var(--primary-color-light)] font-500 text-[var(--primary-color)] border-[var(--primary-color)]': index === subActive, 'border-[var(--temp-bg)]  bg-[var(--temp-bg)]': index != subActive }"
@@ -235,6 +235,8 @@ import { useLogin } from '@/hooks/useLogin'
 import useMemberStore from '@/stores/member'
 import useCartStore from '@/addon/shop/stores/cart'
 import { cloneDeep } from 'lodash-es'
+import useSystemStore from '@/stores/system';
+const systemStore = useSystemStore()
 
 const instance = getCurrentInstance(); // 获取组件实例
 const cartStore = useCartStore();
@@ -301,6 +303,42 @@ const getListFn = (mescroll: mescrollStructure) => {
         mescroll.endErr(); // 请求失败, 结束加载
     })
 }
+// 左侧tab切换样式
+const tabsBoxCss = computed(() => {
+    let style = ''
+    if(config.search.control){
+        style += `top: calc(${ systemStore.topTabbarInfo.height || 0 }px + 96rpx);`
+    }else{
+        style += `top: ${ systemStore.topTabbarInfo.height || 0 }px;`
+    }
+
+    if(config.cart.control && config.cart.event === 'cart'){
+        style += `bottom: 198rpx !important;`
+    }
+    return style
+})
+// 二级菜单样式
+const twoTabCss = computed(() => {
+    let style = ''
+    if(config.search.control){
+        style += `top: calc(${ systemStore.topTabbarInfo.height || 0 }px + 94rpx) !important;`
+    }else{
+        style += `top: ${ systemStore.topTabbarInfo.height || 0 }px !important;`
+    }
+    return style
+})
+
+// 二级菜单弹窗样式
+const labelPopupCss = computed(() => {
+    let style = ''
+    // #ifdef MP-WEIXIN
+    style = `padding-top: calc(${ systemStore.topTabbarInfo.height || 0 }px + 20rpx) !important;`
+    // #endif
+    // #ifdef H5
+    style = `padding-top: 20rpx !important;`
+    // #endif
+    return style
+})
 
 const goodsMaxBuy = () => {
     list.value.forEach((data, index) => {
@@ -411,15 +449,6 @@ const animationAddCart = (row: any, id: any) => {
     }, 100);
     // #endif
 }
-
-/**
- * 获取购物车数据
- * @description 获取分类数据
- * */
-const initAll = ref({
-    allActive: -1,
-    data: { category_name: "全部", category_id: '' }
-})
 
 const tabsData: any = ref<Array<Object>>([])
 const getCategoryData = () => {
@@ -647,16 +676,12 @@ const settlement = () => {
 
 // 价格类型
 const priceType = (data: any) => {
-    let type = "";
-	type = data.goodsSku.show_type
-    return type;
+	return data.goodsSku.show_type
 }
 
 // 商品价格
 const goodsPrice = (data: any) => {
-    let price = "0.00";
-	price = data.goodsSku.show_price
-    return price;
+	return data.goodsSku.show_price
 }
 </script>
 
@@ -756,6 +781,7 @@ const goodsPrice = (data: any) => {
     min-height: 56rpx;
     padding: 20rpx 0;
     background-color: #fff;
+    font-size: 24rpx;
 }
 
 .tabs-box .tab-item-active {
@@ -766,7 +792,7 @@ const goodsPrice = (data: any) => {
     &::before {
         display: inline-block;
         position: absolute;
-        left: 0rpx;
+        left: 0;
         top: 50%;
         transform: translateY(-50%);
         content: '';
@@ -778,7 +804,7 @@ const goodsPrice = (data: any) => {
     &::after {
         display: inline-block;
         position: absolute;
-        left: 0rpx;
+        left: 0;
         top: 50%;
         transform: translateY(-50%);
         content: '';

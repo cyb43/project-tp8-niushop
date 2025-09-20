@@ -37,6 +37,8 @@ class GoodsDict
     const GIFT = 'gift';
     const DELIVERY = 'delivery';
     const STOCK = 'stock';
+    const MEMBER_DISCOUNT = 'member_discount';
+    const DIY_DETAIL = 'diy_detail';
 
     const SORT_TYPE_ASC = 'asc';
     const SORT_TYPE_DESC = 'desc';
@@ -94,7 +96,9 @@ class GoodsDict
             self::GIFT => get_lang('dict_shop_goods_batch_set.gift'),
             self::DELIVERY => get_lang('dict_shop_goods_batch_set.delivery'),
             self::STOCK => get_lang('dict_shop_goods_batch_set.stock'),
+            self::MEMBER_DISCOUNT => get_lang('dict_shop_goods_batch_set.member_discount'),
             self::DIY_FORM => get_lang('dict_shop_goods_batch_set.diy_form'),
+            self::DIY_DETAIL => get_lang('dict_shop_goods_batch_set.diy_detail'),
         ];
         if (!$type) {
             return $data;

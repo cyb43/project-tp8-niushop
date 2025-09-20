@@ -143,13 +143,13 @@
 </template>
 
 <script lang="ts" setup>
-import { t } from "@/lang";
-import { img, deepClone } from "@/utils/common";
+import { t } from '@/lang'
+import { img, deepClone } from '@/utils/common'
 import { FormInstance, ElMessage } from 'element-plus'
-import { ref, reactive, nextTick } from "vue";
+import { ref, reactive, nextTick } from 'vue'
 
-const showDialog = ref(false);
-const emit = defineEmits(["skuSave"]);
+const showDialog = ref(false)
+const emit = defineEmits(['skuSave'])
 const formData: Record<string, any> = ref({ skuList: [] })
 const formRef = ref<FormInstance>()
 
@@ -162,7 +162,7 @@ const regExp = {
 
 const show = (data: any) => {
     formData.value = deepClone(data)
-    //设置校验下标
+    // 设置校验下标
     formData.value.skuList.forEach((el: any, index: number) => {
         // if (el.is_enabled == 1){
 
@@ -172,10 +172,10 @@ const show = (data: any) => {
         el.index = index
     })
     setGoodsList()
-    showDialog.value = true;
+    showDialog.value = true
 }
 
-//设置展示商品
+// 设置展示商品
 interface goodsTableInterface {
     page: number,
     limit: number,
@@ -212,16 +212,16 @@ const setGoodsList = (page = 1) => {
     }
 }
 
-//完整数据转分页数据
+// 完整数据转分页数据
 const splitArray = (array: [], size: number) => {
-    var result = [];
-    for (var i = 0; i < array.length; i += size) {
-        result.push(array.slice(i, i + size));
+    const result = []
+    for (let i = 0; i < array.length; i += size) {
+        result.push(array.slice(i, i + size))
     }
-    return result;
+    return result
 }
 
-/*****批量设置 ****/
+/** ***批量设置 ****/
 interface batchOperationInterface {
     discount_type: any,
     discountNumber: any,
@@ -267,7 +267,7 @@ const saveBatch = () => {
     if (!multipleSelection.value.length) {
         ElMessage({
             type: 'warning',
-            message: `${ t('batchEmptySelectedGoodsTips') }`
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
@@ -275,25 +275,25 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('discountsPlaceholder') }`
+                message: `${t('discountsPlaceholder')}`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.number.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('discountsTips') }`
+                message: `${t('discountsTips')}`
             })
             return
         } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('discountsTipsTwo') }`
+                message: `${t('discountsTipsTwo')}`
             })
             return
         } else if (batchOperation.value.discountNumber > 9.9) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('discountsTipsThree') }`
+                message: `${t('discountsTipsThree')}`
             })
             return
         }
@@ -301,64 +301,60 @@ const saveBatch = () => {
         if (batchOperation.value.discountNumber.length == 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('reduceMoneyPlaceholder') }`
+                message: `${t('reduceMoneyPlaceholder')}`
             })
             return
         } else if (isNaN(batchOperation.value.discountNumber) || !regExp.digit.test(batchOperation.value.discountNumber)) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('reduceMoneyTips') }`
-            })
-            return
-        } else if (batchOperation.value.discountNumber <0) {
-            ElMessage({
-                type: 'warning',
-                message: `${ t('reduceMoneyTipsTwo') }`
-            })
-            return
-        }
-
-    } else {
-        if (batchOperation.value.discountNumber.length == 0) {
-            ElMessage({
-                type: 'warning',
-                message: `${ t('promotionalPlaceholder') }`
-            })
-            return
-        } else if (isNaN(batchOperation.value.discountNumber) || !regExp.digit.test(batchOperation.value.discountNumber)) {
-            ElMessage({
-                type: 'warning',
-                message: `${ t('promotionalTips') }`
+                message: `${t('reduceMoneyTips')}`
             })
             return
         } else if (batchOperation.value.discountNumber < 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('promotionalTipsTwo') }`
+                message: `${t('reduceMoneyTipsTwo')}`
+            })
+            return
+        }
+    } else {
+        if (batchOperation.value.discountNumber.length == 0) {
+            ElMessage({
+                type: 'warning',
+                message: `${t('promotionalPlaceholder')}`
+            })
+            return
+        } else if (isNaN(batchOperation.value.discountNumber) || !regExp.digit.test(batchOperation.value.discountNumber)) {
+            ElMessage({
+                type: 'warning',
+                message: `${t('promotionalTips')}`
+            })
+            return
+        } else if (batchOperation.value.discountNumber < 0) {
+            ElMessage({
+                type: 'warning',
+                message: `${t('promotionalTipsTwo')}`
             })
             return
         }
     }
     formData.value.skuList.forEach((el: any, index: number) => {
         multipleSelection.value.forEach((v: any) => {
-
             if (v.sku_id === el.sku_id && el.is_enabled === 1) {
-
                 if (batchOperation.value.discount_type == 'discount') {
-                    //折扣
+                    // 折扣
                     el.discount_rate = batchOperation.value.discountNumber + ''
-                    //实际
+                    // 实际
                     el.specify_price = (el.price * (batchOperation.value.discountNumber / 10)).toFixed(2)
                     el.discount_price = (el.price * (batchOperation.value.discountNumber / 10)).toFixed(2)
-                    //减价
+                    // 减价
                     el.reduce_money = (el.price - el.specify_price).toFixed(2)
-                } else if (batchOperation.value.discount_type == 'reduce') {//减价
+                } else if (batchOperation.value.discount_type == 'reduce') { // 减价
                     el.reduce_money = batchOperation.value.discountNumber + ''
                     el.specify_price = (el.price - el.reduce_money).toFixed(2)
                     el.discount_price = (el.price - el.reduce_money).toFixed(2)
                     el.discount_rate = (el.specify_price / el.price * 10).toFixed(1)
-
-                } else {//实际
+                } else { // 实际
                     el.specify_price = batchOperation.value.discountNumber + ''
                     el.discount_price = batchOperation.value.discountNumber + ''
                     el.reduce_money = (el.price - el.specify_price).toFixed(2)
@@ -379,14 +375,14 @@ const saveBatch = () => {
     // goods_listTableRef.value.clearSelection()
 }
 
-/**** 修改单行 *****/
+/** ** 修改单行 *****/
 const inputBlur = (row: any, discount_type: string, index: number) => {
     if (discount_type == 'discount') {
         if (row.discount_rate.length) {
-            //实际
+            // 实际
             row.specify_price = (row.price * (row.discount_rate / 10)).toFixed(2)
             row.discount_price = (row.price * (row.discount_rate / 10)).toFixed(2)
-            //减价
+            // 减价
             row.reduce_money = (row.price - row.specify_price).toFixed(2)
         }
     } else if (discount_type == 'reduce') { // 减价
@@ -395,14 +391,12 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
             row.discount_price = (row.price - row.reduce_money).toFixed(2)
             row.discount_rate = (row.specify_price / row.price * 10).toFixed(1)
         }
-
     } else { // 实际
         if (row.specify_price.length) {
             row.discount_price = row.specify_price + ''
             row.reduce_money = (row.price - row.specify_price).toFixed(2)
             row.discount_rate = (row.specify_price / row.price * 10).toFixed(1)
         }
-
     }
     row.discount_type = discount_type + ''
     if (formRef.value) {
@@ -413,7 +407,7 @@ const inputBlur = (row: any, discount_type: string, index: number) => {
     }
 }
 
-//sku状态
+// sku状态
 const enabledEvent = (row: any) => {
     row.is_enabled = row.is_enabled ? 0 : 1
     if (row.is_enabled) {
@@ -463,38 +457,36 @@ const validFn = (row: any) => {
 
 const save = (formEl: FormInstance | undefined) => {
     if (!formEl) return
-    for (var i = 0; i < formData.value.skuList.length; i++) {
+    for (let i = 0; i < formData.value.skuList.length; i++) {
         if (!validFn(formData.value.skuList[i])) {
-            let page = Math.ceil(i + 1 <= goodsTable.limit ? 1 : (i + 1) / goodsTable.limit)
+            const page = Math.ceil(i + 1 <= goodsTable.limit ? 1 : (i + 1) / goodsTable.limit)
             goodsTable.list = goodsTable.data[page - 1]
             goodsTable.page = page
-            break;
+            break
         }
-
     }
-    nextTick(async() => {
+    nextTick(async () => {
         await formEl.validate((valid) => {
             if (valid) {
                 formData.value.valid = true
-                let discount_rate_list = formData.value.skuList.filter((el: any) => el.is_enabled === 1).map((el: any) => Number(el.discount_rate))
-                let reduce_money_list = formData.value.skuList.filter((el: any) => el.is_enabled === 1).map((el: any) => Number(el.reduce_money))
-                let specify_price_list = formData.value.skuList.filter((el: any) => el.is_enabled === 1).map((el: any) => Number(el.specify_price))
+                const discount_rate_list = formData.value.skuList.filter((el: any) => el.is_enabled === 1).map((el: any) => Number(el.discount_rate))
+                const reduce_money_list = formData.value.skuList.filter((el: any) => el.is_enabled === 1).map((el: any) => Number(el.reduce_money))
+                const specify_price_list = formData.value.skuList.filter((el: any) => el.is_enabled === 1).map((el: any) => Number(el.specify_price))
                 formData.value.max_discount_rate = Math.max(...discount_rate_list)
                 formData.value.min_discount_rate = Math.min(...discount_rate_list)
                 formData.value.max_reduce_money = Math.max(...reduce_money_list)
                 formData.value.min_reduce_money = Math.min(...reduce_money_list)
                 formData.value.max_specify_price = Math.max(...specify_price_list)
                 formData.value.min_specify_price = Math.min(...specify_price_list)
-                emit("skuSave", formData.value);
-                showDialog.value = false;
+                emit('skuSave', formData.value)
+                showDialog.value = false
             }
         })
     })
-
-};
+}
 defineExpose({
     show
-});
+})
 </script>
 
 <style lang="scss" scoped>

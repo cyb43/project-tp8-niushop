@@ -26,7 +26,7 @@
                         <view class="text-[28rpx] break-all leading-[1.2] text-[#333] my-[20rpx] overflow-clip">{{ item.content }}</view>
                         <template v-if="item.image_mid.length === 1">
                             <view class="w-[420rpx] mt-[10rpx]">
-                                <u--image width="420rpx" height="420rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[0])" model="aspectFill" @click="imgListPreview(item.images[0])">
+                                <u--image width="420rpx" height="420rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[0])" model="aspectFill" @click="imgListPreview(item.images[0],item.images)">
                                     <template #error>
                                         <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                     </template>
@@ -36,14 +36,14 @@
                         <template v-if="item.image_mid.length === 2">
                             <view class="flex justify-between mt-[10rpx]">
                                 <view class="w-[322rpx]">
-                                    <u--image width="322rpx" height="322rpx" :src="img(item.image_mid[0])" :radius="'var(--goods-rounded-big)'" model="aspectFill" @click="imgListPreview(item.images[0])">
+                                    <u--image width="322rpx" height="322rpx" :src="img(item.image_mid[0])" :radius="'var(--goods-rounded-big)'" model="aspectFill" @click="imgListPreview(item.images[0],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
                                     </u--image>
                                 </view>
                                 <view class="w-[322rpx]">
-                                    <u--image width="322rpx" height="322rpx" :src="img(item.image_mid[1])" :radius="'var(--goods-rounded-big)'" model="aspectFill" @click="imgListPreview(item.images[1])">
+                                    <u--image width="322rpx" height="322rpx" :src="img(item.image_mid[1])" :radius="'var(--goods-rounded-big)'" model="aspectFill" @click="imgListPreview(item.images[1],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
@@ -53,19 +53,19 @@
                         </template>
                         <template v-if="item.image_mid.length === 3">
                             <view class="flex justify-between mt-[10rpx]">
-                                <u--image width="430rpx" height="430rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[0])" model="aspectFill" @click="imgListPreview(item.images[0])">
+                                <u--image width="430rpx" height="430rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[0])" model="aspectFill" @click="imgListPreview(item.images[0],item.images)">
                                     <template #error>
                                         <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                     </template>
                                 </u--image>
                                 <view>
-                                    <u--image width="205rpx" height="205rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[1])" model="aspectFill" @click="imgListPreview(item.images[1])">
+                                    <u--image width="205rpx" height="205rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[1])" model="aspectFill" @click="imgListPreview(item.images[1],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
                                     </u--image>
                                     <view class="mt-[20rpx]">
-                                        <u--image width="205rpx" height="205rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[2])" model="aspectFill" @click="imgListPreview(item.images[2])">
+                                        <u--image width="205rpx" height="205rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[2])" model="aspectFill" @click="imgListPreview(item.images[2],item.images)">
                                             <template #error>
                                                 <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                             </template>
@@ -78,28 +78,28 @@
                         <template v-if="item.image_mid.length === 4">
                             <view class="flex flex-wrap mt-[10rpx]">
                                 <view class="mr-[15rpx] mb-[15rpx]">
-                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[0])" model="aspectFill" @click="imgListPreview(item.images[0])">
+                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[0])" model="aspectFill" @click="imgListPreview(item.images[0],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
                                     </u--image>
                                 </view>
                                 <view class="mr-[15rpx] mb-[15rpx]">
-                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[1])" model="aspectFill" @click="imgListPreview(item.images[1])">
+                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[1])" model="aspectFill" @click="imgListPreview(item.images[1],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
                                     </u--image>
                                 </view>
                                 <view class="mr-[15rpx]">
-                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[2])" model="aspectFill" @click="imgListPreview(item.images[2])">
+                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[2])" model="aspectFill" @click="imgListPreview(item.images[2],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
                                     </u--image>
                                 </view>
                                 <view class="mr-[15rpx]">
-                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[3])" model="aspectFill" @click="imgListPreview(item.images[3])">
+                                    <u--image width="215rpx" height="215rpx" :radius="'var(--goods-rounded-big)'" :src="img(item.image_mid[3])" model="aspectFill" @click="imgListPreview(item.images[3],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
@@ -112,7 +112,7 @@
                                 <view v-for="(imageItem, imageIndex) in item.image_mid" class="mb-[10rpx]" :class="{'mr-[10rpx]':(imageIndex + 1) % 3 != 0}">
                                     <u--image width="211rpx" height="211rpx" :src="img(imageItem)" model="aspectFill"
                                               :radius="'var(--goods-rounded-big)'"
-                                              @click="imgListPreview(item.images[imageIndex])">
+                                              @click="imgListPreview(item.images[imageIndex],item.images)">
                                         <template #error>
                                             <u-icon name="photo" color="var(--text-color-light9)" size="50"></u-icon>
                                         </template>
@@ -120,8 +120,7 @@
                                 </view>
                             </view>
                         </template>
-                        <view v-if="item.explain_first !=''"
-                              class="text-[26rpx]  !text-[var(--text-color-light6)] mt-[20rpx] pt-[20rpx] border-0 border-t-[2rpx] border-solid border-[#ebebec] w-[100%] overflow-clip leading-[1.2]  break-all">
+                        <view v-if="item.explain_first !=''" class="text-[26rpx]  !text-[var(--text-color-light6)] mt-[20rpx] pt-[20rpx] border-0 border-t-[2rpx] border-solid border-[#ebebec] w-[100%] overflow-clip leading-[1.2] break-all">
                             <text class=" text-[var(--primary-color)]">商家回复：</text>
                             {{ item.explain_first }}
                         </view>
@@ -191,15 +190,18 @@ const getEvaluateListFn = (mescroll: any) => {
     })
 }
 //预览图片
-const imgListPreview = (item: any) => {
-    if (item === '') return false
-    var urlList = []
-    urlList.push(img(item))  //push中的参数为 :src="item.img_url" 中的图片地址
-    uni.previewImage({
-        indicator: "number",
-        loop: true,
-        urls: urlList
-    })
+const imgListPreview = (current: string, all: string[]) => {
+	if (!current || !all?.length) return
+
+	const urlList = all.map(img)
+	const currentUrl = img(current)
+
+	uni.previewImage({
+		current: currentUrl,
+		urls: urlList,
+		indicator: 'number',
+		loop: true
+	})
 }
 
 //关闭预览图片

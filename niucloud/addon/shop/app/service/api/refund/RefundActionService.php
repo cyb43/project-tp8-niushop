@@ -62,12 +62,16 @@ class RefundActionService extends BaseApiService
 
         //查询是否是最后一笔退款且还没有退运费
         $order_goods_count = $order_goods_model->where([['order_id', '=', $order_id], ['is_gift', '=', 0]])->count();
-        $refund_count = $this->model->where([['order_id', '=', $order_id], ['status', '<>', OrderRefundDict::CLOSE]])->count();
+        $refund_count = $this->model->where([['order_id', '=', $order_id]])->whereNotIn(
+            'status', [OrderRefundDict::CLOSE, OrderRefundDict::SHOP_ACTIVE_CLOSE_REFUND]
+        )->count();
         //是否包含运费
         $is_refund_delivery = 0;
         if(($refund_count + 1) >= $order_goods_count){//最后一笔退款
             //判断是否已经退过运费
-            $refund_delivery_count = $this->model->where([['order_id', '=', $order_id], ['status', '<>', OrderRefundDict::CLOSE], ['is_refund_delivery', '=', 1]])->count();
+            $refund_delivery_count = $this->model->where([['order_id', '=', $order_id], ['is_refund_delivery', '=', 1]])->whereNotIn(
+                'status', [OrderRefundDict::CLOSE, OrderRefundDict::SHOP_ACTIVE_CLOSE_REFUND]
+            )->count();
             if($refund_delivery_count == 0){//已经退过运费的,就不需要重复再退了
                 $is_refund_delivery = 1;
             }
@@ -161,7 +165,7 @@ class RefundActionService extends BaseApiService
         ];
         $order_refund_info->save($update_data);
         //订单申请退款后事件
-        event('AfterShopOrderRefundEdit', ['order_refund_no' => $order_refund_no, 'refund_data' => array_merge($order_refund_info->toArray(), $update_data)]);
+        event('AfterShopOrderRefundEdit', [ 'order_refund_no' => $order_refund_no, 'refund_data' => array_merge($order_refund_info->toArray(), $update_data)]);
         return true;
     }
 
@@ -189,7 +193,7 @@ class RefundActionService extends BaseApiService
         //查询订单项信息
         $order_refund_info = $this->model->where([
             ['order_refund_no', '=', $order_refund_no],
-            ['member_id', '=', $this->member_id],
+            ['member_id', '=', $this->member_id]
         ])->findOrEmpty();
         if ($order_refund_info->isEmpty()) throw new ApiException('SHOP_ORDER_REFUND_IS_INVALID');//退款已失效
         if ($order_refund_info['status'] != OrderRefundDict::STORE_AGREE_REFUND_GOODS_APPLY_WAIT_BUYER) throw new ApiException('SHOP_ORDER_REFUND_STATUS_NOT_SUPPORT_ACTION');//退款已失效(只有被拒绝的请求才可以修改退货)
@@ -229,7 +233,7 @@ class RefundActionService extends BaseApiService
         //查询订单项信息
         $order_refund_info = $this->model->where([
             ['order_refund_no', '=', $order_refund_no],
-            ['member_id', '=', $this->member_id],
+            ['member_id', '=', $this->member_id]
         ])->findOrEmpty();
         if ($order_refund_info->isEmpty()) throw new ApiException('SHOP_ORDER_REFUND_IS_INVALID');//退款已失效
         if (!in_array($order_refund_info['status'], [OrderRefundDict::STORE_REFUSE_TAKE_REFUND_GOODS_WAIT_BUYER, OrderRefundDict::BUYER_REFUND_GOODS_WAIT_STORE])) throw new ApiException('SHOP_ORDER_REFUND_STATUS_NOT_SUPPORT_ACTION');//退款已失效(只有被拒绝的请求才可以修改退款)
@@ -289,11 +293,15 @@ class RefundActionService extends BaseApiService
 
         //查询是否是最后一笔退款且还没有退运费
         $order_goods_count = $order_goods_model->where([['order_id', '=', $order_id], ['is_gift', '=', 0]])->count();
-        $refund_count = $this->model->where([['order_id', '=', $order_id], ['status', '<>', OrderRefundDict::CLOSE]])->count();
+        $refund_count = $this->model->where([['order_id', '=', $order_id]])->whereNotIn(
+            'status', [OrderRefundDict::CLOSE, OrderRefundDict::SHOP_ACTIVE_CLOSE_REFUND]
+        )->count();
         $is_refund_delivery = 0;
         if(($refund_count + 1) >= $order_goods_count){//最后一笔退款
             //判断是否已经退过运费
-            $refund_delivery_count = $this->model->where([['order_id', '=', $order_id], ['status', '<>', OrderRefundDict::CLOSE], ['is_refund_delivery', '=', 1]])->count();
+            $refund_delivery_count = $this->model->where([['order_id', '=', $order_id], ['is_refund_delivery', '=', 1]])->whereNotIn(
+                'status', [OrderRefundDict::CLOSE, OrderRefundDict::SHOP_ACTIVE_CLOSE_REFUND]
+            )->count();
             if($refund_delivery_count == 0){//已经退过运费的,就不需要重复再退了
 //                $refund_delivery_money = $order['delivery_money'];
                 $is_refund_delivery = 1;
@@ -322,7 +330,7 @@ class RefundActionService extends BaseApiService
 
         $order_refund_info = $this->model->where([
             ['order_refund_no', '=', $order_refund_no],
-            ['member_id', '=', $this->member_id],
+            ['member_id', '=', $this->member_id]
         ])->findOrEmpty();
         if ($order_refund_info->isEmpty()) throw new ApiException('SHOP_ORDER_IS_INVALID');//退款已失效
         $order_goods_id = $order_refund_info['order_goods_id'];//订单id

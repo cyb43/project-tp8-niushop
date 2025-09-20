@@ -74,7 +74,7 @@ return [
                     "lineHeight" => 0,
                     "angle" => 0,
                     "zIndex" => 3,
-                    "fontFamily" => "static/font/price.ttf",
+                    "fontFamily" => "static/font/OPLUSSANS3-REGULAR.ttf",
                     "fontSize" => 44,
                     "fontColor" => "#E4163F"
                 ],
@@ -95,7 +95,7 @@ return [
                     "y" => 1040,
                     "angle" => 0,
                     "zIndex" => 4,
-                    "fontFamily" => "static/font/price.ttf",
+                    "fontFamily" => "static/font/OPLUSSANS3-REGULAR.ttf",
                     "fontSize" => 36,
                     "weight" => false,
                     "space" => 0,
@@ -345,5 +345,5 @@ return [
                 ],
             ]
         ]
-    ],
+    ]
 ];

@@ -34,6 +34,7 @@ class Exchange extends BaseAdminController
             [ "names", "" ],
             [ "status", "" ],
             [ "create_time", "" ],
+            [ "active_id", [] ],
         ]);
         return success(( new ExchangeService() )->getPage($data));
     }

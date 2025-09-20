@@ -35,8 +35,8 @@ class Cart extends BaseValidate
     ];
 
     protected $scene = [
-        "add" => [ 'member_id', 'goods_id', 'sku_id', 'num', 'market_type', 'market_type_id', 'status', 'invalid_remark' ],
-        "edit" => [ 'member_id', 'sku_id', 'num', 'market_type', 'market_type_id', 'status', 'invalid_remark' ]
+        "add" => [ 'member_id', 'goods_id', 'sku_id', 'num', 'status', 'invalid_remark' ],
+        "edit" => [ 'member_id', 'sku_id', 'num', 'status', 'invalid_remark' ]
     ];
 
 }

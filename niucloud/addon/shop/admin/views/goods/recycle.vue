@@ -101,7 +101,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { img ,setTablePageStorage,getTablePageStorage} from '@/utils/common'
+import { img, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import { ElMessageBox, ElMessage, FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'
 import { cloneDeep } from 'lodash-es'
@@ -340,8 +340,8 @@ const sortChange = (event: any) => {
     height: 100% !important;
     z-index: 10;
     position: absolute;
-    top: 0px;
-    right: 0px;
+    top: 0;
+    right: 0;
 }
 
 .recyle .el-cascader-panel .el-radio__input{

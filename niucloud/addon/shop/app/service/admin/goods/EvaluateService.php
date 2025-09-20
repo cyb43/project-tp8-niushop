@@ -18,7 +18,10 @@ use addon\shop\app\model\goods\Goods;
 use addon\shop\app\service\core\goods\CoreGoodsEvaluateService;
 use addon\shop\app\service\core\goods\CoreGoodsStatService;
 use core\base\BaseAdminService;
+use core\exception\AdminException;
+use core\exception\CommonException;
 use think\db\Query;
+use think\facade\Db;
 
 
 /**
@@ -44,14 +47,20 @@ class EvaluateService extends BaseAdminService
         $field = 'evaluate_id,order_id,order_goods_id,goods_id,member_id,content,images,is_anonymous,scores,is_audit,explain_first,create_time,topping';
         $order = 'create_time desc';
 
-        $goods_where = [];
+        $goods_where =$evaluate_where = [];
+        $evaluate_where[] = [
+            [ 'evaluate.evaluate_id', '>', 0 ]
+        ];
         if (isset($where[ 'goods_name' ]) && $where[ 'goods_name' ] != '') {
             $goods_where[] = [ 'goods.goods_name', 'like', '%' . $this->model->handelSpecialCharacter($where[ 'goods_name' ]) . '%' ];
+        }
+        if (isset($where[ 'status' ]) && $where[ 'status' ] != '') {
+            $evaluate_where[] = [ 'evaluate.is_audit', '=', $where[ 'status' ] ];
         }
 
         $search_model = $this->model
             // ->withSearch(["goods_name"], $where)
-            ->where([ [ 'evaluate.evaluate_id', '>', 0 ] ])
+            ->where($evaluate_where)
             ->field($field)
             ->withJoin([
                 'goods' => function(Query $query) use ($goods_where) {
@@ -208,5 +217,77 @@ class EvaluateService extends BaseAdminService
             }
         });
         return true;
+    }
+
+    /**
+     * 批量通过
+     * @param $evaluate_ids
+     * @return bool
+     */
+    public function batchAdopt($evaluate_ids)
+    {
+        $evaluate_list = $this->model->where([  [ 'evaluate_id', 'in', $evaluate_ids ], [ 'is_audit', '=', EvaluateDict::AUDIT ] ])->column('evaluate_id, goods_id');
+        $goods_ids = array_column($evaluate_list, 'goods_id');
+        $evaluate_ids = array_column($evaluate_list, 'evaluate_id');
+        Db::startTrans();
+        try {
+            if (!empty($evaluate_list)){
+                $this->model->where([  [ 'evaluate_id', 'in', $evaluate_ids ] ])->update([ 'is_audit' => EvaluateDict::AUDIT_ADOPT ]);
+                foreach ($goods_ids as $value){
+                    CoreGoodsStatService::addStat([ 'goods_id' => $value, 'evaluate_num' => 1 ]);
+                    ( new Goods() )->where([ [ 'goods_id', '=', $value ] ])->inc('evaluate_num', 1)->update();
+                }
+            }
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw new CommonException($e->getMessage());
+        }
+    }
+
+    /**
+     * 批量拒绝
+     * @param $evaluate_ids
+     * @return bool
+     */
+    public function batchRefuse($evaluate_ids)
+    {
+        $evaluate_list = $this->model->where([ ['evaluate_id', 'in', $evaluate_ids], [ 'is_audit', '=', EvaluateDict::AUDIT ]])->column('evaluate_id, is_audit');
+        if (!empty($evaluate_list)){
+            $this->model->where([ ['evaluate_id', 'in', $evaluate_ids]])->update(['is_audit' => EvaluateDict::AUDIT_REFUSE]);
+        }
+        return true;
+    }
+
+    /**
+     * 批量删除
+     * @param $evaluate_ids
+     * @return bool
+     */
+    public function batchDel($evaluate_ids)
+    {
+        $evaluate_list = $this->model->where([ [ 'evaluate_id', 'in', $evaluate_ids ] ])->column('is_audit, goods_id');
+
+        Db::startTrans();
+        try {
+            $this->model->where([ ['evaluate_id', 'in', $evaluate_ids]])->delete();
+
+            foreach ($evaluate_list as $value){
+                switch ($value[ 'is_audit' ]){
+                    case EvaluateDict::AUDIT_NO:
+                    case EvaluateDict::AUDIT_ADOPT:
+                        CoreGoodsStatService::addStat([ 'goods_id' => $value[ 'goods_id' ], 'evaluate_num' => -1 ]);
+                        ( new Goods() )->where([ [ 'goods_id', '=', $value[ 'goods_id' ] ] ])->dec('evaluate_num', 1)->update();
+                        break;
+                }
+            }
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw new CommonException($e->getMessage());
+        }
+
     }
 }

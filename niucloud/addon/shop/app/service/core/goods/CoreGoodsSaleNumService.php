@@ -51,4 +51,18 @@ class CoreGoodsSaleNumService extends BaseCoreService
         return true;
     }
 
+    public function batchUpdateSaleNum($data)
+    {
+        if (!isset($data['goods']) || !isset($data['sku'])) {
+            return false;
+        }
+        try {
+            $this->model->saveAll($data['goods']);
+            (new GoodsSku())->saveAll($data['sku']);
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
+    }
+
+
 }

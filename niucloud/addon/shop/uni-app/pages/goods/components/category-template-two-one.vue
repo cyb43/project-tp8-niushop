@@ -1,14 +1,14 @@
 <template>
     <view class=" bg-[var(--page-bg-color)] overflow-hidden min-h-screen">
         <view class="mescroll-box" v-if="tabsData.length">
-            <view v-if="config.search.control" class="search-box box-border z-10 fixed top-0 left-0 right-0  h-[100rpx] bg-[#fff]">
+            <view v-if="config.search.control" class="search-box box-border z-10 fixed top-0 left-0 right-0  h-[100rpx] bg-[#fff]" :style="{'top': systemStore.topTabbarInfo.fullHeight || 0}">
                 <view class="flex-1 search-input">
                     <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                     <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" placeholderClass="text-[var(--text-color-light9)]" @confirm="searchNameFn">
                     <text v-if="searchName" class="nc-iconfont nc-icon-cuohaoV6xx1 clear" @click="searchName=''"></text>
                 </view>
             </view>
-            <view class="tabs-box z-2 fixed left-0 bg-[#fff] bottom-[50px] top-0" :class="{ '!top-[100rpx]': config.search.control }">
+            <view class="tabs-box z-2 fixed left-0 bg-[#fff] bottom-[50px] top-0" :style="tabsBoxCss">
                 <scroll-view :scroll-y="true" class="scroll-height">
                     <view class="bg-[var(--temp-bg)]">
                         <view class="tab-item"
@@ -46,11 +46,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { img, redirect } from '@/utils/common';
 import { getGoodsCategoryTree } from '@/addon/shop/api/goods';
 import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.vue';
 import { t } from '@/locale';
+import useSystemStore from '@/stores/system';
+const systemStore = useSystemStore()
 
 const prop = defineProps({
     config: {
@@ -71,6 +73,16 @@ const loading = ref<boolean>(true);
 
 onMounted(() => {
     getCategoryData()
+})
+
+const tabsBoxCss = computed(() => {
+    let style = ''
+    if(config.search.control){
+        style += `top: calc(${ systemStore.topTabbarInfo.height || 0 }px + 100rpx);`
+    }else{
+        style += `top: ${ systemStore.topTabbarInfo.height || 0 }px;`
+    }
+    return style
 })
 
 /**
@@ -207,6 +219,7 @@ const searchNameFn = () => {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 24rpx;
 }
 
 .tabs-box .tab-item-active {
@@ -217,7 +230,7 @@ const searchNameFn = () => {
     &::before {
         display: inline-block;
         position: absolute;
-        left: 0rpx;
+        left: 0;
         top: 50%;
         transform: translateY(-50%);
         content: '';
@@ -229,7 +242,7 @@ const searchNameFn = () => {
     &::after {
         display: inline-block;
         position: absolute;
-        left: 0rpx;
+        left: 0;
         top: 50%;
         transform: translateY(-50%);
         content: '';

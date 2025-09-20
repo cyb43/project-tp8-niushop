@@ -54,7 +54,7 @@ class CouponService extends BaseApiService
         $category_coupon_id = [];
         if (!empty($data[ 'category_id' ])) {
             $coupon_goods_model = new CouponGoods();
-            $category_coupon_list = $coupon_goods_model->where([ [ 'category_id', 'in', $data[ 'category_id' ] ] ])->select()->toArray();
+            $category_coupon_list = $coupon_goods_model->where([  [ 'category_id', 'in', $data[ 'category_id' ] ] ])->select()->toArray();
             if (!empty($category_coupon_list)) {
                 $category_coupon_id = array_column($category_coupon_list, 'coupon_id');
             } else {
@@ -73,6 +73,9 @@ class CouponService extends BaseApiService
 
         $where[] = [ 'status', '=', CouponDict::NORMAL ];
         $where[] = [ 'receive_type', '=', CouponDict::USER ];
+        $where[] = function ($query) {
+            $query->where([ [ 'remain_count', '=', '-1' ] ])->whereOr([ [ 'remain_count', '>', 0 ] ]);
+        };
 
         $time_where = function($query) {
             $nowtime = time();
@@ -158,7 +161,7 @@ class CouponService extends BaseApiService
             }
 
             if ($member_info) {
-                $coupon_member_count = $coupon_member->where([ [ 'member_id', '=', $this->member_id ], [ 'coupon_id', '=', $v[ 'id' ] ], [ 'receive_type', '=', 'receive' ] ])->count();
+                $coupon_member_count = $coupon_member->where([  [ 'member_id', '=', $this->member_id ], [ 'coupon_id', '=', $v[ 'id' ] ], [ 'receive_type', '=', 'receive' ] ])->count();
                 if ($coupon_member_count) {
                     $v[ 'is_receive' ] = 1;
                     $v[ 'member_receive_count' ] = $coupon_member_count;
@@ -469,7 +472,7 @@ class CouponService extends BaseApiService
         $dir = 'upload/shop_coupon_qrcode';
         $channel = 'weapp';
 
-        $path = qrcode($url, $page, $data, $dir, $channel);
+        $path = qrcode($url, $page, $data,$dir, $channel);
         return $path;
     }
 }

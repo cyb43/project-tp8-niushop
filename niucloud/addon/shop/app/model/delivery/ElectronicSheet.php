@@ -114,4 +114,22 @@ class ElectronicSheet extends BaseModel
         }
     }
 
+    public function getKdbirdConfigAttr($value, $data)
+    {
+        if(!empty($data['interface_data'])){
+            $interface_data = json_decode($data['interface_data'], true);
+            return is_array($interface_data) && $interface_data['kdbird'] ? $interface_data['kdbird'] : [];
+        }
+    }
+
+    public function getKd100ConfigAttr($value, $data)
+    {
+        if(!empty($data['interface_data'])){
+            $interface_data = json_decode($data['interface_data'], true);
+            return is_array($interface_data) && $interface_data['kd100'] ? $interface_data['kd100'] : [];
+        }
+    }
+
+
+
 }

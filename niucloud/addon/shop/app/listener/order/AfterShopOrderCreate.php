@@ -17,6 +17,7 @@ use addon\shop\app\service\core\goods\CoreGoodsStockService;
 use addon\shop\app\service\core\order\CoreInvoiceService;
 use addon\shop\app\service\core\order\CoreOrderConfigService;
 use addon\shop\app\service\core\order\CoreOrderLogService;
+use think\facade\Db;
 use think\facade\Log;
 
 class AfterShopOrderCreate
@@ -35,14 +36,18 @@ class AfterShopOrderCreate
             //循环商品项扣除库存
 
             $core_goods_stock_service = new CoreGoodsStockService();
+            $dec_data = [];
             foreach ($order_goods_data as $v) {
-                // todo 可以优化
-                $core_goods_stock_service->dec([
-                    'num' => $v[ 'num' ],
+                $dec_data['goods'][] =[
+                    'stock' => Db::raw('stock-' . $v[ 'num' ]),
                     'goods_id' => $v[ 'goods_id' ],
-                    'sku_id' => $v[ 'sku_id' ]
-                ]);
+                ];
+                $dec_data['sku'][] =[
+                    'stock' => Db::raw('stock-' . $v[ 'num' ]),
+                    'sku_id' => $v[ 'sku_id' ],
+                ];
             }
+            $core_goods_stock_service->batchUpdateStock($dec_data);
 //            Db::commit();
 //        } catch (\Exception $e) {
 //            Db::rollback();
@@ -57,21 +62,24 @@ class AfterShopOrderCreate
 
             //累增销量
             $core_goods_sale_num_service = new CoreGoodsSaleNumService();
+            $inc_data = [];
             foreach ($order_goods_data as $v) {
-                // todo 可以优化
                 //商品累计销量
-                $core_goods_sale_num_service->inc([
-                    'num' => $v[ 'num' ],
+                $inc_data['goods'][] =[
+                    'sale_num' => Db::raw('sale_num+' . $v[ 'num' ]),
                     'goods_id' => $v[ 'goods_id' ],
-                    'sku_id' => $v[ 'sku_id' ]
-                ]);
-
+                ];
+                $inc_data['sku'][] =[
+                    'sale_num' => Db::raw('sale_num+' . $v[ 'num' ]),
+                    'sku_id' => $v[ 'sku_id' ],
+                ];
+                // todo 可以优化 逻辑较多 后置
                 // 商品销量统计 - 下单数
                 CoreGoodsStatService::addStat([ 'goods_id' => $v[ 'goods_id' ], 'sale_num' => $v[ 'num' ] ]);
             }
-
+            $core_goods_sale_num_service->batchUpdateSaleNum($inc_data);
             //写入发票
-            $invoice = $basic[ 'invoice' ];
+            $invoice = $basic[ 'invoice' ] ?? [];
             if (!empty($invoice)) {
                 $invoice_id = ( new CoreInvoiceService() )->add([
                     'type' => $invoice[ 'type' ] ?? '',

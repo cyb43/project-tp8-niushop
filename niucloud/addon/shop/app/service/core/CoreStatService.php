@@ -38,7 +38,7 @@ class CoreStatService extends BaseCoreService
         // 添加天统计
         $stat_data = [
             'date' => date('Y-m-d', time()),
-            'date_time' => strtotime(date('Y-m-d', time())),
+            'date_time' => strtotime(date('Y-m-d', time()))
         ];
         $stat = ( new ShopStat() )->where($stat_data)->findOrEmpty();
         if ($stat->isEmpty()) {
@@ -46,6 +46,31 @@ class CoreStatService extends BaseCoreService
         } else {
             foreach ($data as $key => $value) {
                 $stat->$key = Db::raw("{$key} + {$value}");
+            }
+            $stat->allowField(self::STAT_FIELD)->save();
+        }
+        return true;
+    }
+
+    /**
+     * 累减统计数据
+     * @param $data
+     * @return true
+     */
+    public static function decStat($data = [])
+    {
+        $time = strtotime($data['time']);
+        // 更新天统计
+        $stat_data = [
+            'date' => date('Y-m-d', $time),
+            'date_time' => strtotime(date('Y-m-d', $time))
+        ];
+
+        $stat = ( new ShopStat() )->where($stat_data)->findOrEmpty();
+        if (!$stat->isEmpty()) {
+            unset($data[ 'time' ]);
+            foreach ($data as $key => $value) {
+                $stat->$key = Db::raw("CASE WHEN {$key} - {$value} >= 0 THEN {$key} - {$value} ELSE 0 END");
             }
             $stat->allowField(self::STAT_FIELD)->save();
         }
@@ -90,7 +115,7 @@ class CoreStatService extends BaseCoreService
      * @param string $date
      * @return array
      */
-    public function getHourStatData(string $date)
+    public function getHourStatData( string $date)
     {
         $field = implode(',', array_merge(self::STAT_FIELD, [ 'hour' ]));
         $stat_data = ( new ShopStat() )->where([ [ 'date_time', '=', strtotime($date) ] ])->field($field)->select()->toArray();
@@ -117,9 +142,11 @@ class CoreStatService extends BaseCoreService
      * @param string $end_date
      * @return array
      */
-    public function getStat(string $start_date = '', string $end_date = '')
+    public function getStat( string $start_date = '', string $end_date = '')
     {
-        $condition = [];
+        $condition = [
+            [ 'id', '>', 0 ]
+        ];
 
         if (!empty($start_date) && !empty($end_date)) {
             $condition[] = [ 'date_time', '>=', strtotime($start_date) ];

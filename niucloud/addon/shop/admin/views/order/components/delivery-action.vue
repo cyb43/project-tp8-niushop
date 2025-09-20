@@ -1,5 +1,5 @@
 <template>
-    <el-dialog v-model="showDialog" :title="t('delivery')" width="700px" class="diy-dialog-wrap" :destroy-on-close="true" :close-on-click-modal="false">
+    <el-dialog v-model="showDialog" :title="showType == 'add' ? t('delivery') : t('修改物流信息')" :width="showType =='add' ?'700px' :'1000px'" class="diy-dialog-wrap" :destroy-on-close="true" :close-on-click-modal="false">
         <div v-loading="loading">
 
             <el-alert type="warning" :closable="false" class="!mb-[10px]" v-if="isTradeManaged">
@@ -55,7 +55,17 @@
                 </el-table-column>
                 <el-table-column prop="num" :label="t('num')" min-width="80" />
                 <el-table-column prop="status_name" :label="t('refundStatusName')" min-width="80" />
-                <el-table-column prop="delivery_status_name" :label="t('deliveryStatusName')" min-width="80" align="right" />
+                <el-table-column prop="delivery_status_name" :label="t('deliveryStatusName')" min-width="80" />
+                <el-table-column prop="express_company_name" :label="t('物流公司')" min-width="80" v-if="showType == 'edit'">
+                    <template #default="{ row }">
+                        <span class="text-[#999]">{{ row.delivery_info?.express_company_name }}</span>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="express_number" :label="t('物流单号')" min-width="80" v-if="showType == 'edit'">
+                    <template #default="{ row }">
+                        <span class="text-[#999]">{{ row.delivery_info?.express_number }}</span>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <template #footer>
@@ -140,7 +150,8 @@ const initialFormData = {
     express_company_id: '',
     express_number: '',
     electronic_sheet_id: '',
-    order_goods_ids: []
+    order_goods_ids: [],
+    delivery_ids: []
 }
 
 const formData: Record<string, any> = reactive({ ...initialFormData })
@@ -190,7 +201,7 @@ const electronicSheetIdPass = (rule: any, value: any, callback: any) => {
 }
 
 const selectable = (row:any, index:number) => {
-    if (row.status == 2 || row.delivery_status != 'wait_delivery'  || row.status == 3 || row.is_gift == 1) {
+    if ((row.status == 2 || row.delivery_status != 'wait_delivery'  || row.status == 3 || row.is_gift == 1 )&& (showType.value =='add' || !showType.value)) {
         return false
     }
     return true
@@ -219,9 +230,14 @@ const deliveryChange = () => {
 
 const handleSelectionChange = (val:any) => {
     formData.order_goods_ids = cloneDeep([])
+    formData.delivery_ids = cloneDeep([])
     for (const v in val) {
         formData.order_goods_ids.push(val[v].order_goods_id)
+        if(showType.value == 'edit'){
+            formData.delivery_ids.push(val[v].delivery_id)
+        }
     }
+
 }
 
 const emit = defineEmits(['complete'])
@@ -259,9 +275,10 @@ const confirm = async (formEl: FormInstance | undefined) => {
         }
     })
 }
-
-const setFormData = async (row: any = null) => {
+const showType = ref('')
+const setFormData = async (row: any = null,type:any) => {
     loading.value = true
+    showType.value = type
     if (row) {
         formData.order_id = row.order_id
         formData.delivery_type = ''

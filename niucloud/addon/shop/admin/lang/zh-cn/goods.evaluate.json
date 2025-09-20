@@ -45,5 +45,15 @@
   "goodsNamePlaceholder": "请输入商品名称",
   "topping": "置顶",
   "cancelTopping": "取消置顶",
-  "memberHeadPlaceholder": "请上传会员头像"
+  "memberHeadPlaceholder": "请上传会员头像",
+  "batchDelete": "批量删除",
+  "batchDeleteTips": "确定要批量删除选中的评价吗？",
+  "batchAdopt": "批量通过",
+  "batchAdoptTips": "确定要批量通过选中的评价吗？",
+  "batchRefuse": "批量拒绝",
+  "batchRefuseTips": "确定要批量拒绝选中的评价吗？",
+  "batchEmptySelectedCommentsTips": "请先选择要操作的评价",
+  "status":"审核状态",
+  "statusPlaceholder":"请选择审核状态"
+  
 }

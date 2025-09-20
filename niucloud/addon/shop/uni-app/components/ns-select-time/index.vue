@@ -65,7 +65,6 @@ export default {
 		    type: Boolean,
 		    default: true
 		}
-
     },
     data() {
         return {
@@ -162,8 +161,8 @@ export default {
 					const isInTradeTime = this.rules.trade_time_json.some(slot => {
 						return nowTime >= slot.start_time && nowTime < slot.end_time;
 					});
+
 					if ((isToday && useLimit && isInTradeTime) ||(isToday && useLimit && !this.isOpen)  ) {
-					
 						item.children.unshift({
 							begin: '立即',
 							end: '配送',

@@ -12,8 +12,10 @@
 namespace addon\shop\app\listener\marketing;
 
 use addon\shop\app\dict\active\ActiveDict;
+use addon\shop\app\dict\active\ManjianDict;
 use addon\shop\app\model\active\ActiveGoods;
 use addon\shop\app\model\discount\DiscountGoods;
+use addon\shop\app\model\manjian\ManjianGoods;
 use addon\shop\app\service\admin\goods\GoodsService;
 use app\dict\common\CommonActiveDict;
 
@@ -54,8 +56,17 @@ class GetGoodsJoinInfo
                 $query->withField('discount_id,name');
             }
         ]);
+        $manjian_query = (new ManjianGoods())->where([
+            ['status', '=', ManjianDict::ACTIVE]
+        ])->where($condition)->with([
+            'manjian' => function ($query) {
+                $query->withField('manjian_id,manjian_name');
+            }
+        ]);
+
+
         if ($is_get_count == 1) {
-            return $query->count() + $discount_query->count();
+            return $query->count() + $discount_query->count() + $manjian_query->count();
         }
         $common_active_dict_arr = CommonActiveDict::getActiveShort();
 
@@ -77,6 +88,17 @@ class GetGoodsJoinInfo
                 'join_type' => 'discount',
                 'short' => $short_info,
                 'name' => $item['discount']['name'] ?? $short_info['active_name'],
+            ];
+        }
+        // 满减送商品条件
+        $manjian_goods_list = $manjian_query->group('goods_id,manjian_id')->select()->toArray();
+        $manjian_short_info = $common_active_dict_arr['manjiansong'];
+        foreach ($manjian_goods_list as $item) {
+            $return[$item['goods_id']]['manjian_' . $item['manjian_id']] = [
+                'join_id' => $item['manjian_id'],
+                'join_type' => 'manjian',
+                'short' => $manjian_short_info,
+                'name' => $item['manjian']['name'] ?? $manjian_short_info['active_name'],
             ];
         }
         return $return;

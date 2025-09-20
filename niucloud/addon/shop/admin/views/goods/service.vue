@@ -69,7 +69,7 @@ import { getServePageList, deleteServe } from '@/addon/shop/api/goods'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import ServiceEdit from '@/addon/shop/views/goods/components/service-edit.vue'
 import { useRoute } from 'vue-router'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const pageName = route.meta.title

@@ -56,15 +56,15 @@
                         </view>
                     </view>
                     <view class="mt-[20rpx] flex flex-wrap justify-end" v-if="['6','7','8','-1','3','2','5','-3'].indexOf(item.status) == -1">
-                        <view class="text-[24rpx] text-[var(--text-color-light6)] font-500 h-[56rpx] leading-[52rpx] box-border px-[23rpx] border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full ml-[20rpx]"
+                        <view class="text-[24rpx] text-[var(--text-color-light3)] font-500 h-[56rpx] leading-[52rpx] box-border px-[23rpx] border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx]"
                             @click.stop="refundBtnFn(item,'cancel')"
                             v-if="['6','7','8','-1','-3'].indexOf(item.status) == -1">{{ t('refundApply') }}</view>
                         <view v-if="['3'].indexOf(item.status) != -1"
-                              class="text-[24rpx] font-500 text-[var(--text-color-light6)] h-[56rpx] box-border leading-[52rpx] px-[23rpx] border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full ml-[20rpx]"
+                              class="text-[24rpx] font-500 text-[var(--text-color-light3)] h-[56rpx] box-border leading-[52rpx] px-[23rpx] border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx]"
                               @click.stop="refundBtnFn(item,'edit')">编辑退款信息</view>
-                        <view v-if="['2'].indexOf(item.status) != -1" class=" text-[24rpx] font-500 text-[var(--text-color-light6)] h-[56rpx] box-border leading-[52rpx] px-[23rpx] border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full ml-[20rpx]"
+                        <view v-if="['2'].indexOf(item.status) != -1" class=" text-[24rpx] font-500 text-[var(--text-color-light3)] h-[56rpx] box-border leading-[52rpx] px-[23rpx] border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx]"
                               @click.stop="refundBtnFn(item,'logistics')">填写发货物流</view>
-                        <view v-if="['5'].indexOf(item.status) != -1" class="text-[24rpx] font-500 text-[var(--text-color-light6)] h-[56rpx] box-border  leading-[52rpx] px-[23rpx] border-[2rpx] border-solid border-[var(--text-color-light9)] rounded-full ml-[20rpx]"
+                        <view v-if="['5'].indexOf(item.status) != -1" class="text-[24rpx] font-500 text-[var(--text-color-light3)] h-[56rpx] box-border  leading-[52rpx] px-[23rpx] border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx]"
                               @click.stop="refundBtnFn(item,'editLogistics')">编辑发货物流</view>
                     </view>
                 </view>

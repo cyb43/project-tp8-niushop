@@ -15,6 +15,7 @@ use addon\shop\app\dict\order\OrderRefundDict;
 use app\model\member\Member;
 use app\model\pay\Refund;
 use core\base\BaseModel;
+use think\model\concern\SoftDelete;
 use think\model\relation\HasOne;
 
 /**
@@ -22,6 +23,7 @@ use think\model\relation\HasOne;
  */
 class OrderRefund extends BaseModel
 {
+    use SoftDelete;
 
     /**
      * 数据表主键
@@ -45,6 +47,14 @@ class OrderRefund extends BaseModel
 
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
+
+    /**
+     * 定义软删除标记字段.
+     * @var string
+     */
+    protected $deleteTime = 'delete_time';
+
+    protected $defaultSoftDelete = 0;
 
     /**
      * 关联订单项

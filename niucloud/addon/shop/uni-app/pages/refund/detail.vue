@@ -91,13 +91,13 @@
                 <view
                     class="flex tab-bar justify-between items-center bg-[#fff] fixed left-0 right-0 bottom-0 min-h-[100rpx] pl-[30rpx] pr-[20rpx] flex-wrap">
                     <view class="flex">
-                        <view class="flex mr-[20rpx] flex-col justify-center items-center"
+                        <!-- <view class="flex mr-[20rpx] flex-col justify-center items-center"
                               @click="redirect({ url: '/addon/shop/pages/index', mode: 'reLaunch' })">
                             <view class="nc-iconfont nc-icon-shouyeV6xx11 text-[36rpx]"></view>
                             <text class="text-[20rpx] mt-[10rpx]">{{ t('index') }}</text>
-                        </view>
+                        </view> -->
                         <!-- #ifdef MP-WEIXIN -->
-                        <view>
+                        <!-- <view>
                             <nc-contact
                                 :send-message-title="sendMessageTitle"
                                 :send-message-path="sendMessagePath"
@@ -107,18 +107,30 @@
                                     <text class="text-[20rpx] mt-[10rpx]">客服</text>
                                 </view>
                             </nc-contact>
-                        </view>
+                        </view> -->
                         <!-- #endif -->
                     </view>
 
                     <view class="flex justify-end">
-                        <view class="min-w-[180rpx] box-border text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#ccc] text-[#333] rounded-full ml-[20rpx]"
+                        <view  @click="redirect({ url: '/addon/shop/pages/index', mode: 'reLaunch' })" class="order-grey-hollow-btn ml-[20rpx]">
+                              {{ t('index') }}
+                        </view>
+                          <!-- #ifdef MP-WEIXIN -->
+                          <view>
+                            <nc-contact :send-message-title="sendMessageTitle" :send-message-path="sendMessagePath" :send-message-img="sendMessageImg">
+                                <view class="order-grey-hollow-btn ml-[20rpx]">
+                                    客服
+                                </view>
+                            </nc-contact>
+                        </view>
+                        <!-- #endif -->
+                        <view class="px-[10rpx] box-border text-[24rpx] h-[60rpx] flex-center border-[2rpx] border-solid border-[#ccc] text-[#333] rounded-full ml-[20rpx]"
                             @click="refundBtnFn('cancel')" v-if="['6','7','8','-1','-3'].indexOf(detail.status) == -1">{{ t('refundApply') }}</view>
-                        <view v-if="['3'].indexOf(detail.status) != -1" class="min-w-[180rpx] box-border text-[#333] text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"
+                        <view v-if="['3'].indexOf(detail.status) != -1" class="px-[10rpx] box-border text-[#333] text-[24rpx] h-[60rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"
                               @click.stop="refundBtnFn('edit')">编辑退款信息</view>
-                        <view v-if="['2'].indexOf(detail.status) != -1" class="min-w-[180rpx] box-border text-[#333] text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"
+                        <view v-if="['2'].indexOf(detail.status) != -1" class="px-[10rpx] box-border text-[#333] text-[24rpx] h-[60rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"
                               @click.stop="refundBtnFn('logistics')">填写发货物流</view>
-                        <view v-if="['5'].indexOf(detail.status) != -1" class="min-w-[180rpx] box-border text-[#333] text-[26rpx] h-[70rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"
+                        <view v-if="['5'].indexOf(detail.status) != -1" class="px-[10rpx] box-border text-[#333] text-[24rpx] h-[60rpx] flex-center border-[2rpx] border-solid border-[#ccc] rounded-full ml-[20rpx] px-[20rpx]"
                               @click.stop="refundBtnFn('editLogistics')">编辑发货物流</view>
                     </view>
                 </view>

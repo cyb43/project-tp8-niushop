@@ -11,6 +11,7 @@
                                 <image class="w-[200rpx] h-[200rpx] overflow-hidden" :style="imageRounded.style" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                             </template>
                         </u--image>
+<!--                        <easy-image class="w-[200rpx] h-[200rpx]" :image-src="item.goods_cover_thumb_small" :imageStyle="imageStyle1" />-->
                         <view class="flex-1 flex flex-col ml-[20rpx] py-[6rpx] relative">
                             <view class="text-[28rpx] leading-[40rpx] text-[#303133] multi-hidden mb-[10rpx]"
                                   :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }"
@@ -47,19 +48,8 @@
                                     </text>
                                 </view>
                                 <view class="absolute right-[16rpx] bottom-[16rpx]" @click.stop v-if="diyComponent.btnStyle.control && !item.isMaxBuy || diyStore.mode == 'decorate'">
-                                    <view v-if="(item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && diyComponent.btnStyle.cartEvent === 'cart'" class="flex items-center">
-                                        <view class="relative w-[40rpx] h-[40rpx]">
-                                            <text class="!text-[40rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[12rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
-                                                @click.stop="reduceCart(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id])"></text>
-                                        </view>
-                                        <text class="text-[#333] text-[24rpx] mx-[16rpx] w-[20rpx] text-center">{{ cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id].num }}</text>
-                                        <view class="relative w-[40rpx] h-[40rpx]">
-                                            <text class="!text-[40rpx] text-color iconfont iconjiahao2fill absolute flex items-center justify-center -left-[14rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
-                                                :id="'itemCart' + index"
-                                                @click.stop="addCartBtn(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id], 'itemCart' + index)"></text>
-                                        </view>
-                                    </view>
-                                    <template v-else-if="(item.goods_type == 'virtual'  && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
+                        
+                                    <template v-if="(item.goods_type == 'virtual'  && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
                                         <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="relative px-[18rpx] h-[48rpx] flex items-center justify-center bg-[red]" @click.stop="itemCart(item, 'itemCart' + index)">
                                             <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
                                             <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
@@ -86,6 +76,8 @@
                                         <image :style="{'width': style2Width,'height': style2Width, 'border-radius': imageRounded.val}" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                     </template>
                                 </u--image>
+<!--                                <easy-image :image-src="item.goods_cover_thumb_small" :imageStyle="imageStyle2" />-->
+
                                 <view class="relative min-h-[44rpx] px-[16rpx] flex-1 pt-[16rpx] pb-[20rpx] flex flex-col justify-between">
                                     <view class="text-[#303133] leading-[40rpx] text-[28rpx] multi-hidden"
                                           :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }"
@@ -122,19 +114,7 @@
                                             </text>
                                         </view>
                                         <view class="absolute right-[16rpx] bottom-[16rpx]" @click.stop v-if="diyComponent.btnStyle.control && !item.isMaxBuy || diyStore.mode == 'decorate'">
-                                            <view v-if="(item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && diyComponent.btnStyle.cartEvent === 'cart'" class="flex items-center">
-                                                <view class="relative w-[40rpx] h-[40rpx]">
-                                                    <text class="!text-[40rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[12rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
-                                                        @click.stop="reduceCart(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id])"></text>
-                                                </view>
-                                                <text class="text-[#333] text-[24rpx] mx-[16rpx] w-[20rpx] text-center">{{ cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id].num }}</text>
-                                                <view class="relative w-[40rpx] h-[40rpx]">
-                                                    <text class="!text-[40rpx] text-color iconfont iconjiahao2fill absolute flex items-center justify-center -left-[14rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
-                                                        :id="'itemCart' + index"
-                                                        @click.stop="addCartBtn(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id], 'itemCart' + index)"></text>
-                                                </view>
-                                            </view>
-                                            <template v-else-if="(item.goods_type == 'virtual' && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
+                                            <template v-if="(item.goods_type == 'virtual' && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
                                                 <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="relative px-[18rpx] h-[48rpx] flex items-center justify-center bg-[red]" @click.stop="itemCart(item, 'itemCart' + index)">
                                                     <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
                                                     <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
@@ -160,6 +140,7 @@
                                         <image :style="{'width': style2Width,'height': style2Width, 'border-radius': imageRounded.val}" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                     </template>
                                 </u--image>
+<!--                                <easy-image :image-src="item.goods_cover_thumb_small" :imageStyle="imageStyle2" />-->
                                 <view class="relative min-h-[44rpx] px-[16rpx] flex-1 pt-[16rpx] pb-[20rpx] flex flex-col justify-between">
                                     <view class="text-[#303133] leading-[40rpx] text-[28rpx] multi-hidden"
                                           :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }"
@@ -195,19 +176,7 @@
                                             </text>
                                         </view>
                                         <view class="absolute right-[16rpx] bottom-[16rpx]" @click.stop v-if="diyComponent.btnStyle.control && !item.isMaxBuy || diyStore.mode == 'decorate'">
-                                            <view v-if="(item.goods_type == 'real' || (item.goods_type == 'virtual' && item.virtual_receive_type != 'verify')) && item.goodsSku.sku_spec_format === '' && cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id] && diyComponent.btnStyle.cartEvent === 'cart'" class="flex items-center">
-                                                <view class="relative w-[40rpx] h-[40rpx]">
-                                                    <text class="!text-[40rpx] text-color nc-iconfont nc-icon-jianshaoV6xx absolute flex items-center justify-center -left-[12rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
-                                                        @click.stop="reduceCart(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id])"></text>
-                                                </view>
-                                                <text class="text-[#333] text-[24rpx] mx-[16rpx] w-[20rpx] text-center">{{ cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id].num }}</text>
-                                                <view class="relative w-[40rpx] h-[40rpx]">
-                                                    <text class="!text-[40rpx] text-color iconfont iconjiahao2fill absolute flex items-center justify-center -left-[14rpx] -bottom-[14rpx] -right-[14rpx] -top-[14rpx]"
-                                                        :id="'itemCart' + index"
-                                                        @click.stop="addCartBtn(item,cartList['goods_' + item.goods_id]['sku_' + item.goodsSku.sku_id], 'itemCart' + index)"></text>
-                                                </view>
-                                            </view>
-                                            <template v-else-if="(item.goods_type == 'virtual'  && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
+                                            <template v-if="(item.goods_type == 'virtual'  && item.virtual_receive_type != 'verify') || item.goods_type == 'real' || diyStore.mode == 'decorate'">
                                                 <view v-if="diyComponent.btnStyle.style == 'button'" :style="goodsBtnCss" class="relative px-[18rpx] h-[48rpx] flex items-center justify-center bg-[red]" @click.stop="itemCart(item, 'itemCart' + index)">
                                                     <text class="text-[20rpx]">{{ diyComponent.btnStyle.text }}</text>
                                                     <view v-if="cartList['goods_' + item.goods_id] && cartList['goods_' + item.goods_id].totalNum"
@@ -238,6 +207,7 @@
                                         <image class="w-[214rpx] h-[160rpx]" :style="imageRounded.style" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                     </template>
                                 </u--image>
+<!--                                <easy-image class="w-[214rpx] h-[160rpx]" :image-src="item.goods_cover_thumb_small" :imageStyle="imageStyle3" />-->
                                 <view class="relative min-h-[40rpx] px-[10rpx] pt-[16rpx] pb-[10rpx]">
                                     <view class="text-[26rpx] text-[#303133] truncate" :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }" v-if="diyComponent.goodsNameStyle.control">{{ item.goods_name }}</view>
                                     <view class="text-[var(--price-text-color)] pt-[16rpx] pb-[6rpx] font-bold price-font block truncate max-w-[160rpx] leading-[1] overflow-hidden"
@@ -308,7 +278,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
     else style += 'background-color:' + (diyComponent.value.componentStartBgColor || diyComponent.value.componentEndBgColor) + ';';
@@ -326,7 +296,7 @@ const warpCss = computed(() => {
 })
 
 const imageRounded = computed(() => {
-    var obj = {
+    const obj = {
         val: '',
         style: ''
     };
@@ -339,7 +309,7 @@ const imageRounded = computed(() => {
 
 // 背景图加遮罩层
 const maskLayer = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentBgUrl) {
         style += 'position:absolute;top:0;width:100%;';
         style += `background: rgba(0,0,0,${ diyComponent.value.componentBgAlpha / 10 });`;
@@ -355,7 +325,7 @@ const maskLayer = computed(() => {
 });
 
 const itemCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.elementBgColor) style += 'background-color:' + diyComponent.value.elementBgColor + ';';
     if (diyComponent.value.topElementRounded) style += 'border-top-left-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     if (diyComponent.value.topElementRounded) style += 'border-top-right-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
@@ -369,7 +339,7 @@ const itemCss = computed(() => {
 })
 
 const goodsBtnCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.btnStyle.style == 'button' && diyComponent.value.btnStyle.aroundRadius) style += 'border-radius:' + diyComponent.value.btnStyle.aroundRadius * 2 + 'rpx;';
     if (diyComponent.value.btnStyle.startBgColor && diyComponent.value.btnStyle.endBgColor) {
         style += `background:linear-gradient(${ diyComponent.value.btnStyle.startBgColor },${ diyComponent.value.btnStyle.endBgColor });`;
@@ -381,21 +351,38 @@ const goodsBtnCss = computed(() => {
     return style;
 })
 
+const imageStyle1 = computed(() => {
+    let style = 'border-radius:' + imageRounded.value.val + ';';
+    return style;
+})
+
 const style2Width = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.margin && diyComponent.value.margin.both) style += 'calc((100vw - ' + (diyComponent.value.margin.both * 4) + 'rpx - 20rpx) / 2)'
     else style += 'calc((100vw - 20rpx) / 2 )'
     return style;
 })
 
+const imageStyle2 = computed(() => {
+    let style = 'border-radius:' + imageRounded.value.val + ';';
+    style += 'width:'+ style2Width.value + ';';
+    style += 'height:'+ style2Width.value + ';';
+    return style;
+})
+
 const style3Css = computed(() => {
-    var style = '';
+    let style = '';
     style += 'padding:0 20rpx;';
     if (diyComponent.value.margin && diyComponent.value.margin.both) {
         style += 'width: calc(100vw - ' + ((diyComponent.value.margin.both * 4) + 40) + 'rpx);'
     } else {
         style += 'box-sizing: border-box; width: 100vw;';
     }
+    return style;
+})
+
+const imageStyle3 = computed(() => {
+    let style = 'border-radius:' + imageRounded.value.val + ';';
     return style;
 })
 
@@ -533,20 +520,22 @@ const itemCart = (row: any, id: any) => {
         return false
     }
     
-    if (row.goodsSku.sku_spec_format) {
-        cartRef.value.open(row.goodsSku.sku_id)
-    } else {
-        //单规格添加购物车
-        if (!row.goodsSku.stock || parseInt(row.goodsSku.num || 0) > parseInt(row.goodsSku.stock)) {
-            uni.showToast({ title: '商品库存不足', icon: 'none' })
-            return;
-        }
-        if (row.min_buy && row.min_buy > parseInt(row.stock)) {
-            uni.showToast({ title: '商品库存小于起购数量', icon: 'none' })
-            return;
-        }
-        animationAddCart(row, id)
-    }
+    cartRef.value.open(row.goodsSku.sku_id)
+
+    // if (row.goodsSku.sku_spec_format) {
+    //     cartRef.value.open(row.goodsSku.sku_id)
+    // } else {
+    //     //单规格添加购物车
+    //     if (!row.goodsSku.stock || parseInt(row.goodsSku.num || 0) > parseInt(row.goodsSku.stock)) {
+    //         uni.showToast({ title: '商品库存不足', icon: 'none' })
+    //         return;
+    //     }
+    //     if (row.min_buy && row.min_buy > parseInt(row.stock)) {
+    //         uni.showToast({ title: '商品库存小于起购数量', icon: 'none' })
+    //         return;
+    //     }
+    //     animationAddCart(row, id)
+    // }
 }
 
 
@@ -628,7 +617,6 @@ const initSkeleton = () => {
 
         // 单列 风格
         skeleton.type = 'list'
-        skeleton.type = 'list'
         skeleton.config = {
             textRows: 2
         };
@@ -692,7 +680,7 @@ const refresh = () => {
     // 装修模式下设置默认图
     if (diyStore.mode == 'decorate') {
         let obj = {
-            goods_cover_thumb_mid: "",
+            goods_cover_thumb_small: "",
             goods_name: "商品名称",
             sale_num: "100",
             unit: "件",

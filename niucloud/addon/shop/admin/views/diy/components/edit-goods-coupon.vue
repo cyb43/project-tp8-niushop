@@ -8,7 +8,7 @@
                 <el-form-item :label="t('selectStyle')" class="flex">
                     <span class="text-primary flex-1 cursor-pointer"
                           @click="showCouponStyle">{{ diyStore.editComponent.styleName }}</span>
-                    <el-icon>
+                    <el-icon @click="showCouponStyle" class="cursor-pointer">
                         <ArrowRight />
                     </el-icon>
                 </el-form-item>
@@ -138,26 +138,26 @@ diyStore.editComponent.verify = (index: number) => {
         if (diyStore.value[index].couponIds.length == 0) {
             res.code = false
             res.message = t('couponPlaceholder')
-            return res;
+            return res
         }
     }
 
     if (diyStore.value[index].btnText == '') {
         res.code = false
         res.message = t('couponBtnTextPlaceholder')
-        return res;
+        return res
     }
 
     if (diyStore.value[index].couponTitle == '') {
         res.code = false
         res.message = t('couponTitlePlaceholder')
-        return res;
+        return res
     }
 
     if (diyStore.value[index].couponSubTitle == '') {
         res.code = false
         res.message = t('couponSubTitlePlaceholder')
-        return res;
+        return res
     }
 
     return res
@@ -173,8 +173,8 @@ const showCouponDialog = ref(false)
 
 const showCouponStyle = () => {
     showCouponDialog.value = true
-    selectCouponStyle.title = diyStore.editComponent.styleName;
-    selectCouponStyle.value = diyStore.editComponent.style;
+    selectCouponStyle.title = diyStore.editComponent.styleName
+    selectCouponStyle.value = diyStore.editComponent.style
 }
 
 const couponStyleList = reactive([
@@ -201,13 +201,13 @@ const couponStyleList = reactive([
 ])
 
 const changeCouponStyle = (item: any) => {
-    selectCouponStyle.title = item.title;
-    selectCouponStyle.value = item.value;
+    selectCouponStyle.title = item.title
+    selectCouponStyle.value = item.value
 }
 
 const confirmCouponStyle = () => {
-    diyStore.editComponent.styleName = selectCouponStyle.title;
-    diyStore.editComponent.style = selectCouponStyle.value;
+    diyStore.editComponent.styleName = selectCouponStyle.title
+    diyStore.editComponent.style = selectCouponStyle.value
     if (diyStore.editComponent.style == 'style-3') {
         if (diyStore.editComponent.couponTitle && diyStore.editComponent.couponTitle.length > 4) {
             diyStore.editComponent.couponTitle = diyStore.editComponent.couponTitle.substring(0, 4)
@@ -216,28 +216,26 @@ const confirmCouponStyle = () => {
             diyStore.editComponent.couponSubTitle = diyStore.editComponent.couponSubTitle.substring(0, 7)
         }
     }
-    initStyleFn();
+    initStyleFn()
     showCouponDialog.value = false
 }
 
 const initStyleFn = () => {
-    let index = diyStore.editComponent.ignore.indexOf('componentBgColor');
+    const index = diyStore.editComponent.ignore.indexOf('componentBgColor')
     if (diyStore.editComponent.style == 'style-4' && index != -1) {
-        diyStore.editComponent.ignore.splice(index, 1);
-        diyStore.editComponent.titleColor = "#ffffff";
-        diyStore.editComponent.subTitleColor = "#ffffff";
+        diyStore.editComponent.ignore.splice(index, 1)
+        diyStore.editComponent.titleColor = '#ffffff'
+        diyStore.editComponent.subTitleColor = '#ffffff'
 
-        diyStore.editComponent.couponItem.moneyColor = "#fa191d";
-        diyStore.editComponent.couponItem.textColor = "#333333";
-        diyStore.editComponent.couponItem.subTextColor = "#999999";
-        diyStore.editComponent.couponItem.bgColor = "#ffffff";
-        diyStore.editComponent.couponItem.aroundRadius = 10;
-        diyStore.editComponent.componentStartBgColor = "#fa191d";
-
+        diyStore.editComponent.couponItem.moneyColor = '#fa191d'
+        diyStore.editComponent.couponItem.textColor = '#333333'
+        diyStore.editComponent.couponItem.subTextColor = '#999999'
+        diyStore.editComponent.couponItem.bgColor = '#ffffff'
+        diyStore.editComponent.couponItem.aroundRadius = 10
+        diyStore.editComponent.componentStartBgColor = '#fa191d'
     } else if (diyStore.editComponent.style != 'style-4' && index == -1) {
-        diyStore.editComponent.ignore.push('componentBgColor');
+        diyStore.editComponent.ignore.push('componentBgColor')
     }
-
 }
 
 defineExpose({})

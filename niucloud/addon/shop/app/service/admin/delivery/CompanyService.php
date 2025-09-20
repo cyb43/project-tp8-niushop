@@ -35,7 +35,7 @@ class CompanyService extends BaseAdminService
      */
     public function getPage(array $where = [])
     {
-        $field = 'company_id,company_name,logo,url,express_no,express_no_electronic_sheet,electronic_sheet_switch,print_style,exp_type,create_time';
+        $field = 'company_id,company_name,logo,url,express_no,express_no_electronic_sheet,electronic_sheet_switch,print_style,exp_type,create_time,kd100_express_no';
         $order = 'create_time desc';
 
         $search_model = $this->model->where([ [ 'company_id', '>', 0 ] ])->withSearch([ "company_name", 'electronic_sheet_switch' ], $where)->field($field)->order($order);
@@ -63,7 +63,7 @@ class CompanyService extends BaseAdminService
      */
     public function getInfo(int $id)
     {
-        $field = 'company_id,company_name,logo,url,express_no,express_no_electronic_sheet,electronic_sheet_switch,print_style,exp_type,create_time';
+        $field = 'company_id,company_name,logo,url,express_no,express_no_electronic_sheet,electronic_sheet_switch,print_style,exp_type,create_time,kd100_express_no';
 
         $info = $this->model->field($field)->where([ [ 'company_id', '=', $id ] ])->findOrEmpty()->toArray();
         return $info;

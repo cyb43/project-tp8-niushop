@@ -70,19 +70,19 @@
   </template>
 <script lang="ts" setup>
 // 添加满减送活动
-import { ref, reactive } from "vue";
-import {t} from "@/lang";
-import { useRoute, useRouter } from "vue-router";
-import {closeManjian, deleteManjian,getManjianList,getManjianStatusList,batchCloseMajian,batchDeleteManjian} from "@/addon/shop/api/marketing";
-import { FormInstance, ElMessageBox,ElMessage } from "element-plus";
+import { ref, reactive } from 'vue'
+import { t } from '@/lang'
+import { useRoute, useRouter } from 'vue-router'
+import { closeManjian, deleteManjian, getManjianList, getManjianStatusList, batchCloseMajian, batchDeleteManjian } from '@/addon/shop/api/marketing'
+import { FormInstance, ElMessageBox, ElMessage } from 'element-plus'
 import manjianDetail from '@/addon/shop/views/marketing/manjian/detail.vue'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
-const router = useRouter();
-const route = useRoute();
-const pageName = route.meta.title;
-const repeat = ref(false);
-const searchFormRef = ref<FormInstance>();
+const router = useRouter()
+const route = useRoute()
+const pageName = route.meta.title
+const repeat = ref(false)
+const searchFormRef = ref<FormInstance>()
 // 表单内容
 const tableData = reactive({
     page: 1,
@@ -92,10 +92,11 @@ const tableData = reactive({
     data: [],
     searchParam: {
         create_time: [],
-        manjian_name: "",
+        manjian_name: '',
         status: route.query.status || '',
-    },
-});
+        active_id: route.query.active_id || ''
+    }
+})
 const status = ref()
 
 // 当前选中tab页面
@@ -113,24 +114,24 @@ const loadManjianList = (page: number = 1) => {
     getManjianList({
         page: tableData.page,
         limit: tableData.limit,
-        ...tableData.searchParam,
+        ...tableData.searchParam
     }).then((res) => {
-        tableData.loading = false;
-        tableData.data = res.data.data;
-        tableData.total = res.data.total;
+        tableData.loading = false
+        tableData.data = res.data.data
+        tableData.total = res.data.total
         setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam)
     }).catch(() => {
         tableData.loading = false
     })
 }
 
-loadManjianList(getTablePageStorage(tableData.searchParam).page);
+loadManjianList(getTablePageStorage(tableData.searchParam).page)
 
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()
     loadManjianList()
-};
+}
 
 const handleChange = () => {
     router.push('/shop/marketing/manjian/edit')
@@ -139,61 +140,61 @@ const handleChange = () => {
 const statusList = ref<{ [key: string]: string }>({})
 const getManjianStatusListFn = () => {
     getManjianStatusList().then((res) => {
-        statusList.value= res.data;
+        statusList.value = res.data
     })
 }
 
 getManjianStatusListFn()
 // 编辑满减送活动
 const editEvent = (data: any) => {
-    router.push('/shop/marketing/manjian/edit?id='+data.manjian_id)
+    router.push('/shop/marketing/manjian/edit?id=' + data.manjian_id)
 }
 
-//详情
+// 详情
 const manjianDetailDialog: Record<string, any> | null = ref(null)
 const detailEvent = (id:number) => {
-    let data = { id: id };
-    manjianDetailDialog.value.setFormData(data);
-    manjianDetailDialog.value.showDialog = true;
+    const data = { id }
+    manjianDetailDialog.value.setFormData(data)
+    manjianDetailDialog.value.showDialog = true
 }
 // 批量复选框
-const toggleCheckbox = ref();
+const toggleCheckbox = ref()
 
 // 复选框中间状态
-const isIndeterminate = ref(false);
+const isIndeterminate = ref(false)
 
 // 监听批量复选框事件
 const toggleChange = (value: any) => {
-    isIndeterminate.value = false;
-    goodBankListTableRef.value.toggleAllSelection();
-};
+    isIndeterminate.value = false
+    goodBankListTableRef.value.toggleAllSelection()
+}
 
-const goodBankListTableRef = ref();
+const goodBankListTableRef = ref()
 
 // 选中数据
-const multipleSelection: any = ref([]);
+const multipleSelection: any = ref([])
 
 // 监听表格单行选中
 const handleSelectionChange = (val: []) => {
-    multipleSelection.value = val;
+    multipleSelection.value = val
 
-    toggleCheckbox.value = false;
+    toggleCheckbox.value = false
     if (
         multipleSelection.value.length > 0 &&
         multipleSelection.value.length < tableData.data.length
     ) {
-        isIndeterminate.value = true;
+        isIndeterminate.value = true
     } else {
-        isIndeterminate.value = false;
+        isIndeterminate.value = false
     }
 
     if (multipleSelection.value.length == tableData.data.length) {
-        toggleCheckbox.value = true;
+        toggleCheckbox.value = true
     }
-};
+}
 
-//关闭
-const closeEvent = (id:number)=>{
+// 关闭
+const closeEvent = (id:number) => {
     ElMessageBox.confirm(t('closeTips'), t('warning'),
         {
             confirmButtonText: t('confirm'),
@@ -228,64 +229,64 @@ const deleteEvent = (id:number) => {
 const batchDeleteManjianFn = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedActiveDeleteTips") }`,
-        });
-        return;
+            type: 'warning',
+            message: `${t('batchEmptySelectedActiveDeleteTips')}`
+        })
+        return
     }
 
-    ElMessageBox.confirm(t("batchGoodsDeleteTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning",
+    ElMessageBox.confirm(t('batchGoodsDeleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
-        if (repeat.value) return;
-        repeat.value = true;
+        if (repeat.value) return
+        repeat.value = true
 
-        const manjian_id: any = [];
+        const manjian_id: any = []
         multipleSelection.value.forEach((item: any) => {
-            manjian_id.push(item.manjian_id);
-        });
+            manjian_id.push(item.manjian_id)
+        })
 
         batchDeleteManjian({ manjian_id }).then(() => {
-            loadManjianList();
-            repeat.value = false;
+            loadManjianList()
+            repeat.value = false
         }).catch(() => {
-            repeat.value = false;
-        });
-    });
-};
+            repeat.value = false
+        })
+    })
+}
 
 // 批量关闭
 const batchCloseManjianFn = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedActiveCloseTips") }`,
-        });
-        return;
+            type: 'warning',
+            message: `${t('batchEmptySelectedActiveCloseTips')}`
+        })
+        return
     }
 
-    ElMessageBox.confirm(t("batchGoodsCloseTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning",
+    ElMessageBox.confirm(t('batchGoodsCloseTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
-        if (repeat.value) return;
-        repeat.value = true;
+        if (repeat.value) return
+        repeat.value = true
 
-        const manjian_id: any = [];
+        const manjian_id: any = []
         multipleSelection.value.forEach((item: any) => {
-            manjian_id.push(item.manjian_id);
-        });
+            manjian_id.push(item.manjian_id)
+        })
 
         batchCloseMajian({ manjian_id }).then(() => {
-            loadManjianList();
-            repeat.value = false;
+            loadManjianList()
+            repeat.value = false
         }).catch(() => {
-            repeat.value = false;
-        });
-    });
+            repeat.value = false
+        })
+    })
 }
 
 </script>

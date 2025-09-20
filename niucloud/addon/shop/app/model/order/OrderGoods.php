@@ -20,6 +20,7 @@ use app\dict\sys\FileDict;
 use app\model\member\Member;
 use core\base\BaseModel;
 use Exception;
+use think\model\concern\SoftDelete;
 use think\model\relation\HasOne;
 
 /**
@@ -27,7 +28,7 @@ use think\model\relation\HasOne;
  */
 class OrderGoods extends BaseModel
 {
-
+    use SoftDelete;
     /**
      * 数据表主键
      * @var string
@@ -51,6 +52,14 @@ class OrderGoods extends BaseModel
 
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
+
+    /**
+     * 定义软删除标记字段.
+     * @var string
+     */
+    protected $deleteTime = 'delete_time';
+
+    protected $defaultSoftDelete = 0;
 
     /**
      * 包裹
@@ -100,7 +109,7 @@ class OrderGoods extends BaseModel
      */
     public function deliveryInfo()
     {
-        return $this->hasOne(OrderDelivery::class, 'id', 'delivery_id');
+        return $this->hasOne(OrderDelivery::class, 'id', 'delivery_id')->append(['express_company_name']);
     }
 
     /**

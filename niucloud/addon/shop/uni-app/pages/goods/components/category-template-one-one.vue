@@ -2,8 +2,8 @@
     <view class="min-h-screen bg-[var(--page-bg-color)] overflow-hidden">
         <view class="mescroll-box bg-[var(--page-bg-color)]"
               :class="{ 'cart': config.cart.control && config.cart.event === 'cart', 'detail': !(config.cart.control && config.cart.event === 'cart') }" v-if="tabsData.length">
-            <mescroll-body ref="mescrollRef" :down="{ use: false }" @init="mescrollInit" @up="getListFn">
-                <view v-if="config.search.control" class="search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[100rpx] box-border">
+              <mescroll-body ref="mescrollRef" :down="{ use: false }" @init="mescrollInit" @up="getListFn">
+                <view v-if="config.search.control" class="search-box z-10 bg-[#fff] fixed top-0 left-0 right-0 h-[100rpx] box-border"  :style="{'top': systemStore.topTabbarInfo.fullHeight || 0}">
                     <view class="flex-1 search-input">
                         <text @click.stop="searchNameFn" class="nc-iconfont nc-icon-sousuo-duanV6xx1 btn"></text>
                         <input class="input" type="text" v-model.trim="searchName" :placeholder="config.search.title" @confirm="searchNameFn" placeholderClass="text-[var(--text-color-light9)]">
@@ -26,7 +26,7 @@
                 </view>
                 <!--  #endif -->
                 <!--  #ifndef  H5 -->
-                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0" :class="{ 'top-[98rpx]': config.search.control, '!bottom-[198rpx]': config.cart.control && config.cart.event === 'cart' }">
+                <view class="tabs-box z-2 fixed left-0 bg-[#fff] pb-ios bottom-[100rpx] top-0" :style="tabsBoxCss">
                     <scroll-view :scroll-y="true" class="scroll-height">
                         <view class="bg-[var(--temp-bg)]">
                             <view class="tab-item" :class="{ 'tab-item-active': index == tabActive,'rounded-br-[12rpx]':tabActive-1===index,'rounded-tr-[12rpx]':tabActive+1===index}"
@@ -191,10 +191,26 @@ import { useLogin } from '@/hooks/useLogin'
 import useMemberStore from '@/stores/member'
 import useCartStore from '@/addon/shop/stores/cart'
 import { cloneDeep } from 'lodash-es'
+import useSystemStore from '@/stores/system';
+const systemStore = useSystemStore()
 
 // 查询购物车列表
 const cartStore = useCartStore();
 cartStore.getList();
+
+const tabsBoxCss = computed(() => {
+    let style = ''
+    if(config.search.control){
+        style += `top: calc(${ systemStore.topTabbarInfo.height || 0 }px + 98rpx);`
+    }else{
+        style += `top: ${ systemStore.topTabbarInfo.height || 0 }px;`
+    }
+
+    if(config.cart.control && config.cart.event === 'cart'){
+        style += `bottom: 198rpx !important;`
+    }
+    return style
+})
 
 const cartList = computed(() => cartStore.cartList)
 const totalNum = computed(() => cartStore.totalNum)
@@ -569,16 +585,12 @@ const settlement = () => {
 
 // 价格类型
 const priceType = (data: any) => {
-    let type = "";
-	type = data.goodsSku.show_type
-    return type;
+    return data.goodsSku.show_type
 }
 
 // 商品价格
 const goodsPrice = (data: any) => {
-    let price = "0.00";
-	price = data.goodsSku.show_price
-    return price;
+    return data.goodsSku.show_price
 }
 </script>
 
@@ -675,6 +687,7 @@ const goodsPrice = (data: any) => {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 24rpx;
 }
 
 .tabs-box .tab-item-active {
@@ -685,7 +698,7 @@ const goodsPrice = (data: any) => {
     &::before {
         display: inline-block;
         position: absolute;
-        left: 0rpx;
+        left: 0;
         top: 50%;
         transform: translateY(-50%);
         content: '';
@@ -697,7 +710,7 @@ const goodsPrice = (data: any) => {
     &::after {
         display: inline-block;
         position: absolute;
-        left: 0rpx;
+        left: 0;
         top: 50%;
         transform: translateY(-50%);
         content: '';

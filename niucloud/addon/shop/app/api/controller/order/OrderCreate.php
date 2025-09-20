@@ -39,17 +39,18 @@ class OrderCreate extends BaseApiController
     public function calculate()
     {
         $data = $this->request->params([
-            [ 'order_key', [] ],
-            [ 'cart_ids', [] ],
-            [ 'sku_data', [] ],
-            [ 'delivery', [] ],
-            [ 'is_need_recalculate', 0 ],
+            ['order_key', []],
+            ['cart_ids', []],
+            ['sku_data', []],
+            ['delivery', []],
+            ['is_need_recalculate', 0],
 //            ['member_remark', ''],//买家留言
-            [ 'discount', [] ],//优惠
+            ['discount', []],//优惠
 //            ['invoice', []],//发票
-            [ 'extend_data', [] ],// 扩展数据
-            [ 'impulse_buy_goods', [] ] // 顺买商品信息
+            ['extend_data', []],// 扩展数据
+            ['impulse_buy_goods', []], // 顺买商品信息
         ]);
+
         return success('SUCCESS', ( new OrderCreateService() )->calculate($data));
     }
 
@@ -60,14 +61,14 @@ class OrderCreate extends BaseApiController
     public function create()
     {
         $data = $this->request->params([
-            [ 'order_key', [] ],
-            [ 'member_remark', '' ],//买家留言
-            [ 'delivery', [] ],//配送参数
+            ['order_key', []],
+            ['member_remark', ''],//买家留言
+            ['delivery', []],//配送参数
 //            ['discount', []],//优惠
-            [ 'invoice', [] ],//发票
-            [ 'form_data', [] ] // 万能表单数据
+            ['invoice', []],//发票
+            ['form_data', []] // 万能表单数据
         ]);
-        return success('SUCCESS', ( new OrderCreateService() )->create($data));
+        return success('SUCCESS', (new OrderCreateService())->create($data));
     }
 
     /**
@@ -77,9 +78,9 @@ class OrderCreate extends BaseApiController
     public function getCoupon()
     {
         $data = $this->request->params([
-            [ 'order_key', [] ],
+            ['order_key', []],
         ]);
-        return success('SUCCESS', ( new OrderCreateService() )->getCoupon($data));
+        return success('SUCCESS', (new OrderCreateService())->getCoupon($data));
     }
 
     /**
@@ -92,9 +93,9 @@ class OrderCreate extends BaseApiController
     public function getStore()
     {
         $data = $this->request->params([
-            [ 'latlng', [] ],
+            ['latlng', []],
         ]);
-        return success('SUCCESS', ( new OrderCreateService() )->getStore($data[ 'latlng' ]));
+        return success('SUCCESS', (new OrderCreateService())->getStore($data['latlng']));
     }
 
     /**

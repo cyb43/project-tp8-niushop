@@ -1,5 +1,6 @@
 import TransformCoordinate from './transformCoordinate.js'
 import useConfigStore from "@/stores/config";
+import useSystemStore from "../../../../stores/system";
 
 function openMapByDefault(latitude, longitude, name) {
 	uni.openLocation({
@@ -87,7 +88,8 @@ export default {
 	openMap(latitude, longitude, name, coord_type = 'gcj02') {
 		let arr = getCoordByType(longitude, latitude, coord_type)
 		// #ifdef APP-PLUS
-		switch (uni.getSystemInfoSync().platform) {
+		const systemStore = useSystemStore()
+		switch (systemStore.systemInfo.platform) {
 			case 'android':
 				// console.log('运行Android上')
 				openMapByAndroid(arr[1], arr[0], name)

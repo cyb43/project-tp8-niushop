@@ -16,7 +16,6 @@ use addon\shop\app\dict\goods\GoodsDict;
 use addon\shop\app\dict\order\OrderDeliveryDict;
 use addon\shop\app\model\delivery\Local;
 use addon\shop\app\service\core\delivery\third_delivery\ThirdDeliveryLoader;
-use app\dict\sys\ConfigKeyDict;
 use app\service\core\sys\CoreConfigService;
 use core\base\BaseCoreService;
 use Location\Coordinate;
@@ -45,15 +44,15 @@ class CoreLocalDeliveryService extends BaseCoreService
      * @return array
      */
 
-    public function setConfig($data)
+    public function setConfig( $data)
     {
-        $this->core_config_service->setConfig(ConfigKeyDict::SHOP_THIRD_PARTY_DELIVERY_CONFIG, $data);
+        $this->core_config_service->setConfig( DeliveryLocalDict::SHOP_THIRD_PARTY_DELIVERY_CONFIG, $data);
         return true;
     }
 
     public function getConfig()
     {
-        $data = $this->core_config_service->getConfigValue(ConfigKeyDict::SHOP_THIRD_PARTY_DELIVERY_CONFIG);
+        $data = $this->core_config_service->getConfigValue( DeliveryLocalDict::SHOP_THIRD_PARTY_DELIVERY_CONFIG);
         $config = DeliveryLocalDict::getType();
         foreach ($config as $type => $item) {
             if (!isset($data[$type])) {

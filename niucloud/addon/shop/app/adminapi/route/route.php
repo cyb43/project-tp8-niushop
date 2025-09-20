@@ -185,6 +185,9 @@ Route::group('shop', function () {
     // 修改商品上下架状态
     Route::put('goods/status', 'addon\shop\app\adminapi\controller\goods\Goods@editStatus');
 
+    // 修改商品上下架状态（单商品）
+    Route::put('goods/single/status', 'addon\shop\app\adminapi\controller\goods\Goods@editSingleStatus');
+
     // 复制商品
     Route::put('goods/copy/:goods_id', 'addon\shop\app\adminapi\controller\goods\Goods@copy');
 
@@ -381,6 +384,9 @@ Route::group('shop', function () {
     //订单详情
     Route::get('order/detail/:id', 'addon\shop\app\adminapi\controller\order\Order@detail');
 
+    //订单删除
+    Route::post('order/delete', 'addon\shop\app\adminapi\controller\order\Order@delete');
+
     //获取 订单类型
     Route::get('order/type', 'addon\shop\app\adminapi\controller\order\Order@getOrderType');
 
@@ -552,6 +558,18 @@ Route::group('shop', function () {
 
     //商品评价 置顶
     Route::put('goods/evaluate/topping/:id', 'addon\shop\app\adminapi\controller\goods\Evaluate@topping');
+
+    //获取商品评价审核状态
+    Route::get('goods/evaluate/status', 'addon\shop\app\adminapi\controller\goods\Evaluate@status');
+
+    //批量通过
+    Route::post('goods/evaluate/batch/adopt', 'addon\shop\app\adminapi\controller\goods\Evaluate@batchAdopt');
+
+    //批量拒绝
+    Route::post('goods/evaluate/batch/refuse', 'addon\shop\app\adminapi\controller\goods\Evaluate@batchRefuse');
+
+    //批量删除
+    Route::post('goods/evaluate/batch/del', 'addon\shop\app\adminapi\controller\goods\Evaluate@batchDel');
 
     //商品评价 取消置顶
     Route::put('goods/evaluate/cancel_topping/:id', 'addon\shop\app\adminapi\controller\goods\Evaluate@cancelTopping');
@@ -778,6 +796,7 @@ Route::group('shop', function () {
 
     //满减送批量删除
     Route::put('manjian/goods/batchDelete', 'addon\shop\app\adminapi\controller\marketing\Manjian@batchDelete');
+
 
 })->middleware([
     AdminCheckToken::class,

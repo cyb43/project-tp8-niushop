@@ -21,6 +21,7 @@
                                             <image class="w-[184rpx] h-[184rpx]" :style="imageRounded.style" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                                         </template>
                                     </u--image>
+<!--                                    <easy-image class="w-[184rpx] h-[184rpx]" :image-src="item.info.goods_cover_thumb_small" :image-style="imageStyle" />-->
                                 </view>
                                 <view class="pt-[12rpx]">
                                     <view
@@ -82,7 +83,7 @@ const diyComponent = computed(() => {
     }
 })
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -97,7 +98,7 @@ const warpCss = computed(() => {
 })
 
 const imageRounded = computed(() => {
-    var obj = {
+    const obj = {
         val: '',
         style: ''
     };
@@ -109,7 +110,7 @@ const imageRounded = computed(() => {
 })
 
 const itemCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.elementBgColor) style += 'background-color:' + diyComponent.value.elementBgColor + ';';
     if (diyComponent.value.topElementRounded) style += 'border-top-left-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     if (diyComponent.value.topElementRounded) style += 'border-top-right-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
@@ -118,9 +119,14 @@ const itemCss = computed(() => {
     return style;
 })
 
+const imageStyle = computed(() => {
+    let style = 'border-radius:' + imageRounded.value.val + ';';
+    return style;
+})
+
 //listFrame样式
 const listFrameStyle = (item: any) => {
-    var style = '';
+    let style = '';
     if (item.listFrame.startColor) {
         if (item.listFrame.startColor && item.listFrame.endColor) style = `background:linear-gradient( 110deg, ${ item.listFrame.startColor } 0%, ${ item.listFrame.endColor } 100%);`;
         else style = 'background-color:' + item.listFrame.startColor + ';';
@@ -130,7 +136,7 @@ const listFrameStyle = (item: any) => {
 
 //moreTitle样式
 const moreTitleStyle = (item: any) => {
-    var style = '';
+    let style = '';
     if (item.moreTitle.startColor) {
         if (item.moreTitle.startColor && item.moreTitle.endColor) style = `background:linear-gradient( 0deg, ${ item.moreTitle.startColor } 0%, ${ item.moreTitle.endColor } 100%);`;
         else style = 'background-color:' + item.moreTitle.startColor + ';';

@@ -74,8 +74,7 @@
                         </template>
                         <template v-if="item.image_mid.length === 4">
                             <view class="flex flex-wrap mt-[10rpx]">
-                                <u--image
-                                    class="rounded-[var(--goods-rounded-big)] overflow-hidden mr-[15rpx] mb-[15rpx]"
+                                <u--image class="rounded-[var(--goods-rounded-big)] overflow-hidden mr-[15rpx] mb-[15rpx]"
                                     width="215rpx" height="215rpx" :src="img(item.image_mid[0])" model="aspectFill"
                                     @click="imgListPreview(item.images[0])">
                                     <template #error>
@@ -165,7 +164,7 @@ const getOrderEvaluateFn = (id: any) => {
 //预览图片
 const imgListPreview = (item: any) => {
     if (item === '') return false
-    var urlList = []
+    const urlList = [];
     urlList.push(img(item))  //push中的参数为 :src="item.img_url" 中的图片地址
     uni.previewImage({
         indicator: "number",

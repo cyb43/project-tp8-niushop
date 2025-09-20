@@ -30,7 +30,13 @@ class ShowMarketingListener
             ],
             // 工具
             'tool' => [
-
+                [
+                    'title' => '商品榜单',
+                    'desc' => '展示热销商品排行榜',
+                    'icon' => 'static/resource/images/marketing/goods_rank.png',
+                    'key' => 'shop_goods_rank',
+                    'url' => '/shop/marketing/goods_rank/config',
+                ],
             ],
             // 营销
             'marketing' => [
@@ -68,13 +74,6 @@ class ShowMarketingListener
                     'icon' => 'static/resource/images/marketing/newcomer.png',
                     'key' => 'shop_goods_newcomer_discount',
                     'url' => '/shop/marketing/newcomer/config',
-                ],
-                [
-                    'title' => '商品榜单',
-                    'desc' => '展示热销商品排行榜',
-                    'icon' => 'static/resource/images/marketing/goods_rank.png',
-                    'key' => 'shop_goods_rank',
-                    'url' => '/shop/marketing/goods_rank/config',
                 ],
             ]
         ];

@@ -33,6 +33,7 @@ class Discount extends BaseAdminController
         $data = $this->request->params([
             [ "name", "" ],
             [ "status", "" ],
+            [ "active_id", [] ],
         ]);
         return success(( new DiscountService() )->getPage($data));
     }

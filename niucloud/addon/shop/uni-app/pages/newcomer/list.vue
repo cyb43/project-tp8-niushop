@@ -3,7 +3,7 @@
         <template v-if="Object.keys(configInfo).length &&configInfo.active_status =='active'">
             <mescroll-body ref="mescrollRef" @init="mescrollInit" :down="{ use: false }" @up="getGoodsListFn">
                 <view class="marketing-head" v-if="!pageLoading">
-                    <!-- #ifdef MP-WEIXIN -->
+                    <!-- #ifdef MP-WEIXIN || APP-PLUS -->
                     <top-tabbar :data="param" :isFill="false" class="top-header" />
                     <image v-if="configInfo.banner_list && configInfo.banner_list.length" class="w-[100%] h-[434rpx]"
                            :src="img(configInfo.banner_list[0].imageUrl)" mode="aspectFill"
@@ -121,6 +121,7 @@ import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.v
 import { onLoad, onPageScroll, onReachBottom } from '@dcloudio/uni-app';
 import useDiyStore from '@/app/stores/diy';
 import { topTabar } from '@/utils/topTabbar'
+import useSystemStore from "@/stores/system";
 
 const { mescrollInit, downCallback, getMescroll } = useMescroll(onPageScroll, onReachBottom);
 const goodsList = ref<Array<any>>([]);
@@ -128,18 +129,13 @@ const mescrollRef = ref(null);
 const loading = ref<boolean>(false);
 const pageLoading = ref<boolean>(true);
 const diyStore = useDiyStore();
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '', topStatusBar: { textColor: '#fff' } })
 let pageNullParam = topTabarObj.setTopTabbarParam({ title: '新人专享列表', topStatusBar: { textColor: '#333' } })
 const topStyle = computed(() => {
-    let style = pxToRpx(Number(menuButtonInfo.height) + menuButtonInfo.top + 8) + 30 + 'rpx;'
+    let style = pxToRpx(Number(systemStore.menuButtonInfo.height) + systemStore.menuButtonInfo.top + 8) + 30 + 'rpx;'
     return style
 })
 /********* 自定义头部 - end ***********/
@@ -258,7 +254,7 @@ const toDetail = (data: any) => {
         image:nth-of-type(1) {
             position: absolute;
             right: 54rpx;
-            top: 0rpx;
+            top: 0;
             height: 54rpx;
             z-index: 5;
         }

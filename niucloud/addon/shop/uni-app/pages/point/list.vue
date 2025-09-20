@@ -40,11 +40,8 @@
             <view v-if="goodsList.length" class="sidebar-margin flex justify-between flex-wrap">
                 <template v-for="(item, index) in goodsList">
                     <view class="goods-item-style-two flex flex-col bg-[#fff] box-border rounded-[var(--rounded-mid)] overflow-hidden mt-[var(--top-m)]" @click="toDetail(item.id)">
-                        <!-- <u--image width="100%" height="350rpx" :src="img(item.goods_cover_thumb_mid ? item.goods_cover_thumb_mid : '')" model="aspectFill">
-                          <template #error>
-                            <image class="w-[100%] h-[350rpx]" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
-                          </template>
-                        </u--image> -->
+<!--                        <easy-image class="w-[100%] h-[350rpx]" image-class="rounded-tl-[var(&#45;&#45;rounded-mid)] rounded-tr-[var(&#45;&#45;rounded-mid)]"-->
+<!--                                    :image-src="item.goods_cover_thumb_small" />-->
                         <image v-if="item.goods_cover_thumb_mid"
                                class="w-[100%] h-[350rpx] rounded-tl-[var(--rounded-mid)] rounded-tr-[var(--rounded-mid)]"
                                :src="img(item.goods_cover_thumb_mid)" :mode="'aspectFill'"

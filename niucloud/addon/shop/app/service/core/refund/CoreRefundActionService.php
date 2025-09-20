@@ -44,7 +44,7 @@ class CoreRefundActionService extends BaseCoreService
         $order_refund_no = $data[ 'order_refund_no' ];
         //查询订单项信息
         $order_refund_info = $this->model->where([
-            [ 'order_refund_no', '=', $order_refund_no ],
+            [ 'order_refund_no', '=', $order_refund_no ]
         ])->findOrEmpty();
         if ($order_refund_info->isEmpty()) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID');//退款已失效
         if ($order_refund_info[ 'status' ] != OrderRefundDict::APPLY) throw new CommonException('SHOP_ORDER_REFUND_IS_ONLY_WAIT_REFUND');//退款已失效(只有申请中的退款才可以审核)
@@ -113,7 +113,7 @@ class CoreRefundActionService extends BaseCoreService
         $order_refund_no = $data[ 'order_refund_no' ];
         //查询订单项信息
         $order_refund_info = $this->model->where([
-            [ 'order_refund_no', '=', $order_refund_no ],
+            [ 'order_refund_no', '=', $order_refund_no ]
         ])->findOrEmpty();
         if ($order_refund_info->isEmpty()) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID');//退款已失效
         if ($order_refund_info[ 'status' ] != OrderRefundDict::BUYER_REFUND_GOODS_WAIT_STORE) throw new CommonException('SHOP_ORDER_REFUND_IS_ONLY_WAIT_REFUND_GOODS');//退款已失效(只有待确认收货请求才可以修改退款)
@@ -159,7 +159,7 @@ class CoreRefundActionService extends BaseCoreService
         }
         $order_refund_info = $this->model->where($where)->findOrEmpty();
         if ($order_refund_info->isEmpty()) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID');//退款已失效
-        if (in_array($order_refund_info[ 'status' ], [ OrderRefundDict::STORE_AGREE_REFUND_WAIT_TRANSFER, OrderRefundDict::STORE_REFUND_TRANSFERING, OrderRefundDict::FINISH, OrderRefundDict::CLOSE ])) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID_OR_FINISH');//退款已失效(退款已完成或已关闭)
+        if (in_array($order_refund_info[ 'status' ], [ OrderRefundDict::STORE_AGREE_REFUND_WAIT_TRANSFER, OrderRefundDict::STORE_REFUND_TRANSFERING, OrderRefundDict::FINISH, OrderRefundDict::CLOSE, OrderRefundDict::SHOP_ACTIVE_CLOSE_REFUND ])) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID_OR_FINISH');//退款已失效(退款已完成或已关闭)
         $update_data = array(
             'status' => $refund_status,
             'close_time' => time()

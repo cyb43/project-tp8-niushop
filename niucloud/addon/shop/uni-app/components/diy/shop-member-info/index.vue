@@ -90,9 +90,10 @@ import { wechatSync } from '@/app/api/system'
 import useDiyStore from '@/app/stores/diy'
 import useConfigStore from '@/stores/config'
 import bindMobile from '@/components/bind-mobile/bind-mobile.vue';
+import useSystemStore from "@/stores/system";
 
 const props = defineProps(['component', 'index', 'global']);
-
+const systemStore = useSystemStore()
 const configStore = useConfigStore()
 const diyStore = useDiyStore();
 
@@ -105,7 +106,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
         else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -151,7 +152,8 @@ const info = computed(() => {
         }
     } else {
         getMyCouponCountFn()
-        return memberStore.info;
+		const data = memberStore ? memberStore.info : null
+        return data;
     }
 })
 
@@ -243,20 +245,14 @@ const bindMobileFn = () => {
     bindMobileRef.value.open()
 }
 
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
-
 // 导航栏内部盒子的样式
 const navbarInnerStyle = computed(() => {
     let style = '';
     // 导航栏宽度，如果在小程序下，导航栏宽度为胶囊的左边到屏幕左边的距离
     // #ifdef MP
     if (props.global.topStatusBar.isShow == false) {
-        style += 'height:' + menuButtonInfo.height + 'px;';
-        style += 'padding-top:' + menuButtonInfo.top + 'px;';
+        style += 'height:' + systemStore.menuButtonInfo.height + 'px;';
+        style += 'padding-top:' + systemStore.menuButtonInfo.top + 'px;';
     }
     // #endif
     return style;

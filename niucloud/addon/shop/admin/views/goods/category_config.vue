@@ -110,7 +110,7 @@ import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
 import { getCategoryConfig, setCategoryConfig } from '@/addon/shop/api/goods'
 import { img } from '@/utils/common'
-import { useRoute,useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
 const pageName = route.meta.title

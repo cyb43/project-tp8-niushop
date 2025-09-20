@@ -48,7 +48,7 @@ class ExchangeService extends BaseApiService
             $order = 'total_order_num desc,sort desc';
         }
         $search_model = $this->model->where([ [ 'id', '>', 0 ] ])->withSearch([ 'names', 'status', 'create_time' ], $where)
-            ->append([ 'type_name', 'status_name', 'goods_cover_thumb_mid','goods_label','goods_brand'])->field($field)->order($order);
+            ->append([ 'type_name', 'status_name', 'goods_cover_thumb_small', 'goods_cover_thumb_mid', 'goods_label', 'goods_brand' ])->field($field)->order($order);
         $list = $this->pageQuery($search_model);
         return $list;
     }
@@ -86,16 +86,16 @@ class ExchangeService extends BaseApiService
             $goods_info[ 'price' ] = $product_detail_array[ $reset_sku_id ][ 'price' ];
 //            $goods_info[ 'market_price' ] = $product_detail_array[ $reset_sku_id ][ 'price' ];
             $goods_info[ 'sale_price' ] = $product_detail_array[ $reset_sku_id ][ 'price' ];
-            $goods_info[ 'stock' ] = min($goods_info['stock'], $product_detail_array[ $reset_sku_id ][ 'stock' ]);
+            $goods_info[ 'stock' ] = min($goods_info[ 'stock' ], $product_detail_array[ $reset_sku_id ][ 'stock' ]);
             $goods_info[ 'point' ] = $product_detail_array[ $reset_sku_id ][ 'point' ];
             $goods_info[ 'exchange_id' ] = $id;
             if (!empty($goods_info[ 'skuList' ])) {
-                foreach ($goods_info[ 'skuList' ] as $k=>&$item) {
+                foreach ($goods_info[ 'skuList' ] as $k => &$item) {
                     $item[ 'limit_num' ] = 0;
-                    $item['is_join_exchange'] = 1;
-                    if (!in_array($item['sku_id'],$sku_ids)){
+                    $item[ 'is_join_exchange' ] = 1;
+                    if (!in_array($item[ 'sku_id' ], $sku_ids)) {
                         $item[ 'is_join_exchange' ] = 0;
-                        unset($goods_info[ 'skuList' ][$k]);
+                        unset($goods_info[ 'skuList' ][ $k ]);
                     }
                     $item[ 'point' ] = 0;
                     $item[ 'is_default' ] = $reset_sku_id == $item[ 'sku_id' ] ? 1 : 0;
@@ -103,12 +103,12 @@ class ExchangeService extends BaseApiService
                         $item[ 'price' ] = $product_detail_array[ $item[ 'sku_id' ] ][ 'price' ];
 //                        $item[ 'market_price' ] = $product_detail_array[ $item[ 'sku_id' ] ][ 'price' ];
                         $item[ 'sale_price' ] = $product_detail_array[ $item[ 'sku_id' ] ][ 'price' ];
-                        $item[ 'stock' ] = min($item['stock'],$product_detail_array[ $item[ 'sku_id' ] ][ 'stock' ]);
+                        $item[ 'stock' ] = min($item[ 'stock' ], $product_detail_array[ $item[ 'sku_id' ] ][ 'stock' ]);
                         $item[ 'point' ] = $product_detail_array[ $item[ 'sku_id' ] ][ 'point' ];
                         $item[ 'limit_num' ] = $product_detail_array[ $item[ 'sku_id' ] ][ 'limit_num' ];
                     }
                 }
-                $goods_info[ 'skuList' ]  = array_values($goods_info[ 'skuList' ] );
+                $goods_info[ 'skuList' ] = array_values($goods_info[ 'skuList' ]);
             }
         }
         return $goods_info ?? [];
@@ -136,15 +136,16 @@ class ExchangeService extends BaseApiService
      */
     public function getGoodsComponents(array $where = [])
     {
-        $field = 'status,total_exchange_num,stock,id,type,names,title,image,status,product_detail,point,price,limit_num,content,sort,total_point_num,total_price_num,total_order_num,total_member_num,update_time,create_time';
+        $field = 'total_exchange_num,stock,id,type,names,title,image,product_detail,point,price,limit_num,total_point_num,total_price_num,total_order_num,total_member_num';
 //        $goods_where[] = [ 'stock', '>', 0 ];
+        $goods_where[] = [ 'status', '=', 1 ];
         if (!empty($where[ 'order' ]) && in_array($where[ 'order' ], [ 'total_order_num', 'total_exchange_num', 'price' ])) {
             $order = $where[ 'order' ] . ' ' . $where[ 'sort' ];
         } else {
             $order = 'total_order_num desc,sort desc';
         }
-        $list = $this->model->withSearch([ 'names', 'status', 'ids' ], $where)
-            ->append([ 'type_name', 'status_name', 'goods_cover_thumb_mid','goods_label','goods_brand' ])
+        $list = $this->model->where($goods_where)->withSearch([ 'names', 'ids' ], $where)
+            ->append([ 'type_name', 'goods_cover_thumb_small','goods_cover_thumb_mid', 'goods_label', 'goods_brand' ])
             ->field($field)->order($order)->limit($where[ 'num' ])->select()->toArray();
         return $list;
     }

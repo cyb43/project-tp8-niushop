@@ -82,7 +82,7 @@ const prop = defineProps({
 })
 
 const data = computed(() => {
-    return prop.value;
+    return prop.value
 })
 
 const qrcode = ref('')

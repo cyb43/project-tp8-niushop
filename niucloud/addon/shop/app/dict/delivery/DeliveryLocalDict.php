@@ -22,6 +22,8 @@ class DeliveryLocalDict
     const DADA = 'dada';
     const DADA2 = 'dada2';
 
+    const SHOP_THIRD_PARTY_DELIVERY_CONFIG = 'SHOP_THREE_PARTY_DELIVERY_CONFIG'; // 配送配置
+
 
     /**
      * 获取三方配送提供商(用于订单)
@@ -33,14 +35,14 @@ class DeliveryLocalDict
         $data = [
             self::DADA => [
                 'name' => '达达配送',
-                'column' => ['app_secret', 'app_key', 'shop_id', 'shop_store_no'],
-                'encrypt_params' => ['app_secret', 'app_key', 'shop_id', 'shop_store_no']
+                'column' => [ 'app_secret', 'app_key', 'shop_id', 'shop_store_no' ],
+                'encrypt_params' => [ 'app_secret', 'app_key', 'shop_id', 'shop_store_no' ]
             ],
         ];
 
         if ($type == '') {
             return $data;
         }
-        return $data[$type] ?? '';
+        return $data[ $type ] ?? '';
     }
 }

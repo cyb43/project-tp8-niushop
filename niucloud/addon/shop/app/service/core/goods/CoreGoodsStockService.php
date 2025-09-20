@@ -14,6 +14,7 @@ namespace addon\shop\app\service\core\goods;
 use addon\shop\app\model\goods\Goods;
 use addon\shop\app\model\goods\GoodsSku;
 use core\base\BaseCoreService;
+use think\facade\Log;
 
 /**
  * 商品库存服务层
@@ -37,6 +38,19 @@ class CoreGoodsStockService extends BaseCoreService
         $this->model->where([['goods_id', '=', $data['goods_id']]])->inc('stock', $data['num'])->update();
         (new GoodsSku())->where([['sku_id', '=', $data['sku_id']]])->inc('stock', $data['num'])->update();
         return true;
+    }
+
+    public function batchUpdateStock($data)
+    {
+        if (!isset($data['goods']) || !isset($data['sku'])) {
+            return false;
+        }
+        try {
+            $this->model->saveAll($data['goods']);
+            (new GoodsSku())->saveAll($data['sku']);
+        }catch (\Exception $e){
+            throw new \Exception($e->getMessage());
+        }
     }
 
     /**

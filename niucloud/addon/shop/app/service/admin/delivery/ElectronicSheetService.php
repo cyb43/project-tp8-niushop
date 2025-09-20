@@ -45,7 +45,7 @@ class ElectronicSheetService extends BaseAdminService
         $order = 'is_default desc,create_time desc';
 
         $search_model = $this->model->where([ [ 'electronic_sheet.id', '>', 0 ] ])
-            ->withSearch([ "id", "template_name", "express_company_id", "pay_type", "is_notice", "status", "is_default" ], $where)
+            ->withSearch([ 'id', 'template_name', 'express_company_id', 'pay_type', 'is_notice', 'status', 'is_default' ], $where)
             ->field($field)
             ->withJoin([
                 'company' => [ 'company_name', 'express_no_electronic_sheet' ]
@@ -64,7 +64,7 @@ class ElectronicSheetService extends BaseAdminService
     public function getList(array $where = [], $field = 'id,template_name,express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,status,exp_type,print_style,is_default,create_time')
     {
         $order = 'is_default desc,create_time desc';
-        return $this->model->where([ [ 'id', '>', 0 ] ])->withSearch([ "id", "template_name", "express_company_id", "pay_type", "is_notice", "status", "is_default" ], $where)->field($field)->order($order)->select()->toArray();
+        return $this->model->where([ [ 'id', '>', 0 ] ])->withSearch([ 'id', 'template_name', 'express_company_id', 'pay_type', 'is_notice', 'status', 'is_default' ], $where)->field($field)->order($order)->select()->toArray();
     }
 
     /**
@@ -76,7 +76,7 @@ class ElectronicSheetService extends BaseAdminService
     {
         $field = 'id,template_name,express_company_id,customer_name,customer_pwd,send_site,send_staff,month_code,pay_type,is_notice,status,exp_type,print_style,is_default';
 
-        $info = $this->model->field($field)->where([ [ 'id', "=", $id ] ])->findOrEmpty()->toArray();
+        $info = $this->model->field($field)->where([ [ 'id', '=', $id ] ])->findOrEmpty()->toArray();
         return $info;
     }
 
@@ -87,12 +87,32 @@ class ElectronicSheetService extends BaseAdminService
      */
     public function add(array $data)
     {
-
         // 将同类型页面的默认值改为0，默认页面只有一个
         if (!empty($data[ 'is_default' ])) {
             $this->model->where([ [ 'id', '>', 0 ] ])->update([ 'is_default' => 0 ]);
         }
 
+        $interface_data = [
+            'kdbird'=>[
+                'customer_name'=>$data['customer_pwd'],
+                'customer_pwd'=>$data['customer_pwd'],
+                'send_site'=>$data['send_site'],
+                'send_staff'=>$data['send_staff'],
+                'month_code'=>$data['month_code'],
+                'pay_type'=>$data['pay_type'],
+                'is_notice'=>$data['is_notice'],
+                'print_style'=>$data['print_style']
+            ],
+//            'kd100'=>[
+//                'customer_name'=>$data['kd100_customer_pwd'],
+//                'customer_pwd'=>$data['kd100_customer_pwd'],
+//                'send_site'=>$data['kd100_send_site'],
+//                'send_staff'=>$data['kd100_send_staff'],
+//                'month_code'=>$data['kd100_month_code'],
+//                'pay_type'=>$data['kd100_pay_type'],
+//            ]
+        ];
+        $data['interface_data'] = json_encode($interface_data);
         $res = $this->model->create($data);
         return $res->id;
     }
@@ -109,6 +129,28 @@ class ElectronicSheetService extends BaseAdminService
         if (!empty($data[ 'is_default' ])) {
             $this->model->where([ [ 'id', '>', 0 ] ])->update([ 'is_default' => 0 ]);
         }
+
+        $interface_data = [
+            'kdbird'=>[
+                'customer_name'=>$data['customer_pwd'],
+                'customer_pwd'=>$data['customer_pwd'],
+                'send_site'=>$data['send_site'],
+                'send_staff'=>$data['send_staff'],
+                'month_code'=>$data['month_code'],
+                'pay_type'=>$data['pay_type'],
+                'is_notice'=>$data['is_notice'],
+                'print_style'=>$data['print_style']
+            ],
+//            'kd100'=>[
+//                'customer_name'=>$data['kd100_customer_pwd'],
+//                'customer_pwd'=>$data['kd100_customer_pwd'],
+//                'send_site'=>$data['kd100_send_site'],
+//                'send_staff'=>$data['kd100_send_staff'],
+//                'month_code'=>$data['kd100_month_code'],
+//                'pay_type'=>$data['kd100_pay_type'],
+//            ]
+        ];
+        $data['interface_data'] = json_encode($interface_data);
         $this->model->where([ [ 'id', '=', $id ] ])->update($data);
         return true;
     }
@@ -156,7 +198,7 @@ class ElectronicSheetService extends BaseAdminService
      */
     public function setConfig($data)
     {
-        ( new CoreElectronicSheetService() )->setElectronicSheetConfig($data);
+        ( new CoreElectronicSheetService() )->setElectronicSheetConfig( $data);
         return true;
     }
 

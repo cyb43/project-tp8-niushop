@@ -75,16 +75,16 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref,computed } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
-import { ElMessage,ElMessageBox,FormInstance } from 'element-plus'
+import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { debounce,filterNumber, setTablePageStorage,getTablePageStorage } from '@/utils/common'
-import { getAttrPageList, addAttr, deleteAttr,modifyAttrSort,editAttr} from '@/addon/shop/api/goods'
+import { debounce, filterNumber, setTablePageStorage, getTablePageStorage } from '@/utils/common'
+import { getAttrPageList, addAttr, deleteAttr, modifyAttrSort, editAttr } from '@/addon/shop/api/goods'
 
 const route = useRoute()
 const router = useRouter()
-const pageName = route.meta.title;
+const pageName = route.meta.title
 
 const goodsAttrTable = reactive({
     page: 1,
@@ -147,7 +147,7 @@ const loadShopGoodsAttrList = (page: number = 1) => {
     getAttrPageList({
         page: goodsAttrTable.page,
         limit: goodsAttrTable.limit,
-         ...goodsAttrTable.searchParam
+        ...goodsAttrTable.searchParam
     }).then(res => {
         goodsAttrTable.loading = false
         goodsAttrTable.data = res.data.data
@@ -164,19 +164,19 @@ loadShopGoodsAttrList(getTablePageStorage(goodsAttrTable.searchParam).page)
  * 添加商品参数
  */
 const addEvent = () => {
-    formData.attr_id = 0;
-    formData.attr_name = '';
-    formData.sort = 0;
-    titleDialog.value = t('addShopGoodsAttr');
+    formData.attr_id = 0
+    formData.attr_name = ''
+    formData.sort = 0
+    titleDialog.value = t('addShopGoodsAttr')
     showDialog.value = true
 }
 
 // 编辑商品参数
-const editEvent = (data:any)=>{
-    formData.attr_id = data.attr_id;
-    formData.attr_name = data.attr_name;
-    formData.sort = data.sort;
-    titleDialog.value = t('updateShopGoodsAttr');
+const editEvent = (data:any) => {
+    formData.attr_id = data.attr_id
+    formData.attr_name = data.attr_name
+    formData.sort = data.sort
+    titleDialog.value = t('updateShopGoodsAttr')
     showDialog.value = true
 }
 
@@ -218,7 +218,7 @@ const deleteEvent = (id: number) => {
         {
             confirmButtonText: t('confirm'),
             cancelButtonText: t('cancel'),
-            type: 'warning',
+            type: 'warning'
         }
     ).then(() => {
         deleteAttr(id).then(() => {
@@ -233,7 +233,7 @@ const sortInputListener = debounce((sort, row) => {
     if (isNaN(sort) || !/^\d{0,8}$/.test(sort)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('sortTips') }`
+            message: `${t('sortTips')}`
         })
         return
     }

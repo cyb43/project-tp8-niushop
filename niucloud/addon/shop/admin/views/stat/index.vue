@@ -140,7 +140,7 @@
 </template>
 <script lang="ts" setup>
 import { ref, reactive, onMounted, nextTick } from 'vue'
-import type { TabsPaneContext} from 'element-plus'
+import type { TabsPaneContext } from 'element-plus'
 import * as echarts from 'echarts'
 
 const activeName = ref('first')
@@ -154,34 +154,33 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
     nextTick(() => {
         initIncomeChart()
     })
-
 }
 
 const boxes = reactive([
-  { content: '盒子 1', id : 1 },
-  { content: '盒子 2', id : 2 },
-  { content: '盒子 3', id : 3 },
-  { content: '盒子 1', id : 4  },
-  { content: '盒子 2', id : 5  },
-  { content: '盒子 3', id : 6  },
-  { content: '盒子 3', id : 7  },
+    { content: '盒子 1', id: 1 },
+    { content: '盒子 2', id: 2 },
+    { content: '盒子 3', id: 3 },
+    { content: '盒子 1', id: 4 },
+    { content: '盒子 2', id: 5 },
+    { content: '盒子 3', id: 6 },
+    { content: '盒子 3', id: 7 }
 ])
-const currentIndex = ref(-1);
+const currentIndex = ref(-1)
 
 const selectBox = (item) => {
-    currentIndex.value = item.id;
+    currentIndex.value = item.id
 }
 
 // 折线图
-const incomeChartRef = ref(null);
+const incomeChartRef = ref(null)
 
 const initIncomeChart = () => {
     if (incomeChartRef.value !== null) {
-        const incomeChart = echarts.init(incomeChartRef.value);
+        const incomeChart = echarts.init(incomeChartRef.value)
 
         // 准备数据
-        const xAxisData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
-        const yAxisData = [0, -20, -50, 134, 90, 230, 210];
+        const xAxisData = ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+        const yAxisData = [0, -20, -50, 134, 90, 230, 210]
 
         // 配置项
         const option = {
@@ -203,18 +202,18 @@ const initIncomeChart = () => {
                 type: 'line',
                 data: yAxisData
             }]
-        };
+        }
 
         // 使用配置项初始化图表
-        incomeChart.setOption(option);
+        incomeChart.setOption(option)
         incomeChart.resize({
             width: 'auto'
-        });
+        })
     }
 }
 
 onMounted(() => {
-    initIncomeChart();
+    initIncomeChart()
 })
 </script>
 <style lang="scss" scoped>
@@ -227,10 +226,10 @@ onMounted(() => {
     color: white;
 }
 .tab-index :deep(.el-tabs__item:first-child.is-active){
-    border-left-width: 0px !important;
+    border-left-width: 0 !important;
 }
 .tab-index :deep(.el-tabs__item:first-child:hover){
-    border-left-width: 0px !important;
+    border-left-width: 0 !important;
 }
 .tab-index :deep(.el-tabs__item):hover{
     background-color: #105CFB;

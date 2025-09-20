@@ -341,16 +341,6 @@ const getData = () => {
         goodsIds: goodsIds.value
     };
 
-    initSearchParam();
-}
-
-// 重置表单搜索
-const initSearchParam = () => {
-    goodsTable.searchParam.keyword = '';
-    goodsTable.searchParam.goods_category = [];
-    goodsTable.searchParam.goods_ids = '';
-    goodsTable.searchParam.verify_goods_ids = '';
-    goodsTable.searchParam.goods_type = '';
 }
 
 defineExpose({

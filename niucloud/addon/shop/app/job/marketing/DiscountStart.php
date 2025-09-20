@@ -35,13 +35,9 @@ class DiscountStart extends BaseJob
                 ['status', '=', DiscountDict::NOT_ACTIVE],
                 ['start_time', '<=', time()]
             ])->column('discount_id');
-
-            foreach($ids as $k => $v){
-                (new Discount())->where([ ['discount_id', '=', $v], ['status', '=', DiscountDict::NOT_ACTIVE], ['start_time', '<=', time()] ])->update([ 'status' => DiscountDict::ACTIVE ]);
-                (new DiscountGoods())->where([ ['discount_id', '=', $v]])->update([ 'status' => DiscountDict::ACTIVE ]);
-                ( new DiscountService() )->discountStartAfter($v);
-            }
-
+            (new Discount())->where([ ['discount_id', 'in', $ids], ['status', '=', DiscountDict::NOT_ACTIVE], ['start_time', '<=', time()] ])->update([ 'status' => DiscountDict::ACTIVE ]);
+            (new DiscountGoods())->where([ ['discount_id', 'in', $ids]])->update([ 'status' => DiscountDict::ACTIVE ]);
+            ( new DiscountService() )->discountStartAfter($ids);
             return true;
         } catch (\Exception $e) {
             Log::write('限时折扣自动开启error'.$e->getMessage().$e->getFile().$e->getLine());

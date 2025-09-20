@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref,reactive } from 'vue'
+import { ref, reactive } from 'vue'
 import { t } from '@/lang'
 import { getInvoiceDetail } from '@/addon/shop/api/order'
 import { img } from '@/utils/common'
@@ -66,7 +66,7 @@ const logData = ref<LogDataType>({})
 const getInvoiceDetailList = async () => {
     logData.value = await (await getInvoiceDetail(id)).data
     loading.value = false
-    previewImageList.splice(0, previewImageList.length);
+    previewImageList.splice(0, previewImageList.length)
     if (logData.value.invoice_voucher) {
         previewImageList.push(img(logData.value.invoice_voucher))
     }

@@ -55,8 +55,8 @@ class BrandService extends BaseAdminService
      */
     public function getList(array $where = [], $field = 'brand_id,brand_name,logo,color_json,desc,sort,create_time')
     {
-        $order = 'sort desc';
-        return $this->model->where([ [ 'brand_id', '>', 0 ] ])->withSearch([ "brand_name" ], $where)->field($field)->order($order)->select()->toArray();
+        $order = 'create_time desc';
+        return $this->model->where([ [ 'brand_id', '>', 0 ] ])->withSearch([ "brand_name" ], $where)->field($field)->limit(10)->order($order)->select()->toArray();
     }
 
     /**

@@ -121,4 +121,16 @@ class Manjian extends BaseModel
             $query->where([ [ 'end_time', '<=', $end_time ] ]);
         }
     }
+
+    /**
+     * 搜索器:id
+     * @param $value
+     * @param $data
+     */
+    public function searchActiveIdAttr($query, $value, $data)
+    {
+        if (!empty($value)) {
+            $query->where("manjian_id", 'in', $value);
+        }
+    }
 }

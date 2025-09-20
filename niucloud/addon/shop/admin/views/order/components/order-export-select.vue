@@ -25,13 +25,13 @@ import type { FormInstance } from 'element-plus'
 
 const showDialog = ref(false)
 const loading = ref(false)
-let popTitle: string = ''
+const popTitle: string = ''
 
 /**
  * 表单数据
  */
 const initialFormData = {
-    type: 'shop_order',
+    type: 'shop_order'
 }
 const formData: Record<string, any> = reactive({ ...initialFormData })
 

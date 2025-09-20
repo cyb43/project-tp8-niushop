@@ -129,6 +129,7 @@ return [
     ],
     'dict_diy' => [
         'shop_component_type_basic' => '商城组件',
+        'shop_goods_detail_component_type_basic' => '商品详情组件',
         'page_shop_index' => '商城首页',
         'page_shop_member_index' => '商城个人中心',
         'page_shop_point_index' => '积分商城',
@@ -218,7 +219,9 @@ return [
         'discount' => '限时折扣',
         'exchange' => '积分商城',
         'manjiansong' => '满减送',
-        'newcomer_discount' => '新人专享'
+        'newcomer_discount' => '新人专享',
+        'giftcard' => '礼品卡',
+        'pintuan' => '拼团'
     ],
     'dict_shop_active_type' => [
         'shop' => '店铺活动',
@@ -275,7 +278,9 @@ return [
         'account_point_manjian_gift_back' => '满减送活动赠品退还',
         'account_balance_manjian_gift_give' => '满减送活动赠品发放',
         'account_balance_manjian_gift_back' => '满减送活动赠品退还',
-        'recharge_point_give' => '会员充值积分发放'
+        'recharge_point_give' => '会员充值积分发放',
+        'account_point_sow_community_settle_reward' => '种草奖励发放',
+        'account_balance_sow_community_settle_reward' => '种草奖励发放',
     ],
 
     'dict_shop_delivery_electronic_sheet' => [
@@ -337,14 +342,16 @@ return [
         'gift' => '是否赠品',
         'delivery' => '配送设置',
         'stock' => '商品库存',
+        'member_discount' => '会员折扣',
+        'diy_detail' => '商品模版',
         'diy_form' => '万能表单',
     ],
-    'dict_shop_goods_sort_config'=>[
-        'asc'=>'正序排序',
-        'desc'=>'倒序排序',
-        'price'=>'价格',
-        'sort'=>'排序号',
-        'sale_num'=>'销量',
-        'create_time'=>'创建时间',
+    'dict_shop_goods_sort_config' => [
+        'asc' => '正序排序',
+        'desc' => '倒序排序',
+        'price' => '价格',
+        'sort' => '排序号',
+        'sale_num' => '销量',
+        'create_time' => '创建时间',
     ],
 ];

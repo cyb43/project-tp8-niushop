@@ -40,14 +40,14 @@ Route::group('shop', function () {
     // 获取商品分类列表
     Route::get('goods/category/list', 'addon\shop\app\api\controller\goods\GoodsCategory@lists');
 
-    // 获取商品列表供组件调用
-    Route::get('goods/components', 'addon\shop\app\api\controller\goods\Goods@components');
-
     // 获取商品服务列表
     Route::get('goods/service', 'addon\shop\app\api\controller\goods\GoodsService@all');
 
     // 获取推荐商品列表
     Route::get('goods/recommend', 'addon\shop\app\api\controller\goods\Goods@recommend');
+
+    // 获取商品列表供组件调用
+    Route::get('goods/components', 'addon\shop\app\api\controller\goods\Goods@components');
 
     /***************************************************** 评价 ****************************************************/
     // 获取 评价设置
@@ -139,6 +139,7 @@ Route::group('shop', function () {
     Route::get('rank/components', 'addon\shop\app\api\controller\goods\Rank@components');
 
     Route::get('rank/getRankConfig', 'addon\shop\app\api\controller\goods\Rank@getRankConfig');
+
 
 })->middleware(ApiChannel::class)
     ->middleware(ApiCheckToken::class)//false表示不验证登录

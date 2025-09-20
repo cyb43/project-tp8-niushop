@@ -13,28 +13,28 @@ const prop = defineProps({
 })
 
 const data = computed(() => {
-    return prop.value;
+    return prop.value
 })
 
 const componentStyle = computed(() => {
-    var style = '';
-    style += `font-size: ${ prop.value.fontSize }px;color: ${ prop.value.fontColor };line-height: ${ prop.value.lineHeight + prop.value.fontSize }px;`;
+    let style = ''
+    style += `font-size: ${prop.value.fontSize}px;color: ${prop.value.fontColor};line-height: ${prop.value.lineHeight + prop.value.fontSize}px;`
     if (prop.value.x == 'left' || prop.value.x == 'center' || prop.value.x == 'right') {
-        style += `text-align: ${ prop.value.x };`;
+        style += `text-align: ${prop.value.x};`
     }
     if (prop.value.weight) {
-        style += `font-weight: bold;`;
+        style += 'font-weight: bold;'
     }
-    if (!prop.value.fontFamily || prop.value.fontFamily == 'static/font/price.ttf') {
-        style += `font-family: poster_price_font;`;
+    if (!prop.value.fontFamily || prop.value.fontFamily == 'static/font/OPLUSSANS3-REGULAR.ttf') {
+        style += 'font-family: poster_price_font;'
     }
-    let box: any = document.getElementById(prop.value.id)
+    const box: any = document.getElementById(prop.value.id)
     if (box) {
-        style += `width:${ box.offsetWidth }px;height:${ box.offsetHeight }px;`;
+        style += `width:${box.offsetWidth}px;height:${box.offsetHeight}px;`
     } else {
-        style += `width:${ prop.value.width }px;height:${ prop.value.height }px;`;
+        style += `width:${prop.value.width}px;height:${prop.value.height}px;`
     }
-    return style;
+    return style
 })
 
 defineExpose({})

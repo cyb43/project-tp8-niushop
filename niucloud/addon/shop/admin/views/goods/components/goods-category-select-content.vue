@@ -76,7 +76,7 @@
 
 <script lang="ts" setup>
 import { t } from '@/lang'
-import { ref, reactive, computed, onMounted,nextTick } from 'vue'
+import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import { img } from '@/utils/common'
 import { ElMessage } from 'element-plus'
 import { getCategoryTree } from '@/addon/shop/api/goods'
@@ -101,17 +101,17 @@ const categoryTable = reactive({
     data: []
 })
 
-const scrollBarWidth = ref(0);
-const tableBodyRef = ref(null);
+const scrollBarWidth = ref(0)
+const tableBodyRef = ref(null)
 
 onMounted(() => {
-    window.addEventListener("resize", getScrollBarWidth);
+    window.addEventListener('resize', getScrollBarWidth)
 })
 
 const getScrollBarWidth = () => {
     nextTick(() => {
         if (tableBodyRef.value) {
-            scrollBarWidth.value = tableBodyRef.value.offsetWidth - tableBodyRef.value.clientWidth;
+            scrollBarWidth.value = tableBodyRef.value.offsetWidth - tableBodyRef.value.clientWidth
         }
     })
 }
@@ -119,9 +119,9 @@ const getScrollBarWidth = () => {
 // 选择商品分类
 // 方法：切换子级展开/收起
 const secondLevelArrowChange = (row:any) => {
-    row.isShow = !row.isShow;
-    nextTick(() => getScrollBarWidth());
-};
+    row.isShow = !row.isShow
+    nextTick(() => getScrollBarWidth())
+}
 
 const loadCategoryList = () => {
     categoryTable.loading = true
@@ -131,35 +131,35 @@ const loadCategoryList = () => {
         categoryTable.data = res.data
         categoryTable.data.forEach((item: any) => {
             // 初始化一级分类的字段
-            item.isShow = false; // 控制子级是否展开
-            item.isSecondLevelIndeterminate = false; // 级分类不确定状态
-            item.secondLevelCheckAll = false; // 级分类复选框状态
+            item.isShow = false // 控制子级是否展开
+            item.isSecondLevelIndeterminate = false // 级分类不确定状态
+            item.secondLevelCheckAll = false // 级分类复选框状态
 
             // 如果有子分类（child_list），初始化子分类的字段
             if (item.child_list && item.child_list.length) {
                 item.child_list.forEach((childItem: any) => {
-                    childItem.threeLevelCheckAll = false; // 子分类复选框状态
-                });
+                    childItem.threeLevelCheckAll = false // 子分类复选框状态
+                })
             }
-        });
+        })
         if (categoryId.value) {
             let obj = {}
             categoryTable.data.forEach((row: any) => {
                 if (row.category_id === categoryId.value) {
-                    row.secondLevelCheckAll = true;
-                    row.isShow = true; // 展开选中的一级分类
+                    row.secondLevelCheckAll = true
+                    row.isShow = true // 展开选中的一级分类
                     obj = cloneDeep(row)
                 }
                 if (row.child_list) {
                     row.child_list.forEach((child: any) => {
                         if (child.category_id === categoryId.value) {
-                            child.threeLevelCheckAll = true;
-                            row.isShow = true;
+                            child.threeLevelCheckAll = true
+                            row.isShow = true
                             obj = cloneDeep(child)
                         }
-                    });
+                    })
                 }
-            });
+            })
             currCategoryData = cloneDeep(obj)
         }
     }).catch(() => {
@@ -169,43 +169,43 @@ const loadCategoryList = () => {
 
 const clearAllSelections = () => {
     categoryTable.data.forEach((row: any) => {
-        row.secondLevelCheckAll = false;
+        row.secondLevelCheckAll = false
         if (row.child_list) {
             row.child_list.forEach((child: any) => {
-                child.threeLevelCheckAll = false;
-            });
+                child.threeLevelCheckAll = false
+            })
         }
-    });
+    })
 }
 
 // 处理复选框变化
 const handleCheckboxChange = (checked: any, target: any, parentRow: any) => {
-    clearAllSelections(); // 清空所有复选框的选中状态
+    clearAllSelections() // 清空所有复选框的选中状态
     if (checked) {
         // 设置当前选中的分类
         if (parentRow) {
             // 如果是子分类
-            target.threeLevelCheckAll = checked;
-            currCategoryData = target;
-            parentRow.isShow = true; // 展开父级分类
+            target.threeLevelCheckAll = checked
+            currCategoryData = target
+            parentRow.isShow = true // 展开父级分类
         } else {
             // 如果是一级分类
-            target.secondLevelCheckAll = checked;
-            currCategoryData = target;
-            target.isShow = true; // 展开选中的一级分类
+            target.secondLevelCheckAll = checked
+            currCategoryData = target
+            target.isShow = true // 展开选中的一级分类
         }
     } else {
         // 取消勾选时，清空选中的分类 ID
-        currCategoryData = null;
+        currCategoryData = null
     }
-};
+}
 loadCategoryList()
 
 const getData = () => {
     if (!currCategoryData) {
         ElMessage({
             type: 'warning',
-            message: `${ t('goodsCategorySelectContentPlaceholder') }`
+            message: `${t('goodsCategorySelectContentPlaceholder')}`
         })
         return
     }
@@ -213,7 +213,7 @@ const getData = () => {
     return {
         name: 'SHOP_GOODS_CATEGORY',
         title: currCategoryData.category_name,
-        url: `/addon/shop/pages/goods/list?curr_goods_category=${ currCategoryData.category_id }`,
+        url: `/addon/shop/pages/goods/list?curr_goods_category=${currCategoryData.category_id}`,
         action: '',
         categoryId: currCategoryData.category_id
     }

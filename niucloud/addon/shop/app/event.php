@@ -14,8 +14,10 @@ return [
         'AfterGoodsEdit' => [
             'addon\shop\app\listener\point_exchange\AfterGoodsEdit'
         ],
-        //订单创建
-        'ShopOrderCreate' => [ 'addon\shop\app\listener\order\ShopOrderCreate' ],
+        // 订单创建
+        'ShopOrderCreate' => [
+            'addon\shop\app\listener\order\ShopOrderCreate',
+        ],
         //订单创建时 优惠抵扣减免业务
         'ShopOrderDiscountCreate' => [
             'addon\shop\app\listener\point_exchange\ShopOrderDiscountCreate'   //积分商城兑换
@@ -23,46 +25,50 @@ return [
         //订单创建后
         'AfterShopOrderCreate' => [
             'addon\shop\app\listener\order\AfterShopOrderCreate',
-            'addon\shop\app\listener\point_exchange\AfterShopOrderCreate',   //积分商城业务
         ],
+
         //订单支付后
-        'AfterShopOrderPay' => [ 'addon\shop\app\listener\order\AfterShopOrderPay' ],
+        'AfterShopOrderPay' => [
+            'addon\shop\app\listener\order\AfterShopOrderPay',
+        ],
         //订单发货后
-        'AfterShopOrderDelivery' => [ 'addon\shop\app\listener\order\AfterShopOrderDelivery' ],
+        'AfterShopOrderDelivery' => ['addon\shop\app\listener\order\AfterShopOrderDelivery'],
         //订单收货后
-        'AfterShopOrderFinish' => [ 'addon\shop\app\listener\order\AfterShopOrderFinish' ],
+        'AfterShopOrderFinish' => ['addon\shop\app\listener\order\AfterShopOrderFinish'],
         //订单编辑价格后
-        'AfterShopOrderEditPrice' => [ 'addon\shop\app\listener\order\AfterShopOrderEditPrice' ],
+        'AfterShopOrderEditPrice' => ['addon\shop\app\listener\order\AfterShopOrderEditPrice'],
         //订单关闭后
         'AfterShopOrderClose' => [
             'addon\shop\app\listener\order\AfterShopOrderClose',
             'addon\shop\app\listener\point_exchange\AfterShopOrderClose',   //积分商城业务
         ],
-        //活动信息
+        //计算活动信息
         'ShopGoodsMarketCalculate' => [
-            'addon\shop\app\listener\marketing\ShopNewcomerCalculate'   //新人专享
+            'addon\shop\app\listener\marketing\ShopNewcomerCalculate',   //新人专享
         ],
         /***************************************************** 退款 start *****************************************************/
-        'AfterShopOrderRefundApply' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundApply' ],
-        'AfterShopOrderRefundAuditApply' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundAuditApply' ],
-        'AfterShopOrderRefundAuditRefundGoods' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundAuditRefundGoods' ],
-        'AfterShopOrderRefundClose' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundClose' ],
-        'AfterShopOrderRefundDelivery' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundDelivery' ],
-        'AfterShopOrderRefundEdit' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundEdit' ],
-        'AfterShopOrderRefundEditDelivery' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundEditDelivery' ],
-        'AfterShopOrderRefundFinish' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundFinish' ],
-        'AfterShopOrderRefundActiveCreate' => [ 'addon\shop\app\listener\refund\AfterShopOrderRefundActiveCreate' ],
+        'AfterShopOrderRefundApply' => ['addon\shop\app\listener\refund\AfterShopOrderRefundApply'],
+        'AfterShopOrderRefundAuditApply' => ['addon\shop\app\listener\refund\AfterShopOrderRefundAuditApply'],
+        'AfterShopOrderRefundAuditRefundGoods' => ['addon\shop\app\listener\refund\AfterShopOrderRefundAuditRefundGoods'],
+        'AfterShopOrderRefundClose' => ['addon\shop\app\listener\refund\AfterShopOrderRefundClose'],
+        'AfterShopOrderRefundDelivery' => ['addon\shop\app\listener\refund\AfterShopOrderRefundDelivery'],
+        'AfterShopOrderRefundEdit' => ['addon\shop\app\listener\refund\AfterShopOrderRefundEdit'],
+        'AfterShopOrderRefundEditDelivery' => ['addon\shop\app\listener\refund\AfterShopOrderRefundEditDelivery'],
+        'AfterShopOrderRefundFinish' => [
+            'addon\shop\app\listener\refund\AfterShopOrderRefundFinish',
+        ],
+        'AfterShopOrderRefundActiveCreate' => ['addon\shop\app\listener\refund\AfterShopOrderRefundActiveCreate'],
         /***************************************************** 退款 end *****************************************************/
 
-        'ShopPromotion' => [ 'addon\shop\app\listener\app\ShopPromotionListener' ],
-        'WapIndex' => [ 'addon\shop\app\listener\WapIndexListener' ],
-        'BottomNavigation' => [ 'addon\shop\app\listener\BottomNavigationListener' ],
+        'ShopPromotion' => ['addon\shop\app\listener\app\ShopPromotionListener'],
+        'WapIndex' => ['addon\shop\app\listener\WapIndexListener'],
+        'BottomNavigation' => ['addon\shop\app\listener\BottomNavigationListener'],
 
         //支付
-        'PayCreate' => [ 'addon\shop\app\listener\pay\PayCreateListener' ],
-        'PaySuccess' => [ 'addon\shop\app\listener\pay\PaySuccessListener' ],
-        'PayTradeInfo' => [ 'addon\shop\app\listener\order\ShopOrderTradeInfoListener' ],   //订单交易信息
-        'RefundSuccess' => [ 'addon\shop\app\listener\pay\RefundSuccessListener' ],
+        'PayCreate' => ['addon\shop\app\listener\pay\PayCreateListener'],
+        'PaySuccess' => ['addon\shop\app\listener\pay\PaySuccessListener'],
+        'PayTradeInfo' => ['addon\shop\app\listener\order\ShopOrderTradeInfoListener'],   //订单交易信息
+        'RefundSuccess' => ['addon\shop\app\listener\pay\RefundSuccessListener'],
 
         'NoticeData' => [
             'addon\shop\app\listener\notice_template\OrderPay',
@@ -72,12 +78,12 @@ return [
             'addon\shop\app\listener\notice_template\RefundRefuse',
         ],
         //优惠券
-        'CouponReceiveType' => [ 'addon\shop\app\listener\coupon\CouponReceiveListener' ],
-        'CouponCheck' => [ 'addon\shop\app\listener\coupon\CouponCheckListener' ],
+        'CouponReceiveType' => ['addon\shop\app\listener\coupon\CouponReceiveListener'],
+        'CouponCheck' => ['addon\shop\app\listener\coupon\CouponCheckListener'],
 
         //获取海报数据
-        'GetPosterType' => [ 'addon\shop\app\listener\poster\ShopPosterType' ],
-        'GetPosterData' => [ 'addon\shop\app\listener\poster\ShopPoster' ],
+        'GetPosterType' => ['addon\shop\app\listener\poster\ShopPosterType'],
+        'GetPosterData' => ['addon\shop\app\listener\poster\ShopPoster'],
 
         //导出数据类型
         'ExportDataType' => [
@@ -102,18 +108,19 @@ return [
             'addon\shop\app\listener\order_export\ShopInvoiceExportDataListener',
         ],
         //商城统计执行
-        'StatExecute' => [ 'addon\shop\app\listener\stat\StatExecuteListener' ],
+        'StatExecute' => ['addon\shop\app\listener\stat\StatExecuteListener'],
         //商城统计字段
-        'StatField' => [ 'addon\shop\app\listener\stat\StatFieldListener' ],
+        'StatField' => ['addon\shop\app\listener\stat\StatFieldListener'],
         //核销
-        'VerifyType' => [ 'addon\shop\app\listener\verify\VerifyTypeListener' ],
-        'VerifyCreate' => [ 'addon\shop\app\listener\verify\VerifyCreateListener' ],
-        'Verify' => [ 'addon\shop\app\listener\verify\VerifyListener' ],
-        'VerifyInfo' => [ 'addon\shop\app\listener\verify\VerifyInfoListener' ],
+        'VerifyType' => ['addon\shop\app\listener\verify\VerifyTypeListener'],
+        'VerifyCreate' => ['addon\shop\app\listener\verify\VerifyCreateListener'],
+        'Verify' => ['addon\shop\app\listener\verify\VerifyListener'],
+        'VerifyInfo' => ['addon\shop\app\listener\verify\VerifyInfoListener'],
         'VerifyCheck' => ['addon\shop\app\listener\verify\VerifyCheckListener'],
 
         'GetGoodsJoinInfo' => [
-            'addon\shop\app\listener\marketing\GetGoodsJoinInfo'
+            'addon\shop\app\listener\marketing\GetGoodsJoinInfo',
+//            'addon\pintuan\app\listener\GetGoodsJoinInfo'
         ],
         'ActiveSaveAfter' => [
             'addon\shop\app\listener\marketing\ShopActiveSaveAfter'
@@ -128,30 +135,55 @@ return [
         ],
 
         //新人专享
-        'NewcomerActiveJoin' => [ 'addon\shop\app\listener\marketing\NewcomerActiveJoinListener' ],
+        'NewcomerActiveJoin' => ['addon\shop\app\listener\marketing\NewcomerActiveJoinListener'],
         //会员登录后事件
-        'MemberLoginAfter' => [ 'addon\shop\app\listener\MemberLoginAfterListener' ],
+        'MemberLoginAfter' => ['addon\shop\app\listener\MemberLoginAfterListener'],
 
         // 会员充值 赠送内容
-        'RechargeGiftContent' => [ 'addon\shop\app\listener\recharge\GiftContentListener' ],
+        'RechargeGiftContent' => ['addon\shop\app\listener\recharge\GiftContentListener'],
         // 会员充值成功后的事件
-        'RechargeAfterListener' => [ 'addon\shop\app\listener\recharge\RechargeAfterListener' ],
+        'RechargeAfterListener' => ['addon\shop\app\listener\recharge\RechargeAfterListener'],
 
         //获取宝贝数据
-        'TreasureType' => [ 'addon\shop\app\listener\treasure\TreasureTypeListener' ],
-        'TreasureData' => [ 'addon\shop\app\listener\treasure\TreasureDataListener' ],
+        'TreasureType' => ['addon\shop\app\listener\treasure\TreasureTypeListener'],
+        'TreasureData' => ['addon\shop\app\listener\treasure\TreasureDataListener'],
 
         //主题色
-        'ThemeColor' => [ 'addon\shop\app\listener\diy\ThemeColorListener' ],
+        'ThemeColor' => ['addon\shop\app\listener\diy\ThemeColorListener'],
         //万能表单删除前
-        'BeforeFormDelete' => [ 'addon\shop\app\listener\diy\BeforeFormDeleteListener' ],
+        'BeforeFormDelete' => ['addon\shop\app\listener\diy\BeforeFormDeleteListener'],
         //查询营销列表
         'ShowMarketing' => [
             'addon\shop\app\listener\system\ShowMarketingListener'
         ],
         //获取商品展示价格
-        'GoodsShowPrice' => [ 'addon\shop\app\listener\goods\GoodsShowPriceListener' ]
+        'GoodsShowPrice' => ['addon\shop\app\listener\goods\GoodsShowPriceListener'],
 
+        // 种草奖励发放优惠券
+        'SettleRewardListener' => ['addon\shop\app\listener\sow_community\SettleRewardListener'],
+
+        // 种草奖励优惠券
+        'RuleContentListener' => ['addon\shop\app\listener\sow_community\RuleContentListener'],
+
+
+        //三方插件对接
+        //第三方通用插件订单备份
+        //同步订单到商城
+        'ThirdAddonOrderBackUp' => ['addon\shop\app\listener\third_addon\order\BackUpThirdOrderListener'],
+        //获取订单后续操作路径   退款  服务
+        'ThirdAddonOrderPath' => ['addon\shop\app\listener\third_addon\order\OrderServicePathListener'],
+        //输出当前插件/应用名称及标识
+        'ThirdAddonOutputSource' => ['addon\shop\app\listener\third_addon\SupportAddonListener'],
+        'ThirdAddonOutputData' =>  ['addon\shop\app\listener\third_addon\goods\GoodsOutPutDataListener'],
+        'ThirdAddonOutputWhere' =>  ['addon\shop\app\listener\third_addon\goods\GoodsOutPutWhereInitListener'],
+        //商品详情
+        'ThirdAddonOutputDataInfo' =>  ['addon\shop\app\listener\third_addon\goods\GoodsOutPutDataInfoListener' ],
+        //三方订单附加费用
+        'ThirdAddonOrderAmount' => ['addon\shop\app\listener\third_addon\order\OrderAmountServiceListener'],
+
+
+        //获取商品配送费用
+        'ThirdAddonOrderDelivery' => ['addon\shop\app\listener\third_addon\order\OrderDeliveryServiceListener'],
     ],
     'subscribe' => [
     ],

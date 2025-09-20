@@ -1,5 +1,3 @@
-import { getToken } from '@/utils/common';
-
 export function useGoods(params: any = {}) {
 
     const baseTagStyle = (data: any) => {
@@ -18,15 +16,12 @@ export function useGoods(params: any = {}) {
 
     // 价格类型
     const priceType = (data: any) => {
-        let type = "";
-		type = data.goodsSku.show_type
-        return type;
+        return data.goodsSku.show_type
     }
 
     // 商品价格
     const goodsPrice = (data: any) => {
-        let price = "0.00";
-		price = data.goodsSku.show_price
+        let price = data.goodsSku.show_price
         return parseFloat(price);
     }
 

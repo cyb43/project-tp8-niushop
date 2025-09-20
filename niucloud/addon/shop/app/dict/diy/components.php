@@ -582,8 +582,8 @@ return [
                     'goods_ids' => [],
                     "imgElementRounded" => 10 // 图片圆角
                 ],
-                 // 组件属性
-                 'template' => [
+                // 组件属性
+                'template' => [
                     "textColor" => "#303133", // 文字颜色
                     'pageStartBgColor' => '', // 底部背景颜色（开始）
                     'pageEndBgColor' => '', // 底部背景颜色（结束）
@@ -682,8 +682,296 @@ return [
                         "both" => 10 // 左右边距
                     ]
                 ]
-            ],
+            ]
         ]
     ],
-
+    'SHOP_GOODS_DETAIL_COMPONENT' => [
+        'title' => get_lang('dict_diy.shop_goods_detail_component_type_basic'),
+        'list' => [
+            'ShopGoodsDetailBasicInfo' => [
+                'title' => '基础信息',
+                'icon' => 'iconfont iconjichuxinxi',
+                'path' => 'edit-shop-goods-detail-basic-info',
+                'support_page' => [ 'DIY_SHOP_GOODS_DETAIL' ],
+                'uses' => 1,
+                'sort' => 10011,
+                'position' => 'top_fixed', // 组件置顶标识，不能拖拽
+                'value' => [
+                    'menuContent' => 'index,search,cart,member',
+                    'medium' => [
+                        'type' => 'square_img',
+                        'indicator' => true
+                    ],
+                    'priceRegion' => [
+                        'showWay' => 'normal',
+                        'bgImg' => 'addon/shop/diy/goods_detail/style_01.jpg',
+                        'marketingBgImg' => 'addon/shop/diy/goods_detail/marketing_style_01.jpg',
+                        'goodsStyle' => [
+                            'title' => '风格1',
+                            'value' => 'style-1'
+                        ],
+                        'marketingStyle' => [
+                            'title' => '风格1',
+                            'value' => 'style-1'
+                        ]
+                    ],
+                    'goodsInfo' => [
+                        'titleColor' => '#333333',
+                        'subTitleColor' => '#999999',
+                        'saleInfoColor' => '#999999',
+                        'priceTopRounded' => 20,
+                        'priceBottomRounded' => 0,
+                        'topRounded' => 20,
+                        'bottomRounded' => 0,
+                        "priceBgColor" => '',
+                        "startBgColor" => '#ffffff',
+                        "endBgColor" => '#f6f6f6',
+                        "priceAboutMargin" => 0,
+                        "priceTopMargin" => -22,
+                        "topMargin" => -17,
+                        "aboutMargin" => 0
+                    ],
+                    'saleInfo' => ['underlined_price','sales','stock']
+                ],
+                // 组件属性
+                'template' => [
+                    "textColor" => "#303133", // 文字颜色
+                    'pageStartBgColor' => '', // 底部背景颜色（开始）
+                    'pageEndBgColor' => '', // 底部背景颜色（结束）
+                    'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+                    'componentBgUrl' => '', // 组件背景图片
+                    'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+                    "componentStartBgColor" => '', // 组件背景颜色（开始）
+                    "componentEndBgColor" => '', // 组件背景颜色（结束）
+                    "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+                    "topRounded" => 0, // 组件上圆角
+                    "bottomRounded" => 0, // 组件下圆角
+                    "elementBgColor" => '', // 元素背景颜色
+                    "topElementRounded" => 0,// 元素上圆角
+                    "bottomElementRounded" => 0, // 元素下圆角
+                    "margin" => [
+                        "top" => 0, // 上边距
+                        "bottom" => 0, // 下边距
+                        "both" => 0 // 左右边距
+                    ]
+                ]
+            ],
+            'ShopGoodsDetailPurchaseService' => [
+                'title' => '商品服务',
+                'icon' => 'iconfont iconshangpinfuwu1',
+                'path' => 'edit-shop-goods-detail-purchase-service',
+                'support_page' => [ 'DIY_SHOP_GOODS_DETAIL' ],
+                'uses' => 1,
+                'sort' => 10012,
+                'value' => [
+                    'serviceConfig' => ['goods_service','spec_select','delivery_info','coupons','activity']
+                ],
+                // 组件属性
+                'template' => [
+                    "textColor" => "#303133", // 文字颜色
+                    'pageStartBgColor' => '', // 底部背景颜色（开始）
+                    'pageEndBgColor' => '', // 底部背景颜色（结束）
+                    'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+                    'componentBgUrl' => '', // 组件背景图片
+                    'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+                    "componentStartBgColor" => '#FFFFFF', // 组件背景颜色（开始）
+                    "componentEndBgColor" => '', // 组件背景颜色（结束）
+                    "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+                    "topRounded" => 12, // 组件上圆角
+                    "bottomRounded" => 12, // 组件下圆角
+                    "elementBgColor" => '', // 元素背景颜色
+                    "topElementRounded" => 0,// 元素上圆角
+                    "bottomElementRounded" => 0, // 元素下圆角
+                    "margin" => [
+                        "top" => 12, // 上边距
+                        "bottom" => 0, // 下边距
+                        "both" => 10 // 左右边距
+                    ]
+                ]
+            ],
+            'ShopGoodsDetailEvaluate' => [
+                'title' => '商品评价',
+                'icon' => 'iconfont iconshangpinpingjia1',
+                'path' => 'edit-shop-goods-detail-evaluate',
+                'support_page' => [ 'DIY_SHOP_GOODS_DETAIL' ],
+                'uses' => 1,
+                'sort' => 10014,
+                'value' => [
+                    'isShow' => true
+                ],
+                // 组件属性
+                'template' => [
+                    "textColor" => "#303133", // 文字颜色
+                    'pageStartBgColor' => '', // 底部背景颜色（开始）
+                    'pageEndBgColor' => '', // 底部背景颜色（结束）
+                    'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+                    'componentBgUrl' => '', // 组件背景图片
+                    'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+                    "componentStartBgColor" => '#FFFFFF', // 组件背景颜色（开始）
+                    "componentEndBgColor" => '', // 组件背景颜色（结束）
+                    "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+                    "topRounded" => 12, // 组件上圆角
+                    "bottomRounded" => 12, // 组件下圆角
+                    "elementBgColor" => '', // 元素背景颜色
+                    "topElementRounded" => 0,// 元素上圆角
+                    "bottomElementRounded" => 0, // 元素下圆角
+                    "margin" => [
+                        "top" => 12, // 上边距
+                        "bottom" => 0, // 下边距
+                        "both" => 10 // 左右边距
+                    ]
+                ]
+            ],
+            'ShopGoodsDetailAttr' => [
+                'title' => '商品属性',
+                'icon' => 'iconfont iconshangpinshuxing',
+                'path' => 'edit-shop-goods-detail-attr',
+                'support_page' => [ 'DIY_SHOP_GOODS_DETAIL' ],
+                'uses' => 1,
+                'sort' => 10015,
+                'value' => [
+                    'isShow' => true
+                ],
+                // 组件属性
+                'template' => [
+                    "textColor" => "#303133", // 文字颜色
+                    'pageStartBgColor' => '', // 底部背景颜色（开始）
+                    'pageEndBgColor' => '', // 底部背景颜色（结束）
+                    'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+                    'componentBgUrl' => '', // 组件背景图片
+                    'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+                    "componentStartBgColor" => '#FFFFFF', // 组件背景颜色（开始）
+                    "componentEndBgColor" => '', // 组件背景颜色（结束）
+                    "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+                    "topRounded" => 12, // 组件上圆角
+                    "bottomRounded" => 12, // 组件下圆角
+                    "elementBgColor" => '', // 元素背景颜色
+                    "topElementRounded" => 0,// 元素上圆角
+                    "bottomElementRounded" => 0, // 元素下圆角
+                    "margin" => [
+                        "top" => 12, // 上边距
+                        "bottom" => 0, // 下边距
+                        "both" => 10 // 左右边距
+                    ]
+                ]
+            ],
+            'ShopGoodsDetailDesc' => [
+                'title' => '商品详情',
+                'icon' => 'iconfont iconshangpinxiangqing',
+                'path' => 'edit-shop-goods-detail-desc',
+                'support_page' => [ 'DIY_SHOP_GOODS_DETAIL' ],
+                'uses' => 1,
+                'sort' => 10016,
+                'value' => [
+                    'isShow' => true
+                ],
+                // 组件属性
+                'template' => [
+                    "textColor" => "#303133", // 文字颜色
+                    'pageStartBgColor' => '', // 底部背景颜色（开始）
+                    'pageEndBgColor' => '', // 底部背景颜色（结束）
+                    'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+                    'componentBgUrl' => '', // 组件背景图片
+                    'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+                    "componentStartBgColor" => '#FFFFFF', // 组件背景颜色（开始）
+                    "componentEndBgColor" => '', // 组件背景颜色（结束）
+                    "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+                    "topRounded" => 12, // 组件上圆角
+                    "bottomRounded" => 12, // 组件下圆角
+                    "elementBgColor" => '', // 元素背景颜色
+                    "topElementRounded" => 0,// 元素上圆角
+                    "bottomElementRounded" => 0, // 元素下圆角
+                    "margin" => [
+                        "top" => 12, // 上边距
+                        "bottom" => 20, // 下边距
+                        "both" => 10 // 左右边距
+                    ]
+                ]
+            ],
+            'ShopGoodsDetailBottom' => [
+                'title' => '底部菜单',
+                'icon' => 'iconfont icondibucaidan',
+                'path' => 'edit-shop-goods-detail-bottom',
+                'support_page' => [ 'DIY_SHOP_GOODS_DETAIL' ],
+                'position' => 'bottom_fixed', // 组件置底标识，不能拖拽
+                'uses' => 1,
+                'sort' => 10017,
+                'value' => [
+                    'menuContent' => ['index','service','cart'],
+                    'cartName' => '加入购物车',
+                    'buyName' => '立即购买',
+                    'cartIsShow' => true,
+                    'cartStyle' => [
+                        "textColor" => "#FFFFFF", // 文字颜色
+                        "fontSize" => 16,
+                        "gradientAngle" => "to right",
+                        "startColor" => "#FFB000",
+                        "endColor" => "#FFA029"
+                    ],
+                    'buyStyle' => [
+                        "textColor" => "#FFFFFF", // 文字颜色
+                        "fontSize" => 16,
+                        "gradientAngle" => "to right",
+                        "startColor" => "#FB7939",
+                        "endColor" => "#FF4142"
+                    ],
+                ],
+                // 组件属性
+                'template' => [
+                    "textColor" => "#303133", // 文字颜色
+                    'pageStartBgColor' => '', // 底部背景颜色（开始）
+                    'pageEndBgColor' => '', // 底部背景颜色（结束）
+                    'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+                    'componentBgUrl' => '', // 组件背景图片
+                    'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+                    "componentStartBgColor" => '#FFFFFF', // 组件背景颜色（开始）
+                    "componentEndBgColor" => '', // 组件背景颜色（结束）
+                    "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+                    "topRounded" => 0, // 组件上圆角
+                    "bottomRounded" => 0, // 组件下圆角
+                    "elementBgColor" => '', // 元素背景颜色
+                    "topElementRounded" => 0,// 元素上圆角
+                    "bottomElementRounded" => 0, // 元素下圆角
+                    "margin" => [
+                        "top" => 0, // 上边距
+                        "bottom" => 0, // 下边距
+                        "both" => 0 // 左右边距
+                    ]
+                ]
+            ],
+            'ShopGoodsDetailSow' => [
+                'title' => '种草秀',
+                'icon' => 'iconfont iconzhongcaoxiu',
+                'path' => 'edit-shop-goods-detail-sow',
+                'support_page' => [ 'DIY_SHOP_GOODS_DETAIL' ],
+                'uses' => 0,
+                'sort' => 10018,
+                'value' => [
+                    'isShow' => true
+                ],
+                // 组件属性
+                'template' => [
+                    "textColor" => "#303133", // 文字颜色
+                    'pageStartBgColor' => '', // 底部背景颜色（开始）
+                    'pageEndBgColor' => '', // 底部背景颜色（结束）
+                    'pageGradientAngle' => 'to bottom', // 渐变角度，从上到下（to bottom）、从左到右（to right）
+                    'componentBgUrl' => '', // 组件背景图片
+                    'componentBgAlpha' => 2, // 组件背景图片的透明度，0~10
+                    "componentStartBgColor" => '#FFFFFF', // 组件背景颜色（开始）
+                    "componentEndBgColor" => '', // 组件背景颜色（结束）
+                    "componentGradientAngle" => 'to bottom', // 渐变角度，上下（to bottom）、左右（to right）
+                    "topRounded" => 12, // 组件上圆角
+                    "bottomRounded" => 12, // 组件下圆角
+                    "elementBgColor" => '', // 元素背景颜色
+                    "topElementRounded" => 0,// 元素上圆角
+                    "bottomElementRounded" => 0, // 元素下圆角
+                    "margin" => [
+                        "top" => 12, // 上边距
+                        "bottom" => 0, // 下边距
+                        "both" => 10 // 左右边距
+                    ]
+                ]
+            ]
+        ]
+    ],
 ];

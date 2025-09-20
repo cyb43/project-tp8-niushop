@@ -44,7 +44,7 @@
 
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
-import { t } from "@/lang";
+import { t } from '@/lang'
 
 const props = defineProps({
     modelValue: {

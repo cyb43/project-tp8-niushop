@@ -16,6 +16,7 @@ use addon\shop\app\dict\active\DiscountDict;
 use addon\shop\app\dict\goods\GoodsDict;
 use addon\shop\app\model\discount\DiscountGoods;
 use addon\shop\app\service\api\goods\GoodsService;
+use addon\shop\app\service\api\marketing\NewcomerService;
 use core\base\BaseCoreService;
 
 /**
@@ -58,7 +59,7 @@ class CoreGoodsActivePriceService extends BaseCoreService
 
         if (!$discount->isEmpty()) {
             $discount_price = floatval($sku_info[ 'sale_price' ] ?? 0);
-            $show_price_data[] = [ 'show_price' => $discount_price, 'show_type' => GoodsDict::DISCOUNT_PRICE ];
+            $show_price_data[] = [ 'show_price' => $discount_price, 'show_type' => GoodsDict::DISCOUNT_PRICE, 'discount_id' => $discount['discount_id'] ];
         }
 
         return $this->getMinShowPrice($show_price_data, $price);
@@ -97,26 +98,26 @@ class CoreGoodsActivePriceService extends BaseCoreService
             $show_price_data[] = [ 'show_price' => $discount_price, 'show_type' => GoodsDict::DISCOUNT_PRICE ];
         }
 
-        // 如果有活动类型，只保留该类型对应的价格和原价
-        if (!empty($type)) {
-            $show_type = '';
-
-            switch ($type){
-                case ActiveDict::DISCOUNT:
-                    $show_type = GoodsDict::DISCOUNT_PRICE;
-                    break;
-            }
-            if (!empty($show_type)){
-                $show_price_data = array_filter($show_price_data, function ($item) use ($show_type) {
-                    return in_array($item[ 'show_type' ], [GoodsDict::ORIGINAL_PRICE, $show_type]);
-                });
-            }else{
-                $show_price_data = [[ 'show_price' => $price, 'show_type' => GoodsDict::ORIGINAL_PRICE ]];
-            }
-
-            // 重建索引
-            $show_price_data = array_values($show_price_data);
-        }
+//        // 如果有活动类型，只保留该类型对应的价格和原价
+//        if (!empty($type)) {
+//            $show_type = '';
+//
+//            switch ($type){
+//                case ActiveDict::DISCOUNT:
+//                    $show_type = GoodsDict::DISCOUNT_PRICE;
+//                    break;
+//            }
+//            if (!empty($show_type)){
+//                $show_price_data = array_filter($show_price_data, function ($item) use ($show_type) {
+//                    return in_array($item[ 'show_type' ], [GoodsDict::ORIGINAL_PRICE, $show_type]);
+//                });
+//            }else{
+//                $show_price_data = [[ 'show_price' => $price, 'show_type' => GoodsDict::ORIGINAL_PRICE ]];
+//            }
+//
+//            // 重建索引
+//            $show_price_data = array_values($show_price_data);
+//        }
         return $this->getMinShowPrice($show_price_data, $price);
     }
 

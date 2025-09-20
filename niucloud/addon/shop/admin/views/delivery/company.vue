@@ -2,7 +2,7 @@
     <div class="main-container">
 
         <el-card class="box-card !border-none" shadow="never">
-            <el-page-header :content="pageName" :icon="ArrowLeft" @back="$router.back()" />
+            <el-page-header :content="pageName" :icon="ArrowLeft" @back="router.push('/shop/order/delivery')" />
         </el-card>
 
         <el-card class="box-card mt-[15px] !border-none" shadow="never">
@@ -35,6 +35,7 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="url" :label="t('url')" min-width="120" />
+                    <el-table-column prop="kd100_express_no" :label="t('expressNoKd100')" min-width="120" />
                     <el-table-column prop="express_no" :label="t('expressNo')" min-width="120" />
                     <el-table-column prop="express_no_electronic_sheet" :label="t('expressNoElectronicSheet')" min-width="120" />
                     <el-table-column :label="t('electronicSheetSwitchName')" min-width="120">

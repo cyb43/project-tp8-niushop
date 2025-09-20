@@ -29,6 +29,7 @@ class CoreGoodsStockService extends BaseCoreService
         $this->model = new Exchange();
     }
 
+
     /**
      * 增加库存
      * @param $data
@@ -72,11 +73,7 @@ class CoreGoodsStockService extends BaseCoreService
             $stock = array_sum(array_column($exchange_goods_info[ 'product_detail' ], 'stock'));
             $update_array[ 'product_detail' ] = json_encode($exchange_goods_info[ 'product_detail' ]);
             //数量不足直接下架
-            if ($stock <= 0) {
-                $update_array[ 'stock' ] = 0;
-            } else {
-                $update_array[ 'stock' ] = $stock;
-            }
+            $update_array[ 'stock' ] = max($stock, 0);
             //todo 目前不考虑 切默认展示的sku 限购等数据
             //        array_multisort(array_column($exchange_goods_info['product_detail'], "point"), SORT_ASC, $product_detail);
             //        $update_array['point'] = $product_detail[0]['point'];

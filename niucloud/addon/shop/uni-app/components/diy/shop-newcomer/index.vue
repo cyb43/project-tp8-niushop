@@ -293,7 +293,7 @@ const activeState = () => {
 }
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -308,7 +308,7 @@ const warpCss = computed(() => {
 })
 
 const imageRounded = computed(() => {
-    var obj = {
+    const obj = {
         val: '',
         style: ''
     };
@@ -321,7 +321,7 @@ const imageRounded = computed(() => {
 
 // 倒计时样式
 const countDownTextCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.countDown && diyComponent.value.countDown.numberBg) {
         if (diyComponent.value.countDown.numberBg.startColor && diyComponent.value.countDown.numberBg.endColor) style += `background:linear-gradient(${ diyComponent.value.countDown.numberBg.startColor },${ diyComponent.value.countDown.numberBg.endColor });`;
         else {
@@ -335,7 +335,7 @@ const countDownTextCss = computed(() => {
 
 // 公共模块颜色
 const commonTempCss = () => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.topElementRounded) style += 'border-top-left-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     if (diyComponent.value.topElementRounded) style += 'border-top-right-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     if (diyComponent.value.bottomElementRounded) style += 'border-bottom-left-radius:' + diyComponent.value.bottomElementRounded * 2 + 'rpx;';
@@ -345,7 +345,7 @@ const commonTempCss = () => {
 
 // 副标题样式
 const subTitleCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.subTitle) {
         if (diyComponent.value.subTitle.startColor && diyComponent.value.subTitle.endColor) style += `background:linear-gradient(to right, ${ diyComponent.value.subTitle.startColor },${ diyComponent.value.subTitle.endColor });`;
         else {
@@ -369,6 +369,9 @@ const getNewcomerListFn = () => {
         newcomerTime.value = Number(newcomerTime.value) * 1000 - timestamp;
 
         list.value = res.data.goods_list
+        list.value.forEach((item:any)=>{
+            item.sku_image = item.sku_image ? item.sku_image : item.goods.goods_cover
+        })
 
         // 数据为空时隐藏整个组件
         // if(!(list.value.length && (newcomerTime.value > 0 && isJoin.value == 0))) {
@@ -495,8 +498,7 @@ const toDetail = (data: any) => {
 
         .btn-bg {
             background: linear-gradient(140deg, #FE2B2B 0%, #FF7236 100%);
-            border-radius: 50%;
-            border-bottom-left-radius: 0;
+            border-radius: 50% 50% 50% 0;
             font-size: 30rpx;
             color: #fff;
             width: 50rpx;

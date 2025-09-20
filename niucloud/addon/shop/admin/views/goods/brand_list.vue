@@ -79,7 +79,7 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getBrandPageList, deleteBrand, modifyBrandSort } from '@/addon/shop/api/goods'
-import { img, debounce,setTablePageStorage,getTablePageStorage  } from '@/utils/common'
+import { img, debounce, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import { ElMessageBox, FormInstance, ElMessage } from 'element-plus'
 import BrandEdit from '@/addon/shop/views/goods/components/brand-edit.vue'
 import { useRoute } from 'vue-router'
@@ -180,7 +180,7 @@ const sortInputListener = debounce((sort, row) => {
     if (isNaN(sort) || !/^\d{0,8}$/.test(sort)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('sortTips') }`
+            message: `${t('sortTips')}`
         })
         return
     }

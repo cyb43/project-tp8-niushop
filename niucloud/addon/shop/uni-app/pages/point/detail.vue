@@ -20,7 +20,7 @@
                 <view @touchmove.stop.prevent class="media-mode absolute top-0 left-0 w-full h-full transition-transform duration-300 ease-linear transform"
                 :class="{'translate-x-0':switchMedia === 'video','-translate-x-full':switchMedia != 'video'}" :style="{background: 'url(' + img(goodsDetail.goods.goods_cover_thumb_mid) + ') left bottom / cover no-repeat'}">
                   <view class="goods-video-height">
-                        <video id="goodsVideo" :show-background-playback-button="false" :picture-in-picture-mode="[]" class="w-full h-full" :src="img(goodsDetail.goods.goods_video)" :poster="img(goodsDetail.goods.goods_cover_thumb_mid)" objectFit="cover" play-btn-position="center"></video>
+                        <video id="goodsVideo" class="w-full h-full" :src="img(goodsDetail.goods.goods_video)" :poster="img(goodsDetail.goods.goods_cover_thumb_mid)" objectFit="cover" play-btn-position="center"></video>
                     </view>
                 </view>
                 <!-- 切换视频、图片 -->
@@ -148,8 +148,8 @@
                     </view>
                 </view>
 
-                <view class="my-[var(--top-m)] sidebar-margin card-template px-[var(--pad-sidebar-m)]">
-                    <view class="title">商品详情</view>
+                <view class="my-[var(--top-m)] sidebar-margin card-template p-[0] pt-[30rpx] overflow-hidden">
+                    <view class="title px-[24rpx]">商品详情</view>
                     <view class="u-content">
                         <u-parse :content="goodsDetail.goods.goods_desc" :tagStyle="{img: 'vertical-align: top;',p:'overflow: hidden;word-break:break-word;' }"></u-parse>
                     </view>
@@ -255,6 +255,7 @@ import useMemberStore from '@/stores/member'
 import { useShare } from '@/hooks/useShare'
 import sharePoster from '@/components/share-poster/share-poster.vue'
 import { useGoods } from '@/addon/shop/hooks/useGoods'
+import useSystemStore from "@/stores/system";
 
 const diyGoods = useGoods();
 // 分享
@@ -483,25 +484,19 @@ const distributionListFn = ((data: any, index: any) => {
 
 
 /************ 自定义头部-start ****************/
-// 获取系统状态栏的高度
-let systemInfo = uni.getSystemInfoSync();
-let platform = systemInfo.platform;
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
+let platform = systemStore.systemInfo.platform;
 
 // 导航栏内部盒子的样式
 const navbarInnerStyle = computed(() => {
     let style = '';
     // 导航栏宽度，如果在小程序下，导航栏宽度为胶囊的左边到屏幕左边的距离
     // #ifdef MP
-    let rightButtonWidth = menuButtonInfo.width ? menuButtonInfo.width * 2 + 'rpx' : '70rpx';
-    style += 'height:' + menuButtonInfo.height + 'px;';
+    let rightButtonWidth = systemStore.menuButtonInfo.width ? systemStore.menuButtonInfo.width * 2 + 'rpx' : '70rpx';
+    style += 'height:' + systemStore.menuButtonInfo.height + 'px;';
     style += 'padding-right:calc(' + rightButtonWidth + ' + 30rpx);';
     style += 'padding-left:calc(' + rightButtonWidth + ' + 30rpx);';
-    style += 'padding-top:' + menuButtonInfo.top + 'px;';
+    style += 'padding-top:' + systemStore.menuButtonInfo.top + 'px;';
     style += 'padding-bottom: 8px;';
 
     style += 'font-size: 32rpx;';
@@ -539,7 +534,7 @@ const navbarInnerArrowStyle = computed(() => {
     style += "padding-left: 10rpx;"
     style += "padding-right: 10rpx;"
     style += 'position: absolute;';
-    style += 'left:calc( 100vw - ' + menuButtonInfo.right + 'px);';
+    style += 'left:calc( 100vw - ' + systemStore.menuButtonInfo.right + 'px);';
     style += 'font-size: 26px;';
     // style += 'font-weight: bold;';
     if (platform === 'ios') {

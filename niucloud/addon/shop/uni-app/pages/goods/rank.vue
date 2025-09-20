@@ -1,6 +1,6 @@
 <template>
     <view class="min-h-[100vh]" :style="themeColor()">
-        <!-- #ifdef MP-WEIXIN -->
+        <!-- #ifdef MP-WEIXIN || APP-PLUS -->
         <top-tabbar :data="param" :isFill="false" />
         <!-- #endif -->
         <!-- 顶部图片 -->
@@ -70,7 +70,7 @@
                             </view>
 							<image v-if="diyGoods.priceType(item) == 'member_price'" class="max-w-[50rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/VIP.png')" mode="heightFix" />
 							<image v-else-if="diyGoods.priceType(item) == 'newcomer_price'"  class="max-w-[60rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/newcomer.png')" mode="heightFix" />
-							<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />	
+							<image v-else-if="diyGoods.priceType(item) == 'discount_price'" class="max-w-[80rpx] h-[28rpx] ml-[6rpx]" :src="img('addon/shop/discount.png')" mode="heightFix" />
                             <view :id="'itemCart' + index" class="w-[102rpx] box-border ml-auto text-center text-[#fff] primary-btn-bg h-[46rpx] text-[22rpx] leading-[46rpx] rounded-[100rpx]">去购买</view>
                         </view>
                     </view>
@@ -106,32 +106,27 @@ import MescrollEmpty from '@/components/mescroll/mescroll-empty/mescroll-empty.v
 import { onLoad, onPageScroll, onReachBottom } from '@dcloudio/uni-app';
 import { topTabar } from '@/utils/topTabbar'
 import { useGoods } from '@/addon/shop/hooks/useGoods'
+import useSystemStore from "@/stores/system";
 
+const systemStore = useSystemStore()
 const diyGoods = useGoods();
 const { mescrollInit, downCallback, getMescroll } = useMescroll(onPageScroll, onReachBottom);
 const mescrollRef = ref(null);
 const loading = ref<boolean>(false);
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '' })
 const topStyle = computed(() => {
-    let style = pxToRpx(Number(menuButtonInfo.height) + menuButtonInfo.top + 8) + 30 + 'rpx;'
+    let style = pxToRpx(Number(systemStore.menuButtonInfo.height) + systemStore.menuButtonInfo.top + 8) + 30 + 'rpx;'
     return style
 })
 /********* 自定义头部 - end ***********/
 
 // 获取系统信息
-const systemInfo = uni.getSystemInfoSync();
 const topImageHeight = 450;
-const screenHeight = systemInfo.windowHeight;
+const screenHeight = systemStore.systemInfo.windowHeight;
 // 将屏幕高度转换为 rpx
-const screenHeightInRpx = (screenHeight / systemInfo.screenWidth) * 750;
+const screenHeightInRpx = (screenHeight / systemStore.systemInfo.screenWidth) * 750;
 // 计算列表高度
 const listHeight = computed(() => {
     const listHeightValue = screenHeightInRpx - topImageHeight;
@@ -153,7 +148,7 @@ const calculateCentered = () => {
             if (rects && rects.length > 0) {
                 const totalMarginRight = uni.upx2px(20) * (rects.length - 1); // 记得把 rpx 转成 px
                 const totalWidth = rects.reduce((sum, rect) => sum + rect.width, 0) + totalMarginRight;
-                const screenWidth = uni.getSystemInfoSync().windowWidth;
+                const screenWidth = systemStore.systemInfo.windowWidth;
                 centered.value = totalWidth <= screenWidth * 0.93; // 判断是否需要居中
             } else {
                 console.error('Failed to get .category-btn elements.');

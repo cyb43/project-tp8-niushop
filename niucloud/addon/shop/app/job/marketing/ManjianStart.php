@@ -27,19 +27,15 @@ class ManjianStart extends BaseJob
      */
     public function doJob()
     {
-        Log::write('满减送自动开启');
+        //Log::write('满减送自动开启');
         try {
 
-            $ids = ( new Manjian() )->where([
-                [ 'status', '=', ManjianDict::NOT_ACTIVE ],
-                [ 'start_time', '<=', time() ]
+            $ids = (new Manjian())->where([
+                ['status', '=', ManjianDict::NOT_ACTIVE],
+                ['start_time', '<=', time()]
             ])->column('manjian_id');
-
-            foreach ($ids as $k => $v) {
-                ( new Manjian() )->where([ [ 'manjian_id', '=', $v ], [ 'status', '=', ManjianDict::NOT_ACTIVE ], [ 'start_time', '<=', time() ] ])->update([ 'status' => ManjianDict::ACTIVE ]);
-                ( new ManjianGoods() )->where([ [ 'manjian_id', '=', $v ] ])->update([ 'status' => ManjianDict::ACTIVE ]);
-            }
-
+            (new Manjian())->where([['manjian_id', 'in', $ids], ['status', '=', ManjianDict::NOT_ACTIVE], ['start_time', '<=', time()]])->update(['status' => ManjianDict::ACTIVE]);
+            (new ManjianGoods())->where([['manjian_id', 'in', $ids]])->update(['status' => ManjianDict::ACTIVE]);
             return true;
         } catch (\Exception $e) {
             Log::write('满减送自动开启error' . $e->getMessage() . $e->getFile() . $e->getLine());

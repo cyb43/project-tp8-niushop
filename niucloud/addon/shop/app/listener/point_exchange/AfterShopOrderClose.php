@@ -11,6 +11,7 @@ use app\service\core\member\CoreMemberAccountService;
 use addon\shop\app\model\order\OrderRefund;
 use core\exception\CommonException;
 use Exception;
+use think\facade\Db;
 use think\facade\Log;
 
 /**
@@ -32,6 +33,7 @@ class AfterShopOrderClose
                 //减去商品主体库存
                 $core_goods_stock_service = new CoreGoodsStockService();
                 foreach ($order_goods_data as $v) {
+                    // todo 可以优化 暂不处理
                     $core_goods_stock_service->inc([
                         'num' => $v['num'],
                         'goods_id' => $v['goods_id'],
@@ -40,17 +42,32 @@ class AfterShopOrderClose
                 }
                 //销量 +  兑换数量 +累积分消费 返还
                 $core_goods_sale_num_service = new CoreGoodsSaleNumService();
+                $dec_data = [];
                 foreach ($order_goods_data as $v) {
                     //商品累计销量
-                    $core_goods_sale_num_service->dec([
-                        'num' => $v['num'],
+//                    $core_goods_sale_num_service->dec([
+//                        'num' => $v['num'],
+//                        'goods_id' => $v['goods_id'],
+//                        'sku_id' => $v['sku_id'],
+//                        'id' => $order_data['relate_id'],
+//                        'point' => $order_data['point'],
+//                        'goods_money' => $v['goods_money'],
+//                    ]);
+
+                    $dec_data[] = [
+                        'total_exchange_num' => Db::raw('total_exchange_num-' . $v['num']),
+                        'total_member_num' => Db::raw('total_member_num-1'),
+                        'total_point_num' => Db::raw('total_point_num-' . $order_data['point']),
+                        'total_price_num' => Db::raw('total_price_num-' . $v['goods_money']),
+                        'total_order_num' => Db::raw('total_order_num-1'),
                         'goods_id' => $v['goods_id'],
                         'sku_id' => $v['sku_id'],
                         'id' => $order_data['relate_id'],
-                        'point' => $order_data['point'],
-                        'goods_money' => $v['goods_money'],
-                    ]);
+                    ];
+
+
                 }
+                $core_goods_sale_num_service->batchUpdate($dec_data);
                 $point = 0;
                 foreach ($order_goods_data as $v) {
                     if (empty($v['order_refund_no'])) {
@@ -59,7 +76,7 @@ class AfterShopOrderClose
                         $memo = '积分商城订单关闭积分返还';
                     } else {
                         $order_refund_info = (new OrderRefund)->where([
-                            ['order_refund_no', '=', $v['order_refund_no']],
+                            ['order_refund_no', '=', $v['order_refund_no']]
                         ])->findOrEmpty();
                         if ($order_refund_info->isEmpty()) throw new CommonException('SHOP_ORDER_REFUND_IS_INVALID');//退款已失效
 //                        if ($order_refund_info['money'] == $v['order_goods_money']) {

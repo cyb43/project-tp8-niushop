@@ -37,6 +37,16 @@ class CoreGoodsSaleNumService extends BaseCoreService
         $this->model->where([['id', '=', $data['id']]])->inc('total_exchange_num', $data['num'])->inc('total_member_num', 1)->inc('total_point_num', $data['point'])->inc('total_price_num', $data['goods_money'])->inc('total_order_num', 1)->update();
         return true;
     }
+    /**
+     * 增加
+     * @param $data
+     * @return void
+     */
+    public function batchUpdate($data)
+    {
+        $this->model->saveAll($data);
+        return true;
+    }
 
     /**
      * 减少

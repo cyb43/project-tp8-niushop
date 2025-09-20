@@ -93,7 +93,7 @@ const prop = defineProps({
     }
 })
 
-const emit = defineEmits(['update:modelValue','memberSelect'])
+const emit = defineEmits(['update:modelValue', 'memberSelect'])
 
 const memberIds: any = computed({
     get () {
@@ -122,7 +122,7 @@ const memberTable = reactive({
     data: [],
     searchParam: {
         keyword: '',
-        verify_member_ids:''
+        verify_member_ids: ''
     }
 })
 
@@ -152,7 +152,6 @@ const handleSelectChange = (selection: any, row: any) => {
         // 未选中，删除当前会员
         delete selectMember['member_' + row.member_id]
     }
-
 }
 
 // 监听表格全选
@@ -176,7 +175,7 @@ const loadMemberList = (page: number = 1, callback: any = null) => {
     memberTable.loading = true
     memberTable.page = page
 
-    const searchData: any = cloneDeep(memberTable.searchParam);
+    const searchData: any = cloneDeep(memberTable.searchParam)
     getMemberList({
         page: memberTable.page,
         limit: memberTable.limit,
@@ -188,24 +187,23 @@ const loadMemberList = (page: number = 1, callback: any = null) => {
 
         if (callback) callback(res.data.verify_member_ids)
 
-        setCouponSelected();
+        setCouponSelected()
     }).catch(() => {
         memberTable.loading = false
     })
-
 }
 
 // 表格设置选中状态
 const setCouponSelected = () => {
     nextTick(() => {
-        if (!memberListTableRef.value) return;
+        if (!memberListTableRef.value) return
         for (let i = 0; i < memberTable.data.length; i++) {
-            memberListTableRef.value.toggleRowSelection(memberTable.data[i], false);
+            memberListTableRef.value.toggleRowSelection(memberTable.data[i], false)
             if (selectMember['member_' + memberTable.data[i].member_id]) {
-                memberListTableRef.value.toggleRowSelection(memberTable.data[i], true);
+                memberListTableRef.value.toggleRowSelection(memberTable.data[i], true)
             }
         }
-    });
+    })
 }
 
 const resetForm = (formEl: FormInstance | undefined) => {
@@ -217,31 +215,30 @@ const resetForm = (formEl: FormInstance | undefined) => {
 
 const show = () => {
     // 检测商品id集合是否存在，移除不存在的商品id，纠正数据准确性
-    memberTable.searchParam.verify_member_ids = memberIds.value;
+    memberTable.searchParam.verify_member_ids = memberIds.value
     loadMemberList(1, (verify_member_ids:any) => {
         // 第一次打开弹出框时，纠正数据，并且赋值已选会员
         if (memberIds.value) {
             // memberIds.value.splice(0, memberIds.value.length, ...verify_member_ids)
             // 先删除 selectMember 中已经不再存在于 memberIds 中的会员
-            for (let key in selectMember) {
-                const memberId = key.replace('member_', '');
+            for (const key in selectMember) {
+                const memberId = key.replace('member_', '')
 
                 if (!memberIds.value.includes(Number(memberId))) {
-                    delete selectMember[key]; // 删除不存在的会员
+                    delete selectMember[key] // 删除不存在的会员
                 }
             }
             memberIds.value.forEach((item: any) => {
                 if (!selectMember['member_' + item]) {
-                    selectMember['member_' + item] = {};
+                    selectMember['member_' + item] = {}
                 }
             })
             // 赋值已选择的会员
             for (let i = 0; i < memberTable.data.length; i++) {
                 if (memberIds.value.indexOf(memberTable.data[i].member_id) != -1) {
-                    selectMember['member_' + memberTable.data[i].member_id] = memberTable.data[i];
+                    selectMember['member_' + memberTable.data[i].member_id] = memberTable.data[i]
                 }
             }
-
         }
     })
     showDialog.value = true
@@ -249,36 +246,36 @@ const show = () => {
 
 // 清空已选会员
 const clear = () => {
-    for (let k in selectMember) {
-        delete selectMember[k];
+    for (const k in selectMember) {
+        delete selectMember[k]
     }
-    setCouponSelected();
+    setCouponSelected()
 }
 
 const save = () => {
     if (prop.min && selectMemberNum.value < prop.min) {
         ElMessage({
             type: 'warning',
-            message: `${t('所选会员数量不能少于')}${prop.min}${t('个')}`,
-        });
-        return;
+            message: `${t('所选会员数量不能少于')}${prop.min}${t('个')}`
+        })
+        return
     }
 
     if (prop.max && prop.max > 0 && selectMemberNum.value && selectMemberNum.value > prop.max) {
         ElMessage({
             type: 'warning',
-            message: `${t('所选会员数量不能超过')}${prop.max}${t('个')}`,
-        });
-        return;
+            message: `${t('所选会员数量不能超过')}${prop.max}${t('个')}`
+        })
+        return
     }
 
-    let ids: any = [];
-    for (let k in selectMember) {
-        ids.push(parseInt(k.replace('member_', '')));
+    const ids: any = []
+    for (const k in selectMember) {
+        ids.push(parseInt(k.replace('member_', '')))
     }
 
     memberIds.value.splice(0, memberIds.value.length, ...ids)
-    emit('memberSelect',selectMember)
+    emit('memberSelect', selectMember)
     showDialog.value = false
 }
 

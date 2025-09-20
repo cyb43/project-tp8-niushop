@@ -1,5 +1,5 @@
 <template>
-    <el-drawer v-model="showDialog" :title="popTitle" direction="rtl" :before-close="handleClose" class="member-detail-drawer">
+    <el-drawer v-model="showDialog" :title="popTitle" direction="rtl" :before-close="handleClose" size="1300px">
         <div class="main-container" v-loading="loading">
             <el-tabs v-model="activeName" class="pb-[10px]" @tab-change="tabChange">
                 <el-tab-pane label="订单信息" name="order" />
@@ -31,36 +31,36 @@
                             </el-form-item>
                             <div v-if="formData.order_main.delivery_type == 'express' || formData.order_main.delivery_type == 'local_delivery'">
                                 <el-form-item :label="t('takerName')">
-                                    <div class="input-width">{{ formData.order_main.taker_name }}</div>
+                                    <div class="input-width">{{ formData.order_main.taker_name || '--' }}</div>
                                 </el-form-item>
                                 <el-form-item :label="t('takerMobile')">
-                                    <div class="input-width">{{ formData.order_main.taker_mobile }}</div>
+                                    <div class="input-width">{{ formData.order_main.taker_mobile || '--' }}</div>
                                 </el-form-item>
                                 <el-form-item :label="t('takerFullAddress')">
-                                    <div class="input-width">{{ formData.order_main.taker_full_address }}</div>
+                                    <div class="input-width">{{ formData.order_main.taker_full_address|| '--'  }}</div>
                                 </el-form-item>
                             </div>
                             <div v-if="formData.order_main.delivery_type == 'store'">
                                 <el-form-item :label="t('storeName')">
-                                    <div class="input-width">{{ formData.store.store_name }}</div>
+                                    <div class="input-width">{{ formData.store.store_name || '--' }}</div>
                                 </el-form-item>
                                 <el-form-item :label="t('storeAddress')">
-                                    <div class="input-width">{{ formData.store.full_address }}</div>
+                                    <div class="input-width">{{ formData.store.full_address|| '--'  }}</div>
                                 </el-form-item>
                                 <el-form-item :label="t('storeMobile')">
-                                    <div class="input-width">{{ formData.store.store_mobile }}</div>
+                                    <div class="input-width">{{ formData.store.store_mobile || '--' }}</div>
                                 </el-form-item>
                                 <el-form-item :label="t('tradeTime')">
-                                    <div class="input-width">{{ formData.store.trade_time }}</div>
+                                    <div class="input-width">{{ formData.store.trade_time || '--' }}</div>
                                 </el-form-item>
                             </div>
                         </el-col>
                         <el-col :span="8">
                             <el-form-item :label="t('memberRemark')">
-                                <div class="input-width">{{ formData.order_main.member_remark }}</div>
+                                <div class="input-width">{{ formData.order_main.member_remark || '--' }}</div>
                             </el-form-item>
                             <el-form-item :label="t('notes')">
-                                <div class="input-width line-feed">{{ formData.order_main.shop_remark }}</div>
+                                <div class="input-width line-feed">{{ formData.order_main.shop_remark || '--' }}</div>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -106,7 +106,7 @@
                                     </div>
                                 </el-form-item>
                                 <el-form-item :label="t('refundRemark')">
-                                    <div class="max-w-[100%] break-all">{{ formData.remark }}</div>
+                                    <div class="max-w-[100%] break-all">{{ formData.remark || '--' }}</div>
                                 </el-form-item>
                             </el-col>
                         </el-row>
@@ -533,10 +533,7 @@ defineExpose({
 })
 </script>
 
-<style lang="scss">
-.member-detail-drawer{
-    width: 1300px !important;
-}
+<style lang="scss" scoped>
 .page-form .input-width{
     width: 170px;
 }

@@ -87,6 +87,15 @@ class CategoryService extends BaseAdminService
         }
         return $info;
     }
+    /**
+     * 获取商品分类信息
+     * @param int $id
+     * @return array
+     */
+    public function checkCategoryValid($ids)
+    {
+        return $this->model->where([ [ 'category_id', 'in', $ids ] ])->column('category_id');
+    }
 
     /**
      * 添加商品分类

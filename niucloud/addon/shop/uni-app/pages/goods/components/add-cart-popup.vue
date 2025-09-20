@@ -21,8 +21,7 @@
                             </view>
                             <view class="text-[26rpx] leading-[32rpx] text-[#303133] mt-[12rpx]">库存{{ detail.stock }}{{ goodsDetail.goods.unit }}</view>
                         </view>
-                        <view
-                            class="w-[100%] text-[26rpx] leading-[30rpx] text-[var(--text-color-light6)] multi-hidden max-h-[60rpx]"
+                        <view class="w-[100%] text-[26rpx] leading-[30rpx] text-[var(--text-color-light6)] multi-hidden max-h-[60rpx]"
                             v-if="goodsDetail.goodsSpec && goodsDetail.goodsSpec.length">
                             已选规格：{{ detail.sku_spec_format }}
                         </view>
@@ -94,7 +93,7 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, watch, toRaw } from 'vue';
-import { img, getToken } from '@/utils/common';
+import { img } from '@/utils/common';
 import { getGoodsSku } from '@/addon/shop/api/goods';
 import useCartStore from '@/addon/shop/stores/cart'
 import { cloneDeep } from 'lodash-es'
@@ -115,14 +114,21 @@ const maxBuy = ref(0); // 限购
 const minBuy = ref(0); // 起售
 const maxBuyShow = ref(0); // 限购，只展示
 const minBuyShow = ref(0); // 起售，只展示
+const repeat = ref(false) // 防重复请求
 
 const getGoodsSkuFn = (sku_id: any) => {
+    if (repeat.value) return
+    repeat.value = true
     getGoodsSku(sku_id).then((res: any) => {
         info.value = res.data
         // 当前详情内容
         currSpec.value.sku_id = sku_id
         if (info.value.skuList && Object.keys(info.value.skuList).length) {
             info.value.skuList.forEach((item: any) => {
+                item.sku_image = info.value.goods.goods_cover_thumb_mid
+                if(item.sku_image_thumb_mid && item.sku_image_thumb_mid.length){
+                    item.sku_image = item.sku_image_thumb_mid
+                }
                 if (item.sku_id == sku_id) {
                     detail.value = item;
                     currSpec.value.name = item.sku_spec_format.split(",");
@@ -130,6 +136,9 @@ const getGoodsSkuFn = (sku_id: any) => {
             })
         }
         goodsSkuPop.value = true;
+        repeat.value = false;
+    }).catch((e) => {
+        repeat.value = false;
     })
 }
 
@@ -147,6 +156,7 @@ const goodsSkuInputFn = () => {
         }
     }, 0)
 }
+
 const goodsSkuBlurFn = () => {
     setTimeout(() => {
         if (!buyNum.value || buyNum.value <= minBuy.value) {
@@ -321,14 +331,6 @@ const save = () => {
             cartStore.isAddCartRecommend = true;
         });
     } else {
-
-        // let price = 0
-
-        // if (goodsDetail.value.goods.member_discount && getToken() && detail.value.member_price != detail.value.price) {
-        //     price = detail.value.member_price ? detail.value.member_price : detail.value.price // 会员价
-        // } else {
-        //     price = detail.value.price
-        // }
 
         // 购物车添加数量
         cartStore.increase({

@@ -7,16 +7,18 @@ return [
             'name' => '购买商品',
             'desc' => '订单交易成功后按订单交易金额发放积分',
             'component' => '/src/addon/shop/views/member/components/point-rule-buygoods.vue',
-            'calculate' => function(array $config, array $data) {
-                $order_money = $data[ 'order_money' ] ?? 0;
+            'calculate' => function (array $config, array $data) {
+                $order_money = (float)($data['order_money'] ?? 0);
                 if ($order_money <= 0) return 0;
-                return (int) round($order_money / $config[ 'money' ] * $config[ 'point' ]);
+                $point = ((float)$config['money'] * (float)$config['point']);
+                if ($point <= 0) return 0;
+                return (int)round($order_money / $point);
             },
             'content' => [
-                'admin' => function($config) {
+                'admin' => function ($config) {
                     return "购买商品可获得{$config['point']}积分/{$config['money']}元";
                 },
-                'task' => function($config) {
+                'task' => function ($config) {
                     return [
                         'icon' => '/addon/shop/rule/growth-rule-cart.png',
                         'title' => '购买商品',

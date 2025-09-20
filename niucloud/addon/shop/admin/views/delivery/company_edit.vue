@@ -4,7 +4,7 @@
             <el-page-header :content="formData.company_id ? t('updateCompany') : t('addCompany')" :icon="ArrowLeft" @back="back()" />
         </el-card>
         <el-card class="box-card mt-[15px] !border-none" shadow="never">
-            <el-form :model="formData" label-width="130px" ref="formRef" :rules="formRules" class="page-form" v-loading="loading">
+            <el-form :model="formData" label-width="150px" ref="formRef" :rules="formRules" class="page-form" v-loading="loading">
                 <el-form-item :label="t('companyName')" prop="company_name">
                     <el-input v-model.trim="formData.company_name" maxlength="20" clearable :placeholder="t('companyNamePlaceholder')" class="input-width" />
                 </el-form-item>
@@ -14,6 +14,12 @@
                 <el-form-item :label="t('url')">
                     <el-input v-model.trim="formData.url" clearable :placeholder="t('urlPlaceholder')" class="input-width" />
                 </el-form-item>
+                <el-form-item :label="t('expressNoKd100')">
+                    <div>
+                        <el-input v-model.trim="formData.kd100_express_no" clearable :placeholder="t('expressNoKd100Placeholder')" class="input-width" />
+                        <p class="w-[380px] text-[12px] text-[#999] mt-[5px] leading-[20px]">{{ t('expressNoTips') }}</p>
+                    </div>
+                </el-form-item>
                 <el-form-item :label="t('expressNo')">
                     <div>
                         <el-input v-model.trim="formData.express_no" clearable :placeholder="t('expressNoPlaceholder')" class="input-width" />
@@ -22,7 +28,7 @@
                 </el-form-item>
                 <el-form-item :label="t('expressNoElectronicSheet')">
                     <div>
-                        <el-input v-model.trim="formData.express_no_electronic_sheet" clearable :placeholder="t('expressNoPlaceholder')" class="input-width" />
+                        <el-input v-model.trim="formData.express_no_electronic_sheet" clearable :placeholder="t('expressNoElectronicSheetPlaceholder')" class="input-width" />
                         <p class="w-[380px] text-[12px] text-[#999] mt-[5px] leading-[20px]">{{ t('expressNoElectronicSheetTips') }}</p>
                     </div>
                 </el-form-item>
@@ -140,6 +146,7 @@ const initialFormData = {
     company_name: '',
     logo: '',
     url: '',
+    kd100_express_no: '',
     express_no: '',
     express_no_electronic_sheet: "",
     print_style: [],

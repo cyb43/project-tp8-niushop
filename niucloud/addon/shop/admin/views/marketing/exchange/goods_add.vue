@@ -457,10 +457,10 @@
 <script lang="ts" setup>
 import { ref, computed, reactive } from 'vue'
 import { t } from '@/lang'
-import { img,deepClone } from '@/utils/common'
-import { FormInstance,ElMessage } from 'element-plus'
+import { img, deepClone } from '@/utils/common'
+import { FormInstance, ElMessage } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { addActiveExchange } from "@/addon/shop/api/marketing";
+import { addActiveExchange } from '@/addon/shop/api/marketing'
 import goodsSelectPopup from '@/addon/shop/views/goods/components/goods-select-popup.vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -471,7 +471,7 @@ const pageName = route.meta.title
 const loading = ref(false)
 // 商品类型
 const goodsType = reactive([
-    {name:'商品',type:'goods'},
+    { name: '商品', type: 'goods' }
     // {name:'优惠券',type:'coupon'},
     // {name:'余额',type:'balance'},
 ])
@@ -514,7 +514,7 @@ const formRules = computed(() => {
         ],
         coupon_ids: [
             { required: true, message: t('couponSelectPlaceholder'), trigger: 'change' }
-        ],
+        ]
     }
 })
 const changeGoodsType = (item:any) => {
@@ -529,32 +529,32 @@ const changeGoodsType = (item:any) => {
     formData.value.product_list = []
 }
 
-/********* 商品 **********/
-//删除商品
-const deleteGoods = ()=>{
+/** ******* 商品 **********/
+// 删除商品
+const deleteGoods = () => {
     delete formData.value.goods_info
     formData.value.goods_ids = []
     formData.value.product_list = []
 }
-//设置商品sku是否参与
-const enabledEvent = (row:any)=> {
+// 设置商品sku是否参与
+const enabledEvent = (row:any) => {
     row.is_enabled = row.is_enabled ? 0 : 1
     if (formData.value.product_list.every((el: any) => el.is_enabled === 0)) {
         row.is_enabled = 1
         ElMessage({
             type: 'warning',
-            message: `${ t('noEnabledTip') }`
+            message: `${t('noEnabledTip')}`
         })
         return
     }
-    row.stock = '';
-    row.limit_num = '';
-    row.point = '';
-    row.price = '';
+    row.stock = ''
+    row.limit_num = ''
+    row.point = ''
+    row.price = ''
 }
 
 const goodsSelectPopupRef = ref()
-const goodsSelect = (value:any)=> {
+const goodsSelect = (value:any) => {
     const goods_info: any = Object.values(deepClone(value))[0]
     formData.value.product_list = deepClone(goods_info.skuList.map((el: any) => {
         el.goods_stock = el.stock + ''
@@ -576,8 +576,10 @@ const goodsSelect = (value:any)=> {
     formData.value.names = goods_info.goods_name
     formData.value.title = goods_info.sub_title
     formData.value.content = goods_info.goods_desc
-    if (formRef.value) formRef.value.validateField('product_list').catch(() => {
-    })
+    if (formRef.value) {
+        formRef.value.validateField('product_list').catch(() => {
+        })
+    }
 }
 
 interface batchOperationInterface {
@@ -587,10 +589,10 @@ interface batchOperationInterface {
     price:any,
 }
 const batchOperation = ref<batchOperationInterface>({
-    stock:'',
-    limit_num:'',
-    point:'',
-    price:'',
+    stock: '',
+    limit_num: '',
+    point: '',
+    price: ''
 })
 // 批量复选框
 const toggleCheckbox = ref()
@@ -623,12 +625,12 @@ const handleSelectionChange = (val: []) => {
         toggleCheckbox.value = true
     }
 }
-//批量设置确认按钮
-const saveBatch = ()=> {
+// 批量设置确认按钮
+const saveBatch = () => {
     if (!multipleSelection.value.length) {
         ElMessage({
             type: 'warning',
-            message: `${ t('batchEmptySelectedGoodsTips') }`
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
@@ -636,13 +638,13 @@ const saveBatch = ()=> {
         if (isNaN(batchOperation.value.stock) || !regExp.number.test(batchOperation.value.stock)) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('stockTips') }`
+                message: `${t('stockTips')}`
             })
             return
         } else if (batchOperation.value.stock <= 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('stockTipsTwo') }`
+                message: `${t('stockTipsTwo')}`
             })
             return
         }
@@ -651,13 +653,13 @@ const saveBatch = ()=> {
         if (isNaN(batchOperation.value.limit_num) || !regExp.number.test(batchOperation.value.limit_num)) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('limitTips') }`
+                message: `${t('limitTips')}`
             })
             return
         } else if (batchOperation.value.limit_num <= 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('limitTipsTwo') }`
+                message: `${t('limitTipsTwo')}`
             })
             return
         }
@@ -666,13 +668,13 @@ const saveBatch = ()=> {
         if (isNaN(batchOperation.value.point) || !regExp.number.test(batchOperation.value.point)) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('pointTips') }`
+                message: `${t('pointTips')}`
             })
             return
         } else if (batchOperation.value.point <= 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('pointTipsTwo') }`
+                message: `${t('pointTipsTwo')}`
             })
             return
         }
@@ -681,13 +683,13 @@ const saveBatch = ()=> {
         if (isNaN(batchOperation.value.price) || !regExp.digit.test(batchOperation.value.price)) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('moneyTips') }`
+                message: `${t('moneyTips')}`
             })
             return
         } else if (batchOperation.value.price < 0) {
             ElMessage({
                 type: 'warning',
-                message: `${ t('moneyTipsTwo') }`
+                message: `${t('moneyTipsTwo')}`
             })
             return
         }
@@ -711,7 +713,6 @@ const saveBatch = ()=> {
                 }
             }
         })
-
     })
     isIndeterminate.value = false
     toggleCheckbox.value = false
@@ -719,15 +720,15 @@ const saveBatch = ()=> {
         stock: '',
         limit_num: '',
         point: '',
-        price: '',
+        price: ''
     }
     productListTableRef.value.clearSelection()
 }
-/********** 优惠券 ***********/
-const couponSelect = (value:any)=>{
+/** ******** 优惠券 ***********/
+const couponSelect = (value:any) => {
     formData.value.product_list = Object.values(value)
 }
-/**** 提交 ****/
+/** ** 提交 ****/
 const onSave = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return
     await formEl.validate(async (valid) => {
@@ -749,7 +750,7 @@ const onSave = async (formEl: FormInstance | undefined) => {
             } else if (formData.value.type == 'coupon') {
                 formData.value.product_detail = JSON.stringify(formData.value.product_list.map((el: any) => {
                     return {
-                        coupon_id: el.id,
+                        coupon_id: el.id
                     }
                 }))
             } else {

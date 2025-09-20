@@ -21,18 +21,18 @@ class Kd100
         $param = [
             'com' => $shipper_code,             // 快递公司编码
             'num' => $logistic_code,     // 快递单号
-            'phone' => $mobile               // 手机号
         ];
-
+        if(!empty($mobile)){
+            $param[ 'phone' ] = $mobile; // 手机号
+        }
         $post_data = array();
         $post_data[ 'customer' ] = $this->customer;
         $post_data[ 'param' ] = json_encode($param, JSON_UNESCAPED_UNICODE);
         $sign = md5($post_data[ 'param' ] . $this->key . $post_data[ 'customer' ]);
         $post_data[ 'sign' ] = strtoupper($sign);
-        //根据公司业务处理返回的信息......
         $result = $this->sendPost($this->url, $post_data);
-
         $res = [];
+
         if (!empty($result[ 'result' ]) && $result[ 'result' ] == false) {
             $res[ "success" ] = false;
             $res[ "reason" ] = $result[ "message" ];
@@ -53,7 +53,12 @@ class Kd100
             $res = [
                 'success' => $result[ 'message' ],
                 'status' => !empty($result[ 'status' ]) ? $result[ 'status' ] : '',
-                'list' => $list
+                'list' => array_reverse($list)
+            ];
+        }else{
+            $res = [
+                'success' => false,
+                'reason' => '暂无物流信息'
             ];
         }
         return $res;

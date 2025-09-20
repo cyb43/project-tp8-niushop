@@ -77,7 +77,7 @@ const deliveryChange = (e: any) => {
     deliveryMoney.value = e.target.value
 }
 const setFormData = (data: any) => {
-    for (let key in orderData) {
+    for (const key in orderData) {
         delete orderData[key]
     }
     Object.assign(orderData, cloneDeep(data))
@@ -125,7 +125,7 @@ const confirm = () => {
     if (isRepeat.value) return
     isRepeat.value = true
 
-    let order_goods_data: any = {}
+    const order_goods_data: any = {}
     orderData.order_goods.forEach((item: any) => {
         if (item.adjust_money) {
             order_goods_data[item.order_goods_id] = {

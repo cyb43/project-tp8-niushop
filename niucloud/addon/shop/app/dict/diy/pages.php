@@ -1,5 +1,291 @@
 <?php
 
+$my_pintuan = [
+    "id" => "3ilbpixhyia0",
+    "title" => "我的拼单",
+    "imageUrl" => "addon/pintuan/diy/member/style1/nav_my_spell.png",
+    "imgWidth" => 92,
+    "imgHeight" => 92,
+    "link" => [
+        "parent" => "PINTUAN_LINK",
+        "title" => "我的拼单",
+        "url" => "/addon/pintuan/pages/order/list",
+        "name" => "PINTUAN_ORDER_LIST",
+        "action" => ""
+    ],
+    "label" => [
+        "control" => false,
+        "text" => "热门",
+        "textColor" => "#FFFFFF",
+        "bgColorStart" => "#F83287",
+        "bgColorEnd" => "#FE3423"
+    ]
+];
+
+$member_index_graphic_nav_list = [
+    [
+        "id" => "49kxbgr5lwue",
+        "title" => "签到",
+        "imageUrl" => "addon/shop/diy/member/style1/nav_sign_in.png",
+        "imgWidth" => 92,
+        "imgHeight" => 92,
+        "link" => [
+            "name" => "MEMBER_MY_SIGN_IN",
+            "parent" => "MEMBER_LINK",
+            "title" => "我的签到",
+            "url" => "/app/pages/member/sign_in",
+            "action" => ""
+        ],
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ]
+    ],
+    [
+        "title" => "我的余额",
+        "link" => [
+            "parent" => "MEMBER_LINK",
+            "name" => "MEMBER_BALANCE",
+            "title" => "我的余额",
+            "url" => "/app/pages/member/balance",
+            "action" => ""
+        ],
+        "imageUrl" => "addon/shop/diy/member/style1/nav_balance.png",
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ],
+        "id" => "2aqy33banse8",
+        "imgWidth" => 92,
+        "imgHeight" => 92
+    ],
+    [
+        "title" => "地址管理",
+        "link" => [
+            "parent" => "MEMBER_LINK",
+            "name" => "MEMBER_ADDRESS",
+            "title" => "收货地址",
+            "url" => "/app/pages/member/address",
+            "action" => ""
+        ],
+        "imageUrl" => "addon/shop/diy/member/style1/nav_address.png",
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ],
+        "id" => "hdk4145zk40",
+        "imgWidth" => 92,
+        "imgHeight" => 92
+    ],
+    [
+        "title" => "优惠券",
+        "link" => [
+            "parent" => "SHOP_LINK",
+            "name" => "SHOP_MY_COUPON",
+            "title" => "我的优惠券",
+            "url" => "/addon/shop/pages/member/my_coupon",
+            "action" => ""
+        ],
+        "imageUrl" => "addon/shop/diy/member/style1/nav_coupon.png",
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ],
+        "id" => "34t5xg9ik0i0",
+        "imgWidth" => 92,
+        "imgHeight" => 92
+    ],
+    [
+        "id" => "7dpefp0s9ew0",
+        "title" => "分销中心",
+        "imageUrl" => "addon/shop/diy/member/style1/nav_promote.png",
+        "imgWidth" => 92,
+        "imgHeight" => 92,
+        "link" => [
+            "name" => "SHOP_FENXIAO_INDEX",
+            "parent" => "SHOP_FENXIAO_LINK",
+            "title" => "分销中心",
+            "url" => "/addon/shop_fenxiao/pages/index",
+            "action" => ""
+        ],
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ]
+    ],
+    [
+        "title" => "积分兑换",
+        "link" => [
+            "name" => "SHOP_LINK",
+            "parent" => "SHOP_FENXIAO_LINK",
+            "title" => "积分商城",
+            "url" => "/addon/shop/pages/point/index",
+            "action" => ""
+        ],
+        "imageUrl" => "addon/shop/diy/member/style1/nav_point_change.png",
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ],
+        "id" => "692put4jerg0",
+        "imgWidth" => 92,
+        "imgHeight" => 92
+    ],
+    [
+        "id" => "78kxbgr4lipw",
+        "title" => "核销台",
+        "imageUrl" => "addon/shop/diy/member/style1/nav_verify_index.png",
+        "imgWidth" => 92,
+        "imgHeight" => 92,
+        "link" => [
+            "name" => "MEMBER_VERIFY_INDEX",
+            "parent" => "MEMBER_LINK",
+            "title" => "核销台",
+            'url' => '/app/pages/verify/index',
+            "action" => ""
+        ],
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ]
+    ],
+    [
+        "id" => "27kxbgr5lj3w",
+        "title" => "礼品卡",
+        "imageUrl" => "addon/shop/diy/member/style1/nav_giftcard.png",
+        "imgWidth" => 92,
+        "imgHeight" => 92,
+        "link" => [
+            "name" => "SHOP_GIFTCARD_MY_CARD_LIST",
+            "parent" => "SHOP_GIFTCARD_LINK",
+            "title" => "我的卡包",
+            "url" => "/addon/shop_giftcard/pages/my_card_list",
+            "action" => ""
+        ],
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ]
+    ],
+    [
+        "id" => "4o2q7yss59m0",
+        "title" => "我的等级",
+        "imageUrl" => "addon/shop/diy/member/style1/nav_my_level.png",
+        "imgWidth" => 92,
+        "imgHeight" => 92,
+        "link" => [
+            "name" => "MEMBER_MY_LEVEL",
+            "parent" => "MEMBER_LINK",
+            "title" => "会员等级",
+            "url" => "/app/pages/member/level",
+            "action" => ""
+        ],
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ]
+    ],
+    [
+        "id" => "78fnsh8cx5k0",
+        "title" => "我的收藏",
+        "imageUrl" => "addon/shop/diy/member/style1/nav_collect.png",
+        "imgWidth" => 92,
+        "imgHeight" => 92,
+        "link" => [
+            "name" => "SHOP_MY_GOODS_COLLECT",
+            "parent" => "SHOP_LINK",
+            "title" => "商品收藏",
+            "url" => "/addon/shop/pages/goods/collect",
+            "action" => ""
+        ],
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ]
+    ],
+    [
+        "id" => "38fqtyu8cx5k0",
+        "title" => "我的足迹",
+        "imageUrl" => "addon/shop/diy/member/style1/nav_browse.png",
+        "imgWidth" => 92,
+        "imgHeight" => 92,
+        "link" => [
+            "name" => "SHOP_MY_GOODS_BROWSE",
+            "parent" => "SHOP_LINK",
+            "title" => "我的足迹",
+            "url" => "/addon/shop/pages/goods/browse",
+            "action" => ""
+        ],
+        "label" => [
+            "control" => false,
+            "text" => "热门",
+            "textColor" => "#FFFFFF",
+            "bgColorStart" => "#F83287",
+            "bgColorEnd" => "#FE3423"
+        ]
+    ],
+];
+
+$addon_service = new \app\service\admin\addon\AddonService();
+$site_addons = $addon_service->getInstallList();
+if(!empty($site_addons)) {
+    $site_addons = array_keys($site_addons);
+    if (in_array('pintuan', $site_addons)) {
+        $member_index_graphic_nav_list[] = $my_pintuan;
+    }
+}
+$member_index_graphic_nav_list[] = [
+    "id" => "27kxbgr5ljbw",
+    "title" => "联系客服",
+    "imageUrl" => "addon/shop/diy/member/style1/nav_service.png",
+    "imgWidth" => 92,
+    "imgHeight" => 92,
+    "link" => [
+        "name" => "MEMBER_CONTACT",
+        "parent" => "MEMBER_LINK",
+        "title" => "客服",
+        "url" => "/app/pages/member/contact",
+        "action" => ""
+    ],
+    "label" => [
+        "control" => false,
+        "text" => "热门",
+        "textColor" => "#FFFFFF",
+        "bgColorStart" => "#F83287",
+        "bgColorEnd" => "#FE3423"
+    ]
+];
+
 return [
     'DIY_SHOP_INDEX' => [
         'shop_index_style2' => [ // 页面标识
@@ -20,6 +306,7 @@ return [
                     "imgWidth" => "",
                     "imgHeight" => "",
                     "topStatusBar" => [
+                        'control' => true,
                         "isShow" => false,
                         "bgColor" => "#ffffff",
                         "rollBgColor" => "#ffffff",
@@ -34,7 +321,10 @@ return [
                             "name" => ""
                         ]
                     ],
-                    "bottomTabBarSwitch" => true,
+                    "bottomTabBar" => [
+                        'control' => true,
+                        'isShow' => true
+                    ],
                     "popWindow" => [
                         "imgUrl" => "",
                         "imgWidth" => "",
@@ -490,16 +780,16 @@ return [
                             ],
                             [
                                 "id" => "2wggehpnako0",
-                                "title" => "地址管理",
-                                "imageUrl" => "addon/shop/diy/index/style3/nav_my_address.png",
+                                "title" => "限时秒杀",
+//                                "imageUrl" => "addon/shop/diy/index/style3/nav_my_address.png",
+                                "imageUrl" => "addon/shop/diy/index/style3/nav_seckill.png",
                                 "imgWidth" => 180,
                                 "imgHeight" => 180,
                                 "link" => [
-                                    "name" => "MEMBER_ADDRESS",
-                                    "parent" => "MEMBER_LINK",
-                                    "title" => "收货地址",
-                                    "url" => "/app/pages/member/address",
-                                    "action" => ""
+                                    "parent" => "SECKILL_LINK",
+                                    "title" => "秒杀首页",
+                                    "url" => "/addon/seckill/pages/index",
+                                    "name" => "SECKILL_INDEX"
                                 ],
                                 "label" => [
                                     "control" => false,
@@ -1437,6 +1727,7 @@ return [
                     "imgWidth" => "",
                     "imgHeight" => "",
                     "topStatusBar" => [
+                        'control' => true,
                         'isShow' => false,
                         'bgColor' => "#ffffff",
                         'rollBgColor' => "#ffffff",
@@ -1451,7 +1742,10 @@ return [
                             'name' => ""
                         ]
                     ],
-                    "bottomTabBarSwitch" => true,
+                    "bottomTabBar" => [
+                        'control' => true,
+                        'isShow' => true
+                    ],
                     "popWindow" => [
                         "imgUrl" => "",
                         "imgWidth" => "",
@@ -2490,7 +2784,7 @@ return [
                             "textColor" => "#FFFFFF",
                             "startBgColor" => "#FF4142",
                             "endBgColor" => "#FF4142",
-                            "style" => "button",
+                            "style" => "nc-icon-jiahaoV6xx",
                             "control" => true
                         ],
                         "imgElementRounded" => 10,// 图片圆角
@@ -2915,7 +3209,10 @@ return [
                     "bgUrl" => "",
                     "imgWidth" => "",
                     "imgHeight" => "",
-                    "bottomTabBarSwitch" => true,
+                    "bottomTabBar" => [
+                        'control' => true,
+                        'isShow' => true
+                    ],
                     "template" => [
                         "textColor" => "#303133",
                         "componentStartBgColor" => "",
@@ -2938,6 +3235,7 @@ return [
                         "componentGradientAngle" => "to bottom"
                     ],
                     "topStatusBar" => [
+                        'control' => true,
                         'isShow' => true,
                         'bgColor' => "#ffffff",
                         'rollBgColor' => "#ffffff",
@@ -3225,260 +3523,7 @@ return [
                             "weight" => "normal",
                             "color" => "#303133"
                         ],
-                        "list" => [
-                            [
-                                "id" => "49kxbgr5lwue",
-                                "title" => "签到",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_sign_in.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "MEMBER_MY_SIGN_IN",
-                                    "parent" => "MEMBER_LINK",
-                                    "title" => "我的签到",
-                                    "url" => "/app/pages/member/sign_in",
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ],
-                            [
-                                "title" => "我的余额",
-                                "link" => [
-                                    "parent" => "MEMBER_LINK",
-                                    "name" => "MEMBER_BALANCE",
-                                    "title" => "我的余额",
-                                    "url" => "/app/pages/member/balance",
-                                    "action" => ""
-                                ],
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_balance.png",
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ],
-                                "id" => "2aqy33banse8",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92
-                            ],
-                            [
-                                "title" => "地址管理",
-                                "link" => [
-                                    "parent" => "MEMBER_LINK",
-                                    "name" => "MEMBER_ADDRESS",
-                                    "title" => "收货地址",
-                                    "url" => "/app/pages/member/address",
-                                    "action" => ""
-                                ],
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_address.png",
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ],
-                                "id" => "hdk4145zk40",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92
-                            ],
-                            [
-                                "title" => "优惠券",
-                                "link" => [
-                                    "parent" => "SHOP_LINK",
-                                    "name" => "SHOP_MY_COUPON",
-                                    "title" => "我的优惠券",
-                                    "url" => "/addon/shop/pages/member/my_coupon",
-                                    "action" => ""
-                                ],
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_coupon.png",
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ],
-                                "id" => "34t5xg9ik0i0",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92
-                            ],
-                            [
-                                "id" => "7dpefp0s9ew0",
-                                "title" => "分销中心",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_promote.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "SHOP_FENXIAO_INDEX",
-                                    "parent" => "SHOP_FENXIAO_LINK",
-                                    "title" => "分销中心",
-                                    "url" => "/addon/shop_fenxiao/pages/index",
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ],
-                            [
-                                "title" => "积分兑换",
-                                "link" => [
-                                    "name" => "SHOP_LINK",
-                                    "parent" => "SHOP_FENXIAO_LINK",
-                                    "title" => "积分商城",
-                                    "url" => "/addon/shop/pages/point/index",
-                                    "action" => ""
-                                ],
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_point_change.png",
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ],
-                                "id" => "692put4jerg0",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92
-                            ],
-                            [
-                                "id" => "78kxbgr4lipw",
-                                "title" => "核销台",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_verify_index.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "MEMBER_VERIFY_INDEX",
-                                    "parent" => "MEMBER_LINK",
-                                    "title" => "核销台",
-                                    'url' => '/app/pages/verify/index',
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ],
-                            [
-                                "id" => "27kxbgr5lj3w",
-                                "title" => "礼品卡",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_giftcard.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "SHOP_GIFTCARD_MY_CARD_LIST",
-                                    "parent" => "SHOP_GIFTCARD_LINK",
-                                    "title" => "我的卡包",
-                                    "url" => "/addon/shop_giftcard/pages/my_card_list",
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ],
-                            [
-                                "id" => "4o2q7yss59m0",
-                                "title" => "我的等级",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_my_level.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "MEMBER_MY_LEVEL",
-                                    "parent" => "MEMBER_LINK",
-                                    "title" => "会员等级",
-                                    "url" => "/app/pages/member/level",
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ],
-                            [
-                                "id" => "78fnsh8cx5k0",
-                                "title" => "我的收藏",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_collect.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "SHOP_MY_GOODS_COLLECT",
-                                    "parent" => "SHOP_LINK",
-                                    "title" => "商品收藏",
-                                    "url" => "/addon/shop/pages/goods/collect",
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ],
-                            [
-                                "id" => "38fqtyu8cx5k0",
-                                "title" => "我的足迹",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_browse.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "SHOP_MY_GOODS_BROWSE",
-                                    "parent" => "SHOP_LINK",
-                                    "title" => "我的足迹",
-                                    "url" => "/addon/shop/pages/goods/browse",
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ],
-                            [
-                                "id" => "27kxbgr5ljbw",
-                                "title" => "联系客服",
-                                "imageUrl" => "addon/shop/diy/member/style1/nav_service.png",
-                                "imgWidth" => 92,
-                                "imgHeight" => 92,
-                                "link" => [
-                                    "name" => "MEMBER_CONTACT",
-                                    "parent" => "MEMBER_LINK",
-                                    "title" => "客服",
-                                    "url" => "/app/pages/member/contact",
-                                    "action" => ""
-                                ],
-                                "label" => [
-                                    "control" => false,
-                                    "text" => "热门",
-                                    "textColor" => "#FFFFFF",
-                                    "bgColorStart" => "#F83287",
-                                    "bgColorEnd" => "#FE3423"
-                                ]
-                            ]
-                        ],
+                        "list" => $member_index_graphic_nav_list,
                         // 轮播图设置
                         'swiper' => [
                             'indicatorColor' => 'rgba(0, 0, 0, 0.3)', // 未选中颜色
@@ -3510,6 +3555,7 @@ return [
                     "pageGradientAngle" => "to bottom",
                     "bgHeightScale" => 0,
                     "topStatusBar" => [
+                        'control' => true,
                         'isShow' => false,
                         'bgColor' => "#ffffff",
                         'rollBgColor' => "#ffffff",
@@ -3524,7 +3570,10 @@ return [
                             'name' => ""
                         ]
                     ],
-                    "bottomTabBarSwitch" => true,
+                    "bottomTabBar" => [
+                        'control' => true,
+                        'isShow' => true
+                    ],
                     "popWindow" => [
                         "imgUrl" => "",
                         "imgWidth" => "",
@@ -3869,6 +3918,357 @@ return [
                             "bottom" => 0,
                             "both" => 10
                         ]
+                    ]
+                ]
+            ]
+        ]
+    ],
+    'DIY_SHOP_GOODS_DETAIL' => [
+        'shop_goods_detail_style1' => [
+            "title" => "商品详情",
+            'cover' => '', // 页面封面图
+            'preview' => '', // 页面预览图
+            'desc' => '', // 页面描述
+            'mode' => 'diy', // 页面模式：diy：自定义，fixed：固定
+            // 页面数据源
+            'data' => [
+                'global' => [
+                    'title' => '商品详情',
+                    'completeLayout' => 'style-1',
+                    'completeAlign' => 'left',
+                    'borderControl' => true,
+                    'pageStartBgColor' => 'rgba(246, 246, 246, 1)',
+                    'pageEndBgColor' => '',
+                    'pageGradientAngle' => 'to bottom',
+                    'bgUrl' => '',
+                    'bgHeightScale' => 100,
+                    'imgWidth' => '',
+                    'imgHeight' => '',
+                    'topStatusBar' => [
+                        'control' => false,
+                        'isShow' => false,
+                        'bgColor' => "#ffffff",
+                        'rollBgColor' => "#ffffff",
+                        'style' => 'style-1',
+                        'styleName' => '风格1',
+                        'textColor' => "#333333",
+                        'rollTextColor' => "#333333",
+                        'textAlign' => 'center',
+                        'inputPlaceholder' => '请输入搜索关键词',
+                        'imgUrl' => '',
+                        'link' => [
+                            'name' => ""
+                        ]
+                    ],
+                    'bottomTabBar' => [
+                        'control' => false,
+                        'isShow' => false
+                    ],
+                    'popWindow' => [
+                        'imgUrl' => '',
+                        'imgWidth' => '',
+                        'imgHeight' => '',
+                        'count' => 'once',
+                        'show' => false,
+                        'link' => [
+                            'name' => ''
+                        ]
+                    ],
+                    'template' => [
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 0,
+                        'bottomRounded' => 0,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 0,
+                            'bottom' => 0,
+                            'both' => 0
+                        ],
+                        'isHidden' => false
+                    ]
+                ],
+                'value' => [
+                    [
+                        'path' => 'edit-shop-goods-detail-basic-info',
+                        'uses' => 1,
+                        'position' => 'top_fixed',
+                        'id' => 'j3hqu5tg1zk',
+                        'componentName' => 'ShopGoodsDetailBasicInfo',
+                        'componentTitle' => '基础信息',
+                        'ignore' => [
+                            'pageBgColor',
+                            'componentBgUrl',
+                            'marginTop',
+                            'marginBottom',
+                            'marginBoth',
+                            'topRounded',
+                            'bottomRounded'
+                        ],
+                        'menuContent' => 'index,search,cart,member',
+                        'medium' => [
+                            'type' => 'square_img',
+                            'indicator' => true
+                        ],
+                        'priceRegion' => [
+                            'showWay' => 'normal',
+                            'bgImg' => 'addon/shop/diy/goods_detail/style_01.jpg',
+                            'marketingBgImg' => 'addon/shop/diy/goods_detail/marketing_style_01.jpg',
+                            'goodsStyle' => [
+                                'title' => '风格1',
+                                'value' => 'style-1'
+                            ],
+                            'marketingStyle' => [
+                                'title' => '风格1',
+                                'value' => 'style-1'
+                            ]
+                        ],
+                        'goodsInfo' => [
+                            'titleColor' => '#333333',
+                            'subTitleColor' => '#999999',
+                            'saleInfoColor' => '#999999',
+                            'priceTopRounded' => 17,
+                            'priceBottomRounded' => 0,
+                            'topRounded' => 12,
+                            'bottomRounded' => 0,
+                            'priceBgColor' => '',
+                            "startBgColor" => '#ffffff',
+                            "endBgColor" => '#f6f6f6',
+                            'priceAboutMargin' => 0,
+                            'priceTopMargin' => -22,
+                            'topMargin' => -13,
+                            'aboutMargin' => 0
+                        ],
+                        'saleInfo' => [ 'underlined_price', 'sales', 'stock' ],
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 0,
+                        'bottomRounded' => 0,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 0,
+                            'bottom' => 0,
+                            'both' => 0
+                        ],
+                        'isHidden' => false
+                    ],
+                    [
+                        'path' => 'edit-shop-goods-detail-purchase-service',
+                        'uses' => 1,
+                        'id' => 'c4wh1kcz3i0',
+                        'componentName' => 'ShopGoodsDetailPurchaseService',
+                        'componentTitle' => '商品服务',
+                        'ignore' => [],
+                        'serviceConfig' => [ 'goods_service', 'spec_select', 'delivery_info', 'coupons', 'activity' ],
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '#FFFFFF',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 12,
+                        'bottomRounded' => 12,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 12,
+                            'bottom' => 0,
+                            'both' => 10
+                        ],
+                        'isHidden' => false
+                    ],
+                    [
+                        'path' => 'edit-shop-goods-detail-sow',
+                        'uses' => 0,
+                        'id' => '1zi5tkyxurpc',
+                        'componentName' => 'ShopGoodsDetailSow',
+                        'componentTitle' => '种草秀',
+                        'ignore' => [],
+                        'isShow' => true,
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '#FFFFFF',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 12,
+                        'bottomRounded' => 12,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 12,
+                            'bottom' => 0,
+                            'both' => 10
+                        ],
+                        'isHidden' => false
+                    ],
+                    [
+                        'path' => 'edit-shop-goods-detail-evaluate',
+                        'uses' => 1,
+                        'id' => '1jgv7ysvlh0g',
+                        'componentName' => 'ShopGoodsDetailEvaluate',
+                        'componentTitle' => '商品评价',
+                        'ignore' => [],
+                        'isShow' => true,
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '#FFFFFF',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 12,
+                        'bottomRounded' => 12,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 12,
+                            'bottom' => 0,
+                            'both' => 10
+                        ],
+                        'isHidden' => false
+                    ],
+                    [
+                        'path' => 'edit-shop-goods-detail-attr',
+                        'uses' => 1,
+                        'id' => '19m7738ofq68',
+                        'componentName' => 'ShopGoodsDetailAttr',
+                        'componentTitle' => '商品属性',
+                        'ignore' => [],
+                        'isShow' => true,
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '#FFFFFF',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 12,
+                        'bottomRounded' => 12,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 12,
+                            'bottom' => 0,
+                            'both' => 10
+                        ],
+                        'isHidden' => false
+                    ],
+                    [
+                        'path' => 'edit-shop-goods-detail-desc',
+                        'uses' => 1,
+                        'id' => '37i90so3cly0',
+                        'componentName' => 'ShopGoodsDetailDesc',
+                        'componentTitle' => '商品详情',
+                        'ignore' => [],
+                        'isShow' => true,
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '#FFFFFF',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 12,
+                        'bottomRounded' => 12,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 12,
+                            'bottom' => 20,
+                            'both' => 10
+                        ],
+                        'isHidden' => false
+                    ],
+                    [
+                        'path' => 'edit-shop-goods-detail-bottom',
+                        'position' => 'bottom_fixed',
+                        'uses' => 1,
+                        'id' => 'p313pc2eduo',
+                        'componentName' => 'ShopGoodsDetailBottom',
+                        'componentTitle' => '底部菜单',
+                        'ignore' => [
+                            'pageBgColor',
+                            'componentBgUrl',
+                            'marginTop',
+                            'marginBottom',
+                            'marginBoth',
+                            'topRounded',
+                            'bottomRounded'
+                        ],
+                        'menuContent' => [ 'index', 'service', 'cart' ],
+                        'cartName' => '加入购物车',
+                        'buyName' => '立即购买',
+                        'cartIsShow' => true,
+                        'cartStyle' => [
+                            'textColor' => '#FFFFFF',
+                            'fontSize' => 12,
+                            'gradientAngle' => 'to right',
+                            'startColor' => '#FFB000',
+                            'endColor' => '#FFA029'
+                        ],
+                        'buyStyle' => [
+                            'textColor' => '#FFFFFF',
+                            'fontSize' => 12,
+                            'gradientAngle' => 'to right',
+                            'startColor' => '#FB7939',
+                            'endColor' => '#FF4142'
+                        ],
+                        'textColor' => '#303133',
+                        'pageStartBgColor' => '',
+                        'pageEndBgColor' => '',
+                        'pageGradientAngle' => 'to bottom',
+                        'componentBgUrl' => '',
+                        'componentBgAlpha' => 2,
+                        'componentStartBgColor' => '#FFFFFF',
+                        'componentEndBgColor' => '',
+                        'componentGradientAngle' => 'to bottom',
+                        'topRounded' => 0,
+                        'bottomRounded' => 0,
+                        'elementBgColor' => '',
+                        'topElementRounded' => 0,
+                        'bottomElementRounded' => 0,
+                        'margin' => [
+                            'top' => 0,
+                            'bottom' => 0,
+                            'both' => 0
+                        ],
+                        'isHidden' => false
                     ]
                 ]
             ]

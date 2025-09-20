@@ -11,6 +11,7 @@
 
 namespace addon\shop\app\adminapi\controller\goods;
 
+use addon\shop\app\dict\goods\EvaluateDict;
 use core\base\BaseAdminController;
 use addon\shop\app\service\admin\goods\EvaluateService;
 
@@ -30,7 +31,8 @@ class Evaluate extends BaseAdminController
     public function lists()
     {
         $data = $this->request->params([
-            [ 'goods_name', '' ]
+            [ 'goods_name', '' ],
+            [ 'status', '' ],
         ]);
         return success(( new EvaluateService() )->getPage($data));
     }
@@ -158,6 +160,55 @@ class Evaluate extends BaseAdminController
     {
         ( new EvaluateService() )->cancelTopping($id);
 
+        return success('SUCCESS');
+    }
+
+    /**
+     * 获取审核状态
+     * @description 审核状态
+     * @return \think\Response
+     */
+    public function status()
+    {
+        return success(EvaluateDict::getStatus());
+    }
+
+    /**
+     * 批量通过
+     * @description 批量通过
+     */
+    public function batchAdopt()
+    {
+        $data = $this->request->params([
+            [ 'evaluate_ids', [] ],
+        ]);
+        ( new EvaluateService() )->batchAdopt($data['evaluate_ids']);
+        return success('SUCCESS');
+    }
+
+    /**
+     * 批量拒绝
+     * @description 批量拒绝
+     */
+    public function batchRefuse()
+    {
+        $data = $this->request->params([
+            [ 'evaluate_ids', [] ],
+        ]);
+        ( new EvaluateService() )->batchRefuse($data['evaluate_ids']);
+        return success('SUCCESS');
+    }
+
+    /**
+     * 批量删除
+     * @description 批量删除
+     */
+    public function batchDel()
+    {
+        $data = $this->request->params([
+            [ 'evaluate_ids', [] ],
+        ]);
+        ( new EvaluateService() )->batchDel($data['evaluate_ids']);
         return success('SUCCESS');
     }
 }

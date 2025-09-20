@@ -107,7 +107,7 @@ DROP TABLE IF EXISTS `{{prefix}}shop_coupon_send_records`;
 CREATE TABLE `{{prefix}}shop_coupon_send_records` (
     `id`             INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
     `coupon_id`      INT(11) UNSIGNED NOT NULL DEFAULT 0 COMMENT '优惠券id',
-    `send_num`       INT(11) NOT NULL COMMENT '每位会员发放数量',
+    `send_num`       INT(11) NOT NULL DEFAULT 0 COMMENT '每位会员发放数量',
     `range_type`     VARCHAR(20)  NOT NULL DEFAULT '' COMMENT '发券范围',
     `range_param`    TEXT                  DEFAULT NULL COMMENT '范围对应参数',
     `success_num`    INT(11) NOT NULL DEFAULT 0 COMMENT '发放成功数',
@@ -128,13 +128,15 @@ CREATE TABLE `{{prefix}}shop_delivery_company` (
   `company_name` varchar(255) NOT NULL DEFAULT '' COMMENT '物流公司名称',
   `logo` varchar(255) NOT NULL DEFAULT '' COMMENT '物流公司logo',
   `url` varchar(255) NOT NULL DEFAULT '' COMMENT '物流公司网站',
-  `express_no` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '物流公司编号(用于物流跟踪)',
-  `express_no_electronic_sheet` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '物流公司编号(用于电子面单)',
+  `express_no` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '快递鸟:物流公司编号(用于物流跟踪)',
+  `express_no_electronic_sheet` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '快递鸟:物流公司编号(用于电子面单)',
   `electronic_sheet_switch` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '是否支持电子面单（0：不支持，1：支持）',
   `print_style` VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '电子面单打印模板样式，json字符串',
   `exp_type` VARCHAR(2000) NOT NULL DEFAULT '' COMMENT '物流公司业务类型，json字符串',
   `create_time` int(11) NOT NULL DEFAULT '0',
   `update_time` int(11) NOT NULL DEFAULT '0',
+  `kd100_express_no` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '快递100:物流公司编号(用于物流跟踪)',
+  `kd100_express_no_electronic_sheet` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '快递100:物流公司编号(用于电子面单)',
   PRIMARY KEY (`company_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT = '站点快递表';
 
@@ -169,6 +171,12 @@ CREATE TABLE `{{prefix}}shop_delivery_electronic_sheet` (
   `is_default` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '是否默认（1：是，0：否）',
   `create_time` INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
   `update_time` INT(11) NOT NULL DEFAULT 0 COMMENT '修改时间',
+  `interface_type` CHAR(20) NOT NULL DEFAULT '' COMMENT '快递公司类型 kdbird:快递鸟 kd100:快递100',
+  `exp_type_name` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '物流公司业务类型名称',
+  `temp_id` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '主模版:快递100用',
+  `child_temp_id` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '子模版:快递100用',
+  `back_temp_id` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '回单模版:快递100用',
+  `interface_data` TEXT DEFAULT NULL COMMENT '接口参数',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='电子面单';
 
@@ -266,7 +274,7 @@ CREATE TABLE `{{prefix}}shop_discount_goods` (
   `sku_id` int NOT NULL DEFAULT 0 COMMENT '商品规格id',
   `status` varchar(50) NOT NULL DEFAULT '' COMMENT '商品状态',
   `type` varchar(255) NOT NULL DEFAULT '' COMMENT '折扣类型',
-  `rate` decimal(10, 1) NOT NULL COMMENT '折扣',
+  `rate` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '折扣',
   `reduce_money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '减钱',
   `discount_price` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '活动商品价格（展示，搜索）',
   `order_money` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '活动累计金额',
@@ -314,6 +322,7 @@ CREATE TABLE `{{prefix}}shop_goods` (
   `member_discount` varchar(255) NOT NULL DEFAULT '' COMMENT '会员等级折扣，不参与：空，会员折扣：discount，指定会员价：fixed_price',
   `poster_id` int(11) NOT NULL DEFAULT '0' COMMENT '海报id',
   `form_id` INT(11) NOT NULL DEFAULT 0 COMMENT '万能表单id',
+  `diy_detail_id` INT NOT NULL DEFAULT 0 COMMENT '自定义详情id',
   `is_limit` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '商品是否限购(0:否 1:是)',
   `limit_type` TINYINT(4) NOT NULL DEFAULT 1 COMMENT '限购类型，1：单次限购，2：单人限购',
   `max_buy` INT(11) NOT NULL DEFAULT 0 COMMENT '限购数',
@@ -690,6 +699,8 @@ CREATE TABLE `{{prefix}}shop_order` (
   `point` int(11) NOT NULL DEFAULT '0' COMMENT '积分兑换',
   `activity_type` varchar(255) NOT NULL DEFAULT '' COMMENT '营销类型',
   `form_record_id` INT(11) NOT NULL DEFAULT 0 COMMENT '万能表单记录id',
+  `relate_order_id` int NOT NULL DEFAULT 0 COMMENT '关联活动来源订单id',
+  `relate_source` varchar(255) NOT NULL DEFAULT '' COMMENT 'seckill 秒杀系统',
   PRIMARY KEY (`order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单表';
 
@@ -724,7 +735,7 @@ CREATE TABLE `{{prefix}}shop_order_delivery` (
   `express_number` varchar(50) NOT NULL DEFAULT '' COMMENT '配送单号',
   `local_deliver_id` int(11) NOT NULL DEFAULT '0' COMMENT '同城配送员',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '配送状态',
-  `third_delivery` varchar(50) NOT NULL DEFAULT '' COMMENT '三方配送提供者',
+  `third_delivery` varchar(50) NOT NULL DEFAULT '' COMMENT '配送方（三方配送）',
   `remark` varchar(1000) NOT NULL DEFAULT '' COMMENT '备注',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   PRIMARY KEY (`id`)
@@ -744,6 +755,9 @@ CREATE TABLE `{{prefix}}shop_order_discount` (
   `content` varchar(255) NOT NULL DEFAULT '' COMMENT '订单优惠说明',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '创建时间',
   `status` int(11) NOT NULL DEFAULT '1' COMMENT '状态',
+  `member_id` INT NOT NULL DEFAULT 0 COMMENT '会员id',
+  `goods_id` INT NOT NULL DEFAULT 0 COMMENT '商品id',
+  `sku_id` INT NOT NULL DEFAULT 0 COMMENT 'sku_id',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单优惠表';
 
@@ -791,7 +805,8 @@ CREATE TABLE `{{prefix}}shop_order_goods` (
   `shop_active_refund` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '商家主动退款（0否  1是）',
   `shop_active_refund_money` DECIMAL(10, 2) NOT NULL DEFAULT 0.00 COMMENT '商家主动退款金额',
   `is_gift` TINYINT(4) NOT NULL DEFAULT 0 COMMENT '是否是赠品（0否  1是）',
-  `form_record_id` INT(11) NOT NULL DEFAULT 0 COMMENT '万能表单记录id',
+  `form_record_id`           INT(11) NOT NULL DEFAULT 0 COMMENT '万能表单记录id',
+  `delete_time`              INT(11) NOT NULL DEFAULT 0 COMMENT '是否删除(针对后台)',
   PRIMARY KEY (`order_goods_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单项表';
 
@@ -800,12 +815,12 @@ DROP TABLE IF EXISTS `{{prefix}}shop_order_log`;
 CREATE TABLE `{{prefix}}shop_order_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `order_id` int(11) NOT NULL DEFAULT '0' COMMENT '订单id',
-  `main_type` varchar(255) NOT NULL DEFAULT '操作人类型',
+  `main_type` varchar(255) NOT NULL DEFAULT '' COMMENT '操作人类型',
   `main_id` int(11) NOT NULL DEFAULT '0' COMMENT '操作人id',
-  `status` int(11) DEFAULT NULL COMMENT '订单状态',
+  `status` int(11) NOT NULL DEFAULT 0 COMMENT '订单状态',
   `type` varchar(255) NOT NULL DEFAULT '',
-  `content` varchar(255) DEFAULT NULL COMMENT '日志内容',
-  `create_time` int(11) DEFAULT NULL COMMENT '创建时间',
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '日志内容',
+  `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单日志表';
 
@@ -833,6 +848,7 @@ CREATE TABLE `{{prefix}}shop_order_refund` (
   `shop_reason` varchar(255) NOT NULL DEFAULT '' COMMENT '上架拒绝原因',
   `refund_address` varchar(1000) NOT NULL DEFAULT '' COMMENT '商家退货地址',
   `is_refund_delivery` INT(11) NOT NULL DEFAULT 0 COMMENT '是否退运费',
+  `delete_time` INT NOT NULL DEFAULT 0 COMMENT '是否删除(针对后台)',
   PRIMARY KEY (`refund_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单退款表';
 
@@ -841,12 +857,12 @@ DROP TABLE IF EXISTS `{{prefix}}shop_order_refund_log`;
 CREATE TABLE `{{prefix}}shop_order_refund_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `order_refund_no` varchar(100) NOT NULL DEFAULT '' COMMENT '退款编号',
-  `main_type` varchar(255) NOT NULL DEFAULT '操作人类型',
+  `main_type` varchar(255) NOT NULL DEFAULT '' DEFAULT '操作人类型',
   `main_id` int(11) NOT NULL DEFAULT '0' COMMENT '操作人id',
-  `status` int(11) DEFAULT NULL COMMENT '退款状态',
+  `status` int(11) NOT NULL DEFAULT 0 COMMENT '退款状态',
   `type` varchar(255) NOT NULL DEFAULT '',
-  `content` varchar(255) DEFAULT NULL COMMENT '日志内容',
-  `create_time` int(11) DEFAULT NULL COMMENT '创建时间',
+  `content` varchar(255) NOT NULL DEFAULT '' COMMENT '日志内容',
+  `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='订单退款日志表';
 
@@ -856,7 +872,7 @@ CREATE TABLE `{{prefix}}shop_point_exchange` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '兑换活动主键id',
   `type` varchar(255) NOT NULL DEFAULT '' COMMENT '兑换类型（商品、优惠券、红包）',
   `names` varchar(255) NOT NULL DEFAULT '' COMMENT '兑换标题',
-  `title` varchar(255) NOT NULL COMMENT '副标题',
+  `title` varchar(255) NOT NULL DEFAULT '' COMMENT '副标题',
   `image` text COMMENT '图片',
   `status` int(11) NOT NULL DEFAULT '0' COMMENT '兑换状态 0 下架  1上架  -1 删除',
   `product_detail` TEXT DEFAULT NULL COMMENT '兑换产品信息',
@@ -865,7 +881,7 @@ CREATE TABLE `{{prefix}}shop_point_exchange` (
   `limit_num` int(11) NOT NULL DEFAULT '0' COMMENT '限制数量',
   `content` text COMMENT '产品介绍',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '排序',
-  `total_point_num` int(11) DEFAULT '0' COMMENT '积分消费总额',
+  `total_point_num` int(11) NOT NULL DEFAULT '0' COMMENT '积分消费总额',
   `total_price_num` decimal(10,2) NOT NULL DEFAULT '0.00' COMMENT '总支付金额',
   `total_order_num` int(11) DEFAULT '0' COMMENT '订单笔数',
   `total_member_num` int(11) DEFAULT '0' COMMENT '参与会员数',

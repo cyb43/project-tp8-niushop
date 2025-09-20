@@ -9,6 +9,7 @@ use addon\shop\app\dict\order\OrderRefundLogDict;
 use addon\shop\app\model\order\Order;
 use addon\shop\app\service\core\order\CoreOrderDeliveryService;
 use addon\shop\app\service\core\refund\CoreRefundLogService;
+use addon\shop\app\service\core\third_addon\order\CoreOrderNoticeService;
 
 /**
  * 退款关闭后操作
@@ -31,6 +32,10 @@ class AfterShopOrderRefundClose
         }
         $main_type = $data['main_type'] ?? OrderRefundLogDict::MEMBER;
         $main_id = $data['main_id'] ?? $refund_data['member_id'];
+        //通知三方应用更新订单状态
+        if(!empty($order['relate_source'])){
+            (new CoreOrderNoticeService())->sendRefundCloseNotice($refund_data,$order['relate_source'],$order['relate_order_id']);
+        }
         //日志
         (new CoreRefundLogService())->add([
             'order_refund_no' => $refund_data['order_refund_no'],
@@ -40,7 +45,6 @@ class AfterShopOrderRefundClose
             'type' => OrderRefundDict::CLOSE_ACTION,
             'content' => ''
         ]);
-        //消息发送
 
     }
 }

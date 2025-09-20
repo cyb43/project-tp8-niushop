@@ -158,5 +158,7 @@
   "noLogisticsRequired": "无需物流",
   "notLogistics": "暂无物流信息",
   "orderInfoEmpty": "暂无数据",
-  "buyerAskDeliveryTime": "要求自提时间"
+  "buyerAskDeliveryTime": "要求自提时间",
+  "deleteTips": "是否确认删除该订单？",
+  "batchDeleteTips": "是否确认批量删除选中的订单？"
 }

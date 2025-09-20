@@ -145,10 +145,10 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getCouponList, deleteCoupon, closeCoupon,getCouponStatusList } from '@/addon/shop/api/marketing'
+import { getCouponList, deleteCoupon, closeCoupon, getCouponStatusList } from '@/addon/shop/api/marketing'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { t } from '@/lang'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 import couponCollection from '@/addon/shop/views/marketing/coupon/components/coupon-collection.vue'
 import CouponSendRecords from '@/addon/shop/views/marketing/coupon/components/coupon-send-records.vue'
 import couponSendPopup from '@/addon/shop/views/marketing/coupon/components/coupon-send-popop.vue'
@@ -229,14 +229,14 @@ const loadCouponList = (page: number = 1) => {
         tableData.loading = false
         tableData.data = res.data.data
         tableData.total = res.data.total
-        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam);
+        setTablePageStorage(tableData.page, tableData.limit, tableData.searchParam)
     }).catch(() => {
         tableData.loading = false
     })
 }
 
 const loadData = () => {
-    loadCouponList(getTablePageStorage(tableData.searchParam).page);
+    loadCouponList(getTablePageStorage(tableData.searchParam).page)
 }
 
 loadData()
@@ -248,13 +248,13 @@ const couponCollectionRef: any = ref(null)
 const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    const pagePath = "/addon/shop/pages/coupon/detail"
-    const columnName = "coupon_id"
-    const columnValue = data.id
-    const title = "优惠券推广"
-    const folder = "coupon"
-
-    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
+    const pagePath = '/addon/shop/pages/coupon/detail'
+    const paramsArr = [
+        { name: 'coupon_id', value: data.id },
+    ];
+    const title = '优惠券推广'
+    const folder = 'coupon'
+    spreadPopupRef.value?.show(pagePath, paramsArr, title, folder);
 }
 
 // 添加优惠券
@@ -275,17 +275,17 @@ const sendEvent = (data: any) => {
 
 // 领取记录
 const collectionEvent = (data: any) => {
-    let parameter = {id: data.id};
-    couponCollectionRef.value.setFormData(parameter);
-    couponCollectionRef.value.showDialog = true;
+    const parameter = { id: data.id }
+    couponCollectionRef.value.setFormData(parameter)
+    couponCollectionRef.value.showDialog = true
 }
 
 // 优惠券发放记录
 const couponSendRecordRef: any = ref(null)
 const sendRecordEvent = (data: any) => {
-    let parameter = {id: data.id};
-    couponSendRecordRef.value.setFormData(parameter);
-    couponSendRecordRef.value.showDialog = true;
+    const parameter = { id: data.id }
+    couponSendRecordRef.value.setFormData(parameter)
+    couponSendRecordRef.value.showDialog = true
 }
 
 /**
@@ -299,7 +299,7 @@ const deleteEvent = (data: any) => {
             type: 'warning'
         }
     ).then(() => {
-        deleteCoupon({ids: [data.id]}).then(() => {
+        deleteCoupon({ ids: [data.id] }).then(() => {
             loadCouponList()
         }).catch(() => {
         })
@@ -315,7 +315,7 @@ const closeEvent = (data: any) => {
             type: 'warning'
         }
     ).then(() => {
-        closeCoupon({ids: [data.id]}).then(() => {
+        closeCoupon({ ids: [data.id] }).then(() => {
             loadCouponList()
         }).catch(() => {
         })
@@ -326,16 +326,16 @@ const closeEvent = (data: any) => {
 const batchDeleteEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchDeleteTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchDeleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const coupon_ids: any = []
         multipleSelection.value.forEach((item: any) => {
@@ -355,16 +355,16 @@ const batchDeleteEvent = () => {
 const batchcloseEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("batchEmptySelectedGoodsTips") }`,
+            type: 'warning',
+            message: `${t('batchEmptySelectedGoodsTips')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("batchCloseTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('batchCloseTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const coupon_ids: any = []
         multipleSelection.value.forEach((item: any) => {

@@ -15,6 +15,7 @@ use addon\shop\app\model\order\Order;
 use addon\shop\app\service\core\delivery\CoreConfigService;
 use addon\shop\app\service\core\delivery\delivery_search\DeliverySearchLoader;
 use core\base\BaseCoreService;
+use think\facade\Cache;
 
 /**
  * 订单服务层
@@ -49,16 +50,23 @@ class CoreOrderService extends BaseCoreService
      */
     public function deliverySearch($params)
     {
-        $config = ( new CoreConfigService() )->getDeliverySearchConfig();
-        $class = new DeliverySearchLoader("KdniaoDeliverySearch", $config);
+        $class = new DeliverySearchLoader();
         $data = [
+            'company_id' => !empty($params[ 'company' ]) ? $params[ 'company' ][ 'company_id' ] : '',
             'express_no' => !empty($params[ 'company' ]) ? $params[ 'company' ][ 'express_no' ] : '',
             'logistic_no' => $params[ 'express_number' ],
             'mobile' => $params[ 'mobile' ],
         ];
-        $traces = $class->search($data);
-        if (!empty($traces[ 'list' ])) {
-            $traces[ 'list' ] = array_reverse($traces[ 'list' ]);
+
+        //获取缓存
+        $traces = Cache::get('order_delivery:'.$data['express_no']);
+        if(empty($traces)){
+            $traces = $class->search($data);
+            if (!empty($traces[ 'list' ])) {
+                //结果缓存2小时
+                $traces[ 'list' ] = array_reverse($traces[ 'list' ]);
+                Cache::tag('order_delivery')->set('order_delivery:'.$data['express_no'], $traces, 7200);
+            }
         }
         $params[ 'traces' ] = $traces;
         return $params;

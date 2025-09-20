@@ -3,7 +3,7 @@
 return [
     'shop_goods' => [
         'title' => get_lang('dict_diy_poster.shop_goods_component_type_basic'),
-        'support' => [ 'fenxiao_goods', 'shop_point_goods' ], // 支持的插件
+        'support' => [ 'fenxiao_goods', 'shop_point_goods'], // 支持的插件
         'list' => [
             'GoodsImage' => [
                 'title' => "商品图片",
@@ -46,7 +46,7 @@ return [
                 'relate' => 'goods_price', // 关联字段，空为不处理
                 'value' => '',
                 'template' => [
-                    "fontFamily" => 'static/font/price.ttf', // 字体
+                    "fontFamily" => 'static/font/OPLUSSANS3-REGULAR.ttf', // 字体
                     'width' => 151, // 宽度
                     'height' => 49, // 高度
                 ],
@@ -61,7 +61,7 @@ return [
                 'relate' => 'goods_market_price', // 关联字段，空为不处理
                 'value' => '',
                 'template' => [
-                    "fontFamily" => 'static/font/price.ttf', // 字体
+                    "fontFamily" => 'static/font/OPLUSSANS3-REGULAR.ttf', // 字体
                     'width' => 170, // 宽度
                     'height' => 48, // 高度
                 ],

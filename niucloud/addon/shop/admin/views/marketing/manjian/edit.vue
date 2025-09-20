@@ -814,7 +814,7 @@ const onSave = async () => {
                 });
             }
         } else {
-            var iserror = document.getElementsByClassName('is-error')[0]
+            const iserror = document.getElementsByClassName('is-error')[0];
             iserror.scrollIntoView()
         }
     });

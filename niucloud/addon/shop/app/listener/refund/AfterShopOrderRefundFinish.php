@@ -13,6 +13,7 @@ use addon\shop\app\service\core\marketing\CoreManjianService;
 use addon\shop\app\service\core\order\CoreOrderCloseService;
 use addon\shop\app\service\core\order\CoreOrderDeliveryService;
 use addon\shop\app\service\core\refund\CoreRefundLogService;
+use addon\shop\app\service\core\third_addon\order\CoreOrderNoticeService;
 
 /**
  * 退款完成后操作
@@ -34,7 +35,7 @@ class AfterShopOrderRefundFinish
             if ($order[ 'status' ] == OrderDict::WAIT_DELIVERY) {
                 //校验一下订单项是否全部发货
                 ( new CoreOrderDeliveryService() )->checkFinish(
-                    [ 'order_id' => $refund_data[ 'order_id' ] ]
+                    [ 'order_id' => $refund_data[ 'order_id' ]]
                 );
             }
             //校验一下是否全部退款
@@ -60,5 +61,10 @@ class AfterShopOrderRefundFinish
             'content' => ''
         ]);
         //消息发送
+
+        //通知三方应用更新订单状态
+        if(!empty($order['relate_source'])){
+            (new CoreOrderNoticeService())->sendRefundFinishNotice($refund_data,$order['relate_source'],$order['relate_order_id']);
+        }
     }
 }

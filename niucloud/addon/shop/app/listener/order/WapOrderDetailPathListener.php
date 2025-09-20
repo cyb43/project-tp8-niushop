@@ -27,6 +27,7 @@ class WapOrderDetailPathListener
         $trade_type = $params[ 'trade_type' ] ?? '';
         if (in_array($trade_type, [ OrderDict::TYPE ])) {
             $order_info = ( new CoreOrderService() )->getInfo($params[ 'trade_id' ]);
+            if (empty($order_info)) return 'addon/shop/pages/order/list';
             return 'addon/shop/pages/order/detail?order_id=' . $order_info[ 'order_id' ];
         }
     }

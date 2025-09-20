@@ -139,6 +139,13 @@
                         <div class="mt-[10px] ml-[120px] text-[12px] text-[#999] leading-[20px]">{{ t('stockNumTips') }}
                         </div>
                     </div>
+                    <!-- 会员折扣 -->
+                    <el-form-item v-if="activeMenu === 'member_discount'" label="是否参与">
+                        <el-radio-group v-model="formData.member_discount">
+                            <el-radio label="">{{ t('不参与') }}</el-radio>
+                            <el-radio label="discount">{{ t('参与') }}</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
                     <!-- 万能表单 -->
                     <el-form-item v-if="activeMenu === 'diy_form'" :label="t('diyForm')">
                         <el-select v-model="formData.form_id" :placeholder="t('diyFormPlaceholder')" clearable>
@@ -147,6 +154,16 @@
                         <div class="ml-[10px]">
                             <span class="cursor-pointer text-primary mr-[10px]" @click="refreshDiyForm(true)">{{ t('refresh') }}</span>
                             <span class="cursor-pointer text-primary" @click="toDiyFormEvent">{{ t('addDiyForm') }}</span>
+                        </div>
+                    </el-form-item>
+                    <!-- 商品详情模板 -->
+                    <el-form-item v-if="activeMenu === 'diy_detail'" label="商品详情模板">
+                        <el-select v-model="formData.diy_detail_id" placeholder="请选择商品详情模板" clearable>
+                            <el-option v-for="item in detailTemplateOptions" :key="item.id" :label="item.page_title" :value="item.id" />
+                        </el-select>
+                        <div class="ml-[10px]">
+                            <span class="cursor-pointer text-primary mr-[10px]" @click="refreshDetailTemplate(true)">{{ t('refresh') }}</span>
+                            <span class="cursor-pointer text-primary" @click="toDetailTemplateEvent">添加模板</span>
                         </div>
                     </el-form-item>
                 </el-col>
@@ -174,11 +191,12 @@ import {
     getServeList,
     getCategoryTree,
     getGoodsBatchSetDict,
-    goodsBatchSet
+    goodsBatchSet,
+    getGoodsInfoTemplate
 } from '@/addon/shop/api/goods'
 import { getPosterList } from '@/app/api/poster'
 import { getDiyFormList } from '@/app/api/diy_form'
-import {getShopDeliveryList,getShippingTemplateList} from '@/addon/shop/api/delivery'
+import { getShopDeliveryList, getShippingTemplateList } from '@/addon/shop/api/delivery'
 
 const emit = defineEmits(['load'])
 const showDialog = ref(false)
@@ -194,6 +212,7 @@ const initialFormData = {
     service_ids: [],
     poster_id: '',
     form_id: '',
+    diy_detail_id: '',
     brand_id: '',
     goods_category: [],
     virtual_sale_num: 0,
@@ -202,6 +221,7 @@ const initialFormData = {
     fee_type: 'template',
     delivery_type: [],
     stock_type: 'inc',
+    member_discount: '',
     is_free_shipping: 1,
     is_gift: 0,
     stock: ''
@@ -287,7 +307,7 @@ const formRules = reactive({
     ]
 })
 
-const goods_ids = ref([]);
+const goods_ids = ref([])
 const is_all = ref(null)
 const where = ref({})
 const show = (info: any) => {
@@ -299,7 +319,7 @@ const show = (info: any) => {
 
 const confirm = async (formEl: FormInstance | undefined) => {
     if (loading.value || !formEl) return
-    await formEl.validate(async(valid) => {
+    await formEl.validate(async (valid) => {
         if (valid) {
             loading.value = true
             const goodsCategory: any = []
@@ -318,7 +338,7 @@ const confirm = async (formEl: FormInstance | undefined) => {
             })
 
             formData.goods_category = goodsCategory
-            let data = {
+            const data = {
                 is_all: is_all.value,
                 where: where.value,
                 goods_ids: goods_ids.value,
@@ -327,14 +347,15 @@ const confirm = async (formEl: FormInstance | undefined) => {
             }
             goodsBatchSet(data).then((res) => {
                 if (['stock'].indexOf(activeMenu.value) != -1) {
-                    activeMenu.value = 'label';
+                    activeMenu.value = 'label'
                     showDialog.value = false
-                    goods_ids.value.splice(0, goods_ids.value.length);
+                    goods_ids.value.splice(0, goods_ids.value.length)
                     Object.assign(formData, {
                         label_ids: [],
                         service_ids: [],
                         poster_id: '',
                         form_id: '',
+                        diy_detail_id: '',
                         brand_id: '',
                         goods_category: [],
                         virtual_sale_num: '',
@@ -343,10 +364,11 @@ const confirm = async (formEl: FormInstance | undefined) => {
                         fee_type: 'template',
                         delivery_type: [],
                         is_free_shipping: 1,
-                        is_gift: 0,
-                    });
-                    emit('load')
+                        is_gift: 0
+                    })
+                   
                 }
+                emit('load')
                 loading.value = false
             }).catch(err => {
                 loading.value = false
@@ -362,7 +384,7 @@ const handleMenuSelect = (index: string) => {
 const setTypeList = reactive([])
 const getGoodsTypeList = () => {
     getGoodsBatchSetDict().then((res) => {
-        Object.assign(setTypeList, res.data);
+        Object.assign(setTypeList, res.data)
     })
 }
 getGoodsTypeList()
@@ -619,6 +641,38 @@ const refreshDiyForm = (bool = false) => {
 
 refreshDiyForm()
 /** *****************万能表单-end *************************/
+
+/** ***************** 商品详情模板-start *************************/
+// 商品详情模板列表下拉框
+const detailTemplateOptions = reactive([])
+// 跳转到微页面，添加详情模板
+const toDetailTemplateEvent = () => {
+    const url = router.resolve({
+        path: '/diy/list'
+    })
+    window.open(url.href)
+}
+
+// 刷新微页面
+const refreshDetailTemplate = (bool = false) => {
+    getGoodsInfoTemplate({
+        type: 'DIY_SHOP_GOODS_DETAIL'
+    }).then((res) => {
+        const data = res.data
+        if (data) {
+            detailTemplateOptions.splice(0, detailTemplateOptions.length, ...data)
+            if (bool) {
+                ElMessage({
+                    message: t('refreshSuccess'),
+                    type: 'success'
+                })
+            }
+        }
+    })
+}
+
+refreshDetailTemplate()
+/** *****************商品详情模板-end *************************/
 
 defineExpose({
     showDialog,

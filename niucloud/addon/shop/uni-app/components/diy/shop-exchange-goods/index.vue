@@ -11,6 +11,7 @@
                             <image class="overflow-hidden" :style="{'width': style2Width,'height': style2Width, 'border-radius': imageRounded.val}" :src="img('static/resource/images/diy/shop_default.jpg')" mode="aspectFill" />
                         </template>
                     </u--image>
+<!--                    <easy-image :image-src="item.goods_cover_thumb_small" :imageStyle="imageStyle" />-->
                     <view class="flex-1 pt-[10rpx] pb-[20rpx] px-[16rpx] flex flex-col justify-between">
 						<view class="text-[28rpx] leading-[40rpx] text-[#303133] multi-hidden mb-[10rpx]" :style="{ color : diyComponent.goodsNameStyle.color, fontWeight : diyComponent.goodsNameStyle.fontWeight }">
 						    <view class="brand-tag" v-if="item.goods_brand" :style="diyGoods.baseTagStyle(item.goods_brand)">{{ item.goods_brand.brand_name }}</view>
@@ -82,7 +83,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -102,7 +103,7 @@ const warpCss = computed(() => {
 })
 
 const imageRounded = computed(() => {
-    var obj = {
+    const obj = {
         val: '',
         style: ''
     };
@@ -115,7 +116,7 @@ const imageRounded = computed(() => {
 
 // 背景图加遮罩层
 const maskLayer = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentBgUrl) {
         style += 'position:absolute;top:0;width:100%;';
         style += `background: rgba(0,0,0,${ diyComponent.value.componentBgAlpha / 10 });`;
@@ -131,7 +132,7 @@ const maskLayer = computed(() => {
 });
 
 const itemCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.topElementRounded) style += 'border-top-left-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     if (diyComponent.value.topElementRounded) style += 'border-top-right-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
     if (diyComponent.value.bottomElementRounded) style += 'border-bottom-left-radius:' + diyComponent.value.bottomElementRounded * 2 + 'rpx;';
@@ -140,9 +141,16 @@ const itemCss = computed(() => {
 })
 
 const style2Width = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.margin && diyComponent.value.margin.both) style += 'calc((100vw - ' + (diyComponent.value.margin.both * 4) + 'rpx - 20rpx) / 2)'
     else style += 'calc((100vw - 20rpx) / 2 )'
+    return style;
+})
+
+const imageStyle = computed(() => {
+    let style = 'border-radius:' + imageRounded.value.val + ';';
+    style += 'width:'+ style2Width.value + ';';
+    style += 'height:'+ style2Width.value + ';';
     return style;
 })
 
@@ -175,7 +183,6 @@ const initSkeleton = () => {
     if (diyComponent.value.style == 'style-1') {
 
         // 单列 风格
-        skeleton.type = 'list'
         skeleton.type = 'list'
         skeleton.config = {
             textRows: 2

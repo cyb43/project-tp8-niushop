@@ -91,7 +91,8 @@ class VirtualGoods extends BaseAdminController
 
             [ 'member_discount', '' ], // 会员等级折扣，不参与：空，会员折扣：discount，指定会员价：fixed_price
             [ 'poster_id', 0 ], // 海报id
-            [ 'form_id', 0 ] // 万能表单id
+            ['form_id', 0], // 万能表单id
+            ['diy_detail_id', 0] // 自定义详情id
         ]);
 
         $this->validate($data, 'addon\shop\app\validate\goods\Goods.add');
@@ -156,7 +157,8 @@ class VirtualGoods extends BaseAdminController
 
             [ 'member_discount', '' ], // 会员等级折扣，不参与：空，会员折扣：discount，指定会员价：fixed_price
             [ 'poster_id', 0 ], // 海报id
-            [ 'form_id', 0 ] // 万能表单id
+            ['form_id', 0], // 万能表单id
+            ['diy_detail_id', 0] // 自定义详情id
         ]);
         $this->validate($data, 'addon\shop\app\validate\goods\Goods.edit');
         $res = ( new VirtualGoodsService() )->edit($id, $data);

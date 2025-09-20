@@ -81,14 +81,14 @@
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getElectronicSheetPageList, deleteElectronicSheet, setDefaultElectronicSheet } from '@/addon/shop/api/electronic_sheet'
-import { ElMessageBox,FormInstance } from 'element-plus'
-import { useRoute,useRouter } from 'vue-router'
+import { ElMessageBox, FormInstance } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
 import { getCompanyList } from '@/addon/shop/api/delivery'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()
-const pageName = route.meta.title;
+const pageName = route.meta.title
 
 const tableData = reactive({
     page: 1,
@@ -97,8 +97,8 @@ const tableData = reactive({
     loading: true,
     data: [],
     searchParam: {
-        template_name: "",
-        express_company_id: "",
+        template_name: '',
+        express_company_id: ''
     }
 })
 
@@ -118,7 +118,7 @@ const loadList = (page: number = 1) => {
     getElectronicSheetPageList({
         page: tableData.page,
         limit: tableData.limit,
-         ...tableData.searchParam
+        ...tableData.searchParam
     }).then(res => {
         tableData.loading = false
         tableData.data = res.data.data
@@ -135,8 +135,8 @@ const companyList = ref([])
 
 getCompanyList({
     electronic_sheet_switch: 1
-}).then((res:any)=> {
-    companyList.value = res.data;
+}).then((res:any) => {
+    companyList.value = res.data
 })
 
 /**
@@ -162,7 +162,7 @@ const deleteEvent = (id: number) => {
         {
             confirmButtonText: t('confirm'),
             cancelButtonText: t('cancel'),
-            type: 'warning',
+            type: 'warning'
         }
     ).then(() => {
         deleteElectronicSheet(id).then(() => {
@@ -178,10 +178,10 @@ const setDefaultEvent = (id: number) => {
         {
             confirmButtonText: t('confirm'),
             cancelButtonText: t('cancel'),
-            type: 'warning',
+            type: 'warning'
         }
     ).then(() => {
-        setDefaultElectronicSheet({id}).then(() => {
+        setDefaultElectronicSheet({ id }).then(() => {
             loadList()
         })
     })

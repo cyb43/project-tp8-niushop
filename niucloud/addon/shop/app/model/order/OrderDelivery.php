@@ -43,6 +43,11 @@ class OrderDelivery extends BaseModel
         return $this->hasOne(Company::class, 'company_id', 'express_company_id');
     }
 
+    public function getExpressCompanyNameAttr($value, $data)
+    {
+        return (new Company())->find($data['express_company_id'])->company_name ?? '';
+    }
+
     public function orderGoods()
     {
         return $this->hasMany(OrderGoods::class, 'delivery_id', 'id');

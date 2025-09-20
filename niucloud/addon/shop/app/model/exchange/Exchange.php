@@ -297,4 +297,16 @@ class Exchange extends BaseModel
 
     }
 
+    /**
+     * 搜索器:id
+     * @param $value
+     * @param $data
+     */
+    public function searchActiveIdAttr($query, $value, $data)
+    {
+        if (!empty($value)) {
+            $query->where("id", 'in', $value);
+        }
+    }
+
 }

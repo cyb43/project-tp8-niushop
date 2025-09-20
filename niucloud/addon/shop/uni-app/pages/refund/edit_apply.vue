@@ -168,7 +168,7 @@ onLoad((option: any) => {
             formData.value.remark = data.remark;
             formData.value.reason = data.reason;
             currReasonName.value = data.reason;
-            formData.value.voucher = data.voucher;
+            formData.value.voucher = data.voucher || [];
         })
         getRefundMoneyAgain({ order_refund_no: option.order_refund_no }).then(res => {
             refundMoney.value = res.data

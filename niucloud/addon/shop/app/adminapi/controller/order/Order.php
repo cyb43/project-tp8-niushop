@@ -87,7 +87,8 @@ class Order extends BaseAdminController
      */
     public function orderClose($id)
     {
-        return success((new OrderCloseService())->close($id));
+        (new OrderCloseService())->close($id);
+        return success('SUCCESS');
     }
 
     /**
@@ -112,7 +113,7 @@ class Order extends BaseAdminController
     {
         $data = $this->request->params([
             ['order_id', 0],
-            ['delivery_id', 0],//修改
+            ['delivery_ids', []],//修改
             ['order_goods_ids', []],
             ['delivery_type', ''],
             ['delivery_way', ''], // 发货方式，manual_write：手动填写，electronic_sheet：电子面单

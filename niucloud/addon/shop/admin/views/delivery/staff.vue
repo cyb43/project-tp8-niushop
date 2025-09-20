@@ -57,7 +57,7 @@ import { getShopDelivery, deleteShopDeliver } from '@/addon/shop/api/delivery'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { ArrowLeft } from '@element-plus/icons-vue'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()

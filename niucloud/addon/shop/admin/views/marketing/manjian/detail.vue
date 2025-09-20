@@ -1,5 +1,5 @@
 <template>
-    <el-drawer v-model="showDialog" :title="t('detailTitle')" direction="rtl" :before-close="handleClose" class="member-detail-drawer">
+    <el-drawer v-model="showDialog" :title="t('detailTitle')" direction="rtl" :before-close="handleClose" size="1300px">
         <div class="main-container" v-loading="loading">
             <el-tabs v-model="activeName" class="pb-[10px]" @tab-change="handleClick">
                 <el-tab-pane :label="t('basicInfo')" name="basicInfo" />
@@ -9,7 +9,7 @@
                 <el-card class="mb-[15px]" >
                     <h3 class="panel-title">{{ t('basicInfo') }}</h3>
                     <el-form class="mt-[15px]" :model="formData" label-width="120px" ref="formRef" label-position="left" v-if="Object.keys(formData).length">
-                    <div class="relative" shadow="never" v-if="formData">
+                    <div class="relative" v-if="formData">
                         <el-row>
                             <el-col :span="8">
                                 <el-form-item :label="t('name')">
@@ -201,7 +201,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import {getManjianInfo, getManjianMemberPageList} from "@/addon/shop/api/marketing";
+import { getManjianInfo, getManjianMemberPageList } from '@/addon/shop/api/marketing'
 import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
 
@@ -217,22 +217,22 @@ const handleClick = (data:string) => {
 }
 
 const handleClose = (done: () => void) => {
-    activeName.value = 'basicInfo';
-    showDialog.value = false;
+    activeName.value = 'basicInfo'
+    showDialog.value = false
 }
 
-const getManjianInfoFn = (id:number)=>{
+const getManjianInfoFn = (id:number) => {
     loading.value = true
     const data = {
         manjian_id: id
     }
-    getManjianInfo(data).then((res:any)=>{
-        formData.value = Object.assign(formData.value,res.data.manjian_info)
+    getManjianInfo(data).then((res:any) => {
+        formData.value = Object.assign(formData.value, res.data.manjian_info)
         loading.value = false
     })
 }
 
-//活动会员
+// 活动会员
 const memberParams = reactive({
     page: 1,
     limit: 10,
@@ -243,14 +243,14 @@ const memberParams = reactive({
         id
     }
 })
-const getManjianMemberPageListFn= (page: number = 1)=>{
+const getManjianMemberPageListFn = (page: number = 1) => {
     memberParams.loading = true
     memberParams.page = page
     getManjianMemberPageList({
         page: memberParams.page,
         limit: memberParams.limit,
         ...memberParams.searchParam
-    }).then((res:any)=>{
+    }).then((res:any) => {
         memberParams.loading = false
         memberParams.data = res.data.data
         memberParams.total = res.data.total
@@ -259,15 +259,15 @@ const getManjianMemberPageListFn= (page: number = 1)=>{
     })
 }
 
-//查看会员详情
-const detailEvent = (member_id:number)=> {
-    let routeData = router.resolve(`/member/detail?id=${member_id}`)
-    window.open(routeData.href, ' blank');
+// 查看会员详情
+const detailEvent = (member_id:number) => {
+    const routeData = router.resolve(`/member/detail?id=${member_id}`)
+    window.open(routeData.href, ' blank')
 }
 
 const setFormData = async (row: any = null) => {
-    id = row.id;
-    memberParams.searchParam.id = row.id;
+    id = row.id
+    memberParams.searchParam.id = row.id
 
     getManjianMemberPageListFn()
     getManjianInfoFn(Number(id))
@@ -278,11 +278,7 @@ defineExpose({
     setFormData
 })
 </script>
-<style lang="scss">
-.member-detail-drawer{
-    width: 1300px !important;
-}
-
+<style lang="scss" scoped>
 .goods-name {
   max-width: 150px;
   white-space: nowrap;

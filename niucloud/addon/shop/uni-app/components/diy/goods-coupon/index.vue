@@ -150,7 +150,7 @@
 
 <script setup lang="ts">
 // 优惠券组件
-import { ref, reactive, computed, onMounted } from 'vue';
+import { ref, reactive, computed, onMounted ,watch} from 'vue';
 import { img, redirect } from '@/utils/common';
 import useDiyStore from '@/app/stores/diy';
 import { useLogin } from '@/hooks/useLogin';
@@ -180,7 +180,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.topRounded) style += 'border-top-left-radius:' + diyComponent.value.topRounded * 2 + 'rpx;';
     if (diyComponent.value.topRounded) style += 'border-top-right-radius:' + diyComponent.value.topRounded * 2 + 'rpx;';
     if (diyComponent.value.bottomRounded) style += 'border-bottom-left-radius:' + diyComponent.value.bottomRounded * 2 + 'rpx;';
@@ -189,7 +189,7 @@ const warpCss = computed(() => {
 })
 
 const couponStyle4Css = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
     else style += 'background-color:' + (diyComponent.value.componentStartBgColor || diyComponent.value.componentEndBgColor) + ';';
     return style;
@@ -226,9 +226,17 @@ onMounted(() => {
     refresh();
 });
 
+watch(
+   [() => diyComponent.value?.num, () => diyComponent.value?.source],
+    (newVal, oldVal) => {
+        if (newVal !== oldVal) {
+            refresh();
+        }
+    }
+);
 const refresh = () => {
-
     // 装修模式下设置默认图
+	couponList.value=[]
     if (diyStore.mode == 'decorate') {
         let obj = {
             title: '满减券',
@@ -236,7 +244,8 @@ const refresh = () => {
             price: 100,
             min_condition_money: 0,
         };
-        for (let i = 0; i < 4; i++) {
+		let couponNum = diyComponent.value?.source =='all' ?diyComponent.value.num :4
+        for (let i = 0; i < couponNum; i++) {
             couponList.value.push(obj);
         }
     } else {

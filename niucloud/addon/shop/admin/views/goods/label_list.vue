@@ -99,7 +99,7 @@ import { getLabelPageList, deleteLabel, modifyLabelSort, getLabelGroupList, modi
 import { ElMessageBox, FormInstance, ElMessage } from 'element-plus'
 import LabelEdit from '@/addon/shop/views/goods/components/label-edit.vue'
 import { useRoute, useRouter } from 'vue-router'
-import { debounce, img, setTablePageStorage,getTablePageStorage} from '@/utils/common'
+import { debounce, img, setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()
@@ -123,7 +123,7 @@ const labelTable = reactive({
     }
 })
 
-const groupList: any = reactive([]);
+const groupList: any = reactive([])
 
 const searchFormRef = ref<FormInstance>()
 
@@ -158,14 +158,13 @@ const loadLabelList = (page: number = 1) => {
         labelTable.data = res.data.data
         labelTable.total = res.data.total
         setTablePageStorage(labelTable.page, labelTable.limit, labelTable.searchParam)
-
     }).catch(() => {
         labelTable.loading = false
     })
 }
 
-const initData = ()=>{
-    getLabelGroupList({}).then((res:any)=>{
+const initData = () => {
+    getLabelGroupList({}).then((res:any) => {
         const data = res.data
         if (data) {
             groupList.push(...data)
@@ -174,7 +173,7 @@ const initData = ()=>{
     loadLabelList(getTablePageStorage(labelTable.searchParam).page)
 }
 
-initData();
+initData()
 
 const editLabelDialog: Record<string, any> | null = ref(null)
 
@@ -218,7 +217,7 @@ const sortInputListener = debounce((sort, row) => {
     if (isNaN(sort) || !/^\d{0,8}$/.test(sort)) {
         ElMessage({
             type: 'warning',
-            message: `${ t('sortTips') }`
+            message: `${t('sortTips')}`
         })
         return
     }
@@ -231,7 +230,6 @@ const sortInputListener = debounce((sort, row) => {
     }).then((res) => {
     })
 })
-
 
 const isRepeat = ref(false)
 

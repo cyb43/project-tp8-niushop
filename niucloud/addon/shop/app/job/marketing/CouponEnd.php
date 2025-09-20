@@ -27,7 +27,7 @@ class CouponEnd extends BaseJob
      */
     public function doJob()
     {
-        Log::write('优惠券限时自动结束');
+        //Log::write('优惠券限时自动结束');
         try {
             $ids = (new Coupon())->where([
                 ['status', '=', CouponDict::NORMAL],

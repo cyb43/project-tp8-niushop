@@ -175,7 +175,7 @@ class CouponService extends BaseAdminService
             $goods_coupon_ids = $goods_coupon_model->where([['coupon_id', '=', $id]])->column('goods_id');
             //获取选中商品信息
             $goods_list = (new Goods())->field('goods_id,goods_cover,goods_name,status')
-                ->where([['goods.goods_id', 'in', $goods_coupon_ids], ['goods.status', '=', 1], ['goodsSku.is_default', '=', 1]])
+                ->where([ ['goods.goods_id', 'in', $goods_coupon_ids], ['goods.status', '=', 1], ['goodsSku.is_default', '=', 1]])
                 ->withJoin(['goodsSku' => function ($query) {
                     $query->field('sku_id,sku_name,sku_image,goodsSku.stock,goodsSku.price');
                 }])
@@ -449,7 +449,7 @@ class CouponService extends BaseAdminService
             $err_str .= " \n" . get_lang('SHOP_COUPON_IN_USE_NOT_ALLOW_DEL');
             throw new AdminException($err_str);
         }
-        return $this->model->where([['id', 'in', implode(',', $ids)]])->delete();
+        return $this->model->where([ ['id', 'in', implode(',', $ids)]])->delete();
     }
 
     /**
@@ -498,27 +498,12 @@ class CouponService extends BaseAdminService
      */
     public function couponInvalid($ids)
     {
-        $use_coupon_ids = $this->checkCouponInUse();
-        $coupon_list = $this->model->where([
-            ['id', 'in', implode(',', $ids)]
-        ])->field('id,status,title')->select()->toArray();
-        $coupon_names = array_column($coupon_list, 'title', 'id');
-        $diffIds = array_unique(array_intersect($use_coupon_ids, $ids));
-        if (count($diffIds) > 0) {
-            $err_str = '';
-            foreach ($diffIds as $coupon_id) {
-                $err_str .= $coupon_names[$coupon_id] . '、';
-            }
-            $err_str = rtrim($err_str, '、');
-            $err_str .= " \n" . get_lang('SHOP_COUPON_IN_USE_NOT_ALLOW_EDIT');
-            throw new AdminException($err_str);
-        }
         $data = array(
             'status' => CouponDict::INVALID
         );
         $res = $this->model->where([['id', 'in', implode(',', $ids)]])->update($data);
         $coupon_member_model = new CouponMember();
-        if ($res) $coupon_member_model->where([['coupon_id', 'in', implode(',', $ids)], ['status', '=', CouponMemberDict::WAIT_USE]])->update(['status' => CouponMemberDict::INVALID]);
+        if ($res) $coupon_member_model->where([ ['coupon_id', 'in', implode(',', $ids)], ['status', '=', CouponMemberDict::WAIT_USE]])->update(['status' => CouponMemberDict::INVALID]);
         return true;
     }
 
@@ -530,7 +515,7 @@ class CouponService extends BaseAdminService
     public function checkCouponInUse()
     {
         $coupon_ids = [];
-        $sign_config = (new CoreConfigService())->getConfig('SIGN_CONFIG');
+        $sign_config = (new CoreConfigService())->getConfig( 'SIGN_CONFIG');
         if (!empty($sign_config) && !empty($sign_config['value'])) {
             $sign_info = $sign_config['value'];
             if (!empty($sign_info['day_award']) && !empty($sign_info['day_award']['shop_coupon'])) {
@@ -593,7 +578,6 @@ class CouponService extends BaseAdminService
             'create_time' => time(),
         ];
         $record_id = (new CouponSendRecord())->insertGetId($data);
-//        (new CouponSend())->doJob($record_id);
         CouponSend::dispatch(['record_id' => $record_id]);
         return true;
     }
@@ -610,7 +594,6 @@ class CouponService extends BaseAdminService
         switch ($range_type) {
             case CouponDict::SEND_RANGE_ALL:
                 $member_num = (new Member())->where([
-                    ['member_id', '>', 0]
                 ])->count();
                 break;
             case CouponDict::SEND_RANGE_MEMBER:
@@ -619,10 +602,10 @@ class CouponService extends BaseAdminService
             case CouponDict::SEND_RANGE_MEMBER_LEVEL:
                 $member_level = $range_param['member_level'];
                 $member_num = (new Member())->where([
-                    ['member_level', 'in', implode(',', $member_level)],
+                    ['member_level', 'in', implode(',', $member_level)]
                 ])->count();
                 $level_names = (new MemberLevel())->where([
-                    ['level_id', 'in', implode(',', $member_level)],
+                    ['level_id', 'in', implode(',', $member_level)]
                 ])->column('level_name');
                 $range_param['level_name'] = implode('、', $level_names);
                 break;
@@ -632,7 +615,7 @@ class CouponService extends BaseAdminService
                     ['member_id', '>', 0]
                 ])->withSearch(['member_label'], ['member_label' => $member_label])->count();
                 $label_names = (new MemberLabel())->where([
-                    ['label_id', 'in', implode(',', $member_label)],
+                    ['label_id', 'in', implode(',', $member_label)]
                 ])->column('label_name') ?? [];
                 $range_param['label_name'] = implode('、', $label_names);;
                 break;
