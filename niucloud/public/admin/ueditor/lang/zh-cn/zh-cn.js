@@ -157,7 +157,7 @@ UE.I18N['zh-cn'] = {
     'elementPathTip': "元素路径",
     'wordCountTip': "字数统计",
     'wordCountMsg': '{#count} / {#leave}',
-    'wordOverFlowMsg': '<span style="color:red;">字数超出最大允许值，服务器可能拒绝保存！</span>',
+    'wordOverFlowMsg': '<span style="color:red;">字数超出最大允许值！</span>',
     'ok': "确认",
     'cancel': "取消",
     'closeDialog': "关闭对话框",
