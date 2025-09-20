@@ -23,7 +23,7 @@
                     <!-- #endif -->
                 </view>
                 <view class="share-footer" @click="sharePopupClose">
-                    <text>取消分享</text>
+                    <text class="text-[#333]">取消分享</text>
                 </view>
             </view>
         </u-popup>
@@ -45,6 +45,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { img, copy } from '@/utils/common';
+import useSystemStore from "@/stores/system";
 
 const props = defineProps({
     copyUrl: { // 例 "/wap/addon/shop_fenxiao/pages/goods"
@@ -93,12 +94,10 @@ const closeDialog = () => {
 
 const shareTop: any = ref(0)
 /************ 获取微信头部-start ****************/
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
+const systemStore = useSystemStore()
 // 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
 // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-shareTop.value = menuButtonInfo.top + menuButtonInfo.height + 'px';
+shareTop.value = systemStore.menuButtonInfo.top + systemStore.menuButtonInfo.height + 'px';
 // #endif
 /************ 获取微信头部-end ****************/
 

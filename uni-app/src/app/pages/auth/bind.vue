@@ -7,16 +7,16 @@
         <!-- #endif -->
         <view class="mx-[60rpx]">
             <view class="pt-[140rpx] text-[50rpx] text-[#333]">{{ t('bindMobile') }}</view>
-            <view class="text-[26rpx] leading-[39rpx] text-[var(--text-color-light6)] mt-[16rpx] mb-[80rpx]">{{ t('bindMobileTip') }}</view>
+            <view class="text-[26rpx] leading-[39rpx] text-[var(--text-color-light6)] mt-[24rpx] mb-[90rpx]">{{ t('bindMobileTip') }}</view>
             <u-form labelPosition="left" :model="formData" errorType='toast' :rules="rules" ref="formRef">
                 <view
-                    class="h-[90rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6]">
+                    class="h-[90rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6]">
                     <u-form-item label="" prop="mobile" :border-bottom="false">
                         <u-input v-model="formData.mobile" type="number" maxlength="11" border="none" :placeholder="t('mobilePlaceholder')" class="!bg-transparent" :disabled="real_name_input" fontSize="26rpx" placeholderClass="!text-[var(--text-color-light9)] text-[26rpx]" />
                     </u-form-item>
                 </view>
                 <view
-                    class="h-[90rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx]">
+                    class="h-[90rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                     <u-form-item label="" prop="mobile_code" :border-bottom="false">
                         <u-input v-model="formData.mobile_code" type="number" maxlength="4" border="none" :placeholder="t('codePlaceholder')" class="!bg-transparent" :disabled="real_name_input" fontSize="26rpx" placeholderClass="!text-[var(--text-color-light9)]">
                             <template #suffix>
@@ -28,7 +28,7 @@
             </u-form>
             <view class="mt-[100rpx]">
                 <view v-if="config.agreement_show" class="flex items-center mb-[20rpx] py-[10rpx]" @click.stop="agreeChange">
-                    <u-checkbox-group @change="agreeChange">
+                    <u-checkbox-group @change="agreeChange"> 
                         <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="circle" size="24rpx" :customStyle="{ 'marginTop': '4rpx' }" />
                     </u-checkbox-group>
                     <view class="text-[24rpx] text-[var(--text-color-light6)] flex items-center flex-wrap">
@@ -55,18 +55,15 @@ import { useLogin } from '@/hooks/useLogin'
 import { redirect, pxToRpx } from '@/utils/common'
 import { onLoad } from '@dcloudio/uni-app'
 import { topTabar } from '@/utils/topTabbar'
+import useSystemStore from "@/stores/system";
 
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '', topStatusBar: { bgColor: '#fff', textColor: '#333' } })
 /********* 自定义头部 - end ***********/
 const headerHeight = computed(() => {
-    return Object.keys(menuButtonInfo).length ? pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
+    return Object.keys(systemStore.menuButtonInfo).length ? pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
 })
 
 const memberStore = useMemberStore()
@@ -82,27 +79,24 @@ const isAgree = ref(false)
 const formData: any = reactive({
     mobile: '',
     mobile_code: '',
-    mobile_key: ''
+    mobile_key: '',
+    register_type: ''
 })
 
 const real_name_input = ref(true);
 
-const wxPrivacyPopupRef: any = ref(null)
-
-onLoad(() => {
+onLoad((data) => {
     // 防止浏览器自动填充
     setTimeout(() => {
         real_name_input.value = false;
     }, 800)
-    // #ifdef MP
-    nextTick(() => {
-        if (wxPrivacyPopupRef.value) wxPrivacyPopupRef.value.proactive();
-    })
-    // #endif
 
+    data.register_type && (Object.assign(formData, { register_type: data.register_type }))
     uni.getStorageSync('openid') && (Object.assign(formData, { openid: uni.getStorageSync('openid') }))
     uni.getStorageSync('pid') && (Object.assign(formData, { pid: uni.getStorageSync('pid') }))
     uni.getStorageSync('unionid') && (Object.assign(formData, { unionid: uni.getStorageSync('unionid') }))
+    uni.getStorageSync('nickname') && (Object.assign(formData, { nickname: uni.getStorageSync('nickname') }))
+    uni.getStorageSync('avatar') && (Object.assign(formData, { avatar: uni.getStorageSync('avatar') }))
 });
 
 const rules = {

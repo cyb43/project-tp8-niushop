@@ -42,15 +42,18 @@ export function useLocation(isOpenLocation: any) {
             }
             // #endif
 
-            // #ifdef MP
+            // #ifndef H5
             if (systemStore.mapConfig.is_open && !uni.getStorageSync('location_address')) {
                 uni.getLocation({
+                    // #ifndef APP-PLUS
                     type: 'gcj02',
+                    // #endif
                     success: res => {
                         let latlng = res.latitude + ',' + res.longitude; // 纬度（浮点数，范围为90 ~ -90），经度（浮点数，范围为180 ~ -180）
                         getAddressByLatlngFn(latlng);
                     },
                     fail: (res) => {
+                        uni.showToast({ title: res.errMsg, icon: 'none', duration: 15000 })
                         systemStore.defaultPositionAddress = '定位失败';
                         if (res.errno) {
                             if (res.errno == 104) {
@@ -145,7 +148,7 @@ export function useLocation(isOpenLocation: any) {
         let latitude = systemStore.diyAddressInfo ? systemStore.diyAddressInfo.latitude : '';
         let longitude = systemStore.diyAddressInfo ? systemStore.diyAddressInfo.longitude : '';
 
-        // #ifdef MP
+        // #ifndef H5
         uni.chooseLocation({
             latitude,
             longitude,
@@ -184,7 +187,7 @@ export function useLocation(isOpenLocation: any) {
     const locationStorage = () => {
         let data = uni.getStorageSync('location_address');
         if (data) {
-            var date = new Date();
+            const date = new Date();
             if (systemStore.mapConfig.valid_time > 0) {
                 data.is_expired = (date.getTime() / 1000) > data.valid_time; // 是否过期
             } else {

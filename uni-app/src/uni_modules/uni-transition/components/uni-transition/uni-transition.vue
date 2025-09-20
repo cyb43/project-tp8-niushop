@@ -132,9 +132,10 @@ export default {
 			})
 		},
 		/**
-		 * ref 触发 动画分组
-		 * @param {Object} obj
-		 */
+         * ref 触发 动画分组
+         * @param {Object} obj
+         * @param config
+         */
 		step(obj, config = {}) {
 			if (!this.animation) return
 			for (let i in obj) {

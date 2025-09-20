@@ -79,7 +79,7 @@ const diyComponent = computed(() => {
     }
 })
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
         else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -194,11 +194,6 @@ const clickAvatar = () => {
     }
     // #endif
 }
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
 </script>
 
 <style lang="scss" scoped>

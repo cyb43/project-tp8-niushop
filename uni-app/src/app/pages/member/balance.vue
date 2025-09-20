@@ -136,13 +136,6 @@ onShow(() => {
     }
 })
 
-
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
 const headerStyle = computed(() => {
     return {
         backgroundImage: 'url(' + img('static/resource/images/member/balance_bg.png') + ') ',
@@ -154,14 +147,14 @@ const headerStyle = computed(() => {
 
 const mescrollTop = computed(() => {
     if ((cashOutConfigObj.is_open == 1 || rechargeConfigObj.is_use == 1)) {
-        if (Object.keys(menuButtonInfo).length) {
-            return (pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 700) + 'rpx'
+        if (Object.keys(systemStore.menuButtonInfo).length) {
+            return (pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 700) + 'rpx'
         } else {
             return '718rpx'
         }
     } else {
-        if (Object.keys(menuButtonInfo).length) {
-            return (pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 632) + 'rpx'
+        if (Object.keys(systemStore.menuButtonInfo).length) {
+            return (pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 632) + 'rpx'
         } else {
             return '650rpx'
         }

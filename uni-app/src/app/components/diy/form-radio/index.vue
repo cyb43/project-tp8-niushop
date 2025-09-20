@@ -10,7 +10,7 @@
             <view class="detail-two-content">
                 <text class="detail-two-content-label">{{ diyComponent.field.name }}</text>
                 <view class="flex items-center justify-end">
-                    <view class="detail-two-content-value w-[80%]" v-for="(item,index) in diyComponent.field.value" :key="index">{{ item.text }}</view>
+                    <view class="detail-two-content-value" v-for="(item,index) in diyComponent.field.value" :key="index">{{ item.text }}</view>
                     <text v-if="!diyComponent.field.value || !diyComponent.field.value.length">{{ t('notHave') }}</text>
                     <text v-if="diyComponent.isShowArrow" class="iconfont iconfanhui1 text-[#888] !text-[20rpx] ml-[10rpx]"></text>
                 </view>
@@ -123,7 +123,7 @@
 
 <script setup lang="ts">
 // 表单 单选项组件
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { img } from '@/utils/common';
 import { t } from '@/locale'
 import useDiyStore from '@/app/stores/diy';
@@ -192,7 +192,7 @@ const eventFn = (type: any) => {
 }
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
     else if (diyComponent.value.componentStartBgColor) style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -222,20 +222,27 @@ onMounted(() => {
                 }
             }
         )
-    }
-
-    // 样式三，初始化下拉数据
-    if (diyComponent.value.style == 'style-3' && diyComponent.value.field.value.length > 0) {
-        pullDownVal.value = diyComponent.value.field.value[0].id;
-    }
-    if (diyComponent.value.field.value.length > 0) {
-        selectedRadioId.value = diyComponent.value.field.value[0].id;
+    }else{
+        watch(
+            () => diyComponent.value.field.value,
+            (newValue, oldValue) => {
+                refresh();
+            }
+        )
     }
 
 });
 
 const refresh = () => {
-    // console.log('diyComponent.value.field.value',diyComponent.value.field.value)
+    nextTick(() => {
+       // 样式三，初始化下拉数据
+        if (diyComponent.value.style == 'style-3' && diyComponent.value.field.value.length > 0) {
+            pullDownVal.value = diyComponent.value.field.value[0].id;
+        }
+        if (diyComponent.value.field.value.length > 0) {
+            selectedRadioId.value = diyComponent.value.field.value[0].id;
+        } 
+    })
 }
 
 const radioPlaceholder = computed(() => {
@@ -271,7 +278,7 @@ const pullDownCancelFn = () => {
 const pullDownConfirmFn = (item: any) => {
     selectShow.value = false;
     pullDownVal.value = item.id;
-    ;
+
     diyComponent.value.field.value = [{ id: item.id, text: item.text }];
     // diyComponent.value.field.value = pullDownVal.value;
 }
@@ -311,7 +318,7 @@ const selectRadio = (item) => {
         return;
     }
     selectedRadioId.value = item.id;
-    ;
+
     diyComponent.value.field.value = [{ id: item.id, text: item.text }];
 };
 

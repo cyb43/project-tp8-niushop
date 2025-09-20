@@ -16,9 +16,8 @@
                     </view>
                     <view v-else class="h-[90rpx] w-[300rpx]"></view>
                 </view>
-                <view class="text-[var(--text-color-light6)]] text-[28rpx] text-center leading-[34rpx] min-h-[34rpx] mt-[40rpx]">{{ loginConfig.desc }}</view>
+                <view class="text-[var(--text-color-light6)]] text-[28rpx] text-center leading-[34rpx] min-h-[34rpx] mt-[40rpx]">{{ loginConfig.desc }}</view> 
                 <view class="mt-[181rpx]">
-
                     <!-- #ifdef H5 -->
                     <!-- 微信公众号快捷登录，开启自动注册的情况下才能使用 -->
                     <view v-if="isWeixinBrowser() && loginConfig.is_auth_register" class="w-full flex items-center justify-center mb-[40rpx]">
@@ -77,9 +76,9 @@
                     <view v-if="loginConfig.agreement_show" class="w-full flex items-center justify-center mt-[28rpx]">
                         <view class="flex items-center justify-center mt-[28rpx] py-[14rpx] px-[50rpx]" @click.stop="agreeChange">
                             <u-checkbox-group @change="agreeChange">
-                                <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="circle" size="30rpx" />
+                                <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="circle" size="24rpx" />
                             </u-checkbox-group>
-                            <view class="text-[24rpx] text-[var(--text-color-light6)] flex items-center flex-wrap leading-[30rpx]">
+                            <view class="text-[24rpx] -ml-[4rpx] text-[var(--text-color-light6)] flex items-center flex-wrap leading-[30rpx]">
                                 <text>{{ t('agreeTips') }}</text>
                                 <text @click.stop="redirect({ url: '/app/pages/auth/agreement?key=privacy' })" class="text-primary">《{{ t('privacyAgreement') }}》</text>
                                 <text>{{ t('and') }}</text>
@@ -89,11 +88,10 @@
                     </view>
 
                     <view class="footer w-full" v-if="loginConfig.is_mobile && loginConfig.is_username">
-                        <view class="text-[26rpx] leading-[36rpx] text-[333] text-center mb-[30rpx] font-400">{{ t('otherLogin') }}</view>
+                        <view class="text-[26rpx] leading-[36rpx] text-[#666] text-center mb-[30rpx] font-400">其他登录方式</view>
                         <view class="flex justify-center">
-                            <view class="h-[80rpx] w-[80rpx] text-center leading-[78rpx] border-[2rpx] text-[#FF7100] rounded-[50%] border-solid border-[#ddd] nc-iconfont nc-icon-wodeV6mm3 text-[46rpx] overflow-hidden" @click="redirect({ url: '/app/pages/auth/login',param:{type:'username'}})"></view>
+                            <text @click="redirect({ url: '/app/pages/auth/login',param:{type:'username'}})" class="w-[66rpx] h-[66rpx] flex items-center justify-center iconfont iconmima6Vmm border-[2rpx] rounded-[50%] border-solid border-[#ddd] !text-[26rpx]"></text>
                         </view>
-                        <view class="text-[24rpx] leading-[36rpx] text-[var(--text-color-light9)] text-center font-400 mt-[30rpx]">{{ t('accountLogin') }}</view>
                     </view>
 
                 </view>
@@ -139,17 +137,13 @@ import { onLoad, onShow } from '@dcloudio/uni-app'
 import { topTabar } from '@/utils/topTabbar'
 import useSystemStore from '@/stores/system'
 
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '', topStatusBar: { textColor: '#333' } })
 /********* 自定义头部 - end ***********/
 const headerHeight = computed(() => {
-    return Object.keys(menuButtonInfo).length ? pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
+    return Object.keys(systemStore.menuButtonInfo).length ? pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
 })
 const wapMemberMobile = ref('');
 const isAgree = ref(false)
@@ -164,7 +158,6 @@ const memberStore = useMemberStore()
 const memberInfo: any = computed(() => {
     return useMemberStore().info;
 })
-const systemStore = useSystemStore()
 const openType: any = computed(() => {
     if (!isAgree.value && configStore.login.agreement_show) return '';
     return 'getPhoneNumber';
@@ -230,9 +223,9 @@ onLoad(async() => {
         }, 100)
         return;
     }
-	
-	wapMemberMobile.value = uni.getStorageSync('member_mobile_exist');
-	
+
+    wapMemberMobile.value = uni.getStorageSync('member_mobile_exist');
+
     nextTick(() => {
         if (wxPrivacyPopupRef.value) wxPrivacyPopupRef.value.proactive();
     })
@@ -245,7 +238,7 @@ onShow(() => {
 })
 
 const warpStyle = computed(() => {
-    var style = '';
+    let style = '';
     if (configStore.login.bg_url) {
         style += 'background-image:url(' + img(configStore.login.bg_url) + ');';
         style += 'background-size: 100%;';
@@ -274,11 +267,16 @@ const oneClickLogin = (callback: any = null, data: any = null) => {
     if (checkWxPrivacy()) return;
 
     if (loginLoading.value) return
+	uni.showLoading({
+	    title: '正在登录中',
+	    mask: true
+	});
     loginLoading.value = true
-
+	
     if (!callback) {
         callback = () => {
             loginLoading.value = false
+			uni.hideLoading();
         }
     }
 
@@ -308,16 +306,25 @@ const wechatLogin = () => {
         }
         if (loginConfig.wechat_error) {
             loginLoading.value = false
+			uni.hideLoading();
             uni.showToast({ title: loginConfig.wechat_error, icon: 'none' })
             return;
         }
+
 		wapMemberMobile.value = uni.getStorageSync('member_mobile_exist');
-        // wapMemberMobile.value = uni.getStorageSync('wap_member_mobile');
-        // if (!wapMemberMobile.value) {
-        //     wapMemberMobile.value = uni.getStorageSync('wap_member_not_control_mobile'); // 老用户不控制强制绑定手机号
-        // }
-		 let member_exist = uni.getStorageSync('member_exist')
+		let member_exist = uni.getStorageSync('member_exist')
+
         if (loginConfig.is_auth_register) {
+            if(!wapMemberMobile.value && loginConfig.is_bind_mobile && !member_exist && loginConfig.is_force_access_user_info){
+                // 先进行微信授权获取基础信息，然后绑定手机号
+                if(uni.getStorageSync('openid') && uni.getStorageSync('nickname') && uni.getStorageSync('avatar')){
+                    bindMobileFn();
+                    uni.removeStorageSync('mandatory_Mobile')
+                }else{
+                    uni.setStorageSync('mandatory_Mobile', true)
+                    login.getAuthCode({ scopes: 'snsapi_userinfo' })
+                }
+            }else
             // 开启强制绑定手机号，必须填写才能注册
             if (!wapMemberMobile.value && loginConfig.is_bind_mobile && !member_exist) {
                 bindMobileFn();
@@ -329,13 +336,14 @@ const wechatLogin = () => {
                 login.getAuthCode({ scopes: 'snsapi_base' }) // 静默获取
             }
         }else{
-            if (!wapMemberMobile.value && loginConfig.is_bind_mobile &&!member_exist) {
+            if (!wapMemberMobile.value && loginConfig.is_bind_mobile && !member_exist) {
                 bindMobileFn();
             }else {
                 login.getAuthCode({ scopes: 'snsapi_base' }) // 静默获取
             }
         }
         loginLoading.value = false
+		uni.hideLoading();
     }
 }
 
@@ -346,6 +354,7 @@ const weappLogin = (successCallback: any, data: any) => {
     if (loginConfig.is_auth_register && loginConfig.is_force_access_user_info && !member_exist) {
         infoFill.value.show = true
         loginLoading.value = false
+		uni.hideLoading();
     } else {
         data = data || {};
         login.getAuthCode({ backFlag: true, successCallback, ...data })
@@ -365,6 +374,7 @@ const mobileAuth = (e: any) => {
                 uni.setStorageSync('wap_member_mobile', memberInfo.value.mobile) // 存储会员手机号，防止重复请求微信获取手机号接口
             }
             loginLoading.value = false
+			uni.hideLoading();
         }, { mobile_code: e.detail.code });
     }
 
@@ -381,7 +391,10 @@ const mobileAuth = (e: any) => {
 
 <style lang="scss" scoped>
 .footer {
-    margin-top: 200rpx;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding-bottom: calc(151rpx + constant(safe-area-inset-bottom));
     padding-bottom: calc(151rpx + env(safe-area-inset-bottom));
 }

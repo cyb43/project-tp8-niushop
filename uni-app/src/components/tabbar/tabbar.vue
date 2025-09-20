@@ -127,6 +127,7 @@ if (!props.addon) {
         , { deep: true, immediate: true }
     )
 }
+
 watch(
     () => useConfigStore().tabbarList,
     (newValue, oldValue) => {

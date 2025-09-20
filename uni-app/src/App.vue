@@ -12,9 +12,18 @@ onLaunch((data: any) => {
 
     // 添加初始化拦截器
     launchInterceptor()
+    const systemStore = useSystemStore()
+
+    // 初始化全局数据
+    const initGlobalData = () => {
+        systemStore.systemInfo = uni.getSystemInfoSync();
+        systemStore.getMenuButtonInfoFn()
+    }
+
+    initGlobalData()
 
     // #ifdef H5
-    uni.getSystemInfoSync().platform == 'ios' && (uni.setStorageSync('initUrl', location.href))
+    systemStore.systemInfo.platform == 'ios' && (uni.setStorageSync('initUrl', location.href))
 
     // 传输给后台数据
     window.parent.postMessage(JSON.stringify({
@@ -38,11 +47,14 @@ onLaunch((data: any) => {
                     type: 'appOnReady',
                     message: '加载完成'
                 }), '*');
+                // 更新全局数据
+                initGlobalData()
             }
         } catch (e) {
             console.log('uni-app App.vue 接受数据错误', e)
         }
     }, false);
+
 
     try {
         uni.hideTabBar() // 隐藏tabbar
@@ -79,7 +91,7 @@ onLaunch((data: any) => {
     // #endif
 
     // 获取初始化数据信息
-    useSystemStore().getInitFn(async() => {
+    useSystemStore().getInitFn(async () => {
 
         const configStore = useConfigStore()
 

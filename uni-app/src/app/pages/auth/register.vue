@@ -7,10 +7,15 @@
         <!-- #endif -->
         <view class="mx-[60rpx]">
             <view class="pt-[140rpx] text-[44rpx] font-500 text-[#333]">{{ type == 'username' ? t('usernameRegister') : t('mobileRegister') }}</view>
-            <view class="text-[26rpx] leading-[39rpx] text-[var(--text-color-light6)] mt-[16rpx] mb-[80rpx]">{{ type == 'username' ? t('usernameRegisterTip') : t('mobileRegisterTip') }}</view>
+            <view class="flex items-center justify-between  mt-[24rpx] mb-[90rpx]">
+                <view class="text-[26rpx] text-[#333] leading-[34rpx]" @click="toLink">
+                    <text>{{ t('haveAccount') }},</text>
+                    <text class="text-primary">{{ t('toLogin') }}</text>
+                </view>
+            </view>
             <u-form labelPosition="left" :model="formData" errorType='toast' :rules="rules" ref="formRef">
                 <template v-if="type == 'username'">
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6]">
                         <u-form-item label="" prop="username" :border-bottom="false">
                             <u-input v-model="formData.username" border="none" maxlength="40"
                                      :placeholder="t('usernamePlaceholder')" class="!bg-transparent"
@@ -18,7 +23,7 @@
                                      placeholderClass="!text-[var(--text-color-light9)] text-[26rpx]" />
                         </u-form-item>
                     </view>
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                         <u-form-item label="" prop="password" :border-bottom="false">
                             <u-input v-model="formData.password" border="none" :password="isPassword" maxlength="40"
                                      :placeholder="t('passwordPlaceholder')" class="!bg-transparent"
@@ -32,7 +37,7 @@
                             </u-input>
                         </u-form-item>
                     </view>
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                         <u-form-item label="" prop="confirm_password" :border-bottom="false">
                             <u-input v-model="formData.confirm_password" border="none" :password="isConfirmPassword"
                                      maxlength="40" :placeholder="t('confirmPasswordPlaceholder')"
@@ -48,7 +53,7 @@
                     </view>
                 </template>
                 <template v-if="type == 'mobile' || configStore.login.is_bind_mobile">
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                         <u-form-item label="" prop="mobile" :border-bottom="false">
                             <u-input v-model="formData.mobile" border="none" maxlength="11"
                                      :placeholder="t('mobilePlaceholder')" class="!bg-transparent"
@@ -56,7 +61,7 @@
                                      placeholderClass="!text-[var(--text-color-light9)] text-[26rpx]" />
                         </u-form-item>
                     </view>
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                         <u-form-item label="" prop="mobile_code" :border-bottom="false">
                             <u-input v-model="formData.mobile_code" border="none" maxlength="4"
                                      :placeholder="t('codePlaceholder')" class="!bg-transparent"
@@ -71,7 +76,7 @@
                     </view>
                 </template>
                 <template v-if="type == 'username'">
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                         <u-form-item label="" prop="captcha_code" :border-bottom="false">
                             <u-input v-model="formData.captcha_code" border="none"
                                      :placeholder="t('captchaPlaceholder')" class="!bg-transparent"
@@ -85,25 +90,25 @@
                     </view>
                 </template>
             </u-form>
-            <view class="mt-[160rpx]">
-                <view v-if="configStore.login.agreement_show" class="flex items-center mb-[20rpx] py-[14rpx]" @click.stop="agreeChange">
+            <view class="mt-[140rpx]">
+                <button class="w-full h-[80rpx] !bg-[var(--primary-color)] text-[26rpx] rounded-[40rpx] leading-[80rpx] font-500 !text-[#fff]" @click="handleRegister">{{ t('register') }}</button>
+                <view v-if="configStore.login.agreement_show" class="flex items-center mt-[10rpx] mb-[40rpx] py-[14rpx]" @click.stop="agreeChange">
                     <u-checkbox-group @change="agreeChange">
-                        <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="circle" size="30rpx" />
+                        <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="circle" size="24rpx" />
                     </u-checkbox-group>
-                    <view class="text-[24rpx] text-[var(--text-color-light6)] flex items-center flex-wrap leading-[30rpx]">
+                    <view class="text-[24rpx] -ml-[4rpx] text-[var(--text-color-light6)] flex items-center flex-wrap leading-[30rpx]">
                         <text>{{ t('agreeTips') }}</text>
                         <text @click.stop="redirect({ url: '/app/pages/auth/agreement?key=privacy' })" class="text-primary">《{{ t('privacyAgreement') }}》</text>
                         <text>{{ t('and') }}</text>
                         <text @click.stop="redirect({ url: '/app/pages/auth/agreement?key=service' })" class="text-primary">《{{ t('userAgreement') }}》</text>
                     </view>
                 </view>
-                <button class="w-full h-[80rpx] !bg-[var(--primary-color)] text-[26rpx] rounded-[40rpx] leading-[80rpx] font-500 !text-[#fff]" @click="handleRegister">{{ t('register') }}</button>
-                <view class="flex items-center justify-between mt-[30rpx]">
-                    <view class="text-[26rpx] text-[var(--text-color-light6)] leading-[34rpx]" v-if="registerType.length > 1" @click="type = type == 'username' ? 'mobile' : 'username' ">{{ type == 'username' ? t('mobileRegister') : t('usernameRegister') }}</view>
-                    <view class="text-[26rpx] text-[#333] leading-[34rpx]" @click="toLink">
-                        <text>{{ t('haveAccount') }},</text>
-                        <text class="text-primary">{{ t('toLogin') }}</text>
-                    </view>
+            </view>
+            <view class="footer w-full" v-if="registerType.length > 1" :class="{'fixed bottom-0 left-0 right-0': type == 'mobile', 'pt-[60rpx]': type == 'username'}">
+                <view class="text-[26rpx] leading-[36rpx] text-[#666] text-center mb-[30rpx] font-400">其他注册方式</view>
+                <view class="flex justify-center gap-[40rpx]">
+                    <text v-if="type == 'mobile' && configStore.login.is_mobile" @click="type = 'username'" class="w-[66rpx] h-[66rpx] flex items-center justify-center iconfont iconmima6Vmm border-[2rpx] rounded-[50%] border-solid border-[#ddd] !text-[26rpx]"></text>
+                    <text v-if="type == 'username' && configStore.login.is_username"  @click="type = 'mobile'" class="w-[66rpx] h-[66rpx] flex items-center justify-center iconfont iconshouji6Vmm border-[2rpx] rounded-[50%] border-solid border-[#ddd] !text-[26rpx]"></text>
                 </view>
             </view>
         </view>
@@ -140,18 +145,15 @@ import { t } from '@/locale'
 import { redirect, getToken, pxToRpx } from '@/utils/common'
 import { onLoad } from '@dcloudio/uni-app';
 import { topTabar } from '@/utils/topTabbar'
+import useSystemStore from "@/stores/system";
 
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '', topStatusBar: { bgColor: '#fff', textColor: '#333' } })
 /********* 自定义头部 - end ***********/
 const headerHeight = computed(() => {
-    return Object.keys(menuButtonInfo).length ? pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
+    return Object.keys(systemStore.menuButtonInfo).length ? pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
 })
 const formData = reactive({
     username: '',
@@ -370,5 +372,9 @@ const toLink = () => {
 
 :deep(.u-checkbox) {
     margin: 0 !important;
+}
+.footer {
+    padding-bottom: calc(151rpx + constant(safe-area-inset-bottom));
+    padding-bottom: calc(151rpx + env(safe-area-inset-bottom));
 }
 </style>

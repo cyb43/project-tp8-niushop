@@ -553,3 +553,17 @@ button[type='primary'],uni-button[type='primary']{
 .information-filling .u-line{
 	border-color: #dddddd !important;
 }
+.order-grey-hollow-btn{
+	border: 2rpx solid #ccc;
+	height: 56rpx;
+	font-size: 24rpx;
+	background-color: #fff;
+	border-radius: 30rpx;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	box-sizing: border-box;
+	padding: 0 24rpx;
+	min-width: 144rpx;
+	color: #333;
+}

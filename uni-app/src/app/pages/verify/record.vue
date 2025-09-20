@@ -39,7 +39,7 @@
                             </view>
                             <view class="flex-1">
                                 <view class="text-[22rpx] text-[var(--text-color-light9)] mb-[10rpx] leading-[30rpx]">核销员</view>
-                                <view class="text-[26rpx] text-[#303133] leading-[36rpx]">{{ item.member ? item.member.nickname : '--' }}</view>
+                                <view class="text-[26rpx] text-[#303133] leading-[36rpx]">{{ (item.is_admin == 1 ? '后台核销' : item.member?.nickname) || '--' }}</view>
                             </view>
                         </view>
                     </view>

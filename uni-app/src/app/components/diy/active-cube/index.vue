@@ -146,7 +146,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -168,7 +168,7 @@ const warpCss = computed(() => {
 
 // 背景图加遮罩层
 const maskLayer = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentBgUrl) {
         style += 'position:absolute;top:0;width:100%;';
         style += `background: rgba(0,0,0,${ diyComponent.value.componentBgAlpha / 10 });`;
@@ -213,7 +213,7 @@ const setItemStyle4 = () => {
 
 // 公共模块颜色
 const commonTempCss = (data: any) => {
-    var style = '';
+    let style = '';
     if (data.listFrame.startColor && data.listFrame.endColor) {
         style += `background:linear-gradient(${ data.listFrame.startColor },${ data.listFrame.endColor });`;
     } else {
@@ -228,7 +228,7 @@ const commonTempCss = (data: any) => {
 }
 
 const btnCss = (item: any) => {
-    var style = '';
+    let style = '';
     style += `background:linear-gradient(90deg,${ item.startColor },${ item.endColor });`;
     return style;
 };

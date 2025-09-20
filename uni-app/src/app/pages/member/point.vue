@@ -106,29 +106,25 @@ import { t } from '@/locale'
 import { redirect, img, pxToRpx } from '@/utils/common';
 import { getMemberAccountPointcount, getTaskPoint } from '@/app/api/member';
 import { topTabar } from '@/utils/topTabbar'
+import useSystemStore from "@/stores/system";
 
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '我的积分' })
 /********* 自定义头部 - end ***********/
 
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 const headerStyle = computed(() => {
     return {
         backgroundImage: 'url(' + img('static/resource/images/member/point/point_bg.png') + ') ',
         backgroundSize: 'cover',
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'bottom',
-        // paddingTop:Object.keys(menuButtonInfo).length?(Number(menuButtonInfo.height) * 2 + menuButtonInfo.top * 2 + 77)+'rpx':'77rpx',
+        // paddingTop:Object.keys(systemStore.menuButtonInfo).length?(Number(systemStore.menuButtonInfo.height) * 2 + systemStore.menuButtonInfo.top * 2 + 77)+'rpx':'77rpx',
     }
 })
 const topStyle = computed(() => {
-    let style = Object.keys(menuButtonInfo).length ? (pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + 50) + 'rpx;' : '50rpx'
+    let style = Object.keys(systemStore.menuButtonInfo).length ? (pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + 50) + 'rpx;' : '50rpx'
     return style
 })
 

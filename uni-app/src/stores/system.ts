@@ -19,6 +19,11 @@ interface System {
     currTabbar: {
         path: string,
         query: object
+    },
+    systemInfo: any, // 系统设备信息
+    topTabbarInfo: {
+        height: number
+        fullHeight: string
     }
 }
 
@@ -35,10 +40,10 @@ const useSystemStore = defineStore('system', {
             },
             initStatus: 'wait',
             menuButtonInfo: {
-                height: '',
-                top: '',
-                right: '',
-                width: ''
+                height: 0,
+                top: 0,
+                right: 0,
+                width: 0
             },
             shareCallback: null,
             defaultPositionAddress: '定位中',
@@ -46,6 +51,11 @@ const useSystemStore = defineStore('system', {
             currTabbar: {
                 path: '',
                 query: {}
+            },
+            systemInfo: null,
+            topTabbarInfo: {
+                height: 0,
+                fullHeight: ''
             }
         }
     },
@@ -56,7 +66,7 @@ const useSystemStore = defineStore('system', {
             let url = '';
             // #ifdef H5
             if (isWeixinBrowser()) {
-                url = uni.getSystemInfoSync().platform == 'ios' ? uni.getStorageSync('initUrl') : location.href
+                url = this.systemInfo.platform == 'ios' ? uni.getStorageSync('initUrl') : location.href
             }
             // #endif
 
@@ -152,7 +162,7 @@ const useSystemStore = defineStore('system', {
         setAddressInfo(data: any = {}) {
             let addressInfo = cloneDeep(data);
             // 过期时间
-            var date = new Date();
+            const date = new Date();
             date.setSeconds(60 * this.mapConfig.valid_time);
             addressInfo.valid_time = date.getTime() / 1000; // 定位信息 5分钟内有效，过期后将重新获取定位信息
 
@@ -167,6 +177,11 @@ const useSystemStore = defineStore('system', {
             } else {
                 uni.removeStorageSync('location_address');
             }
+        },
+        setTopTabbar(data: any = {}) {
+            this.topTabbarInfo = Object.assign({}, this.topTabbarInfo, data);
+            this.topTabbarInfo.height = this.topTabbarInfo.height || 0
+            this.topTabbarInfo.fullHeight = this.topTabbarInfo.height ? this.topTabbarInfo.height+'px' : 0
         }
     }
 })

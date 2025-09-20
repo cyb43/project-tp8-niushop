@@ -78,7 +78,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -99,7 +99,7 @@ const warpCss = computed(() => {
 
 // 背景图加遮罩层
 const maskLayer = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentBgUrl) {
         style += 'position:absolute;top:0;width:100%;';
         style += `background: rgba(0,0,0,${ diyComponent.value.componentBgAlpha / 10 });`;

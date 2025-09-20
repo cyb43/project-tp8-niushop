@@ -14,7 +14,7 @@
             </u-cell-group>
         </view>
 
-        <view class="h-[88rpx] flex-center bg-[#fff] mx-[var(--sidebar-m)] rounded-[var(--rounded-big)] text-[28rpx]" @click="memberStore.logout(true)">{{ t('logout') }}</view>
+        <view class="h-[88rpx] flex-center bg-[#fff] mx-[var(--sidebar-m)] rounded-[var(--rounded-big)] text-[26rpx]" @click="memberStore.logout(true)">{{ t('logout') }}</view>
 
         <u-action-sheet :actions="langList" :show="langSheetShow" :closeOnClickOverlay="true"
                         :safeAreaInsetBottom="true"
@@ -63,7 +63,7 @@ page {
     .u-cell {
         .u-cell__body {
             padding: 0;
-            height: 90rpx;
+            height: 80rpx;
             margin-top: 16rpx;
         }
 
@@ -72,7 +72,7 @@ page {
         }
 
         .u-cell__title-text {
-            font-size: 28rpx;
+            font-size: 26rpx;
             line-height: 40rpx;
         }
 
@@ -82,7 +82,7 @@ page {
 
         .u-cell__value {
             line-height: 1;
-            font-size: 28rpx;
+            font-size: 26rpx;
         }
 
         .u-line {
@@ -104,7 +104,7 @@ page {
     }
 
     .u-action-sheet__item-wrap__item__name {
-        font-size: 30rpx !important;
+        font-size: 26rpx !important;
     }
 }
 </style>

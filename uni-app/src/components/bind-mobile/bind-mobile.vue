@@ -128,7 +128,12 @@ const handleBind = () => {
         loading.value = true
 
         const request = info.value ? bindMobile : mobileLogin;
-
+        if(uni.getStorageSync('avatar') && uni.getStorageSync('nickname') && uni.getStorageSync('openid') && uni.getStorageSync('unionid')){
+            formData.avatar = uni.getStorageSync('avatar')
+            formData.nickname = uni.getStorageSync('nickname')
+            formData.openid = uni.getStorageSync('openid')
+            formData.unionid = uni.getStorageSync('unionid')
+        }
         request(formData).then((res: any) => {
             if (info.value) {
                 memberStore.getMemberInfo()

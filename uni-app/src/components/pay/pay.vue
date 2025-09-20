@@ -44,6 +44,10 @@ const prop = defineProps({
         default () {
             return []
         }
+    },
+    reformat: {
+        type: String,
+        default: ''
     }
 })
 
@@ -165,6 +169,7 @@ const confirmPay = () => {
 uni.$on('checkIsReturnAfterPayment', () => {
     const data = uni.getStorageSync('paymenting')
     if (uni.getStorageSync('paymenting')) {
+        
         redirect({
             url: '/app/pages/pay/result',
             param: {
@@ -220,8 +225,18 @@ const open = (tradeType: string, tradeId: number, payReturn: string = '', scene:
 }
 
 const emits = defineEmits(['close', 'confirm'])
+
 const toPayResult = () => {
     emits('confirm')
+    // console.log(prop.reformat)
+    if(prop.reformat){
+        redirect({
+            url: prop.reformat,
+            mode: 'redirectTo'
+        })
+        return
+    }
+    
     redirect({
         url: '/app/pages/pay/result',
         param: { trade_type: payInfo.value?.trade_type, trade_id: payInfo.value?.trade_id },
@@ -237,7 +252,8 @@ const handleClose = () => {
 }
 
 defineExpose({
-    open
+    open,
+    payInfo
 })
 </script>
 

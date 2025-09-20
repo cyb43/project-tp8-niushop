@@ -41,18 +41,18 @@
     "register": "注册",
     "complete": "完成",
     "close": "关闭",
-    "diyForm":{
-        "back":"返回",
-        "hidden":"已隐藏",
-        "view":"查看",
-        "know":"我知道了",
-        "prompt":"提示",
-        "call":"拨打",
-        "copy":"复制号码",
-        "uploadTips":"请上传图片",
-        "tips":"仅限本人和管理员能查看完整号码：",
-        "viewFillingDetails":"查看填写详情",
-        "detailInformation":"详细信息"
+    "diyForm": {
+        "back": "返回",
+        "hidden": "已隐藏",
+        "view": "查看",
+        "know": "我知道了",
+        "prompt": "提示",
+        "call": "拨打",
+        "copy": "复制号码",
+        "uploadTips": "请上传图片",
+        "tips": "仅限本人和管理员能查看完整号码：",
+        "viewFillingDetails": "查看填写详情",
+        "detailInformation": "详细信息"
     },
     "pay": {
         "orderInfo": "订单信息",

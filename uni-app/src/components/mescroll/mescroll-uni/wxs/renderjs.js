@@ -3,7 +3,7 @@
 // https://uniapp.dcloud.io/frame?id=renderjs
 
 // 与wxs的me实例一致
-var me = {}
+const me = {};
 
 // 初始化window对象的touch事件 (仅初始化一次)
 if(window && !window.$mescrollRenderInit){
@@ -19,20 +19,20 @@ if(window && !window.$mescrollRenderInit){
 	window.addEventListener('touchmove', function(e){
 		if (me.disabled()) return;
 		if (me.getScrollTop() > 0) return; // 需在顶部下拉,才禁止bounce
-		
-		var curPoint = me.getPoint(e); // 当前点
-		var moveY = curPoint.y - me.startPoint.y; // 和起点比,移动的距离,大于0向下拉,小于0向上拉
+
+        const curPoint = me.getPoint(e); // 当前点
+        const moveY = curPoint.y - me.startPoint.y; // 和起点比,移动的距离,大于0向下拉,小于0向上拉
 		// 向下拉
 		if (moveY > 0) {
 			// 可下拉的条件
 			if (!me.isDownScrolling && !me.optDown.isLock && (!me.isUpScrolling || (me.isUpScrolling && me.isUpBoth))) {
 				
 				// 只有touch在mescroll的view上面,才禁止bounce
-				var el = e.target;
-				var isMescrollTouch = false;
-				while (el && el.tagName && el.tagName !== 'UNI-PAGE-BODY' && el.tagName != "BODY") {
-					var cls = el.classList;
-					if (cls && cls.contains('mescroll-render-touch')) {
+                let el = e.target;
+                let isMescrollTouch = false;
+                while (el && el.tagName && el.tagName !== 'UNI-PAGE-BODY' && el.tagName != "BODY") {
+                    const cls = el.classList;
+                    if (cls && cls.contains('mescroll-render-touch')) {
 						isMescrollTouch = true
 						break;
 					}

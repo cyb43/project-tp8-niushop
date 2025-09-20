@@ -45,7 +45,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
         else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -59,7 +59,7 @@ const warpCss = computed(() => {
 })
 
 const floatBtnItemCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'width:' + diyComponent.value.imageSize * 2 + 'rpx;';
     style += 'height:' + diyComponent.value.imageSize * 2 + 'rpx;';
     style += 'border-radius:' + diyComponent.value.aroundRadius * 2 + 'rpx;';
@@ -92,7 +92,7 @@ const floatBtnWrapCss = computed(() => {
 const styleTwoRepeat = ref(true)
 const styleTwoRepeatTime: any = ref(null)
 const styleTwoWarpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
         else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -107,7 +107,7 @@ const styleTwoWarpCss = computed(() => {
 })
 
 const styleTwoSphere = computed(() => {
-    var style = 'transition: right .25s;background: rgba(0, 0, 0, 0.5);';
+    let style = 'transition: right .25s;background: rgba(0, 0, 0, 0.5);';
     style += styleTwoRepeat.value ? '' : 'right:-32rpx !important;transition-delay: 0.25s;';
     return style
 })

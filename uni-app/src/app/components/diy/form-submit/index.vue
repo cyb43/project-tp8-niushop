@@ -42,7 +42,7 @@ const diyGlobal = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
     else if (diyComponent.value.componentStartBgColor) style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -60,10 +60,10 @@ const warpCss = computed(() => {
 
     if (diyStore.mode != 'decorate' && diyComponent.value.btnPosition == 'hover_screen_bottom') {
         style += "position: fixed !important;";
-        var height = tabbarInfo.value ? tabbarInfo.value.height : 0;
+        const height = tabbarInfo.value ? tabbarInfo.value.height : 0;
         style += `left: 0;`;
         style += `right: 0;`;
-        if (height && diyGlobal.value.bottomTabBarSwitch) {
+        if (height && diyGlobal.value.bottomTabBar && diyGlobal.value.bottomTabBar.isShow) {
             style += `bottom: ${ height }px;`;
         } else {
             style += `bottom: 0;`;
@@ -79,7 +79,7 @@ const warpCss = computed(() => {
             if (diyComponent.value.margin.top > 0) {
                 style += 'padding-top:' + diyComponent.value.margin.top * 2 + 'rpx' + ';';
             }
-            if (height && diyGlobal.value.bottomTabBarSwitch) {
+            if (height && diyGlobal.value.bottomTabBar && diyGlobal.value.bottomTabBar.isShow) {
                 style += 'padding-bottom:' + diyComponent.value.margin.bottom * 2 + 'rpx' + ';';
             } else {
                 style += `padding-bottom: ${ (diyComponent.value.margin.bottom + iphoneSecureVal.value) * 2 }rpx;`;
@@ -100,7 +100,7 @@ const warpCss = computed(() => {
 })
 
 const boxCss = computed(() => {
-    var style = '';
+    let style = '';
 
     if (diyComponent.value.btnPosition == 'hover_screen_bottom') {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -112,7 +112,7 @@ const boxCss = computed(() => {
 
 // 背景图加遮罩层
 const maskLayer = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentBgUrl) {
         style += 'position:absolute;top:0;right:0;left:0;bottom:0;';
         style += `background: rgba(0,0,0,${ diyComponent.value.componentBgAlpha / 10 });`;
@@ -128,7 +128,7 @@ const maskLayer = computed(() => {
 
 // 重置样式
 const resetItem = computed(() => {
-    var style = '';
+    let style = '';
     style += `color: ${ diyComponent.value.resetBtn.color };`;
     style += `background-color: ${ diyComponent.value.resetBtn.bgColor };`;
     if (diyComponent.value.topElementRounded) style += 'border-top-left-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';
@@ -140,7 +140,7 @@ const resetItem = computed(() => {
 
 // 保存样式
 const submitItem = computed(() => {
-    var style = '';
+    let style = '';
     style += `color: ${ diyComponent.value.submitBtn.color };`;
     style += `background-color: ${ diyComponent.value.submitBtn.bgColor };`;
     if (diyComponent.value.topElementRounded) style += 'border-top-left-radius:' + diyComponent.value.topElementRounded * 2 + 'rpx;';

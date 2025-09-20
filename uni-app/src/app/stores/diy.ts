@@ -12,7 +12,7 @@ interface Diy {
         title: string,
         pageStartBgColor: string, // 页面背景颜色（开始）
         pageEndBgColor: string, // 页面背景颜色（结束）
-        bottomTabBarSwitch: boolean, // 底部导航开关
+        bottomTabBar: any, // 底部导航
         bgUrl: string
     },
     // 组件集合
@@ -20,7 +20,8 @@ interface Diy {
     topFixedStatus: string, // 置顶组件的状态
     scrollTop: number,
     topTabarHeight: number,
-    componentRefs: any
+    componentRefs: any,
+    imageAdsSameScreen: any // 图片广告, 是否设置沉浸式
 }
 
 const useDiyStore = defineStore('diy', {
@@ -34,14 +35,18 @@ const useDiyStore = defineStore('diy', {
                 title: "",
                 pageStartBgColor: '', // 页面背景颜色（开始）
                 pageEndBgColor: '', // 页面背景颜色（结束）
-                bottomTabBarSwitch: true,
+                bottomTabBar: {
+                    control: true, // 是否允许展示编辑
+                    isShow: true, // 是否显示
+                },
                 bgUrl: ''
             },
             value: [], // 组件集合
             topFixedStatus: 'home', // 顶部 置顶组件状态，home：展示首页数据、diy：展示置顶组件定义的子页面
             scrollTop: 0, // 滚动位置
             topTabarHeight: 0,
-            componentRefs: null
+            componentRefs: null,
+            imageAdsSameScreen: false
         }
     },
     getters: {},
@@ -49,7 +54,7 @@ const useDiyStore = defineStore('diy', {
         // 初始化
         init() {
             // #ifdef H5
-            var data = JSON.stringify({
+            const data = JSON.stringify({
                 type: 'init',
                 load: true
             });
@@ -68,6 +73,7 @@ const useDiyStore = defineStore('diy', {
                     if (this.value) {
                         this.value.forEach((item, index) => {
                             item.pageStyle = '';
+                            item.componentIsShow = true // 是否显示
                             if (item.pageStartBgColor) {
                                 if (item.pageStartBgColor && item.pageEndBgColor) item.pageStyle += `background:linear-gradient(${ item.pageGradientAngle },${ item.pageStartBgColor },${ item.pageEndBgColor });`;
                                 else item.pageStyle += 'background-color:' + item.pageStartBgColor + ';';
@@ -118,7 +124,7 @@ const useDiyStore = defineStore('diy', {
             // 减少重复请求
             if (this.currentIndex == index) return;
             this.currentIndex = index;
-            var data = JSON.stringify({
+            const data = JSON.stringify({
                 type: 'change',
                 index,
                 component: toRaw(component)

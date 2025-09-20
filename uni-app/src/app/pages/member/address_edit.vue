@@ -44,15 +44,25 @@
                 </u-form-item>
             </view>
         </u-form>
+   
         <view class="w-full footer">
+              
             <view
-                class="py-[var(--top-m)] px-[var(--sidebar-m)] footer w-full fixed bottom-0 left-0 right-0 box-border">
+                class="py-[var(--top-m)] px-[var(--sidebar-m)] footer w-full fixed bottom-30 left-0 right-0 box-border">
                 <button hover-class="none"
                         class="primary-btn-bg !text-[#fff] h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500"
                         @click="save" :disabled="btnDisabled" :loading="operateLoading"
                         :class="{'opacity-50': btnDisabled}">{{ t('save') }}
                 </button>
+                <!-- #ifdef MP-WEIXIN -->  
+                    <button hover-class="none"
+                            class=" bg-[#fff] !text-[var(--primary-color)]   h-[80rpx] leading-[80rpx] rounded-[100rpx] text-[26rpx] font-500 mt-[30rpx] borders"
+                            @click="choosegAddress" :disabled="btnDisabled" :loading="loadingchoosegAddress"
+                            > <text class="nc-iconfont nc-icon-weixinV6mm"></text> 获取微信地址
+                    </button>
+                <!-- #endif -->
             </view>
+            
         </view>
         <area-select ref="areaRef" @complete="areaSelectComplete" :area-id="formData.district_id || formData.city_id" />
         <!-- #ifdef MP-WEIXIN -->
@@ -115,7 +125,7 @@ onLoad((data: any) => {
         }
         formData.value.address = data.name;
         getAddress(data.latng);
-        var tempArr = getQueryVariable('latng').split(',');
+        const tempArr = getQueryVariable('latng').split(',');
         formData.value.lat = tempArr[0];
         formData.value.lng = tempArr[1];
     }
@@ -277,7 +287,7 @@ const chooseLocation = () => {
     // #endif
 
     // #ifdef H5
-    var urlencode = formData.value;
+    const urlencode = formData.value;
     uni.setStorageSync('addressInfo', urlencode);
     let backurl = location.origin + location.pathname + '?source=' + source.value;
     if (isSelectMap.value) {
@@ -310,15 +320,35 @@ const getAddress = (latlng: any) => {
 }
 
 const getQueryVariable = (variable: any) => {
-    var query = window.location.search.substring(1);
-    var vars = query.split('&');
-    for (var i = 0; i < vars.length; i++) {
-        var pair = vars[i].split('=');
+    const query = window.location.search.substring(1);
+    const vars = query.split('&');
+    for (let i = 0; i < vars.length; i++) {
+        const pair = vars[i].split('=');
         if (pair[0] == variable) {
             return pair[1];
         }
     }
     return false;
+}
+const loadingchoosegAddress = ref(false)
+const choosegAddress = () =>{
+    loadingchoosegAddress.value = true
+     uni.chooseAddress({
+            success(res) {
+                console.log(7744)
+                loadingchoosegAddress.value = false
+                // 将地址信息格式化为“名字-手机号-地址（详细地址）”
+                // const formattedAddress = `${res.userName}-${res.telNumber}-${res.provinceName}${res.cityName}${res.countyName}${res.detailInfoNew || res.detailInfo}`;
+                 console.log(res)
+                 formData.value.name = res.userName
+                 formData.value.mobile = res.telNumber
+                 formData.value.area = res.provinceName + res.cityName + res.countyName
+                 formData.value.address =  res.detailInfo
+            },
+            fail(err) {
+               loadingchoosegAddress.value = false
+            }
+        });
 }
 </script>
 
@@ -334,5 +364,8 @@ const getQueryVariable = (variable: any) => {
 .footer {
     height: calc(100rpx + var(--top-m) + var(--top-m) + constant(safe-area-inset-bottom)) !important;
     height: calc(100rpx + var(--top-m) + var(--top-m) + env(safe-area-inset-bottom)) !important;
+}
+.borders{
+    border: 1px solid var(--primary-color);
 }
 </style>

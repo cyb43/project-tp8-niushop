@@ -1,14 +1,14 @@
 <template>
     <!-- 分享弹窗 -->
     <view @touchmove.prevent.stop class="share-popup">
-        <u-popup :show="sharePopupShow" type="bottom" @close="sharePopupClose" overlayOpacity="0.8">
+        <u-popup :show="sharePopupShow" @close="sharePopupClose" overlayOpacity="0.8">
             <view @touchmove.prevent.stop>
                 <view class="poster-img-wrap" :style="{'top': shareTop}">
                     <image v-if="isPosterAnimation" class="poster-animation" :src="img('addon/shop/poster_animation.gif')" mode="aspectFit"/>
                     <image v-if="isPosterImg" class="poster-img" :src="img(poster)" mode="aspectFit" :show-menu-by-longpress="true"/>
                 </view>
                 <view class="share-content">
-                    <!-- #ifdef MP || APP-PLUS  -->
+                    <!-- #ifdef MP -->
                     <view class="share-box">
                         <button class="share-btn" :plain="true" open-type="share">
                             <view class="text-[#07c160] iconfont iconweixin11"></view>
@@ -29,6 +29,29 @@
                         <button class="share-btn" :plain="true">
                             <view class="text-[#07c160] iconfont iconfuzhilianjie"></view>
                             <text>复制链接</text>
+                        </button>
+                    </view>
+                    <!-- #endif -->
+                    
+                    <!-- #ifdef APP-PLUS  -->
+                    <view class="share-box">
+                        <button class="share-btn" :plain="true" @click="shareSession">
+                            <view class="text-[#07c160] iconfont iconweixin11"></view>
+                            <text>分享给好友</text>
+                        </button>
+                    </view>
+                    
+                    <view class="share-box">
+                        <button class="share-btn" :plain="true" @click="shareWechatMoments">
+                            <image :src="img('static/resource/images/app/wechat_moments.png')"></image>
+                            <text>分享到朋友圈</text>
+                        </button>
+                    </view>
+                    
+                    <view class="share-box">
+                        <button class="share-btn" :plain="true" @click="savePoster()">
+                            <view class="text-[#07c160] iconfont iconpengyouquan"></view>
+                            <text>保存海报</text>
                         </button>
                     </view>
                     <!-- #endif -->
@@ -57,10 +80,12 @@
 import { ref } from 'vue';
 import { img, copy } from '@/utils/common';
 import { getPoster } from '@/app/api/system'
+import useSystemStore from "@/stores/system";
+import { useShare } from '@/hooks/useShare'
 
 const props = defineProps({
     posterId: {
-        type: String || Number,
+        type: [String, Number],
         default: 0
     },
     posterType: {
@@ -78,6 +103,10 @@ const props = defineProps({
     copyUrlParam: {
         type: String,
         default: ''
+    },
+    isPreload: {
+        type: Boolean,
+        default: true
     }
 })
 
@@ -116,7 +145,7 @@ const isPosterImg = ref(false)
 // 获取分享海报
 const poster = ref('');
 const loadPoster = () => {
-    if (poster.value) {
+    if (poster.value && props.isPreload) {
         // 预加载
         isPosterAnimation.value = false;
         isPosterImg.value = true;
@@ -198,14 +227,22 @@ const savePoster = () => {
 }
 // #endif
 
+// #ifdef APP-PLUS
+const shareSession = () => {
+    useShare().onShareAppMessage();
+}
+
+const shareWechatMoments = () => {
+    useShare().onShareTimeline();
+}
+// #endif
+
 const shareTop: any = ref(0)
 /************ 获取微信头部-start ****************/
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
+const systemStore = useSystemStore()
 // 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
 // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-shareTop.value = menuButtonInfo.top + menuButtonInfo.height + 'px';
+shareTop.value = systemStore.menuButtonInfo.top + systemStore.menuButtonInfo.height + 'px';
 // #endif
 /************ 获取微信头部-end ****************/
 
@@ -223,9 +260,10 @@ defineExpose({
 </script>
 <style lang="scss" scoped>
 .share-popup {
-    :deep(.u-transition), :deep(.u-popup__content) {
-        background-color: transparent;
-    }
+    //  苹果手机下要白色背景
+    // :deep(.u-transition), :deep(.u-popup__content) {
+    //     background-color: transparent;
+    // }
 
     .share-content {
         border-top-left-radius: 40rpx;
@@ -259,6 +297,11 @@ defineExpose({
                     display: block;
                     color: #333;
                 }
+            }
+            
+            image {
+                width: 80rpx;
+                height: 80rpx;
             }
 
             .iconfont {

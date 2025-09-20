@@ -67,7 +67,7 @@ export function useDiyGroup(params: any = {}) {
         onMounted(() => {
             // #ifdef H5
             if (diyStore.mode == 'decorate') {
-                var el: any = document.getElementById('componentList');
+                const el: any = document.getElementById('componentList');
                 const sortable = Sortable.create(el, {
                     draggable: '.draggable-element',
                     animation: 200,
@@ -91,7 +91,6 @@ export function useDiyGroup(params: any = {}) {
 
             nextTick(() => {
                 setTimeout(() => {
-
                     // 初始化组件滚动值
                     scrollVal = uni.getStorageSync('componentsScrollValGroup');
                     if (scrollVal) {

@@ -138,7 +138,7 @@
 
 <script setup lang="ts">
 // 表单 多选项组件
-import { ref, computed, watch, onMounted } from 'vue';
+import { ref, computed, watch, onMounted, nextTick } from 'vue';
 import { img } from '@/utils/common';
 import { t } from '@/locale'
 import useDiyStore from '@/app/stores/diy';
@@ -206,7 +206,7 @@ const eventFn = (type: any) => {
 }
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
     else if (diyComponent.value.componentStartBgColor) style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -237,17 +237,24 @@ onMounted(() => {
             }
         )
     } else {
-    }
-    if (diyComponent.value.style == 'style-3') {
-        pullDownVal.value = diyComponent.value.field.value.map(item => item.id);
-    }
-    if (diyComponent.value.field.value.length > 0) {
-        selectValue.value = diyComponent.value.field.value.map(item => item.id);
+        watch(
+            () => diyComponent.value.field.value,
+            (newValue, oldValue) => {
+                refresh();
+            }
+        )
     }
 });
 
 const refresh = () => {
-    // console.log('diyComponent.value.field.value',diyComponent.value.field.value)
+    nextTick(()=>{
+        if (diyComponent.value.style == 'style-3') {
+            pullDownVal.value = diyComponent.value.field.value.map(item => item.id);
+        }
+        if (diyComponent.value.field.value?.length) {
+            selectValue.value = diyComponent.value.field.value.map(item => item.id);
+        }
+    })
 }
 
 const checkboxPlaceholder = computed(() => {

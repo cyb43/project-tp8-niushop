@@ -132,7 +132,7 @@ const eventFn = (type: any) => {
 
 // 日期
 const startDate = computed(() => {
-    var date = '';
+    let date = '';
     if (diyComponent.value.field.value.date) {
         let timestamp = diyComponent.value.field.value.timestamp;
         date = getDateFn(timestamp);
@@ -158,7 +158,7 @@ const startDate = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
     else if (diyComponent.value.componentStartBgColor) style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';

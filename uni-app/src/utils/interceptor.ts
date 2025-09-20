@@ -1,6 +1,6 @@
 import { language } from '@/locale'
 import { checkNeedLogin } from '@/utils/auth'
-import { getToken, currRoute, setThemeColor } from '@/utils/common'
+import { redirect, getToken,currRoute, setThemeColor } from '@/utils/common'
 import { memberLog } from '@/app/api/auth'
 import { useShare } from '@/hooks/useShare'
 
@@ -44,7 +44,7 @@ export const launchInterceptor = () => {
     // 加载语言包
     language.loadAllLocaleMessages('app', uni.getLocale())
 
-    // #ifdef H5
+    // #ifndef MP
     language.loadAllLocaleMessages('addon', uni.getLocale())
     // #endif
 
@@ -69,6 +69,7 @@ const loadShare = () => {
     // 分享其它页面时，需要设置当前页面为白名单
     const shareWhiteList = [
         'addon/cms/pages/detail',
+        'addon/seckill/pages/goods/detail',
         'addon/shop/pages/goods/detail',
         'addon/shop/pages/point/detail',
         'addon/shop_fenxiao/pages/promote_code',

@@ -95,6 +95,9 @@ diy.onLoad((data: any) => {
             if(formDetailData[item.id]){
                 try {
                     item.field.value = JSON.parse(formDetailData[item.id])
+                    if (item.componentName=="FormNumber" || item.componentName=="FormIdentity") {
+                        item.field.value = String(formDetailData[item.id])
+                    }
                 } catch (e) {
                     item.field.value = formDetailData[item.id]
                 }

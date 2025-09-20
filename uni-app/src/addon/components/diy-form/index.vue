@@ -1,8 +1,21 @@
 <template>
     <view :style="themeColor()">
         <!-- 自定义组件渲染 -->
-        <view v-show="requestData.status == 1  && !diy.getLoading()" class="diy-template-wrap">
-            <diy-group ref="diyGroupRef" :data="diyFormData" />
+        <view v-show="requestData.status == 1 && requestData.error && requestData.error.length === 0 && !diy.getLoading()" class="diy-template-wrap">
+            <diy-group ref="diyGroupRef" :data="diyFormData"/>
+        </view>
+        <!-- 目前只有自定义表单才展示错误信息，其他类型暂时不控制 -->
+        <view class="flex flex-col" v-if="requestData.error && requestData.error.length > 0 && diy.data == 'DIY_FORM'">
+            <view class="flex-1 flex flex-col items-center pt-[20rpx]" v-for="(item, index) in requestData.error.slice(0, 1)" :key="index">
+                <text class="nc-iconfont nc-icon-tanhaoV6mm text-[#ccc] mb-[30rpx] !text-[100rpx]"></text>
+                <view class="text-[38rpx] font-bold mt-3">{{ item.title }}</view>
+                <view class="p-[30rpx] mt-[20rpx] w-full">
+                    <view class="flex w-full">
+                        <view class="w-[30%] text-[#999] text-left">{{ item.type }}</view>
+                        <view class="w-[70%] text-left">{{ item.desc }}</view>
+                    </view>
+                </view>
+            </view>
         </view>
     </view>
 </template>
@@ -30,12 +43,12 @@ const diyFormData: any = reactive({})
 onMounted(() => {
     diy.getData(() => {
         diyFormData.status = diy.data.status;
-        if (diyFormData.status) {
+        if (diyFormData.status && requestData.value.error.length == 0) {
             diyFormData.title = diy.data.title;
             diyFormData.global = diy.data.global;
             if (diyFormData.global) {
                 diyFormData.global.topStatusBar.isShow = false; // 顶部导航栏强制隐藏
-                diyFormData.global.bottomTabBarSwitch = false; // 底部导航强制隐藏
+                diyFormData.global.bottomTabBar.isShow = false; // 底部导航强制隐藏
             }
             let value: any = [];
             if (props.form_border == 'none') {
@@ -47,7 +60,7 @@ onMounted(() => {
                     value.push(item);
                 }
             })
-            diyFormData.value = value;
+            diyFormData.value = deepClone(value);
             diyFormData.componentRefs = null;
             diyGroupRef.value?.refresh();
             watchFormData();
@@ -95,6 +108,7 @@ const watchFormData = () => {
 const verify = () => {
     if (!diyFormData.status) return true;
     if (!diyFormData.value) return true;
+    if (!requestData.value || requestData.value.error?.length > 0) return true;
     let allPass = true; // 是否全部通过验证
 
     let componentRefs = diyGroupRef.value.getFormRef().componentRefs;

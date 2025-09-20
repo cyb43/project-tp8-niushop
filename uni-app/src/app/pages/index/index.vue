@@ -15,6 +15,7 @@
         </view>
 
         <!-- #ifdef MP-WEIXIN -->
+        <collect-tip ref="collectTipRef" ></collect-tip>
         <!-- 小程序隐私协议 -->
         <wx-privacy-popup ref="wxPrivacyPopupRef"></wx-privacy-popup>
         <!-- #endif -->
@@ -40,7 +41,7 @@ const diy = useDiy({
 const diyGroupRef = ref(null)
 
 const wxPrivacyPopupRef: any = ref(null)
-
+const collectTipRef: any = ref(null)
 // 监听页面加载
 diy.onLoad();
 
@@ -57,9 +58,11 @@ diy.onShow((data: any) => {
     let share = data.share ? JSON.parse(data.share) : null;
     setShare(share);
     diyGroupRef.value?.refresh();
+
     // #ifdef MP
     nextTick(() => {
         if (wxPrivacyPopupRef.value) wxPrivacyPopupRef.value.proactive();
+        if (collectTipRef.value) collectTipRef.value.show();
     })
     // #endif
 });

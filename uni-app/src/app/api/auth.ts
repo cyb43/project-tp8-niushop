@@ -91,6 +91,13 @@ export function updateWechatOpenid(data: AnyObject) {
 }
 
 /**
+ * 微信公众号号修改openid
+ */
+export function updateWechatOpenidByH5(data: AnyObject) {
+    return request.put('wechat/update_openid_h5', data, { showErrorMessage: false })
+}
+
+/**
  * 微信小程序授权登录
  */
 export function weappLogin(data: AnyObject) {

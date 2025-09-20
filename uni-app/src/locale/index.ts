@@ -10,6 +10,7 @@ const t = (message: string) => {
     // #ifdef MP
     route = '/' + (getCurrentInstance()?.root.ctx.$scope.__route__ || useSystemStore().currRoute)
     // #endif
+    
     const file = language.getFileKey(route)
     const key = `${ file.fileKey }.${ message }`
     if (i18n.global.t(message) != message) return i18n.global.t(message)

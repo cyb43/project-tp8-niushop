@@ -24,7 +24,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'border-top:' + (diyComponent.value.borderWidth * 2) + 'rpx ' + diyComponent.value.borderStyle + ' ' + diyComponent.value.borderColor + ';';
     return style;
 })

@@ -22,6 +22,8 @@ onMounted(() => {
 
         props.data.formField.forEach((item: any) => {
             let comp = {
+                
+                componentIsShow: true, // 是否显示
                 id: item.field_key,
                 componentName: item.field_type,
                 pageStyle: '',
@@ -43,6 +45,9 @@ onMounted(() => {
 
             try {
                 comp.field.value = JSON.parse(item.field_value)
+                if (comp.componentName=="FormNumber" || comp.componentName=="FormIdentity") {
+                    comp.field.value =String(item.field_value)
+                }
             } catch (error) {
                 comp.field.value = item.field_value
             }

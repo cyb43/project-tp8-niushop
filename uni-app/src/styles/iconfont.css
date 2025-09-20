@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 3952239 */
-  src: url('//at.alicdn.com/t/c/font_3952239_w9mu2hnz4eg.woff2?t=1731396621845') format('woff2'),
-  url('//at.alicdn.com/t/c/font_3952239_w9mu2hnz4eg.woff?t=1731396621845') format('woff'),
-  url('//at.alicdn.com/t/c/font_3952239_w9mu2hnz4eg.ttf?t=1731396621845') format('truetype');
+  src: url('https://at.alicdn.com/t/c/font_3952239_yxckpayhvp.woff2?t=1755857288182') format('woff2'),
+       url('https://at.alicdn.com/t/c/font_3952239_yxckpayhvp.woff?t=1755857288182') format('woff'),
+       url('https://at.alicdn.com/t/c/font_3952239_yxckpayhvp.ttf?t=1755857288182') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,106 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.iconjiahaoV6xx1:before {
+  content: "\e7cc";
+}
+
+.icona-xiangxiaV6xx1:before {
+  content: "\e79e";
+}
+
+.icona-bijiPC30:before {
+  content: "\e6e8";
+}
+
+.icona-chengtuanrenshuPC30:before {
+  content: "\e6e7";
+}
+
+.iconpintuanV6xx1:before {
+  content: "\e8cb";
+}
+
+.iconxianshiV6xx:before {
+  content: "\e8ad";
+}
+
+.iconwenhao:before {
+  content: "\eae2";
+}
+
+.icontuihuoV6xx:before {
+  content: "\e8ca";
+}
+
+.icontuihuoV6mm:before {
+  content: "\e8c9";
+}
+
+.iconyinfuV6mm:before {
+  content: "\e8c3";
+}
+
+.iconyouV6xx1:before {
+  content: "\e8be";
+}
+
+.iconjishibenV6xx:before {
+  content: "\e6fa";
+}
+
+.iconweixinV6mm1:before {
+  content: "\e8b0";
+}
+
+.iconshouji6Vmm:before {
+  content: "\e8b1";
+}
+
+.iconmima6Vmm:before {
+  content: "\e8b3";
+}
+
+.iconxianshiV6mm:before {
+  content: "\e8ac";
+}
+
+.iconqianV6xx:before {
+  content: "\e79d";
+}
+
+.iconshouyev6mm:before {
+  content: "\e879";
+}
+
+.iconweixinV6mm:before {
+  content: "\e6d6";
+}
+
+.icondianhua1:before {
+  content: "\e6b9";
+}
+
+.iconmofang-yizuoliangyou:before {
+  content: "\e6c7";
+}
+
+.iconfenleiV6mm:before {
+  content: "\e66c";
+}
+
+.icondaifahuoV6mm:before {
+  content: "\e69d";
+}
+
+.iconzhixiang-youjiantouV6xx:before {
+  content: "\e649";
+}
+
+.icona-gengduoV6xx-28:before {
+  content: "\e851";
 }
 
 .icona-paihangbangpc30:before {

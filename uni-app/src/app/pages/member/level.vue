@@ -110,7 +110,7 @@
                 </view>
             </view>
         </view>
-		<view class="" v-if="!loading && (!list || !list.length)">
+		<view v-if="!loading && (!list || !list.length)">
 			<!-- #ifdef MP -->
 			<top-tabbar :data="topTabbarDataEmpty" />
 			<!-- #endif -->

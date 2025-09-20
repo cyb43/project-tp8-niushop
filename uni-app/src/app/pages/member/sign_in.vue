@@ -247,6 +247,7 @@ import { onLoad } from '@dcloudio/uni-app'
 import { getSignInfo, getSignConfig, setSign, getDayPack } from '@/app/api/member'
 import useMemberStore from '@/stores/member'
 import { topTabar } from '@/utils/topTabbar'
+import useSystemStore from "@/stores/system";
 
 const state = reactive({
     dataCount: [], //当月所有天数
@@ -462,23 +463,18 @@ const filteredDate = (date: any) => {
     return date > 0 ? date : ''
 }
 
-// 获取系统状态栏的高度
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 let topTabbarData = topTabarObj.setTopTabbarParam({ title: '我的签到' })
 /********* 自定义头部 - end ***********/
 
 const headStyle = computed(() => {
-    let style = pxToRpx(Number(menuButtonInfo.height) + menuButtonInfo.top + 8) + 382 + 'rpx;'
+    let style = pxToRpx(Number(systemStore.menuButtonInfo.height) + systemStore.menuButtonInfo.top + 8) + 382 + 'rpx;'
     return style
 })
 const topStyle = computed(() => {
-    let style = pxToRpx(Number(menuButtonInfo.height) + menuButtonInfo.top + 8) + 50 + 'rpx;'
+    let style = pxToRpx(Number(systemStore.menuButtonInfo.height) + systemStore.menuButtonInfo.top + 8) + 50 + 'rpx;'
     return style
 })
 </script>

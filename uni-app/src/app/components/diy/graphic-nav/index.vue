@@ -158,7 +158,7 @@ const shouldShowIndicator = computed(() => {
     return totalItems > itemsPerPage // 如果总项数大于每页显示的项数，显示指示器
 })
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     style += 'position:relative;';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
@@ -179,7 +179,7 @@ const warpCss = computed(() => {
 
 // 背景图加遮罩层
 const maskLayer = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentBgUrl) {
         style += 'position:absolute;top:0;width:100%;';
         style += `background: rgba(0,0,0,${ diyComponent.value.componentBgAlpha / 10 });`;
@@ -217,7 +217,7 @@ const swiperHeight = ref(uni.getStorageSync(storageKey) || '');
 
 const handleData = () => {
     if (diyComponent.value.layout == 'horizontal' && diyComponent.value.showStyle == 'pageSlide') {
-        var height = 0;
+        let height = 0;
         const query = uni.createSelectorQuery().in(instance);
         query.select('.graphic-nav-item').boundingClientRect((data: any) => {
             let len = 1;

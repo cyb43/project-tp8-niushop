@@ -1,5 +1,129 @@
 <template>
 	<view :style="warpCss" class="form-item-frame">
+		<view class="relative base-layout-one">
+			<view class="p-[10rpx] flex items-center">
+				<view class="w-[27%] mr-[10rpx] flex items-center">
+					<text class="text-overflow-ellipsis"
+						:style="{'color': diyComponent.textColor,'font-size': (diyComponent.fontSize * 2) + 'rpx' ,'font-weight': diyComponent.fontWeight}">{{ diyComponent.field.name }}</text>
+					<text class="text-[#ec0003]">{{ diyComponent.field.required ? '*' : '' }}</text>
+				</view>
+			</view>
+			<view>
+<!--				<uni-table border>
+					<uni-tr v-for="(column, columnIndex) in diyComponent.columnList" :key="columnIndex">
+						<uni-th>{{ column.name }}</uni-th>
+						<uni-td>
+							<view class="layout-two-content"
+								v-if="column.type === 'text' || column.type === 'number' || column.type === 'idcard'">
+								<input :type="column.type" class="layout-one-content"
+									placeholderClass="layout-one-input-placeholder"
+									:placeholder-style="{'font-size': (diyComponent.fontSize * 2) + 'rpx' }"
+									:style="{'color': diyComponent.textColor,'font-size': (diyComponent.fontSize * 2) + 'rpx'}"
+									v-model="column.value" :disabled="isDisabled" />
+							</view>
+							<view class="layout-two-content"
+								v-else-if="column.type === 'mobile'">
+								<input type="tel" class="layout-one-content"
+									placeholderClass="layout-one-input-placeholder"
+									:placeholder-style="{'font-size': (diyComponent.fontSize * 2) + 'rpx' }"
+									:style="{'color': diyComponent.textColor,'font-size': (diyComponent.fontSize * 2) + 'rpx'}"
+									v-model="column.value" :disabled="isDisabled" />
+							</view>
+							<view v-else-if="column.type === 'gender'">
+								<view @click="openSex(column)"
+									class="px-[16rpx] box-border h-[80rpx] flex items-center justify-between border-solid border-[2rpx] border-[#e6e6e6] rounded-[10rpx] w-[100%]">
+									<view>
+										<text class="mr-[10rpx] text-[28rpx]"
+											:style="{'color': diyComponent.textColor,'font-size': (diyComponent.fontSize * 2) + 'rpx'}">
+											{{ getSexName(column) }}
+										</text>
+									</view>
+									<text class="nc-iconfont nc-icon-xiaV6xx pull-down-arrow text-[#666]"
+										:class="{'selected': selectShow[columnIndex]}"
+										:style="{'font-size': (diyComponent.fontSize * 2 + 2) + 'rpx !important'}"></text>
+								</view>
+							</view>
+							<view v-else-if="column.type === 'date'">
+								<view class="layout-one-content" @click="openCalendar(column)">
+									<view
+										class="nc-iconfont nc-icon-a-riliV6xx-36 !text-[32rpx] text-[#999] mr-[16rpx]">
+									</view>
+									<view class="flex-1 text-overflow-ellipsis flex"
+										:class="{'!text-[#999]' : !diyComponent.field.value.date && !diyComponent.defaultControl}"
+										:style="{'color': diyComponent.textColor,'font-size': (diyComponent.fontSize * 2) + 'rpx' }">
+										{{ startDate }}
+									</view>
+								</view>
+							</view>
+							<view v-else-if="column.type === 'address'">
+								<view class="flex layout-one-content justify-between items-center">
+									<input type="text" class="flex-1" :placeholder="inputPlaceholder(column)" 
+								       placeholderClass="layout-one-input-placeholder"
+								       :placeholder-style="{'font-size': (diyComponent.fontSize * 2) + 'rpx' }"
+								       :style="{'color': diyComponent.textColor,'font-size': (diyComponent.fontSize * 2) + 'rpx'}"
+								       v-model="column.value" :disabled="isDisabled" @click="selectArea(column)" />
+									   <view class="text-[var(&#45;&#45;primary-color)]" v-if="column.value" @click="column.value=''">
+									   	清除
+									   </view>
+								</view>	
+								<textarea v-if="column.addressFormat=='province/city/district/address'" type="textarea" class="layout-one-content mt-2 w-full" placeholderClass="layout-one-input-placeholder" :placeholder-style="{'font-size': (diyComponent.fontSize * 2) + 'rpx' }" placeholder="详细地址(如小区门牌号)" :disabled="isDisabled"></textarea>
+							</view>
+
+							&lt;!&ndash; 仅当字段类型为 'radio' 时才显示 &ndash;&gt;
+							<view class="layout-two-content" v-else-if="column.type === 'radio'">
+								<view @click="openPicker(columnIndex)"
+									class="px-[16rpx] box-border h-[80rpx] flex items-center justify-between border-solid border-[2rpx] border-[#e6e6e6] rounded-[10rpx] w-[100%]">
+									<view v-if="column.value">
+										<text class="mr-[10rpx] text-[28rpx]"
+											:style="{'color': diyComponent.textColor,'font-size': (diyComponent.fontSize * 2) + 'rpx'}">
+											{{ getSelectRadioName(columnIndex) }}
+										</text>
+									</view>
+									<text v-else class="text-[28rpx] text-[#999]"
+										:style="{'font-size': (diyComponent.fontSize * 2) + 'rpx'}">请选择</text>
+									<text class="nc-iconfont nc-icon-xiaV6xx pull-down-arrow text-[#666]"
+										:class="{'selected': selectShow[columnIndex]}"
+										:style="{'font-size': (diyComponent.fontSize * 2 + 2) + 'rpx !important'}"></text>
+								</view>
+							</view>
+						</uni-td>
+					</uni-tr>
+				</uni-table>-->
+			</view>
+		</view>
+
+		<!-- 下拉弹窗 -->
+		<u-popup v-for="(column, columnIndex) in diyComponent.columnList" :key="'popup-' + columnIndex"
+			:show="selectShow[columnIndex]" mode="bottom" @close="selectShow[columnIndex] = false">
+			<view class="p-[15rpx]">
+				<scroll-view scroll-y="true" class="max-h-[450rpx] px-[14rpx] box-border">
+					<u-radio-group v-model="column.value" placement="column" @change="groupChange(columnIndex)"
+						iconPlacement="right">
+						<view class="border-solid border-[0] border-b-[2rpx] border-[#e6e6e6] py-[20rpx]"
+							v-for="(option, optionIndex) in column.options" :key="optionIndex"
+							@click.stop="pullDownConfirmFn(columnIndex, option)">
+							<u-radio activeColor="var(--primary-color)" :labelSize="(diyComponent.fontSize * 2) + 'rpx'"
+								:labelColor="diyComponent.textColor" :style="{'width': '100%'}" :label="option.label"
+								:name="option.id">
+							</u-radio>
+						</view>
+					</u-radio-group>
+				</scroll-view>
+			</view>
+		</u-popup>
+
+		<!-- 修改性别 -->
+		<u-action-sheet :actions="sexList" :show="sexSheetShow" :closeOnClickOverlay="true"
+			:safeAreaInsetBottom="true" @close="sexSheetShow = false" @select="updateSex"></u-action-sheet>
+		<area-select ref="areaRef" @complete="areaSelectComplete" :area-id="formData.district_id" />
+		<view class="calendar-wrap">
+			<u-calendar :show="calendarShow" mode="single" @confirm="confirm" @close="calendarShow=false"
+				closeOnClickOverlay="true" :formatter="formatter" confirmDisabledText="禁止选择"
+				color="var(--primary-color)" ref="calendar" :maxDate="maxDate"></u-calendar>
+			<u-datetime-picker :show="show" mode="datetime" @cancel="show=false"
+				closeOnClickOverlay="true" @confirm="calendarConfirm" @close="show=false"
+				:minDate="minDate"></u-datetime-picker>
+		</view>
 	</view>
 </template>
 
@@ -8,6 +132,10 @@
 	import { ref, computed, watch, onMounted } from 'vue';
 	import useDiyStore from '@/app/stores/diy';
 	import { img, timeStampTurnTime, timeTurnTimeStamp } from '@/utils/common';
+	// import uniTable from '@/addon/o2o/components/uni-table/components/uni-table/uni-table.vue'
+	// import uniTr from '@/addon/o2o/components/uni-table/components/uni-tr/uni-tr.vue'
+	// import uniTh from '@/addon/o2o/components/uni-table/components/uni-th/uni-th.vue'
+	// import uniTd from '@/addon/o2o/components/uni-table/components/uni-td/uni-td.vue'
 	const props = defineProps(['component', 'index', 'global']);
 	const diyStore = useDiyStore();
 	const formData: any = ref({
@@ -208,8 +336,8 @@
 
 
 	const warpCss = computed(() => {
-		var style = '';
-		style += 'position:relative;';
+        let style = '';
+        style += 'position:relative;';
 		if (diyComponent.value.componentStartBgColor) {
 			if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${diyComponent.value.componentGradientAngle},${diyComponent.value.componentStartBgColor},${diyComponent.value.componentEndBgColor});`;
 			else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';

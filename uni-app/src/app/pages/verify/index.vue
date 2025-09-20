@@ -156,7 +156,7 @@ const scanCode = () => {
 
 let isLoading = false;
 const confirm = () => {
-    var reg = /[\S]+/;
+    const reg = /[\S]+/;
     if (!reg.test(verify_code.value)) {
         uni.showToast({
             title: '请输入核销码',

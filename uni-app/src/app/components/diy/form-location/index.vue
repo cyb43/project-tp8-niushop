@@ -77,10 +77,8 @@
 	import { img } from '@/utils/common';
 	import useDiyStore from '@/app/stores/diy';
 	import { useLocation } from '@/hooks/useLocation'
-	import useSystemStore from '@/stores/system';
+
 	const errorInfo: any = ref(null);
-	const systemStore = useSystemStore();
-	const systemInfo = uni.getSystemInfoSync();
 	const props = defineProps(['component', 'index', 'global']);
 	const diyStore = useDiyStore();
 
@@ -108,8 +106,8 @@
 	/************** 定位-end ****************/
 
 	const warpCss = computed(() => {
-		var style = '';
-		style += 'position:relative;';
+        let style = '';
+        style += 'position:relative;';
 		if (diyComponent.value.componentStartBgColor) {
 			if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${diyComponent.value.componentGradientAngle},${diyComponent.value.componentStartBgColor},${diyComponent.value.componentEndBgColor});`;
 			else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';

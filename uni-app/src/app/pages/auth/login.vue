@@ -1,5 +1,5 @@
 <template>
-    <view class="w-screen h-screen flex flex-col" :style="themeColor()" v-if="type">
+    <view class="w-screen h-screen flex flex-col  " :style="themeColor()" v-if="type">
         <!-- #ifdef MP-WEIXIN -->
         <view :style="{'height':headerHeight}">
             <top-tabbar :data="param" :scrollBool="topTabarObj.getScrollBool()" class="top-header" />
@@ -7,10 +7,13 @@
         <!-- #endif -->
         <view class="mx-[60rpx]">
             <view class="pt-[140rpx] text-[44rpx] font-500 text-[#333]">{{ type == 'username' ? t('accountLogin') : t('mobileLogin') }}</view>
-            <view class="text-[26rpx] leading-[39rpx] text-[var(--text-color-light6)] mt-[16rpx] mb-[80rpx]">{{ type == 'username' ? t('accountLoginTip') : t('mobileLoginTip') }}</view>
+            <view class="text-[26rpx] text-[#333] leading-[34rpx] mt-[24rpx] mb-[90rpx]" @click="redirect({ url: '/app/pages/auth/register',param:{type} })">
+                <text>{{ t('noAccount') }},</text>
+                <text class="text-primary">{{ t('toRegister') }}</text>
+            </view>
             <u-form labelPosition="left" :model="formData" errorType='toast' :rules="rules" ref="formRef">
                 <template v-if="type == 'username'">
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6]">
                         <u-form-item label="" prop="username" :border-bottom="false">
                             <u-input v-model="formData.username" border="none" maxlength="40"
                                      :placeholder="t('usernamePlaceholder')" autocomplete="off" class="!bg-transparent"
@@ -18,7 +21,7 @@
                                      placeholderClass="!text-[var(--text-color-light9)] text-[26rpx]" />
                         </u-form-item>
                     </view>
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                         <u-form-item label="" prop="password" :border-bottom="false">
                             <u-input v-model="formData.password" border="none" :password="isPassword" maxlength="40"
                                      :placeholder="t('passwordPlaceholder')" autocomplete="new-password"
@@ -34,7 +37,7 @@
                     </view>
                 </template>
                 <template v-if="type == 'mobile'">
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6]">
                         <u-form-item label="" prop="mobile" :border-bottom="false">
                             <u-input v-model="formData.mobile" type="number" maxlength="11" border="none"
                                      :placeholder="t('mobilePlaceholder')" autocomplete="off" class="!bg-transparent"
@@ -42,7 +45,7 @@
                                      placeholderClass="!text-[var(--text-color-light9)] text-[26rpx]" />
                         </u-form-item>
                     </view>
-                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[var(--goods-rounded-mid)] box-border bg-[#F6F6F6] mt-[40rpx] text-[26rpx]">
+                    <view class="h-[88rpx] flex w-full items-center px-[30rpx] rounded-[40rpx] box-border bg-[#F6F6F6] mt-[40rpx]">
                         <u-form-item label="" prop="mobile_code" :border-bottom="false">
                             <u-input v-model="formData.mobile_code" type="number" maxlength="4" border="none"
                                      class="!bg-transparent" fontSize="26rpx" :disabled="real_name_input"
@@ -57,25 +60,18 @@
                     </view>
                 </template>
             </u-form>
-            <view v-if="type == 'username'" class="text-right text-[24rpx] text-[var(--text-color-light9)] leading-[34rpx] mt-[20rpx]" @click="redirect({ url: '/app/pages/auth/resetpwd' })">{{ t('resetpwd') }}</view>
-            <view :class="{'mt-[160rpx]':type != 'username','mt-[106rpx]':type == 'username'}">
-                <view v-if="configStore.login.agreement_show" class="flex items-center mb-[20rpx] py-[14rpx]" @click.stop="agreeChange">
+            <view class="h-[34rpx] text-right text-[24rpx] text-[var(--text-color-light6)] leading-[34rpx] mt-[20rpx] " @click="toResetpwd">{{ type == 'username' ? t('resetpwd') : '' }}</view>
+            <view class="mt-[106rpx]">
+                <button class="w-full h-[80rpx] !bg-[var(--primary-color)] text-[26rpx] rounded-[40rpx] leading-[80rpx] font-500 !text-[#fff] !mx-[0]" :loadingText="t('logining')" @click="handleLogin">{{ t('login') }}</button>
+                <view v-if="configStore.login.agreement_show" class="flex items-center mt-[20rpx] py-[14rpx]" @click.stop="agreeChange">
                     <u-checkbox-group @change="agreeChange">
-                        <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="circle" size="30rpx" />
+                        <u-checkbox activeColor="var(--primary-color)" :checked="isAgree" shape="circle" size="24rpx" />
                     </u-checkbox-group>
                     <view class="text-[24rpx] text-[var(--text-color-light6)] flex items-center flex-wrap leading-[30rpx]">
                         <text>{{ t('agreeTips') }}</text>
                         <text @click.stop="redirect({ url: '/app/pages/auth/agreement?key=privacy' })" class="text-primary">《{{ t('privacyAgreement') }}》</text>
                         <text>{{ t('and') }}</text>
                         <text @click.stop="redirect({ url: '/app/pages/auth/agreement?key=service' })" class="text-primary">《{{ t('userAgreement') }}》</text>
-                    </view>
-                </view>
-                <button class="w-full h-[80rpx] !bg-[var(--primary-color)] text-[26rpx] rounded-[40rpx] leading-[80rpx] font-500 !text-[#fff] !mx-[0]" :loadingText="t('logining')" @click="handleLogin">{{ t('login') }}</button>
-                <view class="flex items-center justify-between mt-[30rpx]">
-                    <view class="text-[26rpx] text-[var(--text-color-light6)] leading-[34rpx]" @click="setType" v-if="(type == 'username' && configStore.login.is_mobile) || (type == 'mobile' && configStore.login.is_username )">{{ type == 'username' ? t('mobileLogin') : t('accountLogin') }}</view>
-                    <view class="text-[26rpx] text-[#333] leading-[34rpx]" @click="redirect({ url: '/app/pages/auth/register',param:{type} })">
-                        <text>{{ t('noAccount') }},</text>
-                        <text class="text-primary">{{ t('toRegister') }}</text>
                     </view>
                 </view>
             </view>
@@ -99,10 +95,12 @@
                 </view>
             </view>
         </uni-popup>
-        <view class="footer w-full" v-if="isShowQuickLogin">
-            <view class="text-[26rpx] leading-[36rpx] text-[#333] text-center mb-[30rpx] font-400">{{ t('oneClicklogin') }}</view>
-            <view class="flex justify-center">
-                <button class="h-[80rpx] w-[80rpx] text-[46rpx] !text-[#1AAB37] text-center !p-0 !bg-transparent leading-[79rpx] border-[2rpx] rounded-[50%] border-solid border-[#ddd] nc-iconfont nc-icon-weixinV6mm overflow-hidden" @click="toLink"></button>
+        <view class="footer w-full" v-if="type == 'mobile' && configStore.login.is_username || type == 'username' && configStore.login.is_mobile || isShowQuickLogin">
+            <view class="text-[26rpx] leading-[36rpx] text-[#666] text-center mb-[30rpx] font-400">其他登录方式</view>
+            <view class="flex justify-center gap-[40rpx]">
+                <text v-if="type == 'mobile' && configStore.login.is_username"  @click="setType" class="w-[66rpx] h-[66rpx] flex items-center justify-center iconfont iconmima6Vmm border-[2rpx] rounded-[50%] border-solid border-[#ddd] !text-[26rpx]"></text>
+                <text v-if="type == 'username' && configStore.login.is_mobile" @click="setType" class="w-[66rpx] h-[66rpx] flex items-center justify-center iconfont iconshouji6Vmm border-[2rpx] rounded-[50%] border-solid border-[#ddd] !text-[26rpx]"></text>
+                <text v-if="isShowQuickLogin" @click="toLink" class="w-[66rpx] h-[66rpx] !text-[#1AAB37] flex items-center justify-center iconfont iconweixinV6mm1 border-[2rpx] rounded-[50%] border-solid border-[#ddd] !text-[26rpx]"></text>
             </view>
         </view>
     </view>
@@ -117,18 +115,15 @@ import { t } from '@/locale'
 import { redirect, getToken, pxToRpx, isWeixinBrowser } from '@/utils/common'
 import { onLoad } from '@dcloudio/uni-app';
 import { topTabar } from '@/utils/topTabbar'
+import useSystemStore from "@/stores/system";
 
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
+const systemStore = useSystemStore()
 /********* 自定义头部 - start ***********/
 const topTabarObj = topTabar()
 const param = topTabarObj.setTopTabbarParam({ title: '', topStatusBar: { bgColor: '#fff', textColor: '#333' } })
 /********* 自定义头部 - end ***********/
 const headerHeight = computed(() => {
-    return Object.keys(menuButtonInfo).length ? pxToRpx(Number(menuButtonInfo.height)) + pxToRpx(menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
+    return Object.keys(systemStore.menuButtonInfo).length ? pxToRpx(Number(systemStore.menuButtonInfo.height)) + pxToRpx(systemStore.menuButtonInfo.top) + pxToRpx(8) + 'rpx' : 'auto'
 })
 const real_name_input = ref(true);
 const memberStore = useMemberStore()
@@ -161,6 +156,14 @@ onLoad(async(option: any) => {
             redirect({ url: '/app/pages/index/index', mode: 'reLaunch' })
         }, 100)
     }
+	// #ifdef H5
+    uni.getStorageSync('openid') && (Object.assign(formData, { wx_openid: uni.getStorageSync('openid') }))
+    // #endif
+
+    // #ifdef MP-WEIXIN
+    uni.getStorageSync('openid') && (Object.assign(formData, { weapp_openid: uni.getStorageSync('openid') }))
+    // #endif
+	
     if (option.type) {
         if (option.type == 'mobile') {
             if (configStore.login.is_mobile) {
@@ -282,7 +285,7 @@ const handleLogin = () => {
         loading.value = true
 
         const login = type.value == 'username' ? usernameLogin : mobileLogin
-
+        
         login(formData).then((res: any) => {
             memberStore.setToken(res.data.token)
             // todo 已注册的会员不受影响
@@ -311,7 +314,12 @@ const toLink = () => {
     } else {
         redirect({ url: '/app/pages/auth/index', mode: 'redirectTo' })
     }
+}
 
+const toResetpwd = () =>{
+    if(type.value == 'username'){
+        redirect({ url: '/app/pages/auth/resetpwd' })
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -332,7 +340,12 @@ const toLink = () => {
 }
 
 .footer {
+    // position: absolute;
+    // position: fixed;
     margin-top: 200rpx;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding-bottom: calc(151rpx + constant(safe-area-inset-bottom));
     padding-bottom: calc(151rpx + env(safe-area-inset-bottom));
 }

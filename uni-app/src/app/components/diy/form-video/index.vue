@@ -191,8 +191,8 @@
 		return props.global;
 	})
 	const warpCss = computed(() => {
-		var style = '';
-		style += 'position:relative;';
+        let style = '';
+        style += 'position:relative;';
 		if (diyComponent.value.componentStartBgColor) {
 			if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${diyComponent.value.componentGradientAngle},${diyComponent.value.componentStartBgColor},${diyComponent.value.componentEndBgColor});`;
 			else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';

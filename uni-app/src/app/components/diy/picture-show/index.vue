@@ -55,7 +55,7 @@ const diyComponent = computed(() => {
 })
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
         else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -68,7 +68,7 @@ const warpCss = computed(() => {
 })
 
 const moduleOneCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.moduleOne.listFrame) {
         if (diyComponent.value.moduleOne.listFrame.startColor && diyComponent.value.moduleOne.listFrame.endColor) style += `background:linear-gradient(${ diyComponent.value.moduleOne.listFrame.startColor },${ diyComponent.value.moduleOne.listFrame.endColor });`;
     }
@@ -84,7 +84,7 @@ const moduleOneCss = computed(() => {
 })
 
 const moduleTwoCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.moduleTwo.listFrame) {
         if (diyComponent.value.moduleTwo.listFrame.startColor && diyComponent.value.moduleTwo.listFrame.endColor) style += `background:linear-gradient(${ diyComponent.value.moduleTwo.listFrame.startColor },${ diyComponent.value.moduleTwo.listFrame.endColor });`;
     }
@@ -99,7 +99,7 @@ const moduleTwoCss = computed(() => {
 })
 
 const moduleBtnCss = (data: any) => {
-    var style = '';
+    let style = '';
     if (data.btnTitle.color) {
         style += 'color:' + data.btnTitle.color + ';';
     }

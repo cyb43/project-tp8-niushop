@@ -1,5 +1,5 @@
 <template>
-    <view class="w-full min-h-screen bg-page personal-wrap !pb-[20rpx]" v-if="info" :style="themeColor()">
+    <view class="w-full min-h-screen bg-page personal-wrap !pb-[20rpx] overflow-hidden" v-if="info" :style="themeColor()">
         <view class="my-[var(--top-m)] sidebar-margin overflow-hidden card-template py-[20rpx]">
             <u-cell-group :border="false" class="cell-group">
                 <u-cell :title="t('headimg')" :titleStyle="{'font-size': '28rpx'}" :is-link="true">
@@ -217,7 +217,7 @@ page {
     .u-cell {
         .u-cell__body {
             padding: 0;
-            height: 90rpx;
+            height: 80rpx;
             margin-top: 16rpx;
         }
 
@@ -226,7 +226,7 @@ page {
         }
 
         .u-cell__title-text {
-            font-size: 28rpx;
+            font-size: 26rpx;
             line-height: 40rpx;
         }
 
@@ -236,7 +236,7 @@ page {
 
         .u-cell__value {
             line-height: 1;
-            font-size: 28rpx;
+            font-size: 26rpx;
             color: #333 !important;
         }
 
@@ -264,7 +264,7 @@ page {
     }
 
     .u-action-sheet__item-wrap__item__name {
-        font-size: 30rpx !important;
+        font-size: 26rpx !important;
     }
 }
 
@@ -287,8 +287,8 @@ page {
             }    
         }
     	.detail-two-content{
-            padding-top: 32rpx !important;
-            padding-bottom: 32rpx !important;
+            padding-top: 30rpx !important;
+            padding-bottom: 30rpx !important;
             margin-bottom: 0 !important;
             & > view{
                 width: 72% !important;
@@ -297,7 +297,11 @@ page {
                     height: 136rpx !important;
                 }
             }
+            & > view, .detail-two-content-label{
+                font-size: 26rpx!important;
+            }
         }
     }
 }
 </style>
+

@@ -77,9 +77,11 @@ import useMescroll from '@/components/mescroll/hooks/useMescroll.js';
 import { onPageScroll, onReachBottom } from '@dcloudio/uni-app';
 import { topTabar } from '@/utils/topTabbar'
 import selectDate from '@/components/select-date/select-date.vue';
+import useSystemStore from "@/stores/system";
 
 const { downCallback, mescrollInit, getMescroll } = useMescroll(onPageScroll, onReachBottom);
 const memberStore = useMemberStore();
+const systemStore = useSystemStore()
 const info = computed(() => memberStore.info)
 // 提现
 const applyCashOut = () => {
@@ -92,12 +94,6 @@ const topTabarObj = topTabar()
 let param = topTabarObj.setTopTabbarParam({ title: '我的佣金', topStatusBar: { bgColor: '#fff', textColor: '#333' } })
 /********* 自定义头部 - end ***********/
 
-    // 获取系统状态栏的高度
-let menuButtonInfo: any = {};
-// 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
-// #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-// #endif
 const headerStyle = computed(() => {
     return {
         backgroundImage: 'url(' + img('static/resource/images/member/commission/commission_bg.png') + ') ',
@@ -108,7 +104,7 @@ const headerStyle = computed(() => {
 })
 //  16为自定头部的padding-bottom
 const mescrollTop = computed(() => {
-    return Object.keys(menuButtonInfo).length ? (Number(menuButtonInfo.height) * 2 + menuButtonInfo.top * 2 + 470 + 16) + 'rpx' : '470rpx'
+    return Object.keys(systemStore.menuButtonInfo).length ? (Number(systemStore.menuButtonInfo.height) * 2 + systemStore.menuButtonInfo.top * 2 + 470 + 16) + 'rpx' : '470rpx'
 })
 
 //来源类型
@@ -173,7 +169,7 @@ const confirmFn = (data: any) => {
 <style lang="scss">
 .member-level {
     background: linear-gradient(360deg, #F23621 11%, #FF7F71 100%), #D9D9D9;
-    border-radius: 0rpx 20rpx 20rpx 0rpx;
+    border-radius: 0 20rpx 20rpx 0;
 }
 
 :deep(.uni-scroll-view) {

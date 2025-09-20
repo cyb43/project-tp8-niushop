@@ -65,12 +65,12 @@ const props = defineProps({
     // 骨架的背景色
     bgColor: {
         type: String,
-        default: '' // #EAEDF5
+        default: '#EAEDF5' // #EAEDF5
     },
     // 骨架的动画高亮背景色
     highlightBgColor: {
         type: String,
-        default: '' // #F9FAFF
+        default: '#F9FAFF' // #F9FAFF
     },
     // 自定义配置
     config: {
@@ -220,7 +220,9 @@ const addUnit = (value = 'auto', unit = 'px') => {
 
 <style lang="scss" scoped>
 @mixin background {
-    background: linear-gradient(90deg, var(--bgColor) 25%, var(--highlightBgColor) 37%, var(--bgColor) 50%);
+    //background: linear-gradient(90deg, var(--bgColor) 25%, var(--highlightBgColor) 37%, var(--bgColor) 50%);
+    background: linear-gradient(90deg, #EAEDF5 25%, #F9FAFF 37%, #EAEDF5 50%);
+
     background-size: 400% 100%;
 }
 
@@ -261,7 +263,8 @@ const addUnit = (value = 'auto', unit = 'px') => {
 
     .fade-out {
         opacity: 0;
-        animation: fadeOutAnim var(--fadeOutTime);
+        //animation: fadeOutAnim var(--fadeOutTime);
+        animation: fadeOutAnim 0.5s;
     }
 
     @keyframes fadeOutAnim {
@@ -274,7 +277,8 @@ const addUnit = (value = 'auto', unit = 'px') => {
     }
 
     .animate {
-        animation: skeletonAnim var(--animateTime) ease infinite;
+        //animation: skeletonAnim var(--animateTime) ease infinite;
+        animation: skeletonAnim 1.8s ease infinite;
     }
 
     @keyframes skeletonAnim {

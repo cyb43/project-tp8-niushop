@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { getConfig } from '@/app/api/auth'
 import { isWeixinBrowser } from "@/utils/common";
+import useSystemStore from "@/stores/system";
 
 interface loginConfig {
     is_username: number | boolean,
@@ -54,7 +55,8 @@ const useConfigStore = defineStore('config', {
             let url = '';
             // #ifdef H5
             if (isWeixinBrowser()) {
-                url = uni.getSystemInfoSync().platform == 'ios' ? uni.getStorageSync('initUrl') : location.href
+                const systemStore = useSystemStore()
+                url = systemStore.systemInfo.platform == 'ios' ? uni.getStorageSync('initUrl') : location.href
             }
             // #endif
             await getConfig({ url }).then((res: any) => {

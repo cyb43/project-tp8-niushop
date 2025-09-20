@@ -11,10 +11,11 @@
             </view>
             <view class="fixed-wrap" :style="fixedStyle">
                 <view v-if="diyComponent.search.style == 'style-1'" class="diy-search-wrap relative z-10"
-                      @click="diyStore.toRedirect(diyComponent.search.link)" :style="navbarInnerStyle">
-                    <view class="img-wrap" v-if="diyComponent.search.logo">
+                      @click="diyStore.toRedirect(diyComponent.search.link)" :style="!props.global.topStatusBar.isShow ? navbarInnerStyle : ''">
+                    <!-- <view class="img-wrap" v-if="diyComponent.search.logo">	
                         <image :src="img(diyComponent.search.logo)" mode="aspectFit" />
-                    </view>
+                    </view> -->
+					  <image :src="img(diyComponent.search.logo)" v-if="diyComponent.search.logo" mode="aspectFit" class="max-h-[60rpx] w-[152rpx] mr-[20rpx]" />
                     <view class="search-content" :style="{backgroundColor: diyComponent.search.bgColor }" @click.stop="diyStore.toRedirect(diyComponent.search.link)">
                         <text class="input-content text-[#fff] text-[24rpx] leading-[68rpx]" :style="{color: diyComponent.search.color }">{{ isShowSearchPlaceholder ? diyComponent.search.text : '' }}</text>
                         <text class="nc-iconfont nc-icon-sousuo-duanV6xx1 w-[80rpx] h-[52rpx] flex items-center justify-center rounded-[50rpx] text-[28rpx] text-[#fff]"
@@ -27,8 +28,9 @@
                     </view>
                 </view>
                 <view v-if="diyComponent.search.style == 'style-2'" class="diy-search-wrap style-2 relative z-10" @click="diyStore.toRedirect(diyComponent.search.link)">
-                    <view class="flex items-center" :style="navbarInnerStyle">
-                        <view class="img-wrap" v-if="diyComponent.search.logo"><image :src="img(diyComponent.search.logo)" mode="aspectFit" /></view>
+                    <view class="flex items-center" :style="!props.global.topStatusBar.isShow ? navbarInnerStyle : ''">
+                        <!-- <view class="img-wrap" v-if="diyComponent.search.logo"><image :src="img(diyComponent.search.logo)" mode="aspectFit" /></view> -->
+						  <image :src="img(diyComponent.search.logo)" v-if="diyComponent.search.logo" mode="aspectFit" class="max-h-[60rpx] w-[152rpx] mr-[10rpx]" />
                         <view :style="searchSubTitleCss" class="max-w-[360rpx] text-[24rpx] h-[38rpx] rounded-r-[20rpx] rounded-t-[20rpx] rounded-bl-[2rpx]" v-if="diyComponent.search.subTitle.text">
                             <view class="truncate leading-[38rpx] h-[38rpx]  px-[12rpx]">{{ diyComponent.search.subTitle.text }}</view>
                         </view>
@@ -124,7 +126,7 @@
 
             <!-- 分类展开 -->
             <u-popup :safeAreaInsetTop="true" :show="tabAllPopup" mode="top" @close="tabAllPopup = false">
-                <view class="text-sm px-[30rpx] pt-3" :style="{'padding-top':(menuButtonInfo.top+'px')}">全部分类</view>
+                <view class="text-sm px-[30rpx] pt-3" :style="{'padding-top':(systemStore.menuButtonInfo.top+'px')}">全部分类</view>
                 <view class="flex flex-wrap pl-[30rpx] pt-[30rpx]">
                     <view @click="changeData({ source : 'home' },-1)" :class="['px-[26rpx] border-[2rpx] border-solid border-transparent h-[60rpx] mr-[30rpx] mb-[30rpx] flex items-center justify-center bg-[#F4F4F4] rounded-[8rpx] text-xs', { 'tab-select-popup': currTabIndex == -1 }]">首页</view>
                     <text @click="changeData(item,index)" v-for="(item, index) in diyComponent.tab.list" :key="index" :class="['px-[26rpx] border-[2rpx] border-solid border-transparent h-[60rpx] mr-[30rpx] mb-[30rpx] flex items-center justify-center bg-[#F4F4F4] rounded-[8rpx] text-xs', { 'tab-select-popup': index == currTabIndex }]">{{ item.text }}</text>
@@ -155,8 +157,6 @@ import { useLocation } from '@/hooks/useLocation'
 import useSystemStore from '@/stores/system';
 
 const systemStore = useSystemStore();
-const systemInfo = uni.getSystemInfoSync();
-
 const instance = getCurrentInstance();
 const props = defineProps(['component', 'index', 'global', 'scrollBool']);
 const diyStore = useDiyStore();
@@ -180,7 +180,7 @@ locationVal.init();
 /************** 定位-end ****************/
 
 const warpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.componentStartBgColor) {
         if (diyComponent.value.componentStartBgColor && diyComponent.value.componentEndBgColor) style += `background:linear-gradient(${ diyComponent.value.componentGradientAngle },${ diyComponent.value.componentStartBgColor },${ diyComponent.value.componentEndBgColor });`;
         else style += 'background-color:' + diyComponent.value.componentStartBgColor + ';';
@@ -210,7 +210,7 @@ const setModuleLocation = () => {
 
 const fixedStyleBg = ref(false);
 const fixedStyle = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.swiper.swiperStyle == 'style-3') {
         style += 'position: absolute;z-index: 99;left: 0;right: 0;';
     }
@@ -221,7 +221,7 @@ const fixedStyle = computed(() => {
     }
     if (diyComponent.value.swiper.swiperStyle == 'style-3') {
         // h5,上移的像素，采取的是平均值
-        if (systemInfo.platform === 'ios') {
+        if (systemStore.systemInfo.platform === 'ios') {
             style += 'top: 55px;';
         } else {
             style += 'top: 44.5px;';
@@ -236,14 +236,12 @@ const fixedStyle = computed(() => {
             style += 'position: fixed;z-index: 99;top: 0;left: 0;right: 0;';
         }
 
-        // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-        menuButtonInfo = uni.getMenuButtonBoundingClientRect();
-        if (props.global.topStatusBar.isShow) {
-            style += 'top:' + diyStore.topTabarHeight + 'px;';
-        }
-        // #endif
-
         if (props.scrollBool == 1 || props.scrollBool == 2) {
+            // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
+            if (props.global.topStatusBar.isShow) {
+                style += 'top:' + diyStore.topTabarHeight + 'px;';
+            }
+            // #endif
             // #ifdef H5
             if (props.global.topStatusBar.isShow && props.global.topStatusBar.style == 'style-4') {
                 style += 'top:' + diyStore.topTabarHeight + 'px;';
@@ -273,7 +271,7 @@ const carouselSwiperStyle = () => {
     if (diyComponent.value.swiper.swiperStyle == 'style-3') {
         // #ifdef H5
         // h5,上移的像素，采取的是平均值
-        if (systemInfo.platform === 'ios') {
+        if (systemStore.systemInfo.platform === 'ios') {
             style = 'margin-top: -55px;';
         } else {
             style = 'margin-top: -44.5px;';
@@ -314,7 +312,7 @@ const isShowSearchPlaceholder = computed(() => {
 
 // 背景渐变
 const bgImgBoxStyle = computed(() => {
-    var style = '';
+    let style = '';
     let str = props.global.pageStartBgColor ? props.global.pageStartBgColor : 'rgba(255,255,255,1)';
     if (str.indexOf('(') > -1) {
         let arr = str.split('(')[1].split(')')[0].split(',');
@@ -329,7 +327,7 @@ const bgImgBoxStyle = computed(() => {
 
 // 轮播样式二
 const swiperStyleBool = computed(() => {
-    var style = diyComponent.value.swiper.swiperStyle == 'style-2' || diyComponent.value.swiper.swiperStyle == 'style-3' ? true : false;
+    const style = diyComponent.value.swiper.swiperStyle == 'style-2' || diyComponent.value.swiper.swiperStyle == 'style-3' ? true : false;
     return style;
 })
 
@@ -344,7 +342,7 @@ const swiperChange = e => {
 };
 
 const swiperWarpCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.swiper.topRounded) style += 'border-top-left-radius:' + diyComponent.value.swiper.topRounded * 2 + 'rpx;';
     if (diyComponent.value.swiper.topRounded) style += 'border-top-right-radius:' + diyComponent.value.swiper.topRounded * 2 + 'rpx;';
     if (diyComponent.value.swiper.bottomRounded) style += 'border-bottom-left-radius:' + diyComponent.value.swiper.bottomRounded * 2 + 'rpx;';
@@ -353,7 +351,7 @@ const swiperWarpCss = computed(() => {
 })
 
 const searchSubTitleCss = computed(() => {
-    var style = '';
+    let style = '';
     if (diyComponent.value.search.subTitle.textColor) style += 'color:' + diyComponent.value.search.subTitle.textColor + ';';
     if (diyComponent.value.search.subTitle.startColor && diyComponent.value.search.subTitle.endColor) style += `background:linear-gradient(${ diyComponent.value.search.subTitle.startColor }, ${ diyComponent.value.search.subTitle.endColor });`;
     else style += 'background-color:' + (diyComponent.value.search.subTitle.startColor || diyComponent.value.search.subTitle.endColor) + ';';
@@ -383,15 +381,13 @@ const changeData = (item: any, index: any) => {
 }
 
 const tabAllPopup = ref(false);
-let menuButtonInfo: any = {};
 const navbarInnerStyle = ref('')
 // 如果是小程序，获取右上角胶囊的尺寸信息，避免导航栏右侧内容与胶囊重叠(支付宝小程序非本API，尚未兼容)
 // #ifdef MP-WEIXIN || MP-BAIDU || MP-TOUTIAO || MP-QQ
-menuButtonInfo = uni.getMenuButtonBoundingClientRect();
 // 导航栏内部盒子的样式
 // 导航栏宽度，如果在小程序下，导航栏宽度为胶囊的左边到屏幕左边的距离
 // 如果是各家小程序，导航栏内部的宽度需要减少右边胶囊的宽度
-navbarInnerStyle.value += 'padding-top:' + menuButtonInfo.top + 'px;';
+navbarInnerStyle.value += 'padding-top:' + systemStore.menuButtonInfo.top + 'px;';
 // #endif
 onMounted(() => {
     refresh();
@@ -418,14 +414,14 @@ onMounted(() => {
     if (diyComponent.value.positionWay == 'fixed') {
         if (props.global.topStatusBar.isShow == false) {
             navbarInnerStyle.value = ''
-            let rightButtonWidth = menuButtonInfo.width ? menuButtonInfo.width * 2 + 'rpx' : '70rpx';
+            let rightButtonWidth = systemStore.menuButtonInfo.width ? systemStore.menuButtonInfo.width * 2 + 'rpx' : '70rpx';
             navbarInnerStyle.value += 'padding-right:calc(' + rightButtonWidth + ' + 30rpx);';
-            navbarInnerStyle.value += 'padding-top:' + menuButtonInfo.top + 'px;';
+            navbarInnerStyle.value += 'padding-top:' + systemStore.menuButtonInfo.top + 'px;';
         } else if (props.global.topStatusBar) {
             navbarInnerStyle.value = ''
         }
     } else {
-        let rightButtonWidth = menuButtonInfo.width ? menuButtonInfo.width * 2 + 'rpx' : '70rpx';
+        let rightButtonWidth = systemStore.menuButtonInfo.width ? systemStore.menuButtonInfo.width * 2 + 'rpx' : '70rpx';
         navbarInnerStyle.value += 'padding-right:calc(' + rightButtonWidth + ' + 30rpx);';
     }
     // #endif
@@ -471,7 +467,7 @@ const getDiyInfoFn = (id: any) => {
             let sources = JSON.parse(data.value);
             diyPageData.global = sources.global;
             diyPageData.global.topStatusBar.isShow = false; // 子页面不需要展示顶部导航栏
-            diyPageData.global.bottomTabBarSwitch = false; // 子页面不需要展示底部导航
+            diyPageData.global.bottomTabBar.isShow = false; // 子页面不需要展示底部导航
             diyPageData.value = sources.value;
 
             diyPageData.value.forEach((item: any, index) => {
@@ -811,8 +807,7 @@ if (componentsScrollVal && (typeof componentsScrollVal == "object")) {
             width: 10rpx;
             height: 10rpx;
             border-radius: 6rpx;
-            margin: 0;
-            margin-right: 14rpx;
+            margin: 0 14rpx 0 0;
 
             &.last-of-type {
                 margin-right: 0;

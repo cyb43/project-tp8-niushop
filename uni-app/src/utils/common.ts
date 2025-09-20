@@ -26,14 +26,12 @@ export const redirect = (redirect: any) => {
         if (config.login.is_username && !config.login.is_mobile && !config.login.is_auth_register) {
             url = '/app/pages/auth/login'
             param = { type: 'username' }
-            mode = 'redirectTo'
             newLogin = true
         } else if (systemStore.initStatus == 'finish' && !config.login.is_username && !config.login.is_mobile && !config.login.is_auth_register) {
             uni.showToast({ title: '商家未开启登录注册', icon: 'none' })
             return;
         } else {
             url = '/app/pages/auth/index'
-            mode = 'redirectTo'
             newLogin = true
         }
         // #endif
@@ -44,14 +42,12 @@ export const redirect = (redirect: any) => {
             if (config.login.is_username && !config.login.is_mobile && !config.login.is_auth_register) {
                 url = '/app/pages/auth/login'
                 param = { type: 'username' }
-                mode = 'redirectTo'
                 newLogin = true
             } else if (systemStore.initStatus == 'finish' && !config.login.is_username && !config.login.is_mobile && !config.login.is_auth_register) {
                 uni.showToast({ title: '商家未开启登录注册', icon: 'none' })
                 return;
             } else {
                 url = '/app/pages/auth/index'
-                mode = 'redirectTo'
                 newLogin = true
             }
         } else {
@@ -59,14 +55,12 @@ export const redirect = (redirect: any) => {
             if (config.login.is_username && !config.login.is_mobile) {
                 url = '/app/pages/auth/login'
                 param = { type: 'username' }
-                mode = 'redirectTo'
                 newLogin = true
             } else if (systemStore.initStatus == 'finish' && !config.login.is_username && !config.login.is_mobile) {
                 uni.showToast({ title: '商家未开启登录注册', icon: 'none' })
                 return;
             } else {
                 url = '/app/pages/auth/index'
-                mode = 'redirectTo'
                 newLogin = true
             }
         }
@@ -212,7 +206,7 @@ export const currShareRoute = () => {
     }
     let currentRoute = pages[pages.length - 1].route //获取当前页面路由
 
-    // #ifdef H5
+    // #ifndef MP
     let currentParam: any = pages[pages.length - 1].$page.options; //获取路由参数
     // #endif
 
@@ -356,17 +350,17 @@ export function mobileConceal(mobile: string): string {
  */
 export function timeStampTurnTime(timeStamp: any, type = "") {
     if (timeStamp != undefined && timeStamp != "" && timeStamp > 0) {
-        var date = new Date();
+        const date = new Date();
         date.setTime(timeStamp * 1000);
-        var y = date.getFullYear();
-        var m: any = date.getMonth() + 1;
+        const y = date.getFullYear();
+        let m: any = date.getMonth() + 1;
         m = m < 10 ? ('0' + m) : m;
-        var d: any = date.getDate();
+        let d: any = date.getDate();
         d = d < 10 ? ('0' + d) : d;
-        var h: any = date.getHours();
+        let h: any = date.getHours();
         h = h < 10 ? ('0' + h) : h;
-        var minute: any = date.getMinutes();
-        var second: any = date.getSeconds();
+        let minute: any = date.getMinutes();
+        let second: any = date.getSeconds();
         minute = minute < 10 ? ('0' + minute) : minute;
         second = second < 10 ? ('0' + second) : second;
         if (type) {
@@ -385,55 +379,134 @@ export function timeStampTurnTime(timeStamp: any, type = "") {
 
 /**
  * 日期格式转时间戳
- * @param {Object} date
+ * @param dateStr
  */
 export function timeTurnTimeStamp(dateStr: string) {
-    let timestamp;
-    let date;
+    // 输入验证
+    if (!dateStr || typeof dateStr !== 'string' || dateStr.trim() === '') {
+        return null;
+    }
 
-    // 尝试解析 'YYYY年M月D日'
-    try {
-        let dateStr1 = dateStr.replace('年', '-').replace('月', '-').replace('日', '');
-        date = new Date(dateStr1);
-        timestamp = date.getTime();
-    } catch (e) {
-        // 尝试解析 'YYYY-MM-DD'
-        try {
-            date = new Date(dateStr);
-            timestamp = date.getTime();
-        } catch (e) {
-            // 尝试解析 'YYYY/MM/DD'
-            try {
-                date = new Date(dateStr.replace(/\//g, "-"));
-                timestamp = date.getTime();
-            } catch (e) {
-                // 尝试解析 'YYYY年M月D日 HH时mm分'
-                try {
-                    let dateStr1 = dateStr.replace('年', '-').replace('月', '-').replace('日', ' ').replace('时', ':').replace('分', '');
-                    date = new Date(dateStr1);
-                    timestamp = date.getTime();
-                } catch (e) {
-                    // 尝试解析 'YYYY-MM-DD HH:mm'
-                    try {
-                        date = new Date(dateStr);
-                        timestamp = date.getTime();
-                    } catch (e) {
-                        // 尝试解析 'YYYY/MM/DD HH:mm'
-                        try {
-                            date = new Date(dateStr.replace(/\//g, "-"));
-                            timestamp = date.getTime();
-                        } catch (e) {
-                            // 如果所有格式都失败，返回null
-                            console.error("无法解析日期字符串:", dateStr);
-                            return null;
-                        }
-                    }
-                }
-            }
+    const trimmedDateStr = dateStr.trim();
+
+    // 定义支持的日期格式转换规则
+    const formatRules = [
+        // 'YYYY年M月D日' -> 'YYYY-MM-DD'
+        {
+            pattern: /(\d{4})年(\d{1,2})月(\d{1,2})日/,
+            transform: (str: string) => str.replace(/(\d{4})年(\d{1,2})月(\d{1,2})日/, '$1-$2-$3')
+        },
+        // 'YYYY年M月D日 HH时mm分' -> 'YYYY-MM-DD HH:mm'
+        {
+            pattern: /(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2})时(\d{1,2})分/,
+            transform: (str: string) => str.replace(/(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2})时(\d{1,2})分/, '$1-$2-$3 $4:$5')
+        },
+        // 'YYYY/MM/DD' -> 'YYYY-MM-DD'
+        {
+            pattern: /^\d{4}\/\d{1,2}\/\d{1,2}(\s+\d{1,2}:\d{1,2}(:\d{1,2})?)?$/,
+            transform: (str: string) => str.replace(/\//g, '-')
+        },
+        // 标准格式，无需转换
+        {
+            pattern: /^\d{4}-\d{1,2}-\d{1,2}(\s+\d{1,2}:\d{1,2}(:\d{1,2})?)?$/,
+            transform: (str: string) => str
+        }
+    ];
+
+    // 尝试匹配并转换格式
+    let normalizedDateStr = null;
+    for (const rule of formatRules) {
+        if (rule.pattern.test(trimmedDateStr)) {
+            normalizedDateStr = rule.transform(trimmedDateStr);
+            break;
         }
     }
-    return (timestamp / 1000);
+
+    // 如果没有匹配的格式，直接尝试原始字符串
+    if (!normalizedDateStr) {
+        normalizedDateStr = trimmedDateStr;
+    }
+
+    // 创建日期对象并验证
+    const date = new Date(normalizedDateStr);
+
+    // 检查日期是否有效
+    if (isNaN(date.getTime())) {
+        return null;
+    }
+
+    // 返回秒级时间戳
+    return Math.floor(date.getTime() / 1000);
 }
+
+/**
+ * 日期格式转时间戳 (兼容 iOS)
+ * @param dateStr
+ */
+export function timeTurnTimeStampTwo(dateStr: string) {
+    if (!dateStr || typeof dateStr !== 'string' || dateStr.trim() === '') {
+        return null;
+    }
+
+    let trimmedDateStr = dateStr.trim();
+
+    // 定义支持的日期格式转换规则
+    const formatRules = [
+        // 'YYYY年M月D日'
+        {
+            pattern: /(\d{4})年(\d{1,2})月(\d{1,2})日/,
+            transform: (str: string) =>
+                str.replace(/(\d{4})年(\d{1,2})月(\d{1,2})日/, '$1/$2/$3'),
+        },
+        // 'YYYY年M月D日 HH时mm分'
+        {
+            pattern: /(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2})时(\d{1,2})分/,
+            transform: (str: string) =>
+                str.replace(
+                    /(\d{4})年(\d{1,2})月(\d{1,2})日\s+(\d{1,2})时(\d{1,2})分/,
+                    '$1/$2/$3 $4:$5'
+                ),
+        },
+        // 'YYYY-MM-DD HH:mm:ss' -> 'YYYY/MM/DD HH:mm:ss' (iOS兼容)
+        {
+            pattern: /^\d{4}-\d{1,2}-\d{1,2}\s+\d{1,2}:\d{1,2}(:\d{1,2})?$/,
+            transform: (str: string) => str.replace(/-/g, '/'),
+        },
+        // 'YYYY-MM-DD' -> 'YYYY/MM/DD' (iOS兼容)
+        {
+            pattern: /^\d{4}-\d{1,2}-\d{1,2}$/,
+            transform: (str: string) => str.replace(/-/g, '/'),
+        },
+        // 'YYYY/MM/DD' / 'YYYY/MM/DD HH:mm:ss'
+        {
+            pattern: /^\d{4}\/\d{1,2}\/\d{1,2}(\s+\d{1,2}:\d{1,2}(:\d{1,2})?)?$/,
+            transform: (str: string) => str,
+        },
+    ];
+
+    // 尝试匹配并转换
+    let normalizedDateStr: string | null = null;
+    for (const rule of formatRules) {
+        if (rule.pattern.test(trimmedDateStr)) {
+            normalizedDateStr = rule.transform(trimmedDateStr);
+            break;
+        }
+    }
+
+    if (!normalizedDateStr) {
+        normalizedDateStr = trimmedDateStr;
+    }
+
+    // 创建日期对象
+    const date = new Date(normalizedDateStr);
+
+    if (isNaN(date.getTime())) {
+        return null;
+    }
+
+    return Math.floor(date.getTime() / 1000);
+}
+
 
 /**
  * 复制
@@ -442,7 +515,7 @@ export function timeTurnTimeStamp(dateStr: string) {
  */
 export function copy(value: any, callback: any) {
     // #ifdef H5
-    var oInput = document.createElement('input'); //创建一个隐藏input（重要！）
+    const oInput = document.createElement('input'); //创建一个隐藏input（重要！）
     oInput.value = value; //赋值
     oInput.setAttribute("readonly", "readonly");
     document.body.appendChild(oInput);
@@ -492,7 +565,7 @@ export function handleOnloadParams(option: any) {
 
     // 处理小程序扫码进入的场景值参数
     if (option.scene) {
-        var sceneParams = decodeURIComponent(option.scene).split('&');
+        const sceneParams = decodeURIComponent(option.scene).split('&');
         if (sceneParams.length) {
             sceneParams.forEach(item => {
                 let arr = item.split('-');
@@ -558,7 +631,8 @@ const isArray = (value: any) => {
 
 // px转rpx
 export function pxToRpx(px: any) {
-    const screenWidth = uni.getSystemInfoSync().screenWidth;
+    const systemStore = useSystemStore()
+    const screenWidth = systemStore.systemInfo.screenWidth;
     return (750 * Number.parseInt(px)) / screenWidth;
 }
 
@@ -604,7 +678,7 @@ export function getWinxinOpenId() {
 
 // 获取有效期
 export function getValidTime(minutes: any = 1) {
-    var date = new Date();
+    const date = new Date();
     date.setSeconds(60 * minutes);
     let validTime: any = parseInt(date.getTime() / 1000); // 定位信息 5分钟内有效，过期后将重新获取定位信息
     return validTime;
