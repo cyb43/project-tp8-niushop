@@ -32,13 +32,16 @@ class UploadService extends BaseAdminService
      * 附件库上传图片
      * @param $file
      * @param int $cate_id
+     * @param bool $is_attachment
      * @return array
+     * @throws Exception
      */
-    public function image($file, int $cate_id = 0, $is_attachment = true){
-        $dir = $this->root_path.'/image/'.date('Ym').'/'.date('d');
+    public function image($file, int $cate_id = 0, $is_attachment = true)
+    {
+        $dir = $this->root_path . '/' . 'image' . '/' . date('Ym') . '/' . date('d');
         $core_upload_service = new CoreUploadService($is_attachment);
         //如果没有选择相册分组的话,就选择第一个相册分组
-        return $core_upload_service->image($file, $dir, $cate_id);
+        return $core_upload_service->image($file,$dir, $cate_id);
     }
 
     /**
@@ -47,10 +50,24 @@ class UploadService extends BaseAdminService
      * @param int $cate_id
      * @return array
      */
-    public function video($file, int $cate_id = 0){
-        $dir = $this->root_path.'/video/'.date('Ym').'/'.date('d');
+    public function video($file, int $cate_id = 0)
+    {
+        $dir = $this->root_path . '/' . 'video' . '/' . date('Ym') . '/' . date('d');
         $core_upload_service = new CoreUploadService(true);
         return $core_upload_service->video($file, $dir, $cate_id);
+    }
+
+    /**
+     * 附件库上传音频
+     * @param $file
+     * @param int $cate_id
+     * @return array
+     */
+    public function audio($file, int $cate_id = 0)
+    {
+        $dir = $this->root_path . '/' . 'audio' . '/' . date('Ym') . '/' . date('d');
+        $core_upload_service = new CoreUploadService(true);
+        return $core_upload_service->audio($file,$dir, $cate_id);
     }
 
     /**
@@ -60,10 +77,11 @@ class UploadService extends BaseAdminService
      * @return array
      * @throws Exception
      */
-    public function document($file, string $type){
-        if(!in_array($type, FileDict::getSceneType()))
+    public function document($file, string $type)
+    {
+        if (!in_array($type, FileDict::getSceneType()))
             throw new UploadFileException('UPLOAD_TYPE_ERROR');
-        $dir = $this->root_path.'/document/'.$type.'/'.date('Ym').'/'.date('d');
+        $dir = $this->root_path . '/document/' . $type . '/' . date('Ym') . '/' . date('d');
         $core_upload_service = new CoreUploadService();
         return $core_upload_service->document($file, $type, $dir, StorageDict::LOCAL);
     }

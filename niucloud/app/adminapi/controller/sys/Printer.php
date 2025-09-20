@@ -14,6 +14,7 @@ namespace app\adminapi\controller\sys;
 use app\service\admin\sys\PrinterService;
 use app\service\admin\sys\PrinterTemplateService;
 use core\base\BaseAdminController;
+use think\Response;
 
 
 /**
@@ -90,8 +91,8 @@ class Printer extends BaseAdminController
     /**
      * 小票打印机编辑
      * @description 小票打印机编辑
-     * @param $id  小票打印机id
-     * @return \think\Response
+     * @param int $id 小票打印机id
+     * @return Response
      */
     public function edit(int $id)
     {
@@ -131,8 +132,8 @@ class Printer extends BaseAdminController
     /**
      * 小票打印机删除
      * @description 小票打印机删除
-     * @param $id  小票打印机id
-     * @return \think\Response
+     * @param int $id 小票打印机id
+     * @return Response
      */
     public function del(int $id)
     {
@@ -200,8 +201,8 @@ class Printer extends BaseAdminController
     /**
      * 小票打印模板编辑
      * @description 小票打印模板编辑
-     * @param $id  小票打印模板id
-     * @return \think\Response
+     * @param int $id 小票打印模板id
+     * @return Response
      */
     public function templateEdit(int $id)
     {
@@ -218,8 +219,8 @@ class Printer extends BaseAdminController
     /**
      * 小票打印模板删除
      * @description 小票打印模板删除
-     * @param $id  小票打印模板id
-     * @return \think\Response
+     * @param int $id 小票打印模板id
+     * @return Response
      */
     public function templateDel(int $id)
     {
@@ -230,7 +231,7 @@ class Printer extends BaseAdminController
     /**
      * 获取小票打印模板类型
      * @description 获取小票打印模板类型
-     * @return array|\think\Response
+     * @return \think\Response
      */
     public function getType()
     {
@@ -240,7 +241,7 @@ class Printer extends BaseAdminController
     /**
      * 获取小票打印机设备品牌
      * @description 获取小票打印机设备品牌
-     * @return array|\think\Response
+     * @return \think\Response
      */
     public function getBrand()
     {

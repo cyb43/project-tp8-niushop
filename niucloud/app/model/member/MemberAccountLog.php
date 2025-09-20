@@ -128,7 +128,7 @@ class MemberAccountLog extends BaseModel
 
     /**
      * 关键词搜索
-     * @param $query
+     * @param Query $query
      * @param $value
      * @param $data
      */

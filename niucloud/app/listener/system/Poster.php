@@ -23,7 +23,6 @@ class Poster
         switch ($type) {
             case 'friendspay':// 找朋友帮忙付海报
                 return ( new FriendspayPoster() )->handle($data);
-                break;
             default:
                 $param = $data[ 'param' ];
                 $member_id = $param[ 'member_id' ] ?? 0;
@@ -51,7 +50,6 @@ class Poster
                     'headimg' => $headimg,
                 ];
                 return $return_data;
-                break;
         }
     }
 }

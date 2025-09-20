@@ -13,6 +13,7 @@ namespace app\adminapi\controller\dict;
 
 use core\base\BaseAdminController;
 use app\service\admin\dict\DictService;
+use think\Response;
 
 
 /**
@@ -83,8 +84,8 @@ class Dict extends BaseAdminController
     /**
      * 数据字典删除
      * @description 数据字典删除
-     * @param $id  数据字典id
-     * @return \think\Response
+     * @param int $id 数据字典id
+     * @return Response
      */
     public function del(int $id){
         (new DictService())->del($id);
@@ -118,8 +119,8 @@ class Dict extends BaseAdminController
     /**
      * 数据字典详情
      * @description 数据字典详情
-     * @param key 数据字典关键字
-     * @return \think\Response
+     * @param string $type
+     * @return Response
      */
     public function getKeyInfo(string $type){
         $res = (new DictService())->getKeyInfo($type);

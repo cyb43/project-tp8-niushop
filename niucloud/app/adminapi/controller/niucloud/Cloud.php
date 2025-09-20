@@ -11,8 +11,10 @@
 
 namespace app\adminapi\controller\niucloud;
 
+use app\service\admin\niucloud\NiucloudService;
 use app\service\core\niucloud\CoreCloudBuildService;
 use core\base\BaseAdminController;
+use core\util\niucloud\CloudService;
 
 /**
  * 云编译
@@ -73,5 +75,43 @@ class Cloud extends BaseAdminController
      */
     public function buildPreCheck() {
         return success(data:(new CoreCloudBuildService())->buildPreCheck());
+    }
+
+    /**
+     * 连通测试
+     * @description 连通测试
+     * @return \think\Response
+     */
+    public function connectTest()
+    {
+        $data = $this->request->params([
+            [ 'url', '' ],
+        ]);
+        $is_connected = (new CloudService(true,$data['url']))->is_connected;
+        return success('SUCCESS',$is_connected);
+    }
+
+    /**
+     * 设置本地地址
+     * @description 连通测试
+     * @return \think\Response
+     */
+    public function setLocalCloudCompileConfig()
+    {
+        $data = $this->request->params([
+            [ 'url', '' ],
+            [ 'is_open', 0 ],
+        ]);
+        return success('SUCCESS',(new NiucloudService())->setLocalCloudCompileConfig($data));
+    }
+
+    /**
+     * 获取本地地址
+     * @description 连通测试
+     * @return \think\Response
+     */
+    public function getLocalCloudCompileConfig()
+    {
+        return success('SUCCESS',(new NiucloudService())->getLocalCloudCompileConfig());
     }
 }

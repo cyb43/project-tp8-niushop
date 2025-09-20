@@ -149,4 +149,15 @@ class ScheduleService extends BaseAdminService
     {
         return (new CoreScheduleService())->doSchedule($id);
     }
+
+    /**
+     * 重置定时任务
+     * @return true
+     */
+    public function resetSchedule()
+    {
+        return (new CoreScheduleService())->resetSchedule();
+    }
+
+
 }

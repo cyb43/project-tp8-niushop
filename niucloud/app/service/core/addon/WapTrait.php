@@ -34,12 +34,13 @@ trait WapTrait
         $content .= "    <view class=\"diy-group\" id=\"componentList\">\n";
         $content .= "        <top-tabbar :scrollBool=\"diyGroup.componentsScrollBool.TopTabbar\" v-if=\"data.global && Object.keys(data.global).length && data.global.topStatusBar && data.global.topStatusBar.isShow\" ref=\"topTabbarRef\" :data=\"data.global\" />\n";
         $content .= "        <pop-ads v-if=\"data.global && Object.keys(data.global).length && data.global.popWindow && data.global.popWindow.show\" ref=\"popAbsRef\" :data=\"data.global\" />\n";
-        $content .= "        <view v-for=\"(component, index) in data.value\" :key=\"component.id\"\n";
-        $content .= "        @click=\"diyStore.changeCurrentIndex(index, component)\"\n";
-        $content .= "        :class=\"diyGroup.getComponentClass(index,component)\" :style=\"component.pageStyle\">\n";
-        $content .= "            <view class=\"relative\" :style=\"{ marginTop : component.margin.top < 0 ? (component.margin.top * 2) + 'rpx' : '0' }\">\n";
-        $content .= "                <!-- 装修模式下，设置负上边距后超出的内容，禁止选中设置 -->\n";
-        $content .= "                <view v-if=\"diyGroup.isShowPlaceHolder(index,component)\" class=\"absolute w-full z-1\" :style=\"{ height : (component.margin.top * 2 * -1) + 'rpx' }\" @click.stop=\"diyGroup.placeholderEvent\"></view>\n";
+        $content .= "        <template v-for=\"(component, index) in data.value\" :key=\"component.id\">\n";
+        $content .= "           <view v-show=\"component.componentIsShow\"\n";
+        $content .= "               @click=\"diyStore.changeCurrentIndex(index, component)\"\n";
+        $content .= "               :class=\"diyGroup.getComponentClass(index,component)\" :style=\"component.pageStyle\">\n";
+        $content .= "                <view class=\"relative\" :style=\"{ marginTop : component.margin.top < 0 ? (component.margin.top * 2) + 'rpx' : '0' }\">\n";
+        $content .= "                   <!-- 装修模式下，设置负上边距后超出的内容，禁止选中设置 -->\n";
+        $content .= "                    <view v-if=\"diyGroup.isShowPlaceHolder(index,component)\" class=\"absolute w-full z-1\" :style=\"{ height : (component.margin.top * 2 * -1) + 'rpx' }\" @click.stop=\"diyGroup.placeholderEvent\"></view>\n";
 
         $root_path = $compile_path . str_replace('/', DIRECTORY_SEPARATOR, 'app/components/diy'); // 系统自定义组件根目录
         $file_arr = getFileMap($root_path);
@@ -63,9 +64,10 @@ trait WapTrait
                     $name = implode('', $name_arr);
                     $file_name = 'diy-' . $path;
 
-                    $content .= "            <template v-if=\"component.componentName == '{$name}'\">\n";
-                    $content .= "                <$file_name ref=\"diy{$name}Ref\" :component=\"component\" :global=\"data.global\" :index=\"index\" :scrollBool=\"diyGroup.componentsScrollBool.{$name}\" />\n";
-                    $content .= "            </template>\n";
+                    $content .= "                <template v-if=\"component.componentName == '{$name}'\">\n";
+                    $event_str = '$event';
+                    $content .= "                   <$file_name ref=\"diy{$name}Ref\" :component=\"component\" :global=\"data.global\" :index=\"index\" :scrollBool=\"diyGroup.componentsScrollBool.{$name}\" @update:componentIsShow=\"component.componentIsShow = {$event_str}\" />\n";
+                    $content .= "                </template>\n";
                 }
             }
         }
@@ -80,7 +82,7 @@ trait WapTrait
                 $addon_arr[] = $v[ 'key' ];
             }
         }
-        if(!empty($addon)) {
+        if (!empty($addon)) {
             $addon_arr[] = $addon; // 追加新装插件
         }
         $addon_arr = array_unique($addon_arr);
@@ -104,9 +106,11 @@ trait WapTrait
                         $name = implode('', $name_arr);
                         $file_name = 'diy-' . $path;
 
-                        $content .= "            <template v-if=\"component.componentName == '{$name}'\">\n";
-                        $content .= "                <$file_name ref=\"diy{$name}Ref\" :component=\"component\" :global=\"data.global\" :index=\"index\" :scrollBool=\"diyGroup.componentsScrollBool.{$name}\" />\n";
-                        $content .= "            </template>\n";
+                        $content .= "                <template v-if=\"component.componentName == '{$name}'\">\n";
+                        $event_str = '$event';
+                        $content .= "                   <$file_name ref=\"diy{$name}Ref\" :component=\"component\" :global=\"data.global\" :index=\"index\" :scrollBool=\"diyGroup.componentsScrollBool.{$name}\" @update:componentIsShow=\"component.componentIsShow = {$event_str}\" />\n";
+
+                        $content .= "                </template>\n";
 
                         $addon_import_content .= "   import diy{$name} from '@/addon/" . $v . "/components/diy/{$path}/index.vue';\n";
                     }
@@ -114,10 +118,10 @@ trait WapTrait
             }
         }
 
+        $content .= "                </view>\n";
         $content .= "            </view>\n";
-
-        $content .= "        </view>\n";
-        $content .= "        <template v-if=\"diyStore.mode == '' && data.global && data.global.bottomTabBarSwitch\">\n";
+        $content .= "        </template>\n";
+        $content .= "        <template v-if=\"diyStore.mode == '' && data.global && data.global.bottomTabBar && data.global.bottomTabBar.isShow\">\n";
         $content .= "            <view class=\"pt-[20rpx]\"></view>\n";
         $content .= "            <tabbar />\n";
         $content .= "        </template>\n";
@@ -198,7 +202,7 @@ trait WapTrait
             $page_end = strtoupper($addon) . '_PAGE_END';
 
             // 对0.2.0之前的版本做处理
-            $uniapp_pages[ 'pages' ] = preg_replace_callback('/(.*)(\\r\\n.*\/\/ PAGE_END.*)/s', function($match) {
+            $uniapp_pages[ 'pages' ] = preg_replace_callback('/(.*)(\\r\\n.*\/\/ PAGE_END.*)/s', function ($match) {
                 return $match[ 1 ] . ( substr($match[ 1 ], -1) == ',' ? '' : ',' ) . $match[ 2 ];
             }, $uniapp_pages[ 'pages' ]);
 
@@ -210,7 +214,7 @@ trait WapTrait
         }
 
         $content = @file_get_contents($compile_path . "pages.json");
-        $content = preg_replace_callback('/(.*\/\/ \{\{ PAGE_BEGAIN \}\})(.*)(\/\/ \{\{ PAGE_END \}\}.*)/s', function($match) use ($pages) {
+        $content = preg_replace_callback('/(.*\/\/ \{\{ PAGE_BEGAIN \}\})(.*)(\/\/ \{\{ PAGE_END \}\}.*)/s', function ($match) use ($pages) {
             return $match[ 1 ] . PHP_EOL . implode(PHP_EOL, $pages) . PHP_EOL . $match[ 3 ];
         }, $content);
 
@@ -252,7 +256,7 @@ trait WapTrait
         }
 
         $content = @file_get_contents($compile_path . "pages.json");
-        $content = preg_replace_callback('/(.*\/\/ \{\{ PAGE_BEGAIN \}\})(.*)(\/\/ \{\{ PAGE_END \}\}.*)/s', function($match) use ($pages) {
+        $content = preg_replace_callback('/(.*\/\/ \{\{ PAGE_BEGAIN \}\})(.*)(\/\/ \{\{ PAGE_END \}\}.*)/s', function ($match) use ($pages) {
             return $match[ 1 ] . PHP_EOL . implode(PHP_EOL, $pages) . PHP_EOL . $match[ 3 ];
         }, $content);
         // 找到页面路由文件 pages.json，写入内容
@@ -263,14 +267,13 @@ trait WapTrait
      * 编译 加载插件标题语言包
      * @param $compile_path
      * @param $addon
-     * @param $addon
      */
     public function compileLocale($compile_path, $addon)
     {
         $locale_data = [];
 
         $root_path = $compile_path . str_replace('/', DIRECTORY_SEPARATOR, 'locale'); // 系统语言包根目录
-        $file_arr = getFileMap($root_path, [], false);
+        $file_arr = getFileMap($root_path, []);
         if (!empty($file_arr)) {
             foreach ($file_arr as $ck => $cv) {
                 if (str_contains($cv, '.json')) {
@@ -303,7 +306,7 @@ trait WapTrait
         $addon_arr = array_unique($addon_arr);
         foreach ($addon_arr as $k => $v) {
             $addon_path = $compile_path . str_replace('/', DIRECTORY_SEPARATOR, 'addon/' . $v . '/locale'); // 插件语言包根目录
-            $addon_file_arr = getFileMap($addon_path, [], false);
+            $addon_file_arr = getFileMap($addon_path, []);
             if (!empty($addon_file_arr)) {
                 foreach ($addon_file_arr as $ck => $cv) {
                     if (str_contains($cv, '.json')) {

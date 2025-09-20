@@ -11,17 +11,19 @@
 
 namespace app\service\core\schedule;
 
+use app\dict\addon\AddonDict;
 use app\dict\schedule\ScheduleLogDict;
 use app\dict\sys\DateDict;
+use app\model\addon\Addon;
 use app\model\sys\SysSchedule;
 use core\base\BaseCoreService;
 use core\dict\DictLoader;
 use core\exception\CommonException;
-use think\console\Output;
 use think\Container;
 use think\db\exception\DataNotFoundException;
 use think\db\exception\DbException;
 use think\db\exception\ModelNotFoundException;
+use think\facade\Db;
 use think\facade\Log;
 use think\helper\Str;
 use think\Model;
@@ -43,7 +45,7 @@ class CoreScheduleService extends BaseCoreService
     /**
      * 获取自动任务列表
      * @param array $where
-     * @return mixed
+     * @return array
      * @throws DataNotFoundException
      * @throws DbException
      * @throws ModelNotFoundException
@@ -218,9 +220,39 @@ class CoreScheduleService extends BaseCoreService
     }
 
     /**
+     * 重置定时任务
+     * @return bool
+     */
+    public function resetSchedule()
+    {
+        $prefix = config('database.connections.' . config('database.default'))[ 'prefix' ];
+        $table = $prefix . (new SysSchedule())->getName();
+
+        Db::startTrans();
+        try {
+            Db::execute("TRUNCATE TABLE {$table}");
+
+            $addon_list = (new Addon())->where([ ['status', '=', AddonDict::ON] ])->append(['status_name'])->column('key');
+            ( new CoreScheduleInstallService() )->installSystemSchedule();
+            foreach ($addon_list as $value){
+                ( new CoreScheduleInstallService() )->installAddonSchedule($value);
+            }
+            Db::commit();
+            return true;
+        } catch (\Exception $e) {
+            Db::rollback();
+            throw new CommonException($e->getMessage());
+        }
+    }
+
+    /**
      * 执行任务
      * @param array $schedule
+     * @param $output
      * @return true
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function execute(array $schedule, $output){
         $class = !empty($schedule['class']) ? $schedule['class'] : 'app\\job\\schedule\\'.Str::studly($schedule['key']);

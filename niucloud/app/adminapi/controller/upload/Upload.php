@@ -57,6 +57,22 @@ class Upload extends BaseAdminController
     }
 
     /**
+     * 视频上传
+     * @description 音频上传
+     * @return Response
+     */
+    public function audio()
+    {
+        $data = $this->request->params([
+            ['file', 'file'],
+            ['cate_id', 0]
+        ]);
+        $upload_service = new UploadService();
+        return success($upload_service->audio($data['file'], $data['cate_id']));
+    }
+
+
+    /**
      * 文件上传(默认不上云)
      * @description 文件上传
      * @return Response

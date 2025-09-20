@@ -116,4 +116,16 @@ class System extends BaseAdminController
         ]);
         return success((new SystemService())->getQrcode($params));
     }
+
+    /**
+     * 获取imagick扩展是否开启
+     * @return Response
+     */
+    public function getImagickIsOpen(){
+        if (extension_loaded('imagick')) {
+                return success(data: true);
+        } else {
+            return success(data: false);
+        }
+    }
 }

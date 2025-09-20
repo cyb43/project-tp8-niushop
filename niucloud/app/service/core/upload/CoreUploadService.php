@@ -31,6 +31,7 @@ class CoreUploadService extends CoreFileService
      * @param string $file
      * @param string $file_dir
      * @param int $cate_id
+     * @param string $storage_type
      * @return array
      * @throws Exception
      */
@@ -90,6 +91,7 @@ class CoreUploadService extends CoreFileService
      * @param string $file
      * @param string $file_dir
      * @param int $cate_id
+     * @param string $storage_type
      * @return array
      * @throws Exception
      */
@@ -100,6 +102,24 @@ class CoreUploadService extends CoreFileService
         //读取上传附件的信息用于后续得校验和数据写入
         $this->upload_driver->read($file);
         return $this->after($file_dir, FileDict::VIDEO, $cate_id);
+    }
+
+    /**
+     * 音频上传
+     * @param string $file
+     * @param string $file_dir
+     * @param int $cate_id
+     * @param string $storage_type
+     * @return array
+     * @throws Exception
+     */
+    public function audio(string $file, string $file_dir, int $cate_id, string $storage_type = '')
+    {
+        //实例化上传引擎
+        $this->upload_driver = $this->driver($storage_type);
+        //读取上传附件的信息用于后续得校验和数据写入
+        $this->upload_driver->read($file);
+        return $this->after($file_dir, FileDict::AUDIO, $cate_id);
     }
 
     /**

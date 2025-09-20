@@ -114,8 +114,26 @@ class ExceptionHandle extends Handle
             return fail($e->getMessage(), http_code:$e->getCode());
         } else if ($e instanceof RouteNotFoundException) {
             return fail('当前访问路由未定义或不匹配 路由地址：' . request()->baseUrl());
-        } else {
+        } else if($e instanceof \RuntimeException){
             return fail($e->getMessage(), $massageData);
+        } else {
+            return $this->handleException($e);
         }
+    }
+
+    private function handleException(Throwable $e) {
+        $trace = array_map(function ($class){
+            return str_replace('\\', '/', $class);
+        }, array_column($e->getTrace(), 'class'));
+
+        foreach ($trace as $class) {
+            if (preg_match('#^addon/([^/]+)/#', $class, $matches)) {
+                return fail("{$matches[1]}插件内{$class}第{$e->getLine()}行出现异常，异常信息：" .$e->getMessage());
+            }
+        }
+
+        $debug = env("APP_DEBUG", false);
+
+        return fail("{$trace[0]}第{$e->getLine()}行出现异常，异常信息：" .$e->getMessage(), $debug ? $e->getTrace() : []);
     }
 }

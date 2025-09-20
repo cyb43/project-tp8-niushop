@@ -50,7 +50,6 @@ class Area extends BaseApiController
 
     /**
      * 通过经纬度查询地址
-     * @param int $level
      * @return Response
      */
     public function getAddressByLatlng()

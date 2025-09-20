@@ -12,7 +12,6 @@
 namespace app\validate\addon;
 
 use app\dict\addon\AddonDict;
-use think\facade\Route;
 use think\Validate;
 
 /**

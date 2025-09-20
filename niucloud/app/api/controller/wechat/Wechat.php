@@ -12,7 +12,6 @@
 namespace app\api\controller\wechat;
 
 use app\service\api\login\LoginService;
-use app\service\api\wechat\WechatConfigService;
 use app\service\api\wechat\WechatAuthService;
 use core\base\BaseController;
 use think\db\exception\DataNotFoundException;
@@ -142,15 +141,6 @@ class Wechat extends BaseController
     }
 
     /**
-     * 检查微信公众号是否配置
-     * @return Response
-     */
-    public function checkWechatConfig()
-    {
-        return success('SUCCESS', (new WechatConfigService())->checkWechatConfig());
-    }
-
-    /**
      * 更新openid
      * @return Response
      */
@@ -159,5 +149,16 @@ class Wechat extends BaseController
         $data = $this->request->params([ [ 'code', '' ] ]);
         $wechat_auth_service = new WechatAuthService();
         return success($wechat_auth_service->updateOpenid($data[ 'code' ]));
+    }
+
+    /**
+     * 更新openid
+     * @return Response
+     */
+    public function updateOpenidByH5()
+    {
+        $data = $this->request->params([ [ 'wx_openid', '' ] ]);
+        $wechat_auth_service = new WechatAuthService();
+        return success($wechat_auth_service->updateOpenidByH5($data[ 'wx_openid' ]));
     }
 }

@@ -24,15 +24,16 @@ use core\base\BaseAdminService;
  */
 class AddonDevelopService extends BaseAdminService
 {
-    public $core_addon_develop_service;
     public function __construct()
     {
         parent::__construct();
     }
+
     /**
      * 新增插件开发
+     * @param string $key
      * @param array $data
-     * @return mixed
+     * @return true
      */
     public function add(string $key, array $data)
     {
@@ -41,9 +42,9 @@ class AddonDevelopService extends BaseAdminService
 
     /**
      * 编辑插件开发
-     * @param int $id
+     * @param string $key
      * @param array $data
-     * @return SysAttachment
+     * @return true
      */
     public function edit(string $key, array $data)
     {
@@ -53,8 +54,8 @@ class AddonDevelopService extends BaseAdminService
 
     /**
      * 删除插件开发
-     * @param int $id
-     * @return mixed
+     * @param string $key
+     * @return true
      */
     public function del(string $key)
     {
@@ -74,7 +75,7 @@ class AddonDevelopService extends BaseAdminService
     /**
      * 查询
      * @param $key
-     * @return void
+     * @return array
      */
     public function getInfo($key){
         return (new CoreAddonService())->getAddonDevelopInfo($key);
@@ -83,7 +84,7 @@ class AddonDevelopService extends BaseAdminService
     /**
      * 打包
      * @param string $key
-     * @return array
+     * @return true|null
      */
     public function build(string $key){
         return (new CoreAddonDevelopBuildService())->build($key);
@@ -93,7 +94,7 @@ class AddonDevelopService extends BaseAdminService
     /**
      * 下载
      * @param string $key
-     * @return true
+     * @return array|string|string[]|\think\response\File
      */
     public function download(string $key){
         return (new CoreAddonDevelopBuildService())->download($key);

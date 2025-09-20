@@ -41,7 +41,7 @@ class CoreAddonDevelopDownloadService extends CoreAddonBaseService
 
     /**
      * 下载插件
-     * @return true
+     * @return \think\response\File
      */
     public function download()
     {

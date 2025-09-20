@@ -189,7 +189,7 @@ class CoreCloudBuildService extends BaseCoreService
 
     private function handleCustomPort(string $package_dir)
     {
-        $addons = get_site_addons();
+        $addons = get_install_addons();
 
         foreach ($addons as $addon) {
             $custom_port = ( new CoreAddonBaseService() )->getAddonConfig($addon)[ 'port' ] ?? [];

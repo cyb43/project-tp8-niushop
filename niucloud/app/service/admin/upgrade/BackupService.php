@@ -11,6 +11,7 @@
 
 namespace app\service\admin\upgrade;
 
+
 /**
  * 框架及插件升级备份
  * @package app\service\core\upgrade
@@ -19,7 +20,7 @@ class BackupService extends UpgradeService
 {
     /**
      * 备份代码
-     * @return void
+     * @return true
      */
     public function backupCode()
     {
@@ -40,7 +41,7 @@ class BackupService extends UpgradeService
         // 备份niucloud全部代码
         $niucloud_dir = $backup_dir . 'niucloud' . DIRECTORY_SEPARATOR;
 
-        dir_copy($this->root_path . 'niucloud', $niucloud_dir, exclude_dirs: [ 'runtime', 'upload' ]);
+        dir_copy($this->root_path . 'niucloud', $niucloud_dir, exclude_dirs: [ 'runtime', 'upload' ], exclude_files: ['.user.ini']);
 
         return true;
     }

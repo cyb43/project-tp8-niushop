@@ -42,6 +42,7 @@ trait ExecuteSqlTrait
     /**
      * 处理sql增加表前缀
      * @param $sql
+     * @param $prefix
      * @return void
      */
     public function handleSqlPrefix($sql, $prefix) {

@@ -12,9 +12,7 @@
 namespace app\service\core\addon;
 
 use app\model\addon\Addon;
-use app\service\core\niucloud\CoreModuleService;
 use core\exception\AddonException;
-use GuzzleHttp\Exception\GuzzleException;
 use ZipArchive;
 
 /**
@@ -37,9 +35,8 @@ class CoreAddonDownloadService extends CoreAddonBaseService
     /**
      * 下载文件
      * @param $app_key
+     * @param $version
      * @return true
-     * @throws GuzzleException
-     * @throws GuzzleException
      */
     public function download($app_key, $version)
     {

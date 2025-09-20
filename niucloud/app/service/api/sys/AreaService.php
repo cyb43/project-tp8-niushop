@@ -103,7 +103,7 @@ class AreaService extends BaseApiService
     /**
      * 通过经纬度查询地址
      * @param $params
-     * @return array|int
+     * @return array
      */
     public function getAddressByLatlng($params)
     {

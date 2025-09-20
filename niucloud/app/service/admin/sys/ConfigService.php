@@ -11,11 +11,10 @@
 
 namespace app\service\admin\sys;
 
+use app\service\core\channel\CoreH5Service;
 use app\service\core\sys\CoreConfigService;
 use app\service\core\sys\CoreSysConfigService;
 use core\base\BaseAdminService;
-use core\exception\AdminException;
-use app\service\core\channel\CoreH5Service;
 
 /**
  * 配置服务层
@@ -200,10 +199,11 @@ class ConfigService extends BaseAdminService
     /**
      * 设置开发者key
      * @param array $data
-     * @return array
+     * @return \app\model\sys\SysConfig|array|bool|\think\Model
      */
     public function setDeveloperToken(array $data)
     {
         return ( new CoreConfigService() )->setConfig("DEVELOPER_TOKEN", $data);
     }
+
 }

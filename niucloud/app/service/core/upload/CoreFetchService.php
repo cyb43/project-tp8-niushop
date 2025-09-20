@@ -31,6 +31,7 @@ class CoreFetchService extends CoreFileService
      * 图片上传
      * @param string $url
      * @param string $file_dir
+     * @param string $storage_type
      * @return array
      * @throws Exception
      */

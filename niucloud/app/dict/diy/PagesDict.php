@@ -148,7 +148,10 @@ class PagesDict
                             'bgHeightScale' => 0,
                             'imgWidth' => '',
                             'imgHeight' => '',
-                            "bottomTabBarSwitch" => true,
+                            "bottomTabBar" => [
+                                'control' => true,
+                                'isShow' => true
+                            ],
                             "template" => [
                                 'textColor' => "#303133",
                                 'pageStartBgColor' => '',
@@ -220,7 +223,10 @@ class PagesDict
                             'bgHeightScale' => 0,
                             'imgWidth' => '',
                             'imgHeight' => '',
-                            "bottomTabBarSwitch" => true,
+                            "bottomTabBar" => [
+                                'control' => true,
+                                'isShow' => true
+                            ],
                             "template" => [
                                 'textColor' => "#303133",
                                 'pageStartBgColor' => '',
@@ -686,7 +692,10 @@ class PagesDict
                             'bgHeightScale' => 0,
                             'imgWidth' => 750,
                             'imgHeight' => 403,
-                            "bottomTabBarSwitch" => true,
+                            "bottomTabBar" => [
+                                'control' => true,
+                                'isShow' => true
+                            ],
                             "template" => [
                                 'textColor' => "#303133",
                                 'pageStartBgColor' => '',

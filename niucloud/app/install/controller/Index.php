@@ -62,6 +62,9 @@ class Index extends BaseInstall
             //sodium
             $sodium = extension_loaded('sodium');
             $system_variables[] = [ "name" => "sodium", "need" => "开启", "status" => $sodium ];
+            //imagick
+            $imagick = extension_loaded('imagick');
+            $system_variables[] = [ "name" => "imagick", "need" => "开启", "status" => $imagick ];
 
             $root_path = str_replace("\\", DIRECTORY_SEPARATOR, dirname(__FILE__, 4));
             $root_path = str_replace("../", DIRECTORY_SEPARATOR, $root_path);
@@ -260,6 +263,7 @@ class Index extends BaseInstall
         $password = input('password', "");
         $password2 = input('password2', "");
 
+
         if ($admin_name == '' || $username == '' || $password == '') {
             $this->setSuccessLog([ '平台信息不能为空', 'error' ]);
             return fail('平台信息不能为空!');
@@ -379,6 +383,7 @@ class Index extends BaseInstall
                 $this->setSuccessLog([ "写入失败，请检查目录" . dirname(__FILE__, 2) . "是否可写入！'", 'error' ]);
                 return fail("写入失败，请检查目录" . dirname(__FILE__, 2) . "是否可写入！'");
             }
+            $this->setSuccessLog([ '初始化成功', 'success' ]);
             fwrite($fp, '已安装');
             fclose($fp);
 

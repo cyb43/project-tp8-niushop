@@ -11,7 +11,6 @@
 
 namespace app\listener\diy_form_export;
 
-use app\model\diy_form\DiyFormRecords;
 use app\model\diy_form\DiyFormRecordsFields;
 use app\service\admin\diy_form\DiyFormService;
 
@@ -33,7 +32,7 @@ class DiyFormRecordsFieldsExportDataListener
             $json_field_list = array_filter($field_list, function($v) { return in_array($v[ 'field_type' ], [ 'FormRadio', 'FormCheckbox', 'FormDateScope', 'FormTimeScope' ]); });
 
             $records_field_model = new DiyFormRecordsFields();
-            foreach ($simple_field_list as $k => &$v) {
+            foreach ($simple_field_list as $k => $v) {
                 $value_list = $records_field_model->field('form_id, field_key, field_type, field_name, field_value, count(*) as write_count')->where([
                     [ 'field_key', '=', $v[ 'field_key' ] ],
                     [ 'field_type', '=', $v[ 'field_type' ] ]
@@ -56,7 +55,7 @@ class DiyFormRecordsFieldsExportDataListener
                 }
                 $data = array_merge($data, $value_list);
             }
-            foreach ($json_field_list as $k => &$v) {
+            foreach ($json_field_list as $k => $v) {
                 $field_list = $records_field_model->field('form_id, field_key, field_type, field_name, field_value')->where([
                     [ 'field_key', '=', $v[ 'field_key' ] ],
                     [ 'field_type', '=', $v[ 'field_type' ] ]
@@ -64,7 +63,7 @@ class DiyFormRecordsFieldsExportDataListener
 
                 $total_count = 0;
                 $value_list = [];
-                foreach ($field_list as $k1 => &$v1) {
+                foreach ($field_list as $k1 => $v1) {
                     if ($v1[ 'field_type' ] != 'FormCheckbox') {
                         $key = $v1[ 'field_key' ] . '_' . $v1[ 'render_value' ];
                         if (isset($value_list[ $key ])) {

@@ -24,6 +24,10 @@ Route::group('verify', function () {
     Route::get('verify/record', 'verify.Verify/lists');
     // 订单核销记录详情
     Route::get('verify/:verify_code', 'verify.Verify/detail');
+    Route::get('detail/:verify_code', 'verify.Verify/getInfoByCode');
+
+    Route::post('verify/:verify_code', 'verify.Verify/verify');
+
 
     /*****************************************************  核销员相关接口 ****************************************************/
     // 添加核销员

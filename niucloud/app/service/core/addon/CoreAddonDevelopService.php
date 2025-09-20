@@ -283,13 +283,7 @@ class CoreAddonDevelopService extends CoreAddonBaseService
 
     /**
      * 生成新建插件
-     * @param array $title
-     * @param $desc
-     * @param $key
-     * @param $version
-     * @param $author
-     * @param $type
-     * @param $support_app
+     * @param array $data
      * @return true
      */
     public function add(array $data)

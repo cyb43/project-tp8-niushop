@@ -14,6 +14,7 @@ namespace app\service\admin\addon;
 
 use app\dict\addon\AddonDict;
 use app\model\addon\Addon;
+use app\model\sys\SysMenu;
 use app\service\core\addon\CoreAddonCloudService;
 use app\service\core\addon\CoreAddonDownloadService;
 use app\service\core\addon\CoreAddonInstallService;
@@ -108,7 +109,7 @@ class AddonService extends BaseAdminService
 
     /**
      * @param string $addon
-     * @return void
+     * @return array|array[]|null
      */
     public function uninstallCheck(string $addon)
     {
@@ -176,6 +177,12 @@ class AddonService extends BaseAdminService
         return ( new CoreAddonService() )->getInstallAddonList();
     }
 
+    public function getAddonList()
+    {
+        $addon_list = $this->model->where([ [ 'status', '=', AddonDict::ON ], [ 'type', '=', 'addon' ] ])->append([ 'status_name' ])->column('title, icon, key, desc, status, type, support_app', 'key');
+        return $addon_list;
+    }
+
     /**
      * 应用key缓存
      * @param $keys
@@ -219,18 +226,69 @@ class AddonService extends BaseAdminService
     public function getShowAppTools()
     {
         $list = [
-            'addon' => [
-                'title' => '运营工具',
+            'tool' => $this->getAllAddonAndTool()[ 'tool' ],
+        ];
+        return $list;
+    }
+
+    /**
+     * 查询营销列表
+     * @return array
+     */
+    public function getShowMarketingTools()
+    {
+        $all = $this->getAllAddonAndTool();
+        $list = [
+            'marketing' => $all[ 'marketing' ],
+            'addon' => $all[ 'addon' ],
+        ];
+        return $list;
+    }
+
+    private function getMarketing()
+    {
+        $list = [
+            'marketing' => [
+                'title' => '营销活动',
                 'list' => []
+            ]
+        ];
+        $apps = event('ShowMarketing');
+
+        $keys = [];
+        foreach ($apps as $v) {
+            foreach ($v as $ck => $cv) {
+                if (!empty($cv)) {
+                    foreach ($cv as $addon_k => $addon_v) {
+                        if (in_array($addon_v[ 'key' ], $keys)) {
+                            continue;
+                        }
+                        $list[ $ck ][ 'list' ][] = $addon_v;
+                        $keys[] = $addon_v[ 'key' ];
+                    }
+                }
+
+            }
+        }
+        return $list;
+    }
+
+    private function getAllAddonAndTool()
+    {
+        $markting_list = $this->getMarketing() ?? [];
+        $markting = $markting_list[ 'marketing' ];
+        $marking_addon = $markting_list[ 'tool' ][ 'list' ] ?? [];
+
+        $list = [
+            'marketing' => $markting,
+            'addon' => [
+                'title' => '营销工具',
+                'list' => $marking_addon
             ],
             'tool' => [
                 'title' => '系统工具',
                 'list' => []
-            ],
-//            'promotion' => [
-//                'title' => '营销活动',
-//                'list' => []
-//            ]
+            ]
         ];
 
         $apps = event('ShowApp');
@@ -252,51 +310,42 @@ class AddonService extends BaseAdminService
 
         }
 
-        $addons = $this->model->where([ [ 'status', '=', AddonDict::ON ] ])->append([ 'status_name' ])->column('title, icon, key, desc, status, type, support_app', 'key');
-        if (!empty($addons)) {
-            foreach ($addons as $k => $v) {
-                if (!in_array($v[ 'key' ], $keys) && $v[ 'type' ] == AddonDict::ADDON && $v[ 'status' ] == AddonDict::ON) {
+        $menu_model = ( new SysMenu() );
+        $site_addons = $this->getAddonList();
+
+        if (!empty($site_addons)) {
+            foreach ($site_addons as $k => $v) {
+                if ($v[ 'type' ] == 'app') {
+                    unset($site_addons[ $k ]);
+                }
+            }
+
+            $addon_urls = $menu_model
+                ->where([ [ 'addon', 'in', array_column($site_addons, 'key') ], [ 'is_show', '=', 1 ], [ 'menu_type', '=', 1 ] ])
+                ->order('id asc')
+                ->group('addon')
+                ->column('router_path', 'addon');
+
+            foreach ($site_addons as $k => $v) {
+                $continue = true;
+                if (!empty($markting[ 'list' ])) {
+                    foreach ($markting[ 'list' ] as $key => $val) {
+                        if ($v[ 'key' ] == $val[ 'key' ]) {
+                            unset($site_addons[ $k ]);
+                            $continue = false;
+                        }
+                    }
+                }
+                if ($continue && !in_array($v[ 'key' ], $keys)) {
+                    $url = $addon_urls[ $v[ 'key' ] ] ?? '';
                     $list[ 'addon' ][ 'list' ][] = [
                         'title' => $v[ 'title' ],
                         'desc' => $v[ 'desc' ],
                         'icon' => $v[ 'icon' ],
-                        'key' => $v[ 'key' ]
+                        'key' => $v[ 'key' ],
+                        'url' => $url ? '/' . $url : ''
                     ];
                 }
-            }
-        }
-
-        return $list;
-    }
-
-    /**
-     * 查询营销列表
-     * @return array
-     */
-    public function getShowMarketingTools()
-    {
-        $list = [
-            'marketing' => [
-                'title' => '营销活动',
-                'list' => []
-            ]
-        ];
-
-        $apps = event('ShowMarketing');
-
-        $keys = [];
-        foreach ($apps as $v) {
-            foreach ($v as $ck => $cv) {
-                if (!empty($cv)) {
-                    foreach ($cv as $addon_k => $addon_v) {
-                        if (in_array($addon_v[ 'key' ], $keys)) {
-                            continue;
-                        }
-                        $list[ $ck ][ 'list' ][] = $addon_v;
-                        $keys[] = $addon_v[ 'key' ];
-                    }
-                }
-
             }
         }
 

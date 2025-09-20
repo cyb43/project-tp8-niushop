@@ -57,6 +57,7 @@ class SysPrinterTemplate extends BaseModel
 
     /**
      * 搜索器:小票打印模板
+     * @param $query
      * @param $value
      * @param $data
      */
@@ -69,6 +70,7 @@ class SysPrinterTemplate extends BaseModel
 
     /**
      * 搜索器:小票打印模板模板类型
+     * @param $query
      * @param $value
      * @param $data
      */
@@ -81,6 +83,7 @@ class SysPrinterTemplate extends BaseModel
 
     /**
      * 搜索器:小票打印模板模板名称
+     * @param $query
      * @param $value
      * @param $data
      */

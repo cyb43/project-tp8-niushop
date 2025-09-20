@@ -39,7 +39,7 @@ Route::group(function() {
 /**
  * 路由
  */
-Route::group(function() {
+Route::group(function () {
     //获取授权地址
     Route::get('wechat/codeurl', 'wechat.Wechat/getCodeUrl');
     //获取授权信息
@@ -69,6 +69,9 @@ Route::group(function() {
 
     // 通过外部交易号获取消息跳转路径
     Route::get('weapp/getMsgJumpPath', 'weapp.Weapp/getMsgJumpPath');
+
+    // app通过wx code登录
+    Route::post('wxapp/login', 'channel.App/wechatLogin');
 
     //登录
     Route::get('login', 'login.Login/login');
@@ -102,6 +105,8 @@ Route::group(function() {
     Route::get('site', 'sys.Config/site');
     //场景域名
     Route::get('scene_domain', 'sys.Config/getSceneDomain');
+    // 获取手机端首页列表
+    Route::get('wap_index', 'sys.Config/getWapIndexList');
 
     // 获取地图设置
     Route::get('map', 'sys.Config/getMap');
@@ -133,6 +138,8 @@ Route::group(function() {
     Route::get('check_verifier', 'sys.Verify/checkVerifier');
     //核销记录
     Route::get('verify_records', 'sys.Verify/records');
+    //会员核销记录
+    Route::get('member_verify_records', 'sys.Verify/memberRecordList');
     //核销详情
     Route::get('verify_detail/:code', 'sys.Verify/detail');
     //通过code码获取核销信息
@@ -150,9 +157,11 @@ Route::group(function() {
     ->middleware(ApiCheckToken::class)
     ->middleware(ApiLog::class);
 
-Route::group(function() {
+Route::group(function () {
     //公众号更新用户openid
     Route::put('wechat/update_openid', 'wechat.Wechat/updateOpenid');
+    //公众号更新用户openid
+    Route::put('wechat/update_openid_h5', 'wechat.Wechat/updateOpenidByH5');
     //小程序更新用户openid
     Route::put('weapp/update_openid', 'weapp.Weapp/updateOpenid');
 

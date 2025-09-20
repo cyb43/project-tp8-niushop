@@ -10,6 +10,7 @@
 // +----------------------------------------------------------------------
 namespace core\poster;
 
+use core\exception\CommonException;
 use Kkokk\Poster\Facades\Poster as PosterInstance;
 
 class Poster extends BasePoster
@@ -34,8 +35,14 @@ class Poster extends BasePoster
      */
     public function createPoster(array $poster_data, string $dir, string $file_path)
     {
+        if (!extension_loaded('imagick')){
+            throw new CommonException('海报组件未配置完善,请联系管理员');//POSTER_CREATE_ERROR
+        }
         $bg_type = $poster_data[ 'global' ][ 'bgType' ];
-        $instance = PosterInstance::extension('gd')->config([ 'path' => realpath($dir) . DIRECTORY_SEPARATOR . $file_path ]);
+        $instance = PosterInstance::extension('imagick')->config([
+            'path' => realpath($dir) . DIRECTORY_SEPARATOR . $file_path,
+            'dpi' => [480,480]
+        ]);
         $bg_width = $poster_data[ 'global' ][ 'width' ];
         $bg_height = $poster_data[ 'global' ][ 'height' ];
         if ($bg_type == 'url' && !empty($poster_data[ 'global' ][ 'bgUrl' ]) && is_file($poster_data[ 'global' ][ 'bgUrl' ])) {
@@ -54,44 +61,16 @@ class Poster extends BasePoster
             switch ($type) {
                 case 'text':
                     $font_size = ceil($v[ 'fontSize' ]);
-                    $default_font = 'static' . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR . 'SourceHanSansCN-Regular.ttf';
+                    $default_font = 'static' . DIRECTORY_SEPARATOR . 'font' . DIRECTORY_SEPARATOR . 'PingFang-Medium.ttf';
+                    // $font = $default_font;
                     $font = $v[ 'fontFamily' ] ? : $default_font;
-                    $content_list = $this->getText($v[ 'value' ], $font_size, $font, $v[ 'space' ] ?? 0, $v[ 'width' ], $v[ 'height' ], $v[ 'lineHeight' ] + $font_size);
-                    $base_y = $this->getX($v[ 'y' ]);
-                    if (is_array($base_y)) {
-                        $diff_height = count($content_list) * ( $v[ 'lineHeight' ] + $font_size );
-                        $again_y = $base_y[ 0 ];
-                        if ($again_y == 'center') {
-                            $base_y_num = ( $bg_height - $diff_height ) > 0 ? ( $bg_height - $diff_height ) / 2 : 0;
-                        } else if ($again_y == 'top') {
-                            $base_y_num = 0;
-                        } else {
-                            $base_y_num = $bg_height - $v[ 'height' ];
-                        }
+                    // $content_list = $this->getText($v[ 'value' ], $font_size, $font, $v[ 'space' ] ?? 0, $v[ 'width' ], $v[ 'height' ], $v[ 'lineHeight' ] + $font_size);
+                    $base_y = $this->getY($v[ 'y' ]);
+                    $base_y_num = $base_y;
+                    $temp_line_height = $v[ 'lineHeight' ];
+                    $base_y_num += $temp_line_height;
 
-                    } else {
-                        $base_y_num = $base_y;
-                    }
-//                    if(in_array($base_y, $align_array)){
-//                        $diff_height = count($content_list)*($v[ 'lineHeight' ]+$font_size);
-//                        $base_y_num = ($bg_height-$diff_height) > 0 ? ($bg_height-$diff_height)/2 : 0;
-//                    }else{
-//                        $base_y_num = $base_y[0];
-//                    }
-                    foreach ($content_list as $ck => $content) {
-                        if ($ck == 0) {
-                            if ($v[ 'lineHeight' ] > 0) {
-                                $item_line = $v[ 'lineHeight' ] / 2;
-                            } else {
-                                $item_line = 0;
-                            }
-                        } else {
-                            $item_line = $v[ 'lineHeight' ] + $font_size;
-                        }
-                        $base_y_num += $item_line;
-                        //计算文本框宽度
-                        $im = $im->buildText($content, $this->getX($v[ 'x' ]), $base_y_num, $font_size, $this->getRgbColor($v[ 'fontColor' ]), $v[ 'width' ], $font, $v[ 'weight' ] ? 10 : null); # 合成文字
-                    }
+                    $im = $im->buildText($v[ 'value' ], $this->getX($v[ 'x' ]), $base_y_num, $font_size, $this->getRgbColor($v[ 'fontColor' ]), $v[ 'width' ], $font, $v[ 'weight' ] ? 10 : null); # 合成文字
                     break;
                 case 'image':
                     if (is_file($v[ 'value' ])) {
@@ -160,7 +139,7 @@ class Poster extends BasePoster
     {
         $calcSpace = $space > $fontSize ? ( $space - $fontSize ) : 0; // 获取间距计算值
 
-        $fontSize = ( $fontSize * 3 ) / 4; // px 转化为 pt
+        // $fontSize = ( $fontSize * 3 ) / 4; // px 转化为 pt
 
         mb_internal_encoding('UTF-8'); // 设置编码
         // 这几个变量分别是 字体大小, 角度, 字体名称, 字符串, 预设宽度

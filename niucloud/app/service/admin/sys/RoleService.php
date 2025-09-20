@@ -230,6 +230,9 @@ class RoleService extends BaseAdminService
      */
     public function getUserRoles($role_ids)
     {
+        if (empty($role_ids)){
+            return [];
+        }
         $cache_name = 'user_roles_' . md5(implode('_', $role_ids));;
         return cache_remember(
             $cache_name,

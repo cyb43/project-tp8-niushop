@@ -210,15 +210,15 @@ class BackupRecordsService extends BaseAdminService
         // 检测全部目录及文件是否可读可写，忽略指定目录
 
         // 忽略指定目录，admin
-        $exclude_admin_dir = [ 'dist', 'node_modules' ];
+        $exclude_admin_dir = [ 'dist', 'node_modules', '.git' ];
         $check_res = checkDirPermissions(project_path() . 'admin', [], $exclude_admin_dir);
 
         // 忽略指定目录，uni-app
-        $exclude_uniapp_dir = [ 'dist', 'node_modules' ];
+        $exclude_uniapp_dir = [ 'dist', 'node_modules', '.git' ];
         $check_res = array_merge2($check_res, checkDirPermissions(project_path() . 'uni-app', [], $exclude_uniapp_dir));
 
         // 忽略指定目录，web
-        $exclude_web_dir = [ '.nuxt', '.output', 'dist', 'node_modules' ];
+        $exclude_web_dir = [ '.nuxt', '.output', 'dist', 'node_modules', '.git' ];
         $check_res = array_merge2($check_res, checkDirPermissions(project_path() . 'web', [], $exclude_web_dir));
 
         // 忽略指定目录，niucloud
@@ -229,7 +229,8 @@ class BackupRecordsService extends BaseAdminService
             'public' . DIRECTORY_SEPARATOR . 'upload',
             'public' . DIRECTORY_SEPARATOR . 'file',
             'runtime',
-            'vendor'
+            'vendor',
+            '.git'
         ];
         $check_res = array_merge2($check_res, checkDirPermissions(project_path() . 'niucloud', [], $exclude_niucloud_dir));
 
@@ -632,7 +633,7 @@ class BackupRecordsService extends BaseAdminService
         // 备份niucloud全部代码
         $niucloud_dir = $backup_dir . 'niucloud' . DIRECTORY_SEPARATOR;
 
-        dir_copy($this->root_path . 'niucloud', $niucloud_dir, exclude_dirs: [ 'runtime', 'upload' ]);
+        dir_copy($this->root_path . 'niucloud', $niucloud_dir, exclude_dirs: [ 'runtime', 'upload' ], exclude_files: ['.user.ini']);
         return true;
     }
 

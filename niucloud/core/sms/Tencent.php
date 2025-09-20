@@ -62,6 +62,7 @@ class Tencent extends BaseSms
             $clientProfile->setHttpProfile($httpProfile);
 
             $client = new SmsClient($cred, 'ap-guangzhou', $clientProfile);
+            if (isset($data['url_params'])) unset($data['url_params']);
             $params = [
                 'PhoneNumberSet' => [ '+86' . $mobile ],
                 'TemplateID' => $template_id,

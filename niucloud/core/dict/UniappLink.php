@@ -42,6 +42,7 @@ class UniappLink extends BaseDict
 
         $addon_service = new AddonService();
         $addon_info_list = $addon_service->getAddonListByKeys(array_keys($link_files));
+        if (empty($addon_info_list)) return [];
 
         if (!empty($params[ 'params' ][ 'query' ]) && $params[ 'params' ][ 'query' ] == 'addon') {
             $list_key = array_column($addon_info_list, 'key');

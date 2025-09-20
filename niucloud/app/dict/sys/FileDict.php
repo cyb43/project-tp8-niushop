@@ -17,6 +17,9 @@ class FileDict
     public const IMAGE = 'image';
     //上传方式  视频
     public const VIDEO = 'video';
+
+    //上传方式 音频
+    public const AUDIO = 'audio';
     //上传方式  文件
     public const DOCUMENT = 'document';
 
@@ -41,6 +44,7 @@ class FileDict
         return [
             self::IMAGE => get_lang('dict_file.type_image'),//图片
             self::VIDEO => get_lang('dict_file.type_video'),//视频
+            self::AUDIO => get_lang('dict_file.type_audio'),//视频
         ];
     }
 
@@ -69,6 +73,7 @@ class FileDict
             self::ALIYUN,//阿里云相关上传
             self::IMAGE,//图片上传
             self::VIDEO,//视频上传
+            self::AUDIO,//视频上传
             self::APPLET,//小程序包上传
             self::EXCEL,//excel导入
         ];

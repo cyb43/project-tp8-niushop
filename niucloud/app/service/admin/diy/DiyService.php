@@ -314,6 +314,17 @@ class DiyService extends BaseAdminService
         $data[ 'component' ] = $this->getComponentList($data[ 'type' ]);
         $data[ 'domain_url' ] = ( new SystemService() )->getUrl();
 
+        $diy_template = [];
+        if (!empty($data[ 'name' ])) {
+            $diy_template = TemplateDict::getTemplate([
+                'key' => [ $data[ 'name' ] ]
+            ]);
+            if (!empty($diy_template)) {
+                $diy_template = $diy_template[ $data[ 'name' ] ];
+            }
+        }
+        $data[ 'global' ] = $diy_template[ 'global' ] ?? [];
+
         return $data;
     }
 
@@ -325,11 +336,27 @@ class DiyService extends BaseAdminService
     public function getComponentList(string $name = '')
     {
         $data = ComponentDict::getComponent();
+
+        $diy_template = [];
+        if (!empty($name)) {
+            $diy_template = TemplateDict::getTemplate([
+                'key' => [ $name ]
+            ]);
+            if (!empty($diy_template)) {
+                $diy_template = $diy_template[ $name ];
+            }
+        }
         foreach ($data as $k => $v) {
             // 查询组件支持的页面
             $sort_arr = [];
             foreach ($v[ 'list' ] as $ck => $cv) {
                 $support_page = $cv[ 'support_page' ];
+                // 过滤忽略组件名单
+                if (!empty($name) && !empty($diy_template) && isset($diy_template[ 'ignoreComponents' ]) && in_array($ck, $diy_template[ 'ignoreComponents' ])) {
+                    unset($data[ $k ][ 'list' ][ $ck ]);
+                    continue;
+                }
+                // 过滤页面不支持的组件
                 if (!( count($support_page) == 0 || in_array($name, $support_page) )) {
                     unset($data[ $k ][ 'list' ][ $ck ]);
                     continue;
@@ -337,6 +364,10 @@ class DiyService extends BaseAdminService
 
                 $sort_arr [] = $cv[ 'sort' ];
                 unset($data[ $k ][ 'list' ][ $ck ][ 'sort' ], $data[ $k ][ 'list' ][ $ck ][ 'support_page' ]);
+            }
+            if (empty($data[ $k ][ 'list' ])) {
+                unset($data[ $k ]);
+                continue;
             }
             array_multisort($sort_arr, SORT_ASC, $data[ $k ][ 'list' ]); //排序，根据 sort 排序
         }
@@ -392,6 +423,34 @@ class DiyService extends BaseAdminService
 
         }
         return $link;
+    }
+
+    /**
+     * 获取自定义链接
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
+     */
+    public function pageLink()
+    {
+        $order = "update_time desc";
+        $field = 'id,title,page_title,name,template,type,mode,is_default,share,visit_count,create_time,update_time';
+        $query = $this->model
+            ->whereOr([
+                [
+                    [ 'type', '=', 'DIY_PAGE' ],
+                ],
+                [
+                    [ 'type', '<>', 'DIY_PAGE' ],
+                    [ 'is_default', '=', 0 ]
+                ]
+            ])->field($field)->append([ 'type_name' ])->order($order);
+        $list = $this->pageQuery($query);
+        foreach ($list[ 'data' ] as &$item) {
+            $item[ 'url' ] = '/app/pages/index/diy?id=' . $item[ 'id' ];
+        }
+        return $list;
     }
 
     /**
@@ -746,7 +805,7 @@ class DiyService extends BaseAdminService
             $data[ $value[ 'key' ] ][ 'title' ] = $theme_data[ $value[ 'key' ] ][ 'title' ] ?? ( !empty($addon_theme) ? $addon_theme[ 'theme_color' ][ 0 ][ 'title' ] : '' );
             $data[ $value[ 'key' ] ][ 'theme' ] = $theme_data[ $value[ 'key' ] ][ 'theme' ] ?? ( !empty($addon_theme) ? $addon_theme[ 'theme_color' ][ 0 ][ 'theme' ] : '' );
         }
-        if (count($apps) > 1) {// 应用数量大于1时，展示系统主题色设置，只有一个应用时，不展示系统主题色设置
+        if (empty($data) || count($apps) > 1) {// 应用数量大于1时，展示系统主题色设置，只有一个应用时，不展示系统主题色设置
             $data = array_merge($app_theme, $data);
         }
 

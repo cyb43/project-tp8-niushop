@@ -105,6 +105,7 @@ class WechatAuthService extends BaseApiService
      * @param string $openid
      * @param string $nickname
      * @param string $avatar
+     * @param string $unionid
      * @return array|null
      * @throws DataNotFoundException
      * @throws DbException
@@ -266,6 +267,23 @@ class WechatAuthService extends BaseApiService
         $member_info = $member_service->findMemberInfo([ 'member_id' => $this->member_id ]);
         if ($member_info->isEmpty()) throw new AuthException('MEMBER_NOT_EXIST');//账号不存在
         $member_service->editByFind($member_info, [ 'wx_openid' => $openid ]);
+        return true;
+    }
+
+    /**
+     * 更新openid（用于H5注册账号后，在公众号进行登录时绑定wx_openid）
+     * @param string $wx_openid
+     * @return true
+     */
+    public function updateOpenidByH5($wx_openid)
+    {
+        $member_service = new MemberService();
+        $member = $member_service->findMemberInfo([ 'wx_openid' => $wx_openid]);
+        if (!$member->isEmpty()) throw new AuthException('MEMBER_OPENID_EXIST');//openid已存在
+
+        $member_info = $member_service->findMemberInfo([ 'member_id' => $this->member_id]);
+        if ($member_info->isEmpty()) throw new AuthException('MEMBER_NOT_EXIST');//账号不存在
+        $member_service->editByFind($member_info, [ 'wx_openid' => $wx_openid ]);
         return true;
     }
 }

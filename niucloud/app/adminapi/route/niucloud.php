@@ -17,7 +17,7 @@ use think\facade\Route;
 /**
  * 应用插件相关路由
  */
-Route::group('niucloud', function () {
+Route::group('niucloud', function() {
     //设置 授权信息
     Route::post('authinfo', 'niucloud.Module/setAuthorize');
     //获取 授权设置
@@ -60,6 +60,12 @@ Route::group('niucloud', function () {
     // 申请体验
     Route::get('apply/experience', 'niucloud.Module/applyExperience');
 
+    //连通测试
+    Route::post('build/connect_test', 'niucloud.Cloud/connectTest');
+    //保存本地服务器地址
+    Route::post('build/set_local_url', 'niucloud.Cloud/setLocalCloudCompileConfig');
+    //获取本地服务器地址
+    Route::get('build/get_local_url', 'niucloud.Cloud/getLocalCloudCompileConfig');
 })->middleware([
     AdminCheckToken::class,
     AdminCheckRole::class,

@@ -201,7 +201,11 @@ class Diy extends BaseModel
     public function searchTypeAttr($query, $value, $data)
     {
         if ($value) {
-            $query->where("type", $value);
+            if(is_array($value)){
+                $query->where("type", 'in', $value);
+            }else{
+                $query->where("type", $value);
+            }
         }
     }
 

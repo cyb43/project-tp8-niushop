@@ -14,7 +14,6 @@ namespace app\service\admin\upgrade;
 use app\dict\sys\UpgradeDict;
 use app\model\sys\SysUpgradeRecords;
 use core\base\BaseAdminService;
-use think\facade\Log;
 
 /**
  * 升级记录表服务层
@@ -81,7 +80,8 @@ class UpgradeRecordsService extends BaseAdminService
 
     /**
      * 执行失败，更新升级记录状态，备份记录状态
-     * @param $fail_reason
+     * @param $upgrade_key
+     * @param array $fail_reason
      * @return void
      */
     public function failed($upgrade_key, $fail_reason = [])

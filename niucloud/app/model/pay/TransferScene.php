@@ -11,7 +11,6 @@
 
 namespace app\model\pay;
 
-use app\dict\pay\TransferDict;
 use core\base\BaseModel;
 
 /**

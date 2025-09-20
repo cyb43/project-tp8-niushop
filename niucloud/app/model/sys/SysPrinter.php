@@ -57,6 +57,7 @@ class SysPrinter extends BaseModel
 
     /**
      * 搜索器:小票打印机
+     * @param $query
      * @param $value
      * @param $data
      */
@@ -69,6 +70,7 @@ class SysPrinter extends BaseModel
 
     /**
      * 搜索器:小票打印机设备品牌（易联云，365，飞鹅）
+     * @param $query
      * @param $value
      * @param $data
      */
@@ -81,6 +83,7 @@ class SysPrinter extends BaseModel
 
     /**
      * 搜索器:小票打印机打印机名称
+     * @param $query
      * @param $value
      * @param $data
      */
@@ -93,6 +96,7 @@ class SysPrinter extends BaseModel
 
     /**
      * 搜索器:小票打印机状态（0，关闭，1：开启）
+     * @param $query
      * @param $value
      * @param $data
      */

@@ -21,6 +21,5 @@ class AppInitListener
     public function handle()
     {
         //加载插件语言包
-        return;
     }
 }

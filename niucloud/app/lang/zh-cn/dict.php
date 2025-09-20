@@ -79,10 +79,12 @@ return [
     'dict_sms_api' => [
         'template_status_again_report' => '需重新报备',
         'template_status_need_edit' => '需修改报备参数',
+        'template_status_need_pull' => '需拉取同步状态',
         'template_status_not_report' => '未报备',
         'template_status_wait' => '待审核',
         'template_status_pass' => '审核通过',
         'template_status_refuse' => '审核不通过',
+        'template_need_pull' => '需拉取同步',
 
         //验证码-1 行业通知-2 营销推广-3
         'template_type_verify_code' => '验证码',
@@ -102,6 +104,7 @@ return [
         //上传附件类型
         'type_image' => '图片',
         'type_video' => '视频',
+        'type_audio' => '音频',
         //存储方式
         'storage_type_local' => '本地存储',
         'storage_type_qiniu' => '七牛云',
@@ -346,6 +349,7 @@ return [
         'dealing' => '退款中',
         'wait' => '待退款',
         'fail' => '退款失败',
+        'cancel' => '已取消',
         'wechatpay' => '微信原路退款',
         'alipay' => '支付宝原路退款',
         'unipay' => '银联原路退款',

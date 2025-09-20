@@ -33,6 +33,10 @@ class BindDispatch extends Controller
                 $controller = 'weapp.Weapp';
                 $action = 'register';
                 break;
+            case MemberLoginTypeDict::APP:
+                $controller = 'channel.App';
+                $action = 'register';
+                break;
         }
 
 

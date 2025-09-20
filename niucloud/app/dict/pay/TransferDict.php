@@ -129,7 +129,7 @@ class TransferDict
 
     /**
      * 获取微信转账场景
-     * @return void
+     * @return array[]
      */
     public static function getWechatTransferScene(){
         return [

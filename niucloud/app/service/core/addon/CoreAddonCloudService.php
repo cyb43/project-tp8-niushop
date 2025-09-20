@@ -24,7 +24,7 @@ class CoreAddonCloudService extends CoreCloudBaseService
 {
     /**
      * 云编译
-     * @param $addon
+     * @param string $addon
      * @return void
      */
     public function cloudBuild(string $addon) {
@@ -148,6 +148,8 @@ class CoreAddonCloudService extends CoreCloudBaseService
     /**
      * 云编译成功
      * @param string $addon
+     * @param array $log
+     * @param $timestamp
      * @return void
      */
     public function buildSuccess(string $addon, array $log, $timestamp) {
@@ -290,8 +292,12 @@ class CoreAddonCloudService extends CoreCloudBaseService
 
     /**
      * 下载升级文件
-     * @param string $dir
+     * @param string $app_key
      * @param string $token
+     * @param string $dir
+     * @param int $index
+     * @param int $step
+     * @param int $length
      * @return void
      */
     public function downloadUpgradeFile(string $app_key, string $token, string $dir = '', int $index = -1, $step = 0, $length = 0) {

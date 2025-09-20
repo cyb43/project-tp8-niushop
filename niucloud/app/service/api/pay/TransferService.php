@@ -12,17 +12,9 @@
 namespace app\service\api\pay;
 
 use app\dict\common\ChannelDict;
-use app\dict\pay\PaySceneDict;
-use app\model\member\Member;
-use app\model\pay\Pay;
-use app\model\sys\Poster;
 use app\service\core\member\CoreMemberService;
 use app\service\core\pay\CorePayService;
 use core\base\BaseApiService;
-use core\exception\ApiException;
-use think\db\exception\DataNotFoundException;
-use think\db\exception\DbException;
-use think\db\exception\ModelNotFoundException;
 
 /**
  * 支付业务
@@ -39,16 +31,9 @@ class TransferService extends BaseApiService
 
     /**
      * 去支付
-     * @param string $type
-     * @param string $trade_type
-     * @param int $trade_id
-     * @param string $return_url
-     * @param string $quit_url
-     * @param string $buyer_id
-     * @return mixed
-     * @throws DataNotFoundException
-     * @throws DbException
-     * @throws ModelNotFoundException
+     * @param string $transfer_no
+     * @param array $data
+     * @return void
      */
     public function confirm(string $transfer_no, array $data = []){
 

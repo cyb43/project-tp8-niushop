@@ -1,6 +1,7 @@
 ﻿
 SET NAMES utf8mb4;
 
+
 DROP TABLE IF EXISTS `account_log`;
 CREATE TABLE `account_log` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -10,6 +11,28 @@ CREATE TABLE `account_log` (
   `create_time` varchar(255) NOT NULL DEFAULT 0 COMMENT '添加时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE = utf8mb4_general_ci COMMENT='站点账单记录';
+
+
+DROP TABLE IF EXISTS `activity_exchange_code`;
+CREATE TABLE `activity_exchange_code`
+(
+    `id`             INT(11) NOT NULL AUTO_INCREMENT,
+    `code`           VARCHAR(255) NOT NULL DEFAULT '' COMMENT '兑换码',
+    `status`         VARCHAR(20)  NOT NULL DEFAULT 'normal' COMMENT 'normal-正常  received-被领取',
+    `activity_type`  VARCHAR(20)  NOT NULL DEFAULT '' COMMENT '例seckill-秒杀活动',
+    `activity_id`    INT(11) NOT NULL DEFAULT 0 COMMENT '活动ID',
+    `type`           VARCHAR(20)  NOT NULL DEFAULT '' COMMENT '类型    例seckill_goods-秒杀商品',
+    `type_id`        INT(11) NOT NULL DEFAULT 0 COMMENT '类型对应id  秒杀商品id',
+    `expire_time`    INT(11) NOT NULL DEFAULT 0 COMMENT '过期时间 0-不过期',
+    `member_id`      INT(11) NOT NULL DEFAULT 0 COMMENT '领取会员',
+    `received_time`  INT(11) NOT NULL DEFAULT 0 COMMENT '领取时间',
+    `order_id`       INT(11) NOT NULL DEFAULT 0 COMMENT '对应订单id',
+    `admin_username` VARCHAR(100) NOT NULL DEFAULT '' COMMENT '操作人名称（添加人）',
+    `admin_id`       INT(11) NOT NULL DEFAULT 0 COMMENT '操作人id',
+    `create_time`    INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='活动兑换码表';
+
 
 DROP TABLE IF EXISTS `addon`;
 CREATE TABLE `addon` (
@@ -46,7 +69,7 @@ CREATE TABLE `addon_log` (
 
 
 DROP TABLE IF EXISTS `applet_site_version`;
-CREATE TABLE `applet_site_version` (
+CREATE TABLE `applet_site_version`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `version_id` int(11) NOT NULL DEFAULT 0 COMMENT '版本id',
   `type` varchar(20) NOT NULL DEFAULT '' COMMENT '小程序类型',
@@ -57,7 +80,7 @@ CREATE TABLE `applet_site_version` (
 
 
 DROP TABLE IF EXISTS `applet_version`;
-CREATE TABLE `applet_version` (
+CREATE TABLE `applet_version`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `config` varchar(255) NOT NULL DEFAULT '' COMMENT '配置信息',
   `type` varchar(20) NOT NULL DEFAULT '' COMMENT '小程序类型',
@@ -188,7 +211,7 @@ CREATE TABLE `diy_form_write_config` (
 
 
 DROP TABLE IF EXISTS `diy_page`;
-CREATE TABLE `diy_page` (
+CREATE TABLE `diy_page`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `page_title` varchar(255) NOT NULL DEFAULT '' COMMENT '页面名称（用于后台展示）',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '页面标题（用于前台展示）',
@@ -208,7 +231,7 @@ CREATE TABLE `diy_page` (
 
 
 DROP TABLE IF EXISTS `diy_route`;
-CREATE TABLE `diy_route` (
+CREATE TABLE `diy_route`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '页面名称',
   `name` varchar(255) NOT NULL DEFAULT '' COMMENT '页面标识',
@@ -239,7 +262,7 @@ CREATE TABLE `diy_theme` (
 
 
 DROP TABLE IF EXISTS `generate_column`;
-CREATE TABLE `generate_column` (
+CREATE TABLE `generate_column`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `table_id` int(11) NOT NULL DEFAULT 0 COMMENT '表id',
   `column_name` varchar(100) NOT NULL DEFAULT '' COMMENT '字段名称',
@@ -269,7 +292,7 @@ CREATE TABLE `generate_column` (
 
 
 DROP TABLE IF EXISTS `generate_table`;
-CREATE TABLE `generate_table` (
+CREATE TABLE `generate_table`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `table_name` varchar(255) NOT NULL DEFAULT '' COMMENT '表名',
   `table_content` varchar(255) NOT NULL DEFAULT '' COMMENT '描述前缀',
@@ -287,7 +310,7 @@ CREATE TABLE `generate_table` (
 
 
 DROP TABLE IF EXISTS `jobs`;
-CREATE TABLE `jobs` (
+CREATE TABLE `jobs`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `queue` varchar(255) NOT NULL DEFAULT '',
   `payload` longtext NOT NULL,
@@ -300,7 +323,7 @@ CREATE TABLE `jobs` (
 
 
 DROP TABLE IF EXISTS `jobs_failed`;
-CREATE TABLE `jobs_failed` (
+CREATE TABLE `jobs_failed`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `connection` text NOT NULL,
   `queue` text NOT NULL,
@@ -312,7 +335,7 @@ CREATE TABLE `jobs_failed` (
 
 
 DROP TABLE IF EXISTS `member`;
-CREATE TABLE `member` (
+CREATE TABLE `member`  (
   `member_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `member_no` varchar(255) NOT NULL DEFAULT '' COMMENT '会员编码',
   `pid` int(11) NOT NULL DEFAULT 0 COMMENT '推广会员id',
@@ -341,7 +364,7 @@ CREATE TABLE `member` (
   `sex` tinyint(4) NOT NULL DEFAULT 0 COMMENT '性别 0保密 1男 2女',
   `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '用户状态  用户状态默认为1',
   `birthday` varchar(20) NOT NULL DEFAULT '' COMMENT '出生日期',
-  `id_card` varchar(50) NOT NULL DEFAULT '' COMMENT '身份证号',
+  `id_card` varchar(30) NOT NULL DEFAULT '' COMMENT '身份证号',
   `point` int(11) NOT NULL DEFAULT 0 COMMENT '可用积分',
   `point_get` int(11) NOT NULL DEFAULT 0 COMMENT '累计获取积分',
   `balance` decimal(10, 2) NOT NULL DEFAULT 0.00 COMMENT '可用余额',
@@ -362,7 +385,7 @@ CREATE TABLE `member` (
   `district_id` int(11) NOT NULL DEFAULT 0 COMMENT '区县id',
   `address` varchar(255) NOT NULL DEFAULT '' COMMENT '详细地址',
   `location` varchar(255) NOT NULL DEFAULT '' COMMENT '定位地址',
-  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `remark` varchar(300) NOT NULL DEFAULT '' COMMENT '备注',
   `delete_time` int(11) NOT NULL DEFAULT 0 COMMENT '删除时间',
   `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '修改时间',
   PRIMARY KEY (`member_id`) USING BTREE
@@ -370,7 +393,7 @@ CREATE TABLE `member` (
 
 
 DROP TABLE IF EXISTS `member_account_log`;
-CREATE TABLE `member_account_log` (
+CREATE TABLE `member_account_log`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT 0 COMMENT '用户id',
   `account_type` varchar(255) NOT NULL DEFAULT 'point' COMMENT '账户类型',
@@ -406,7 +429,7 @@ ALTER TABLE `member_address`ADD INDEX IDX_member_address (member_id);
 
 
 DROP TABLE IF EXISTS `member_cash_out`;
-CREATE TABLE `member_cash_out` (
+CREATE TABLE `member_cash_out`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cash_out_no` varchar(50) NOT NULL DEFAULT '' COMMENT '提现交易号',
   `member_id` int(11) NOT NULL DEFAULT 0 COMMENT '会员id',
@@ -439,7 +462,7 @@ CREATE TABLE `member_cash_out` (
 
 
 DROP TABLE IF EXISTS `member_cash_out_account`;
-CREATE TABLE `member_cash_out_account` (
+CREATE TABLE `member_cash_out_account`  (
   `account_id` int(11) NOT NULL AUTO_INCREMENT,
   `member_id` int(11) NOT NULL DEFAULT 0 COMMENT '会员id',
   `account_type` varchar(255) NOT NULL DEFAULT '' COMMENT '账户类型',
@@ -454,7 +477,7 @@ CREATE TABLE `member_cash_out_account` (
 
 
 DROP TABLE IF EXISTS `member_label`;
-CREATE TABLE `member_label` (
+CREATE TABLE `member_label`  (
   `label_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '标签id',
   `label_name` varchar(50) NOT NULL DEFAULT '' COMMENT '标签名称',
   `memo` varchar(1000) NOT NULL DEFAULT '' COMMENT '备注',
@@ -467,7 +490,7 @@ CREATE TABLE `member_label` (
 
 
 DROP TABLE IF EXISTS `member_level`;
-CREATE TABLE `member_level` (
+CREATE TABLE `member_level`  (
   `level_id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '会员等级',
   `level_name` varchar(50) NOT NULL DEFAULT '' COMMENT '等级名称',
   `growth` int(11) NOT NULL DEFAULT '0' COMMENT '所需成长值',
@@ -515,9 +538,8 @@ CREATE TABLE `niu_sms_template` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='牛云短信模板表';
 
-
 DROP TABLE IF EXISTS `pay`;
-CREATE TABLE `pay` (
+CREATE TABLE `pay`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `main_id` int(11) NOT NULL DEFAULT 0 COMMENT '支付会员id',
   `from_main_id` INT(11) NOT NULL DEFAULT 0 COMMENT '发起支付会员id',
@@ -543,7 +565,7 @@ CREATE TABLE `pay` (
 
 
 DROP TABLE IF EXISTS `pay_channel`;
-CREATE TABLE `pay_channel` (
+CREATE TABLE `pay_channel`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `type` varchar(255) NOT NULL DEFAULT '' COMMENT '支付类型',
   `channel` varchar(255) NOT NULL DEFAULT '' COMMENT '支付渠道',
@@ -557,7 +579,7 @@ CREATE TABLE `pay_channel` (
 
 
 DROP TABLE IF EXISTS `pay_refund`;
-CREATE TABLE `pay_refund` (
+CREATE TABLE `pay_refund`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `refund_no` varchar(255) NOT NULL DEFAULT '' COMMENT '退款单号',
   `out_trade_no` varchar(255) NOT NULL DEFAULT '' COMMENT '支付流水号',
@@ -582,7 +604,7 @@ CREATE TABLE `pay_refund` (
 
 
 DROP TABLE IF EXISTS `pay_transfer`;
-CREATE TABLE `pay_transfer` (
+CREATE TABLE `pay_transfer`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `trade_type` varchar(255) NOT NULL DEFAULT '' COMMENT '业务类型',
   `transfer_no` varchar(50) NOT NULL DEFAULT '' COMMENT '转账单号',
@@ -663,9 +685,8 @@ CREATE TABLE `stat_hour` (
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '小时统计表' ROW_FORMAT = Dynamic;
 
-
 DROP TABLE IF EXISTS `sys_agreement`;
-CREATE TABLE `sys_agreement` (
+CREATE TABLE `sys_agreement`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `agreement_key` varchar(255) NOT NULL DEFAULT '' COMMENT '协议关键字',
   `title` varchar(255) NOT NULL DEFAULT '' COMMENT '协议标题',
@@ -677,7 +698,7 @@ CREATE TABLE `sys_agreement` (
 
 
 DROP TABLE IF EXISTS `sys_area`;
-CREATE TABLE `sys_area` (
+CREATE TABLE `sys_area`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL DEFAULT 0 COMMENT '父级',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '名称',
@@ -692,7 +713,7 @@ CREATE TABLE `sys_area` (
 
 
 DROP TABLE IF EXISTS `sys_attachment`;
-CREATE TABLE `sys_attachment` (
+CREATE TABLE `sys_attachment`  (
   `att_id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(100) NOT NULL DEFAULT '' COMMENT '附件名称',
   `real_name` varchar(255) NOT NULL DEFAULT '' COMMENT '原始文件名',
@@ -710,7 +731,7 @@ CREATE TABLE `sys_attachment` (
 
 
 DROP TABLE IF EXISTS `sys_attachment_category`;
-CREATE TABLE `sys_attachment_category` (
+CREATE TABLE `sys_attachment_category`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pid` int(11) NOT NULL DEFAULT 0 COMMENT '父级ID',
   `type` varchar(50) NOT NULL DEFAULT '' COMMENT '文件管理类型（image,video）',
@@ -723,22 +744,23 @@ CREATE TABLE `sys_attachment_category` (
 
 
 DROP TABLE IF EXISTS `sys_backup_records`;
-CREATE TABLE `sys_backup_records` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `version` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备份版本号',
-  `backup_key` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备份标识',
-  `content` TEXT DEFAULT NULL COMMENT '备份内容',
-  `status` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '状态',
-  `fail_reason` LONGTEXT DEFAULT NULL COMMENT '失败原因',
-  `remark` VARCHAR(500) NOT NULL DEFAULT '' COMMENT '备注',
-  `create_time` INT NOT NULL DEFAULT 0 COMMENT '创建时间',
-  `complete_time` INT NOT NULL DEFAULT 0 COMMENT '完成时间',
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '备份记录表' ROW_FORMAT = Dynamic;
+CREATE TABLE `sys_backup_records`
+(
+    `id`            INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `version`       VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备份版本号',
+    `backup_key`    VARCHAR(255) NOT NULL DEFAULT '' COMMENT '备份标识',
+    `content`       TEXT DEFAULT NULL COMMENT '备份内容',
+    `status`        VARCHAR(255) NOT NULL DEFAULT '' COMMENT '状态',
+    `fail_reason`   LONGTEXT              DEFAULT NULL COMMENT '失败原因',
+    `remark`        VARCHAR(500) NOT NULL DEFAULT '' COMMENT '备注',
+    `create_time`   INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `complete_time` INT(11) NOT NULL DEFAULT 0 COMMENT '完成时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='备份记录表';
 
 
 DROP TABLE IF EXISTS `sys_config`;
-CREATE TABLE `sys_config` (
+CREATE TABLE `sys_config`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '主键',
   `config_key` varchar(255) NOT NULL DEFAULT '' COMMENT '配置项关键字',
   `value` text NULL COMMENT '配置值json',
@@ -751,7 +773,7 @@ CREATE TABLE `sys_config` (
 
 
 DROP TABLE IF EXISTS `sys_cron_task`;
-CREATE TABLE `sys_cron_task` (
+CREATE TABLE `sys_cron_task`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `status` int(11) NOT NULL DEFAULT 1 COMMENT '任务状态',
   `count` int(11) NOT NULL DEFAULT 0 COMMENT '执行次数',
@@ -773,7 +795,7 @@ CREATE TABLE `sys_cron_task` (
 
 
 DROP TABLE IF EXISTS `sys_dict`;
-CREATE TABLE `sys_dict` (
+CREATE TABLE `sys_dict`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
   `name` varchar(50) NOT NULL DEFAULT '' COMMENT '字典名称',
   `key` varchar(100) NOT NULL DEFAULT '' COMMENT '字典关键词',
@@ -817,16 +839,17 @@ CREATE TABLE `verify` (
   `data` varchar(255) NOT NULL DEFAULT '' COMMENT '核销参数',
   `type` varchar(30) NOT NULL DEFAULT '' COMMENT '核销类型',
   `create_time` int(11) NOT NULL DEFAULT '0' COMMENT '核销时间',
-  `verifier_member_id` int(11) NOT NULL DEFAULT '0' COMMENT '核销会员id',
+  `verifier_member_id` int(11) NOT NULL DEFAULT '0' COMMENT '核销员的会员id',
   `value` varchar(1000) NOT NULL DEFAULT '' COMMENT '核销内容',
   `body` varchar(500) NOT NULL DEFAULT '' COMMENT '描述',
   `relate_tag` varchar(255) NOT NULL DEFAULT '' COMMENT '业务标识',
+  `is_admin` tinyint NOT NULL DEFAULT 0 COMMENT '是否后台核销0-否1-是',
   PRIMARY KEY (`id`)
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '核销记录' ROW_FORMAT = Dynamic;
 
 
 DROP TABLE IF EXISTS `sys_menu`;
-CREATE TABLE `sys_menu` (
+CREATE TABLE `sys_menu`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
   `app_type` varchar(255) NOT NULL DEFAULT 'admin' COMMENT '应用类型',
   `menu_name` varchar(32) NOT NULL DEFAULT '' COMMENT '菜单名称',
@@ -853,7 +876,7 @@ CREATE TABLE `sys_menu` (
 
 
 DROP TABLE IF EXISTS `sys_notice`;
-CREATE TABLE `sys_notice` (
+CREATE TABLE `sys_notice`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `key` varchar(50) NOT NULL DEFAULT '' COMMENT '标识',
   `sms_content` text NULL COMMENT '短信配置参数',
@@ -871,7 +894,7 @@ CREATE TABLE `sys_notice` (
 
 
 DROP TABLE IF EXISTS `sys_notice_log`;
-CREATE TABLE `sys_notice_log` (
+CREATE TABLE `sys_notice_log`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '通知记录ID',
   `key` varchar(255) NULL DEFAULT '' COMMENT '消息key',
   `notice_type` varchar(50) NULL DEFAULT 'sms' COMMENT '消息类型（sms,wechat.weapp）',
@@ -891,7 +914,7 @@ CREATE TABLE `sys_notice_log` (
 
 
 DROP TABLE IF EXISTS `sys_notice_sms_log`;
-CREATE TABLE `sys_notice_sms_log` (
+CREATE TABLE `sys_notice_sms_log`  (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'id',
   `mobile` varchar(11) NOT NULL DEFAULT '' COMMENT '手机号码',
   `sms_type` varchar(32) NOT NULL DEFAULT '' COMMENT '发送关键字（注册、找回密码）',
@@ -910,11 +933,11 @@ CREATE TABLE `sys_notice_sms_log` (
 
 
 DROP TABLE IF EXISTS `sys_role`;
-CREATE TABLE `sys_role` (
+CREATE TABLE `sys_role`  (
   `role_id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '角色id',
   `role_name` varchar(255) NOT NULL DEFAULT '' COMMENT '角色名称',
   `rules` text NULL COMMENT '角色权限(menus_id)',
-  `addon_keys` text COMMENT '角色应用权限（应用key）',
+  `addon_keys` TEXT DEFAULT NULL COMMENT '角色应用权限（应用key）',
   `status` tinyint(3) UNSIGNED NOT NULL DEFAULT 1 COMMENT '状态',
   `create_time` int(11) NOT NULL DEFAULT 0 COMMENT '添加时间',
   `update_time` int(11) NOT NULL DEFAULT 0 COMMENT '最后修改时间',
@@ -971,7 +994,7 @@ CREATE TABLE `sys_printer_template` (
 
 
 DROP TABLE IF EXISTS `sys_schedule`;
-CREATE TABLE `sys_schedule` (
+CREATE TABLE `sys_schedule`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `addon` varchar(255) NOT NULL DEFAULT '' COMMENT '所属插件',
   `key` varchar(255) NOT NULL DEFAULT '' COMMENT '计划任务模板key',
@@ -1005,23 +1028,25 @@ CREATE TABLE `sys_schedule_log` (
 
 
 DROP TABLE IF EXISTS `sys_upgrade_records`;
-CREATE TABLE `sys_upgrade_records` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT '主键id',
-  `upgrade_key` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '升级标识',
-  `app_key` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '插件标识',
-  `name` LONGTEXT DEFAULT NULL  COMMENT '升级名称',
-  `content` TEXT DEFAULT NULL COMMENT '升级内容',
-  `prev_version` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '前一版本',
-  `current_version` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '当前版本',
-  `status` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '状态',
-  `fail_reason` LONGTEXT DEFAULT NULL COMMENT '失败原因',
-  `create_time` INT NOT NULL DEFAULT 0 COMMENT '创建时间',
-  `complete_time` INT NOT NULL DEFAULT 0 COMMENT '完成时间',
-  PRIMARY KEY (`id`)
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '升级记录表' ROW_FORMAT = Dynamic;
+CREATE TABLE `sys_upgrade_records`
+(
+    `id`              INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键id',
+    `upgrade_key`     VARCHAR(255) NOT NULL DEFAULT '' COMMENT '升级标识',
+    `app_key`         VARCHAR(255) NOT NULL DEFAULT '' COMMENT '插件标识',
+    `name`            VARCHAR(255) NOT NULL DEFAULT '' COMMENT '升级名称',
+    `content`         TEXT DEFAULT NULL COMMENT '升级内容',
+    `prev_version`    VARCHAR(255) NOT NULL DEFAULT '' COMMENT '前一版本',
+    `current_version` VARCHAR(255) NOT NULL DEFAULT '' COMMENT '当前版本',
+    `status`          VARCHAR(255) NOT NULL DEFAULT '' COMMENT '状态',
+    `fail_reason`     LONGTEXT              DEFAULT NULL COMMENT '失败原因',
+    `create_time`     INT(11) NOT NULL DEFAULT 0 COMMENT '创建时间',
+    `complete_time`   INT(11) NOT NULL DEFAULT 0 COMMENT '完成时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_general_ci COMMENT='升级记录表';
+
 
 DROP TABLE IF EXISTS `sys_user`;
-CREATE TABLE `sys_user` (
+CREATE TABLE `sys_user`  (
   `uid` smallint(5) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '系统用户ID',
   `username` varchar(255) NOT NULL DEFAULT '' COMMENT '用户账号',
   `head_img` varchar(255) NOT NULL DEFAULT '',
@@ -1043,13 +1068,13 @@ CREATE TABLE `sys_user` (
 
 
 DROP TABLE IF EXISTS `sys_user_log`;
-CREATE TABLE `sys_user_log` (
+CREATE TABLE `sys_user_log`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '管理员操作记录ID',
   `ip` varchar(50) NOT NULL DEFAULT '' COMMENT '登录IP',
   `uid` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '管理员id',
   `username` varchar(255) NOT NULL DEFAULT '' COMMENT '管理员姓名',
   `operation` varchar(255) NOT NULL DEFAULT '' COMMENT '操作描述',
-  `url` varchar(255) NOT NULL DEFAULT '' COMMENT '链接',
+  `url` varchar(300) NOT NULL DEFAULT '' COMMENT '链接',
   `params` longtext DEFAULT NULL COMMENT '参数',
   `type` varchar(32) NOT NULL DEFAULT '' COMMENT '请求方式',
   `create_time` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '操作时间',
@@ -1058,7 +1083,7 @@ CREATE TABLE `sys_user_log` (
 
 
 DROP TABLE IF EXISTS `sys_user_role`;
-CREATE TABLE `sys_user_role` (
+CREATE TABLE `sys_user_role`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL DEFAULT 0 COMMENT '用户id',
   `role_ids` varchar(255) NOT NULL DEFAULT '' COMMENT '角色id',
@@ -1070,7 +1095,7 @@ CREATE TABLE `sys_user_role` (
 
 
 DROP TABLE IF EXISTS `weapp_version`;
-CREATE TABLE `weapp_version` (
+CREATE TABLE `weapp_version`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `version` varchar(255) NOT NULL DEFAULT '',
   `version_no` int(11) NOT NULL DEFAULT 1,
@@ -1124,7 +1149,7 @@ CREATE TABLE `web_nav` (
 
 
 DROP TABLE IF EXISTS `wechat_fans`;
-CREATE TABLE `wechat_fans` (
+CREATE TABLE `wechat_fans`  (
   `fans_id` int(11) NOT NULL AUTO_INCREMENT COMMENT '粉丝ID',
   `nickname` varchar(255) NOT NULL DEFAULT '' COMMENT '昵称',
   `avatar` varchar(500) NOT NULL DEFAULT '' COMMENT '头像',
@@ -1149,7 +1174,7 @@ CREATE TABLE `wechat_fans` (
 
 
 DROP TABLE IF EXISTS `wechat_media`;
-CREATE TABLE `wechat_media` (
+CREATE TABLE `wechat_media`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` varchar(255) NOT NULL DEFAULT '' COMMENT '类型',
   `value` text NULL COMMENT '值',
@@ -1161,7 +1186,7 @@ CREATE TABLE `wechat_media` (
 
 
 DROP TABLE IF EXISTS `wechat_reply`;
-CREATE TABLE `wechat_reply` (
+CREATE TABLE `wechat_reply`  (
  `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
  `name` varchar(64) NOT NULL DEFAULT '' COMMENT '规则名称',
  `keyword` varchar(64) NOT NULL DEFAULT '' COMMENT '关键词',

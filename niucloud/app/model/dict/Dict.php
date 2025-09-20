@@ -44,6 +44,7 @@ class Dict extends BaseModel
 
     /**
      * 搜索器:数据字典字典名称
+     * @param $query
      * @param $value
      * @param $data
      */
@@ -56,6 +57,7 @@ class Dict extends BaseModel
 
     /**
      * 搜索器:数据字典字典关键词
+     * @param $query
      * @param $value
      * @param $data
      */

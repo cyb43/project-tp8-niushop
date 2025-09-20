@@ -76,7 +76,7 @@ class DiyFormRecords extends BaseModel
 
     /**
      * 搜索器:创建时间
-     * @param $query
+     * @param Query $query
      * @param $value
      * @param $data
      */

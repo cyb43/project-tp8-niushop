@@ -13,6 +13,9 @@ namespace app\service\admin\dict;
 
 use app\model\dict\Dict;
 use core\base\BaseAdminService;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 
 
 /**
@@ -99,8 +102,10 @@ class DictService extends BaseAdminService
 
     /**
      * 获取全部数据字典
-     * @param array $where
      * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function getAll()
     {

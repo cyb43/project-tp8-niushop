@@ -77,7 +77,10 @@ class TemplateDict
                                     "name" => ""
                                 ]
                             ],
-                            "bottomTabBarSwitch" => true,
+                            "bottomTabBar" => [
+                                'control' => true,
+                                'isShow' => true
+                            ],
                             "popWindow" => [
                                 "imgUrl" => "",
                                 "imgWidth" => "",
@@ -719,7 +722,10 @@ class TemplateDict
                                     "name" => ""
                                 ]
                             ],
-                            "bottomTabBarSwitch" => true,
+                            "bottomTabBar" => [
+                                'control' => true,
+                                'isShow' => true
+                            ],
                             "popWindow" => [
                                 "imgUrl" => "",
                                 "imgWidth" => "",

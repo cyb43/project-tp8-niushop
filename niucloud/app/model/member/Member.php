@@ -17,6 +17,7 @@ use app\dict\member\MemberDict;
 use app\dict\member\MemberLoginTypeDict;
 use app\dict\member\MemberRegisterChannelDict;
 use app\dict\member\MemberRegisterTypeDict;
+use app\dict\sys\FileDict;
 use core\base\BaseModel;
 use think\db\Query;
 use think\model\concern\SoftDelete;
@@ -274,6 +275,16 @@ class Member extends BaseModel
     public function memberLevelNameBind()
     {
         return $this->hasOne(MemberLevel::class, 'level_id', 'member_level')->bind([ 'member_level_name' => 'level_name' ]);
+    }
+    /**
+     * 获取头像缩略图（小）
+     */
+    public function getHeadimgSmallAttr($value, $data)
+    {
+        if (isset($data['headimg']) && $data['headimg'] != '') {
+            return get_thumb_images($data['headimg'], FileDict::SMALL);
+        }
+        return '';
     }
 
 }

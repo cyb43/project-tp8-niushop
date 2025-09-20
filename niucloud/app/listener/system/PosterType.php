@@ -21,7 +21,7 @@ class PosterType
                 'type' => 'friendspay',
                 'addon' => '',
                 'name' => '找朋友帮忙付海报',
-                'decs' => '找朋友帮忙付，分享后进入帮付页面',
+                'desc' => '找朋友帮忙付，分享后进入帮付页面',
                 'icon' => 'static/resource/images/poster/type_friendspay.png'
             ],
         ];

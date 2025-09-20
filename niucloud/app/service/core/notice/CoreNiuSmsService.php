@@ -63,14 +63,14 @@ class CoreNiuSmsService extends BaseAdminService
      * @param $params
      * @return \app\model\sys\SysConfig|bool|\think\Model
      */
-    public function setNiuLoginConfig($params)
+    public function setNiuLoginConfig($params, $is_login = false)
     {
         $config = $this->getNiuLoginConfig(true);
         $config['default'] = $params['default'] ?? ($config['default'] ?? "");
         $config[SmsDict::NIUSMS] = [
             'username' => $params['username'] ?? $config[SmsDict::NIUSMS]['username'] ?? "",
             'password' => $params['password'] ?? $config[SmsDict::NIUSMS]['password'] ?? "",
-            'signature' => $params['signature'] ?? $config[SmsDict::NIUSMS]['signature'] ?? "",
+            'signature' => $is_login ? "" : ($params['signature'] ?? $config[SmsDict::NIUSMS]['signature'] ?? ""),//登录清空默认签名重新选择
         ];
         return (new CoreConfigService())->setConfig(ConfigKeyDict::SMS, $config);
     }
@@ -86,7 +86,7 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 发验证短信
-     * @param $mobile
+     * @param $params
      * @return mixed
      */
     public function packageList($params)
@@ -98,7 +98,7 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 发验证短信
-     * @param $mobile
+     * @param $params
      * @return mixed
      */
     public function sendMobileCode($params)
@@ -110,7 +110,6 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 发验证短信
-     * @param $mobile
      * @return mixed
      */
     public function captcha()
@@ -162,6 +161,7 @@ class CoreNiuSmsService extends BaseAdminService
     /**
      * 获取牛云短信子账号信息
      * @param $username
+     * @param $params
      * @return mixed
      */
     public function accountSendList($username, $params)
@@ -202,7 +202,7 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 获取签名列表
-     * @param $data
+     * @param $username
      * @return mixed
      */
     public function signList($username)
@@ -214,7 +214,8 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 获取签名信息
-     * @param $data
+     * @param $username
+     * @param $signature
      * @return mixed
      */
     public function signInfo($username, $signature)
@@ -226,7 +227,8 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 报备签名
-     * @param $data
+     * @param $username
+     * @param $params
      * @return mixed
      */
     public function signCreate($username, $params)
@@ -238,8 +240,10 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 报备签名-删除
-     * @param $data
+     * @param $username
+     * @param $params
      * @return mixed
+     * @throws \Exception
      */
     public function signDelete($username, $params)
     {
@@ -263,7 +267,8 @@ class CoreNiuSmsService extends BaseAdminService
     /**********************模版处理*********************/
     /**
      * 获取模版列表
-     * @param $data
+     * @param $username
+     * @param $params
      * @return mixed
      */
     public function templateList($username, $params)
@@ -277,7 +282,8 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 获取模版详情
-     * @param $data
+     * @param $username
+     * @param $tem_id
      * @return mixed
      */
     public function templateInfo($username, $tem_id)
@@ -291,6 +297,7 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 获取签名列表
+     * @param $username
      * @param $params
      * @return mixed
      */
@@ -303,8 +310,10 @@ class CoreNiuSmsService extends BaseAdminService
 
     /**
      * 删除模版
-     * @param $data
+     * @param $username
+     * @param $params
      * @return mixed
+     * @throws \Exception
      */
     public function templateDelete($username, $params)
     {
@@ -316,13 +325,14 @@ class CoreNiuSmsService extends BaseAdminService
         $url = "https://api-shss.zthysms.com/sms/v2/template/delete";
         $res = (new HttpHelper())->httpRequest('POST', $url, $request);
         if ($res['code'] != 200) {
-            throw new \Exception('ZT'.$res['code'].":".$res['msg']);
+            throw new \Exception('ZT' . $res['code'] . ":" . $res['msg']);
         }
     }
 
 
     /**
      * 获取订单列表
+     * @param $username
      * @param $params
      * @return mixed
      */
@@ -362,6 +372,7 @@ class CoreNiuSmsService extends BaseAdminService
     /**
      * 创建订单
      * @param $username
+     * @param $params
      * @return mixed
      */
     public function orderCreate($username, $params)
@@ -374,6 +385,7 @@ class CoreNiuSmsService extends BaseAdminService
     /**
      * 创建订单
      * @param $username
+     * @param $params
      * @return mixed
      */
     public function calculate($username, $params)
@@ -386,6 +398,7 @@ class CoreNiuSmsService extends BaseAdminService
     /**
      * 获取订单支付信息
      * @param $username
+     * @param $params
      * @return mixed
      */
     public function orderPayInfo($username, $params)

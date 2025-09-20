@@ -37,7 +37,7 @@ class CoreAddonDevelopBuildService extends BaseCoreService
     /**
      * 插件打包
      * @param string $addon
-     * @return void
+     * @return true
      */
     public function build(string $addon)
     {
@@ -70,7 +70,7 @@ class CoreAddonDevelopBuildService extends BaseCoreService
     /**
      * 下载
      * @param string $addon
-     * @return \think\response\File
+     * @return array|string|string[]
      */
     public function download(string $addon) {
         $zip_file = runtime_path() . $addon . '.zip';
@@ -180,7 +180,7 @@ class CoreAddonDevelopBuildService extends BaseCoreService
 
     /**
      * admin打包
-     * @return void
+     * @return true
      */
     public function admin()
     {
@@ -200,7 +200,7 @@ class CoreAddonDevelopBuildService extends BaseCoreService
 
     /**
      * wap打包
-     * @return void
+     * @return true
      */
     public function uniapp()
     {
@@ -267,7 +267,7 @@ class CoreAddonDevelopBuildService extends BaseCoreService
 
     /**
      * web打包
-     * @return void
+     * @return true
      */
     public function web()
     {

@@ -15,6 +15,7 @@ return [
     'EDIT_SUCCESS' => '编辑成功',
     'DELETE_SUCCESS' => '删除成功',
     'MODIFY_SUCCESS' => '更新成功',
+    'VERIFY_SUCCESS' => '核销成功',
     'FAIL' => '操作失败',
     'SAVE_FAIL' => '保存失败',
     'EDIT_FAIL' => '修改失败',
@@ -39,6 +40,7 @@ return [
     'ADDON_INSTALL_EXECUTED' => '插件安装任务已执行',
     'ADDON_INSTALLING' => '插件安装中',
     'INSTALL_CHECK_NOT_PASS' => '安装校验未通过',
+    'ADMIN_INDEX_VIEW_PATH_NOT_EXIST' => '当前首页路径不存在',
     'ADDON_SQL_FAIL' => '插件sql执行失败',
     'ADDON_DIR_FAIL' => '插件文件操作失败',
     'LAYOUT_NOT_EXIST' => '该布局不存在',
@@ -92,6 +94,7 @@ return [
 
     //用户管理
     'USER_NOT_EXIST' => '用户不存在',
+    'ADMIN_NOT_ALLOW_EDIT_ROLE' => '超级管理员不允许改动权限',
     'USERNAME_REPEAT' => '账号重复',
 
     //角色管理
@@ -144,6 +147,7 @@ return [
     'MEMBER_TYPE_NOT_EXIST' => '账户类型不存在',
     'MEMBER_IS_EXIST' => '账号已存在',
     'MEMBER_NO_IS_EXIST' => '会员编号已存在',
+    'MEMBER_NO_CREATE_ERROR' => '会员编号创建失败',
     'REG_CHANNEL_NOT_EXIST' => '无效的注册渠道',
     'MEMBER_USERNAME_LOGIN_NOT_OPEN' => '未开启账号登录注册',
     'AUTH_LOGIN_NOT_OPEN' => '未开启第三方登录注册',
@@ -192,6 +196,7 @@ return [
     //海报
     'POSTER_NOT_EXIST' => '海报不存在',
     'POSTER_IN_USE_NOT_ALLOW_MODIFY' => '海报使用中禁止修改状态',
+    'POSTER_CREATE_ERROR' => '海报组件未配置完善,请联系管理员',
 
     //万能表单
     'DIY_FORM_NOT_EXIST' => '表单不存在',
@@ -287,6 +292,7 @@ return [
     'NEED_TO_AUTHORIZE_FIRST' => '使用云服务需先进行授权',
     'WEAPP_UPLOADING' => '小程序有正在上传的版本，请等待上一版本上传完毕后再进行操作',
     'CLOUD_BUILD_TASK_EXIST' => '已有正在执行中的编译任务',
+    'CONNECT_FAIL' => '连接失败',
 
     //核销相关
     'VERIFY_TYPE_ERROR' => '核销类型错误',

@@ -142,6 +142,11 @@ class AreaService extends BaseAdminService
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 
+        // 设置 Referer 头（需替换为你的授权域名）
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            'Referer: ' . $this->request->domain()
+        ]);
+
         $res = curl_exec($curl);
         $res = json_decode($res, true);
         if($res){

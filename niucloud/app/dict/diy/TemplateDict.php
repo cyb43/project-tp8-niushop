@@ -35,7 +35,9 @@ class TemplateDict
                 'title' => get_lang('dict_diy.page_index'),
                 'page' => '/app/pages/index/index',
                 'action' => 'decorate', // 页面是否装修标识，为空标识不装修，decorate：装修
-                'type' => 'index' // 页面类型，index：首页、member_index：个人中心，空：普通页面
+                'type' => 'index', // 页面类型，index：首页、member_index：个人中心，空：普通页面
+                'ignoreComponents' => [], // 忽略组件名单
+                'global' => [] // 页面数据结构，初始化时覆盖
             ],
             'DIY_MEMBER_INDEX' => [
                 'title' => get_lang('dict_diy.page_member_index'),

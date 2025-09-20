@@ -137,7 +137,7 @@ class MenuService extends BaseAdminService
                 $where = [
                     [ 'menu_key', 'in', $menu_keys ],
                 ];
-                $addons = get_site_addons();
+                $addons = get_install_addons();
                 $addons[] = '';
 
                 $delete_menu_addon = [];
@@ -194,7 +194,7 @@ class MenuService extends BaseAdminService
             $cache_name,
             function() use ($status, $is_tree, $is_button) {
                 $where = [
-                    [ 'addon', 'in', array_merge([ '' ], get_site_addons()) ]
+                    [ 'addon', 'in', array_merge([ '' ], get_install_addons()) ]
                 ];
                 if ($status != 'all') {
                     $where[] = [ 'status', '=', $status ];
@@ -203,7 +203,7 @@ class MenuService extends BaseAdminService
                 // 排除菜单
                 $delete_menu_addon = [];
                 $addon_loader = new DictLoader("Menu");
-                foreach (get_site_addons() as $addon) {
+                foreach (get_install_addons() as $addon) {
                     $delete_menu = $addon_loader->load([ "addon" => $addon, "app_type" => 'admin' ])[ 'delete' ] ?? [];
                     if (!empty($delete_menu) && is_array($delete_menu)) $delete_menu_addon[] = $delete_menu;
                 }

@@ -30,6 +30,8 @@ class MemberRegisterTypeDict
     //手动添加
     const MANUAL = 'manual';
 
+    const APP = 'app';
+
     public static function getType($type = '')
     {
         $data = [

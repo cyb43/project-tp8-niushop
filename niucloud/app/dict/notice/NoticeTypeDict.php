@@ -20,6 +20,7 @@ class NoticeTypeDict
     //微信小程序
     public const WEAPP = 'weapp';
 
+    public const TEMPLATE_NEED_PULL = -4;
     public const TEMPLATE_AUDIT_STATUS_NEED_AGAIN_REPORT = -3;
     public const TEMPLATE_AUDIT_STATUS_NEED_EDIT = -2;
     public const TEMPLATE_AUDIT_STATUS_NOT_REPORT = -1;
@@ -79,6 +80,7 @@ class NoticeTypeDict
             self::TEMPLATE_AUDIT_STATUS_WAIT => get_lang('dict_sms_api.template_status_wait'),
             self::TEMPLATE_AUDIT_STATUS_PASS => get_lang('dict_sms_api.template_status_pass'),
             self::TEMPLATE_AUDIT_STATUS_REFUSE => get_lang('dict_sms_api.template_status_refuse'),
+            self::TEMPLATE_NEED_PULL => get_lang('dict_sms_api.template_need_pull'),
         ];
         return $type ? $data[$type] : $data;
     }

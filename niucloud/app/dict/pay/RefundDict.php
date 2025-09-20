@@ -18,6 +18,7 @@ class RefundDict
     const DEALING = 'dealing';//退款处理中
     const WAIT = 'wait';//待退款
     const FAIL = 'fail';//失败
+    const CANCEL = 'cancel';//取消
 
     // 退款方式
     const WECHATPAY = 'wechatpay';//微信支付
@@ -38,6 +39,7 @@ class RefundDict
             self::DEALING => get_lang('dict_pay_refund.status_dealing'),
             self::SUCCESS => get_lang('dict_pay_refund.status_success'),
             self::FAIL => get_lang('dict_pay_refund.status_fail'),
+            self::CANCEL => get_lang('dict_pay_refund.cancel'),
         ];
     }
 

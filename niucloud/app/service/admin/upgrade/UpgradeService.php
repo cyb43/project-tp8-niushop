@@ -86,7 +86,7 @@ class UpgradeService extends BaseAdminService
     /**
      * 升级前环境检测
      * @param string $addon
-     * @return void
+     * @return array|array[]
      */
     public function upgradePreCheck(string $addon = '')
     {
@@ -126,15 +126,15 @@ class UpgradeService extends BaseAdminService
         // 检测全部目录及文件是否可读可写，忽略指定目录
 
         // 忽略指定目录，admin
-        $exclude_admin_dir = [ 'dist', 'node_modules' ];
+        $exclude_admin_dir = [ 'dist', 'node_modules', '.git' ];
         $check_res = checkDirPermissions(project_path() . 'admin', [], $exclude_admin_dir);
 
         // 忽略指定目录，uni-app
-        $exclude_uniapp_dir = [ 'dist', 'node_modules' ];
+        $exclude_uniapp_dir = [ 'dist', 'node_modules', '.git' ];
         $check_res = array_merge2($check_res, checkDirPermissions(project_path() . 'uni-app', [], $exclude_uniapp_dir));
 
         // 忽略指定目录，web
-        $exclude_web_dir = [ '.nuxt', '.output', 'dist', 'node_modules' ];
+        $exclude_web_dir = [ '.nuxt', '.output', 'dist', 'node_modules', '.git' ];
         $check_res = array_merge2($check_res, checkDirPermissions(project_path() . 'web', [], $exclude_web_dir));
 
         // 忽略指定目录，niucloud
@@ -146,7 +146,8 @@ class UpgradeService extends BaseAdminService
             'public' . DIRECTORY_SEPARATOR . 'file',
             'runtime',
             'vendor',
-            '.user.ini'
+            '.user.ini',
+            '.git'
         ];
         $check_res = array_merge2($check_res, checkDirPermissions(project_path() . 'niucloud', [], $exclude_niucloud_dir));
 
@@ -431,7 +432,7 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 覆盖更新升级的代码
-     * @return void
+     * @return array|true
      */
     public function coverCode($index = 0, $addon = "")
     {
@@ -563,7 +564,6 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 处理手机端
-     * @param string $verson_no
      * @return true
      */
     public function handleUniapp()
@@ -639,7 +639,7 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 刷新菜单
-     * @return void
+     * @return array|true
      */
     public function refreshMenu($addon = "")
     {
@@ -692,7 +692,7 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 获取云编译日志
-     * @return void
+     * @return array|true
      */
     public function gteCloudBuildLog()
     {
@@ -730,7 +730,7 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 更新完成
-     * @return void
+     * @return true
      */
     public function upgradeComplete()
     {
@@ -750,7 +750,7 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 升级出错之后的处理
-     * @return true|void
+     * @return void
      */
     public function upgradeErrorHandle($fail_reason = [])
     {
@@ -771,7 +771,7 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 恢复源码
-     * @return void
+     * @return true
      */
     public function restoreCode()
     {
@@ -794,7 +794,7 @@ class UpgradeService extends BaseAdminService
 
     /**
      * 恢复数据库
-     * @return void
+     * @return array|true
      */
     public function restoreSql($index = 0)
     {
@@ -833,7 +833,7 @@ class UpgradeService extends BaseAdminService
     /**
      * 获取升级内容
      * @param string $addon
-     * @return array|\core\util\niucloud\Response|object|\Psr\Http\Message\ResponseInterface
+     * @return array
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
     public function getUpgradeContent(string $addon = '')

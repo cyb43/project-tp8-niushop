@@ -27,7 +27,7 @@ class Member extends Validate
 
     protected $rule = [
         'nickname' => 'requireWithout:field|max:30|requireIf:field,nickname',
-        'mobile' => 'mobile|unique:member',
+        'mobile' => 'mobile|checkUniqueMobile',
         'sex' => 'checkSex',
         'birthday' => 'date',
         'username' => 'require|checkUsername',
@@ -86,4 +86,16 @@ class Member extends Validate
     {
         return isset(MemberDict::getStatus()[$value]) ? true : get_lang("validate_member.not_exit_status");
     }
+
+    protected function checkUniqueMobile($value, $rule, $data = [])
+    {
+
+
+        $exists = (new \app\model\member\Member())
+            ->where([[ 'mobile', '=', $value ]])
+            ->count();
+
+        return $exists ? get_lang('validate_member.mobile_unique') : true;
+    }
+
 }

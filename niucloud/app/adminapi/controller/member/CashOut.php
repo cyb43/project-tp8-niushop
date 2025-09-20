@@ -135,7 +135,7 @@ class CashOut extends BaseAdminController
     /**
      * 校验数组是否
      * @description 校验数组是否
-     * @return void
+     * @return Response
      */
     public function checkTransferStatus($id){
         (new MemberCashOutService())->checkTransferStatus($id);
@@ -146,7 +146,7 @@ class CashOut extends BaseAdminController
      * 取消
      * @description 取消
      * @param $id
-     * @return void
+     * @return Response
      */
     public function cancel($id){
 

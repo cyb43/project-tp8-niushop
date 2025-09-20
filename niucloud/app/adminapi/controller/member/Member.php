@@ -231,7 +231,7 @@ class Member extends BaseAdminController
     /**
      * 获取会员权益字典
      * @description 获取会员权益字典
-     * @return mixed
+     * @return Response
      */
     public function getMemberBenefitsDict()
     {
@@ -241,7 +241,7 @@ class Member extends BaseAdminController
     /**
      * 获取会员礼包字典
      * @description 获取会员礼包字典
-     * @return array|null
+     * @return Response
      */
     public function getMemberGiftDict()
     {
@@ -251,7 +251,7 @@ class Member extends BaseAdminController
     /**
      * 获取成长值规则字典
      * @description 获取成长值规则字典
-     * @return array|null
+     * @return Response
      */
     public function getGrowthRuleDict()
     {
@@ -261,7 +261,7 @@ class Member extends BaseAdminController
     /**
      * 获取积分规则字典
      * @description 获取积分规则字典
-     * @return array|null
+     * @return Response
      */
     public function getPointRuleDict()
     {

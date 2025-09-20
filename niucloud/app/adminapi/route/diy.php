@@ -54,6 +54,8 @@ Route::group('diy', function() {
     // 获取自定义链接列表
     Route::get('link', 'diy.Diy/getLink');
 
+    Route::get('page_link', 'diy.Diy/pageLink');
+
     // 设为使用
     Route::put('use/:id', 'diy.Diy/setUse');
 

@@ -154,4 +154,19 @@ class Schedule extends BaseAdminController
             return fail('FAIL');
         }
     }
+
+    /**
+     * 重置定时任务
+     * @description 重置定时任务
+     * @return Response
+     */
+    public function resetSchedule()
+    {
+        $res = (new ScheduleService())->resetSchedule();
+        if ($res) {
+            return success('SUCCESS');
+        } else {
+            return fail('FAIL');
+        }
+    }
 }

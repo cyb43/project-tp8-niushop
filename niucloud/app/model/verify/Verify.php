@@ -35,7 +35,7 @@ class Verify extends BaseModel
     protected $name = 'verify';
 
     // 设置json类型字段
-    protected $json = [ 'data', 'value' ];
+    protected $json = ['data', 'value'];
 
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
@@ -47,7 +47,7 @@ class Verify extends BaseModel
 
     /**
      * 核销码搜索
-     * @param $query
+     * @param Query $query
      * @param $value
      * @param $data
      */
@@ -60,7 +60,7 @@ class Verify extends BaseModel
 
     /**
      * 关键词搜索
-     * @param $query
+     * @param Query $query
      * @param $value
      * @param $data
      */
@@ -120,27 +120,57 @@ class Verify extends BaseModel
      */
     public function searchCreateTimeAttr(Query $query, $value, $data)
     {
-        $start_time = empty($value[ 0 ]) ? 0 : strtotime($value[ 0 ]);
-        $end_time = empty($value[ 1 ]) ? 0 : strtotime($value[ 1 ]);
+        $start_time = empty($value[0]) ? 0 : strtotime($value[0]);
+        $end_time = empty($value[1]) ? 0 : strtotime($value[1]);
         if ($start_time > 0 && $end_time > 0) {
             $query->whereBetweenTime('create_time', $start_time, $end_time);
         } else if ($start_time > 0 && $end_time == 0) {
-            $query->where([ [ 'create_time', '>=', $start_time ] ]);
+            $query->where([['create_time', '>=', $start_time]]);
         } else if ($start_time == 0 && $end_time > 0) {
-            $query->where([ [ 'create_time', '<=', $end_time ] ]);
+            $query->where([['create_time', '<=', $end_time]]);
+        }
+    }
+
+
+    /**
+     * 订单id搜索
+     * @param $query
+     * @param $value
+     * @param $data
+     * @return void
+     */
+    public function searchOrderIdAttr($query, $value, $data)
+    {
+        if ($value) {
+            $query->where("data", "like", '%"' . $value . '"%');
+        }
+    }
+
+    /**
+     * 会员id搜索
+     * @param $query
+     * @param $value
+     * @param $data
+     * @return void
+     */
+    public function searchMemberIdAttr($query, $value, $data)
+    {
+        if ($value) {
+            $query->where("data", "like", '%"' . $value . '"%');
         }
     }
 
     /**
      * 核销类型转换
      * @param $value
+     * @param $data
      * @return void
      */
     public function getTypeNameAttr($value, $data)
     {
-        if (empty($data[ 'type' ]))
+        if (empty($data['type']))
             return '';
-        return VerifyDict::getType()[ $data[ 'type' ] ][ 'name' ] ?? '';
+        return VerifyDict::getType()[$data['type']]['name'] ?? '';
     }
 
 }

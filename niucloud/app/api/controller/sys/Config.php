@@ -113,7 +113,7 @@ class Config extends BaseApiController
     }
 
     /**
-     * 获取用户是否绑定手机
+     * 获取公众号用户是否绑定手机
      * @return Response
      */
     public function getMemberMobileExist()

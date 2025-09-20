@@ -19,16 +19,17 @@ class Verify extends BaseApiController
 {
 
     /**
-     * 获取验证码
+     * 生成核销码
      * @return Response
      */
     public function getVerifyCode()
     {
         $data = $this->request->params([
-            [ 'data', [] ],
-            [ 'type', '' ]
+            ['data', []],
+            ['type', ''],
+            ['need_barcode', 0]//是否需要条形码
         ]);
-        return success(data: ( new VerifyService() )->getVerifyCode($data[ 'type' ], $data[ 'data' ]));
+        return success(data: (new VerifyService())->getVerifyCode($data['type'], $data['data'], $data['need_barcode']));
     }
 
     /**
@@ -38,9 +39,9 @@ class Verify extends BaseApiController
     public function getInfoByCode()
     {
         $data = $this->request->params([
-            [ 'code', '' ],
+            ['code', ''],
         ]);
-        return success(data: ( new VerifyService() )->getInfoByCode($data[ 'code' ]));
+        return success(data: (new VerifyService())->getInfoByCode($data['code']));
     }
 
     /**
@@ -50,7 +51,7 @@ class Verify extends BaseApiController
      */
     public function verify($code)
     {
-        return success(data: ( new VerifyService() )->verify($code));
+        return success(data: (new VerifyService())->verify($code));
     }
 
     /**
@@ -59,33 +60,48 @@ class Verify extends BaseApiController
      */
     public function checkVerifier()
     {
-        return success(data: ( new VerifyService() )->checkVerifier());
+        return success(data: (new VerifyService())->checkVerifier());
     }
 
     /**
      * 核销记录
-     * @return void
+     * @return Response
      */
     public function records()
     {
         $data = $this->request->params([
-            [ 'relate_tag', 0 ],
-            [ 'type', '' ],
-            [ 'code', '' ],
-            [ 'keyword', '' ],
-            [ 'create_time', [] ]
+            ['relate_tag', 0],
+            ['type', ''],
+            ['code', ''],
+            ['keyword', ''],
+            ['order_id', ''],
+            ['create_time', []]
         ]);
-        return success(data: ( new VerifyService() )->getRecordsPageByVerifier($data));
+        return success(data: (new VerifyService())->getRecordsPageByVerifier($data));
     }
 
     /**
      * 获取核销详情
-     * @param $code
+     * @param string|int $code
      * @return Response
      */
     public function detail(string|int $code)
     {
-        return success(data: ( new VerifyService() )->getRecordsDetailByVerifier($code));
+        return success(data: (new VerifyService())->getRecordsDetailByVerifier($code));
 
+    }
+
+    /**
+     * 会员核销记录
+     * @return Response
+     */
+    public function memberRecordList()
+    {
+        $data = $this->request->params([
+            ['relate_tag', 0],
+            ['type', ''],
+            ['order_id', '']
+        ]);
+        return success(data: (new VerifyService())->getMemberRecordsList($data));
     }
 }

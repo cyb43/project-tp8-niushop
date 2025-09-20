@@ -11,8 +11,6 @@
 
 namespace app\model\diy;
 
-use app\dict\diy\PagesDict;
-use app\dict\diy\TemplateDict;
 use core\base\BaseModel;
 
 

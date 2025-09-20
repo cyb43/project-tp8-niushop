@@ -20,6 +20,9 @@ use app\service\core\notice\CoreNiuSmsService;
 use core\base\BaseAdminService;
 use core\exception\AdminException;
 use core\exception\ApiException;
+use think\db\exception\DataNotFoundException;
+use think\db\exception\DbException;
+use think\db\exception\ModelNotFoundException;
 
 /**
  * 消息管理服务层
@@ -30,7 +33,7 @@ class NiuSmsService extends BaseAdminService
     {
         parent::__construct();
         $this->template_model = new NiuSmsTemplate();
-        $this->niu_service = new CoreNiuSmsService();
+        $this->niu_service = (new CoreNiuSmsService());
     }
 
     public function enableNiuSms($enable)
@@ -73,7 +76,7 @@ class NiuSmsService extends BaseAdminService
 
     /**
      * 发送动态码
-     * @param $mobile
+     * @param $params
      * @return mixed
      */
     public function sendMobileCode($params)
@@ -84,7 +87,6 @@ class NiuSmsService extends BaseAdminService
 
     /**
      * 发送动态码
-     * @param $mobile
      * @return mixed
      */
     public function captcha()
@@ -100,7 +102,11 @@ class NiuSmsService extends BaseAdminService
      */
     public function registerAccount($data)
     {
-        $data['imgUrl'] = !empty($data['imgUrl']) ? request()->domain() . $data['imgUrl'] : "";
+        if (!empty($data['imgUrl']) && strstr($data['imgUrl'], 'http') === false) {
+            $data['imgUrl'] = request()->domain() . "/" . $data['imgUrl'];
+        } else {
+            $data['imgUrl'] = $data['imgUrl'] ?? '';
+        }
         $res = $this->niu_service->registerAccount($data);
         return $res;
     }
@@ -114,7 +120,7 @@ class NiuSmsService extends BaseAdminService
     {
         $account_info = $this->niu_service->loginAccount($params);
         if ($account_info) {
-            (new CoreNiuSmsService())->setNiuLoginConfig($params);
+            (new CoreNiuSmsService())->setNiuLoginConfig($params, true);
         }
         return $account_info;
     }
@@ -147,7 +153,7 @@ class NiuSmsService extends BaseAdminService
      * 重置转牛云短信账号密码
      * @param $username
      * @param $params
-     * @return mixed
+     * @return array
      */
     public function resetPassword($username, $params)
     {
@@ -164,28 +170,9 @@ class NiuSmsService extends BaseAdminService
     }
 
     /**
-     * 重置转牛云短信账号密码
-     * @param $username
-     * @param $params
-     * @return mixed
-     */
-    public function forgetPassword($username, $params)
-    {
-        $account_info = $this->accountInfo($username);
-        $mobile_arr = explode(",", $account_info['mobiles']);
-        if (!in_array($params['mobile'], $mobile_arr)) {
-            throw new ApiException('ACCOUNT_BIND_MOBILE_ERROR');
-        }
-        $res = $this->niu_service->resetPassword($username, $params);
-        $this->niu_service->setNiuLoginConfig(['username' => $username, 'password' => $res['newPassword']]);
-        return [
-            'password' => $res['newPassword'],
-        ];
-    }
-
-    /**
      * 获取牛云短信账号发送短信列表
      * @param $username
+     * @param $params
      * @return array
      */
     public function accountSendList($username, $params)
@@ -246,7 +233,11 @@ class NiuSmsService extends BaseAdminService
      */
     public function signCreate($username, $params)
     {
-        $params['imgUrl'] = !empty($params['imgUrl']) ? request()->domain() . $params['imgUrl'] : "";
+        if (!empty($params['imgUrl']) && strstr($params['imgUrl'], 'http') === false) {
+            $params['imgUrl'] = request()->domain() . '/' . $params['imgUrl'];
+        } else {
+            $params['imgUrl'] = $params['imgUrl'] ?? '';
+        }
         $res = $this->niu_service->signCreate($username, $params);
         if (!empty($res['failList'])) {
             throw new AdminException($res['failList'][0]['msg']);
@@ -257,6 +248,8 @@ class NiuSmsService extends BaseAdminService
      * 签名创建
      * @param $username
      * @param $params
+     * @return array|mixed
+     * @throws \Exception
      */
     public function signDelete($username, $params)
     {
@@ -273,8 +266,10 @@ class NiuSmsService extends BaseAdminService
      * 拉取模版状态
      * @param $sms_type
      * @param $username
-     * @param $page
-     * @return void|array
+     * @return array
+     * @throws DataNotFoundException
+     * @throws DbException
+     * @throws ModelNotFoundException
      */
     public function syncTemplateList($sms_type, $username)
     {
@@ -398,17 +393,22 @@ class NiuSmsService extends BaseAdminService
             sort($variable);
 
             $audit_status = $report_info['audit_status'] ?? NoticeTypeDict::TEMPLATE_AUDIT_STATUS_NOT_REPORT;
+            $error_status = '';
             if (!empty($report_info) && $variable != $params_json) {
-                $error_status = $audit_status == NoticeTypeDict::TEMPLATE_AUDIT_STATUS_PASS
-                    ? NoticeTypeDict::TEMPLATE_AUDIT_STATUS_NEED_AGAIN_REPORT
-                    : NoticeTypeDict::TEMPLATE_AUDIT_STATUS_NEED_EDIT;
+                if (empty($params_json)) {
+                    $error_status = NoticeTypeDict::TEMPLATE_NEED_PULL;
+                } else {
+                    $error_status = $audit_status == NoticeTypeDict::TEMPLATE_AUDIT_STATUS_PASS
+                        ? NoticeTypeDict::TEMPLATE_AUDIT_STATUS_NEED_AGAIN_REPORT
+                        : NoticeTypeDict::TEMPLATE_AUDIT_STATUS_NEED_EDIT;
+                }
             }
 
             $item['audit_info'] = [
                 'audit_msg' => $report_info['audit_msg'] ?? '',
                 'audit_status' => $audit_status,
                 'audit_status_name' => NoticeTypeDict::getTemplateAuditStatus($audit_status),
-                'error_status' => $error_status ?? '',
+                'error_status' => $error_status,
                 'error_status_name' => !empty($error_status) ? NoticeTypeDict::getTemplateAuditStatus($error_status) : ""
             ];
         }
@@ -491,7 +491,7 @@ class NiuSmsService extends BaseAdminService
      * @param $sms_type
      * @param $username
      * @param $template_key
-     * @return mixed
+     * @return array
      */
     public function templateInfo($sms_type, $username, $template_key)
     {
@@ -608,6 +608,7 @@ class NiuSmsService extends BaseAdminService
     /**
      * 获取订单列表
      * @param $username
+     * @param $params
      * @return mixed
      */
     public function orderList($username, $params)

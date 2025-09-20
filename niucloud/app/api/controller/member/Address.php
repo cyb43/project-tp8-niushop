@@ -13,6 +13,7 @@ namespace app\api\controller\member;
 
 use core\base\BaseApiController;
 use app\service\api\member\AddressService;
+use think\Response;
 
 
 /**
@@ -89,8 +90,8 @@ class Address extends BaseApiController
 
     /**
      * 会员收货地址删除
-     * @param $id  会员收货地址id
-     * @return \think\Response
+     * @param int $id 会员收货地址id
+     * @return Response
      */
     public function del(int $id){
         (new AddressService())->del($id);

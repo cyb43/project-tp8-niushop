@@ -30,17 +30,9 @@ class ShowMarketingListener
             ],
             // 工具
             'tool' => [
-
             ],
             // 营销
             'marketing' => [
-                [
-                    'title' => '核销管理',
-                    'desc' => '管理核销员及核销记录',
-                    'icon' => 'static/resource/images/marketing/verifier.png',
-                    'key' => 'verify',
-                    'url' => '/marketing/verifier',
-                ],
                 [
                     'title' => '签到管理',
                     'desc' => '客户每日签到发放奖励',

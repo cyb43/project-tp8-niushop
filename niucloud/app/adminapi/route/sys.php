@@ -33,6 +33,8 @@ Route::group('sys', function() {
     Route::get('role/:role_id', 'sys.Role/info');
     //用户组新增
     Route::post('role', 'sys.Role/add');
+    //修改角色状态
+    Route::put('role/status', 'sys.Role/modifyStatus');
     //编辑用户组
     Route::put('role/:role_id', 'sys.Role/edit');
     //删除用户组
@@ -102,6 +104,8 @@ Route::group('sys', function() {
     Route::post('image', 'upload.Upload/image');
     //附件视频上传
     Route::post('video', 'upload.Upload/video');
+    //附件音频上传
+    Route::post('audio', 'upload.Upload/audio');
     //附件上传
     Route::post('document/:type', 'upload.Upload/document');
     //附件列表
@@ -185,6 +189,8 @@ Route::group('sys', function() {
     Route::get('schedule/datetype', 'sys.Schedule/getDateType');
     //执行一次任务
     Route::put('schedule/do/:id', 'sys.Schedule/doSchedule');
+    //重置定时任务
+    Route::post('schedule/reset', 'sys.Schedule/resetSchedule');
 
     //任务执行记录列表
     Route::get('schedule/log/list', 'sys.ScheduleLog/lists');
@@ -319,6 +325,11 @@ Route::group('sys', function() {
 
     // 打印小票内容
     Route::post('printer/printticket', 'sys.Printer/printTicket');
+
+
+
+    // 检验是否开启imagick
+    Route::get('check_imagick', 'sys.System/getImagickIsOpen');
 
 })->middleware([
     AdminCheckToken::class,

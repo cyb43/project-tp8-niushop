@@ -86,7 +86,7 @@ class CoreNoticeService extends BaseCoreService
         }
 
         $notice = NoticeDict::getNotice();
-        $addon_list = (new Addon())->where([ ['key', 'in', get_site_addons() ]])->column('key,title', 'key');
+        $addon_list = (new Addon())->where([ ['key', 'in', get_install_addons() ]])->column('key,title', 'key');
         $addon_list['app'] = ['key' => 'system', 'title' => '系统'];
         foreach ($addon_list as $addon => &$item) {
             if ($addon =='app') {

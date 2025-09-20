@@ -11,6 +11,7 @@
 
 namespace app\adminapi\controller\verify;
 
+use app\dict\verify\VerifyDict;
 use app\service\admin\verify\VerifyService;
 use core\base\BaseAdminController;
 use think\Response;
@@ -43,11 +44,38 @@ class Verify extends BaseAdminController
     /**
      * 核销信息
      * @description 核销信息
-     * @param int $order_id
+     * @param string $verify_code
      * @return Response
      */
     public function detail(string $verify_code)
     {
         return success(( new VerifyService() )->getDetail($verify_code));
+    }
+
+    /**
+     * 获取核销类型
+     * @description 获取核销类型
+     * @return Response
+     */
+    public function getVerifyType()
+    {
+        return success(VerifyDict::getType());
+    }
+
+    /**
+     * @框架核销
+     * @description 核销
+     */
+    public function verify(string $verify_code)
+    {
+        return success('VERIFY_SUCCESS', (new VerifyService())->verify($verify_code));
+    }
+    /**
+     * @获取核销码对应信息
+     * @description 核销
+     */
+    public function getInfoByCode(string $verify_code)
+    {
+        return success((new VerifyService())->getInfoByCode($verify_code));
     }
 }

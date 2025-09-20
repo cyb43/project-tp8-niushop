@@ -11,6 +11,7 @@
 
 namespace app\model\pay;
 
+use app\dict\common\CommonActiveDict;
 use app\dict\pay\PayDict;
 use app\dict\pay\RefundDict;
 use core\base\BaseModel;
@@ -133,5 +134,13 @@ class Refund extends BaseModel
         if ($value != '') {
             $query->where('refund_no', 'like', "%$value%");
         }
+    }
+
+    public function getTradeTypeNameAttr($value, $data)
+    {
+        if (empty($data['trade_type'])){
+            return '';
+        }
+        return CommonActiveDict::getActiveShort($data['trade_type'])['active_name'] ?? "";
     }
 }

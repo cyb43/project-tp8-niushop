@@ -7,6 +7,7 @@ use app\service\core\member\CoreMemberService;
 use app\service\core\notice\CoreNoticeLogService;
 use core\exception\NoticeException;
 use core\template\TemplateLoader;
+use think\facade\Log;
 
 class Weapp
 {
@@ -18,6 +19,7 @@ class Weapp
         $key = $data['key'];
         $to = $data['to'];//发送对象主题
 
+        Log::write("小程序消息发送" . json_encode($data));
         //完全信任消息的设置, 不再依赖support_type
         if ($template['is_weapp']) {
             $member_id = $to['member_id'] ?? 0;
@@ -26,6 +28,7 @@ class Weapp
                 $openid = $info['weapp_openid'] ?? '';
                 $nickname = $info['nickname'] ?? '';
             }
+            Log::write("小程序消息发送  member_id:{$member_id}  openid:{$openid}");
             if (!empty($openid)) {
                 $weapp_template_id = $template['weapp_template_id'];
                 $weapp = $template['weapp'];
@@ -49,6 +52,8 @@ class Weapp
                     'params' => $data,
                     'content' => $weapp
                 );
+
+                Log::write("小程序消息发送参数" . json_encode($log_data));
                 try {
                     (new TemplateLoader(NoticeTypeDict::WEAPP))->send(
                         [
@@ -58,7 +63,7 @@ class Weapp
                             'page' => $url,
                         ]);
                     (new CoreNoticeLogService())->add($log_data);
-                } catch ( NoticeException $e ) {
+                } catch (NoticeException $e) {
                     $log_data['result'] = $e->getMessage();
                     (new CoreNoticeLogService())->add($log_data);
                     //这儿决定要不要抛出

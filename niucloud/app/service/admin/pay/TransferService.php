@@ -11,25 +11,11 @@
 
 namespace app\service\admin\pay;
 
-use app\dict\common\ChannelDict;
-use app\dict\pay\PayDict;
-use app\dict\pay\PaySceneDict;
 use app\dict\pay\TransferDict;
-use app\model\member\Member;
 use app\model\pay\Pay;
-use app\model\sys\Poster;
-use app\service\core\pay\CorePayService;
 use app\service\core\pay\CoreTransferSceneService;
-use app\service\core\pay\CoreTransferService;
-use app\service\core\paytype\CoreOfflineService;
-use app\service\core\sys\CoreSysConfigService;
 use core\base\BaseAdminService;
 use core\exception\AdminException;
-use think\db\exception\DataNotFoundException;
-use think\db\exception\DbException;
-use think\db\exception\ModelNotFoundException;
-use think\facade\Log;
-
 /**
  * 支付服务层
  */
