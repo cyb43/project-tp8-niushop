@@ -130,8 +130,9 @@
                             </el-scrollbar>
                         </div>
                         <div class="h-[370px] mt-[30px]" v-show="showTerminal && upgradeTask && !errorDialog">
-                            <terminal ref="terminalRef" :context="upgradeTask ? upgradeTask.upgrade.app_key : ''" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd" />
+                            <terminal ref="terminalRef" :name="`upgrade-${terminalId}`"  :context="upgradeTask ? upgradeTask.upgrade.app_key : ''" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd" />
                         </div>
+
                     </div>
                     <!-- 是否备份选择 -->
                     <div class="flex flex-col" v-show="active == 'backup'">
@@ -155,18 +156,21 @@
                             </div>
                         </el-scrollbar>
                     </div>
-                    <div class="mt-[50px]" v-show="errorDialog">
-                        <el-result icon="error" :title="t('升级失败')" :sub-title="errorMsg">
+                    <div class="mt-[20px] h-[370px]" v-show="errorDialog">
+                        <el-result icon="error" :title="t('升级失败')">
                             <template #icon>
                                 <img src="@/app/assets/images/error_icon.png" alt="" />
                             </template>
                             <template #extra>
+                                <el-scrollbar class="max-h-[120px] !overflow-auto text-[15px] text-[#4F516D] mb-[15px] mt-[-15px]">
+                                    {{errorMsg}}
+                                </el-scrollbar>
                                 <el-button @click="handleBack()" class="!w-[90px]">错误信息</el-button>
                                 <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
                             </template>
                         </el-result>
                     </div>
-                    <div class="mt-[50px]" v-show="active == 'complete'">
+                    <div class="mt-[20px]" v-show="active == 'complete'">
                         <el-result icon="success" :title="t('upgrade.upgradeSuccess')">
                             <template #icon>
                                 <img src="@/app/assets/images/success_icon.png" alt="">
@@ -189,7 +193,7 @@
             <div class="dialog-footer">
                 <!-- 查看升级内容 -->
                 <el-button v-if="step == 1 && upgradeContent.content.length && isAllowUpgrade" @click="step = 2" type="primary">{{ t("upgrade.upgradeButton") }}</el-button>
-
+                <el-button type="primary" v-show="step == 2 && showTerminal && upgradeTask && !errorDialog"  :loading="timeloading" class="!w-[140px]">已用时 {{ formatUpgradeDuration }}</el-button>
                 <template v-if="step == 2 && active != 'complete'">
                 <!--                <el-button v-if="active == 'content'" @click="showDialog = false">{{ t("return") }}</el-button>-->
                     <el-button type="primary" :disabled="!is_pass" v-if="active == 'upgrade' && !upgradeTask" @click="() => { active = 'backup'; numberOfSteps = 1 }">{{ t("nextStep") }}</el-button>
@@ -225,10 +229,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, h, watch ,computed} from "vue"
-import { t } from "@/lang"
-import { getVersions } from "@/app/api/auth"
-import { getFrameworkNewVersion } from "@/app/api/module"
+import { ref, h, watch, computed } from 'vue'
+import { t } from '@/lang'
+import { getVersions } from '@/app/api/auth'
+import { getFrameworkNewVersion } from '@/app/api/module'
 import {
     getUpgradeContent,
     getUpgradeTask,
@@ -236,15 +240,16 @@ import {
     executeUpgrade,
     preUpgradeCheck,
     clearUpgradeTask, upgradeUserOperate
-} from "@/app/api/upgrade"
-import { Terminal, TerminalFlash } from "vue-web-terminal"
-import "vue-web-terminal/lib/theme/dark.css"
-import { AnyObject } from "@/types/global"
-import { ElNotification, ElMessage, ElMessageBox } from "element-plus"
-import Storage from "@/utils/storage"
+} from '@/app/api/upgrade'
+import { Terminal, TerminalFlash } from 'vue-web-terminal'
+import 'vue-web-terminal/lib/theme/dark.css'
+import { AnyObject } from '@/types/global'
+import { ElNotification, ElMessage, ElMessageBox } from 'element-plus'
+import Storage from '@/utils/storage'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const terminalId = ref(Date.now()); 
 const showDialog = ref<boolean>(false)
 const upgradeContent = ref<null | AnyObject>(null)
 const isAllowUpgrade = ref(true) // 是否允许升级
@@ -254,7 +259,7 @@ const step = ref(1)
 const upgradeCheck = ref<null | AnyObject>(null)
 const loading = ref(false)
 const terminalRef: any = ref(null)
-const emits = defineEmits(["complete", "cloudbuild"])
+const emits = defineEmits(['complete', 'cloudbuild'])
 const upgradeTipsShowDialog = ref<boolean>(false)
 let upgradeLog: any = []
 let errorLog: any = []
@@ -269,17 +274,18 @@ const upgradeOption = ref({
 // 升级步骤排除，backupCode 备份代码，backupSql 备份数据库
 const excludeSteps: any = ref([
     {
-        name: "备份源码",
-        code: "backupCode"
+        name: '备份源码',
+        code: 'backupCode'
     },
     {
-        name: "备份数据库",
-        code: "backupSql"
+        name: '备份数据库',
+        code: 'backupSql'
     }
 ])
 /**
  * 查询升级任务
  */
+const timeloading = ref(false)
 const showTerminal = ref(false)
 const upgradeStartTime = ref<number | null>(null)
 const upgradeDuration = ref(0) // 单位：秒
@@ -293,7 +299,7 @@ const getUpgradeTaskFn = () => {
         if (!upgradeContent.value) {
             upgradeContent.value = data.upgrade_content
 
-            if ( upgradeContent.value || !data.upgrade_content || !Array.isArray(data.upgrade_content.content)) {
+            if (upgradeContent.value || !data.upgrade_content || !Array.isArray(data.upgrade_content.content)) {
                 return
             }
 
@@ -320,8 +326,9 @@ const getUpgradeTaskFn = () => {
         }
         if (!upgradeTask.value) {
             showTerminal.value = true
-            terminalRef.value.execute("clear")
-            terminalRef.value.execute("开始升级")
+            terminalRef.value.execute('clear')
+            terminalRef.value.execute('开始升级')
+            timeloading.value = true
             upgradeStartTime.value = Date.now()
             upgradeDuration.value = 0
             if (upgradeTimer) clearInterval(upgradeTimer)
@@ -334,7 +341,7 @@ const getUpgradeTaskFn = () => {
 
         data.log.forEach((item) => {
             if (!upgradeLog.includes(item)) {
-                terminalRef.value.pushMessage({ content: `${ item }` })
+                terminalRef.value.pushMessage({ content: `${item}` })
                 upgradeLog.push(item)
             }
         })
@@ -342,7 +349,7 @@ const getUpgradeTaskFn = () => {
         if (data.error) {
             data.error.forEach((item) => {
                 if (!errorLog.includes(item)) {
-                    terminalRef.value.pushMessage({ content: item, class: "error" })
+                    terminalRef.value.pushMessage({ content: item, class: 'error' })
                     errorLog.push(item)
                     errorMsg.value = item
                 }
@@ -353,28 +360,30 @@ const getUpgradeTaskFn = () => {
                 clearInterval(upgradeTimer)
                 upgradeTimer = null
             }
+            timeloading.value = false
         }
         // 恢复完毕
-        if (data.step == "restoreComplete") {
+        if (data.step == 'restoreComplete') {
             flashInterval && clearInterval(flashInterval)
             return
         }
         // 升级完成
-        if (data.step == "upgradeComplete") {
-            active.value = "complete"
+        if (data.step == 'upgradeComplete') {
+            active.value = 'complete'
             showTerminal.value = false
             numberOfSteps.value = 4
             notificationEl && notificationEl.close()
-            emits("complete")
+            emits('complete')
             if (upgradeTimer) {
                 clearInterval(upgradeTimer)
                 upgradeTimer = null
             }
+            timeloading.value = false
             clearUpgradeTask()
             return
         }
         numberOfSteps.value = 2
-        active.value = "upgrade"
+        active.value = 'upgrade'
         executeUpgradeFn()
     })
 }
@@ -382,12 +391,11 @@ const getUpgradeTaskFn = () => {
 getUpgradeTaskFn()
 const isBack = ref(false)
 const handleBack = () => {
-    active.value = "upgrade"
+    active.value = 'upgrade'
     isBack.value = true
     showTerminal.value = true
     errorDialog.value = false // 隐藏错误弹窗
 }
-
 
 const formatUpgradeDuration = computed(() => {
     const s = upgradeDuration.value
@@ -426,12 +434,12 @@ let notificationEl: any = null
  */
 const showElNotification = () => {
     notificationEl = ElNotification.success({
-        title: t("warning"),
+        title: t('warning'),
         dangerouslyUseHTMLString: true,
-        message: h("div", {}, [t("upgrade.upgradingTips"), h("span", {
-            class: "text-primary cursor-pointer",
+        message: h('div', {}, [t('upgrade.upgradingTips'), h('span', {
+            class: 'text-primary cursor-pointer',
             onClick: elNotificationClick
-        }, [t("upgrade.clickView")])]),
+        }, [t('upgrade.clickView')])]),
         duration: 0,
         showClose: false
     })
@@ -442,15 +450,15 @@ const elNotificationClick = () => {
     getUpgradeTaskFn()
     step.value = 2
     numberOfSteps.value = 3
-    active.value = "upgrade"
+    active.value = 'upgrade'
     notificationEl && notificationEl.close()
 }
 
-const frameworkVersion = ref("")
+const frameworkVersion = ref('')
 getVersions().then((res) => {
     frameworkVersion.value = res.data.version.version
 })
-const newFrameworkVersion = ref("")
+const newFrameworkVersion = ref('')
 getFrameworkNewVersion().then(({ data }) => {
     newFrameworkVersion.value = data.last_version
 })
@@ -462,7 +470,7 @@ const is_pass = ref(false)
 const repeat = ref(false)
 const readyLoading = ref(false)
 
-const handleUpgrade = async() => {
+const handleUpgrade = async () => {
     if (repeat.value) return
     repeat.value = true
     readyLoading.value = true
@@ -472,7 +480,7 @@ const handleUpgrade = async() => {
     await preUpgradeCheck(appKey).then(async ({ data }) => {
         upgradeCheck.value = data
         is_pass.value = data.is_pass
-        active.value = "upgrade"
+        active.value = 'upgrade'
         !upgradeTask.value ? (numberOfSteps.value = 0) : numberOfSteps.value
         upgradeTipsShowDialog.value = false
         showDialog.value = true
@@ -498,18 +506,18 @@ const upgradeAddonFn = () => {
     })
 }
 
-const open = (addonKey: string = "", callback = null) => {
+const open = (addonKey: string = '', callback = null) => {
     errorDialog.value = false // 隐藏错误弹窗
     if (upgradeTask.value) {
-        ElMessage({ message: "已有正在执行中的升级任务", type: "error" })
+        ElMessage({ message: '已有正在执行中的升级任务', type: 'error' })
         showDialog.value = true
         step.value = 2
         numberOfSteps.value = 3
-        active.value = "upgrade"
+        active.value = 'upgrade'
         if (callback) callback()
     } else {
         if (addonKey && frameworkVersion.value != newFrameworkVersion.value) {
-            ElMessage({ message: "存在新版本框架，请先升级框架", type: "error" })
+            ElMessage({ message: '存在新版本框架，请先升级框架', type: 'error' })
             if (callback) callback()
             return
         }
@@ -532,7 +540,7 @@ const open = (addonKey: string = "", callback = null) => {
             } else if (upgradeContent.value.content.length == failUpgradeCount) {
                 isAllowUpgrade.value = false
             }
-            if (Storage.get("upgradeTipsLock")) {
+            if (Storage.get('upgradeTipsLock')) {
                 handleUpgrade()
             } else {
                 upgradeTipsShowDialog.value = true
@@ -551,19 +559,19 @@ const open = (addonKey: string = "", callback = null) => {
 let flashInterval: any = null
 const terminalFlash = new TerminalFlash()
 const onExecCmd = (key, command, success, failed, name) => {
-    if (command == "开始升级") {
+    if (command == '开始升级') {
         success(terminalFlash)
-        const frames = makeIterator(["/", "——", "\\", "|"])
+        const frames = makeIterator(['/', '——', '\\', '|'])
         flashInterval = setInterval(() => {
-            terminalFlash.flush("> " + frames.next().value)
+            terminalFlash.flush('> ' + frames.next().value)
         }, 150)
     }
 }
 
 const makeIterator = (array: string[]) => {
-    var nextIndex = 0
+    let nextIndex = 0
     return {
-        next() {
+        next () {
             if (nextIndex + 1 == array.length) {
                 nextIndex = 0
             }
@@ -573,11 +581,11 @@ const makeIterator = (array: string[]) => {
 }
 
 const dialogClose = (done: () => {}) => {
-    if (active.value == "upgrade" && upgradeTask.value && ['upgradeComplete', 'restoreComplete'].includes(upgradeTask.value.step) === false && !isBack.value) {
-        ElMessageBox.confirm(t("upgrade.showDialogCloseTips"), t("warning"), {
-            confirmButtonText: t("confirm"),
-            cancelButtonText: t("cancel"),
-            type: "warning"
+    if (active.value == 'upgrade' && upgradeTask.value && ['upgradeComplete', 'restoreComplete'].includes(upgradeTask.value.step) === false && !isBack.value) {
+        ElMessageBox.confirm(t('upgrade.showDialogCloseTips'), t('warning'), {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
         }).then(() => {
             done()
         })
@@ -591,13 +599,12 @@ watch(
     () => {
         if (!showDialog.value) {
             clearUpgradeTaskFn()
-
         }
     }
 )
 
 const clearUpgradeTaskFn = () => {
-    active.value = "upgrade"
+    active.value = 'upgrade'
     loading.value = false
     upgradeTask.value = null
     isBack.value = false
@@ -625,16 +632,16 @@ const clearUpgradeTaskFn = () => {
 const cloudBuildError = (event: string) => {
     cloudBuildErrorTipsShowDialog.value = false
     switch (event) {
-        case "local":
+        case 'local':
             upgradeUserOperate(event).then(() => {
                 getUpgradeTaskFn()
             })
             break
-        case "retry":
+        case 'retry':
             executeUpgradeFn()
             retrySecondInterval && clearInterval(retrySecondInterval)
             break
-        case "rollback":
+        case 'rollback':
             upgradeUserOperate(event).then(() => {
                 getUpgradeTaskFn()
             })
@@ -643,13 +650,13 @@ const cloudBuildError = (event: string) => {
 }
 
 const timeSplit = (str: string) => {
-    const [date, time] = str.split(" ")
-    const [hours, minutes] = time.split(":")
-    return [date, `${ hours }:${ minutes }`]
+    const [date, time] = str.split(' ')
+    const [hours, minutes] = time.split(':')
+    return [date, `${hours}:${minutes}`]
 }
 
 const upgradeTipsConfirm = (isLock: boolean = false) => {
-    isLock && Storage.set({ key: "upgradeTipsLock", data: isLock })
+    isLock && Storage.set({ key: 'upgradeTipsLock', data: isLock })
     upgradeTipsShowDialog.value = false
     !isLock && (showDialog.value = true)
 }
@@ -810,8 +817,7 @@ defineExpose({
     left: 125px;
     border-left-color: #dddddd;
     border-left-style: dashed;
-    margin: 12px 0;
-    margin-top: 24px;
+    margin: 24px 0 12px;
     height: calc(100% - 24px - 12px);
 }
 
@@ -892,7 +898,7 @@ defineExpose({
     position: absolute;
     left: 0;
     top: 46px;
-    bottom: 0px;
+    bottom: 0;
     right: 0;
     z-index: 1;
     overflow: hidden;

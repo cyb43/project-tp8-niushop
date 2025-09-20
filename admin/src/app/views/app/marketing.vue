@@ -13,7 +13,7 @@
                     <div class="flex flex-wrap plug-list pb-10 plug-large">
                         <div class="cursor-pointer mt-[20px] mr-4 bg-[#f7f7f7]" v-for="(childItem,childIndex) in item.list" :key="childIndex" @click="toLink(childItem)">
                             <div class="w-[264px] flex py-[20px] px-[17px] app-item relative">
-                                <el-image class="w-[40px] h-[40px] mr-[10px]" :src="img(childItem.icon)" fit="contain">
+                                <el-image class="w-[40px] h-[40px] mr-[10px] rounded-[6px] overflow-hidden" :src="img(childItem.icon)" fit="contain">
                                     <template #error>
                                         <div class="image-slot">
                                             <img class="w-[40px] h-[40px]" src="@/app/assets/images/index/app_default.png" />
@@ -65,7 +65,13 @@ getMarketingList()
 
 const toLink = (item: any) => {
     if (item.url) {
-        router.push(item.url)
+        // 判断如果携带is_target=true就通过新窗口打开
+        if (item.url.indexOf('is_target=true') != -1) {
+            const url = router.resolve(item.url)
+            window.open(url.href)
+        } else {
+            router.push(item.url)
+        }
     } else {
         addonIndexRoute[item.key] && router.push({ name: addonIndexRoute[item.key] })
     }
@@ -83,6 +89,6 @@ const toLink = (item: any) => {
     }
     .app-item:hover{
         transition: 0.5s;
-        box-shadow: 0px 2px 8px 0px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px 0 rgba(0,0,0,0.1);
     }
 </style>

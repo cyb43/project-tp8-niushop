@@ -74,7 +74,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { t } from '@/lang'
 import useDiyStore from '@/stores/modules/diy'
 import { img } from '@/utils/common'
@@ -329,6 +329,10 @@ const handleHeight = (isCalcHeight: boolean = false) => {
         }
     })
 }
+
+watch(() => diyStore.editComponent.list, () => {
+    handleHeight(true)
+}, { deep: true })
 
 defineExpose({})
 </script>

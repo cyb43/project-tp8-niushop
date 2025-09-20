@@ -486,6 +486,15 @@ export function clearCronLog(params: Record<string, any>) {
     return request.put(`sys/schedule/log/clear`, params, { showSuccessMessage: true })
 }
 
+/**
+ * 重置计划任务
+ * @returns
+ */
+export function resetCron() {
+    return request.post(`sys/schedule/reset`, { showSuccessMessage: true })
+}
+
+
 /***************************************************** 协议管理 ****************************************************/
 
 /**

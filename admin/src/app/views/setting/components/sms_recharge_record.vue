@@ -64,9 +64,9 @@
 </template>
 
 <script lang="ts" setup>
-import { ref , reactive,onMounted} from 'vue'
-import { getSmsOrdersList ,getOrderInfo} from '@/app/api/notice'
-import { t } from "@/lang";
+import { ref, reactive, onMounted } from 'vue'
+import { getSmsOrdersList, getOrderInfo } from '@/app/api/notice'
+import { t } from '@/lang'
 
 const props = defineProps({
     username: {
@@ -82,27 +82,27 @@ const tableData = reactive({
     loading: false,
     data: [],
     searchParam: {
-        name: "",
+        name: '',
         order: '',
         sort: ''
-    },
-});
+    }
+})
 
 // 获取列表
 const loadRankList = () => {
-    tableData.loading = true;
-    let params = {
+    tableData.loading = true
+    const params = {
         page: tableData.page,
         limit: tableData.limit,
         ...tableData.searchParam
     }
     getSmsOrdersList(props.username, params).then((res) => {
-        tableData.loading = false;
-        tableData.data = res.data.data;
-        tableData.total = res.data.total;
+        tableData.loading = false
+        tableData.data = res.data.data
+        tableData.total = res.data.total
     }).catch(() => {
-        tableData.loading = false;
-    });
+        tableData.loading = false
+    })
 }
 
 // 详情
@@ -112,7 +112,7 @@ const loading = ref(false)
 const detailEvent = (row:any) => {
     loading.value = true
     visibleDetail.value = true
-    getOrderInfo(props.username,{out_trade_no:row.out_trade_no}).then(res=>{
+    getOrderInfo(props.username, { out_trade_no: row.out_trade_no }).then(res => {
         detail.value = res.data
         loading.value = false
     })

@@ -81,7 +81,6 @@ export function getSmsLog(params: Record<string, any>) {
 
 /**
  * 获取当前登录子账号
- * @param params
  */
 export function getAccountIsLogin() {
     return request.get(`notice/niusms/config`)
@@ -105,7 +104,7 @@ export function registerAccount(params: Record<string, any>) {
 
 /**
  * 获取当前登录子账号信息
- * @param params
+ * @param username
  */
 export function getAccountInfo(username: string) {
     return request.get(`notice/niusms/account/info/${username}`)
@@ -121,6 +120,7 @@ export function getTemplateList(params: Record<string, any>) {
 
 /**
  * 获取签名列表
+ * @param username
  * @param params
  */
 export function getSignList(username: string, params: Record<string, any>) {
@@ -129,6 +129,7 @@ export function getSignList(username: string, params: Record<string, any>) {
 
 /**
  * 添加签名
+ * @param username
  * @param params
  */
 export function addSign(username: string, params: Record<string, any>) {
@@ -137,6 +138,7 @@ export function addSign(username: string, params: Record<string, any>) {
 
 /**
  * 删除签名
+ * @param username
  * @param params
  */
 export function deleteSign(username: string, params: Record<string, any>) {
@@ -145,6 +147,7 @@ export function deleteSign(username: string, params: Record<string, any>) {
 
 /**
  * 更新子账号信息
+ * @param username
  * @param params
  */
 export function editAccount(username: string,params: Record<string, any>) {
@@ -153,6 +156,7 @@ export function editAccount(username: string,params: Record<string, any>) {
 
 /**
  * 获取短信发送记录
+ * @param username
  * @param params
  */
 export function getSmsSendList(username: string, params: Record<string, any>) {
@@ -161,6 +165,7 @@ export function getSmsSendList(username: string, params: Record<string, any>) {
 
 /**
  * 获取充值列表
+ * @param username
  * @param params
  */
 export function getSmsOrdersList(username: string, params: Record<string, any>) {
@@ -169,7 +174,6 @@ export function getSmsOrdersList(username: string, params: Record<string, any>) 
 
 /**
  * 获取套餐列表
- * @param params
  */
 export function getSmsPackagesList() {
     return request.get(`notice/niusms/packages`)
@@ -177,7 +181,6 @@ export function getSmsPackagesList() {
 
 /**
  * 获取图像验证码
- * @param params
  */
 export function getSmsCaptcha() {
     return request.get(`notice/niusms/captcha`)
@@ -193,7 +196,6 @@ export function getSmsSend(params: Record<string, any>) {
 
 /**
  * 添加签名配置项
- * @param params
  */
 export function getSmsSignConfig() {
     return request.get(`notice/niusms/sign/report/config`)
@@ -201,7 +203,6 @@ export function getSmsSignConfig() {
 
 /**
  * 模版报备配置项
- * @param params
  */
 export function getTemplateReportConfig() {
     return request.get(`notice/niusms/template/report/config`)
@@ -209,6 +210,10 @@ export function getTemplateReportConfig() {
 
 /**
  * 模版报备
+ * @param sms_type
+ * @param username
+ * @param sms_type
+ * @param username
  * @param params
  */
 export function reportTemplate(sms_type: string, username: string, params: Record<string, any>) {
@@ -217,6 +222,10 @@ export function reportTemplate(sms_type: string, username: string, params: Recor
 
 /**
  * 模版详情
+ * @param sms_type
+ * @param username
+ * @param sms_type
+ * @param username
  * @param params
  */
 export function getreportTemplateInfo(sms_type: string, username: string,params: Record<string, any>) {
@@ -226,6 +235,7 @@ export function getreportTemplateInfo(sms_type: string, username: string,params:
 
 /**
  * 充值下单
+ * @param username
  * @param params
  */
 export function smsOrderCreate(username: string, params: Record<string, any>) {
@@ -234,6 +244,7 @@ export function smsOrderCreate(username: string, params: Record<string, any>) {
 
 /**
  * 获取支付信息
+ * @param username
  * @param params
  */
 export function getOrderPayInfo(username: string, params: Record<string, any>) {
@@ -242,6 +253,7 @@ export function getOrderPayInfo(username: string, params: Record<string, any>) {
 
 /**
  * 获取订单详情
+ * @param username
  * @param params
  */
 export function getOrderInfo(username: string, params: Record<string, any>) {
@@ -250,6 +262,7 @@ export function getOrderInfo(username: string, params: Record<string, any>) {
 
 /**
  * 获取支付状态
+ * @param username
  * @param params
  */
 export function getOrderPayStatus(username: string, params: Record<string, any>) {
@@ -258,6 +271,7 @@ export function getOrderPayStatus(username: string, params: Record<string, any>)
 
 /**
  * 计算金额
+ * @param username
  * @param params
  */
 export function calculateOrderPay(username: string, params: Record<string, any>) {
@@ -274,7 +288,9 @@ export function enableNiusms(params: Record<string, any>) {
 
 /**
  * 同步模版状态
- * @param params
+ * @param username
+ * @param sms_type
+ * @param username
  */
 export function templateSync(sms_type: string, username: string) {
     return request.get(`notice/niusms/template/sync/${sms_type}/${username}`)
@@ -282,6 +298,7 @@ export function templateSync(sms_type: string, username: string) {
 
 /**
  * 重置密码
+ * @param username
  * @param params
  */
 export function resetPassword(username: string,params: Record<string, any>) {
@@ -290,7 +307,9 @@ export function resetPassword(username: string,params: Record<string, any>) {
 
 /**
  * 清除模版报备
- * @param params
+ * @param template_id
+ * @param username
+ * @param template_id
  */
 export function clearTemplate(username: string,template_id: string) {
     return request.delete(`notice/niusms/template/${username}/${template_id}`)

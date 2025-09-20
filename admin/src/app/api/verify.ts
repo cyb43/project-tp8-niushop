@@ -21,6 +21,23 @@ export function getVerifyDetail(verifyCode: string) {
     return request.get(`verify/verify/${ verifyCode }`)
 }
 
+/**
+ * 获取核销详情
+ * @param verifyCode
+ * @returns
+ */
+export function getVerifyDetailInfo(verifyCode: string) {
+    return request.get(`verify/detail/${ verifyCode }`)
+}
+
+/**
+ * 核销
+ * @param verifyCode
+ * @returns
+ */
+export function verify(verifyCode: string, params: Record<string, any>) {
+    return request.post(`verify/verify/${ verifyCode }`,params,{ showSuccessMessage: true})
+}
 /***************************************************** 核销员 ****************************************************/
 
 /**

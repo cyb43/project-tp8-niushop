@@ -56,31 +56,31 @@ diyStore.editComponent.verify = (index: number) => {
 onMounted(() => {
     // 初始赋值当天时间
     if (!diyStore.editComponent.field.default) {
-        const today = new Date();
-        const hours = String(today.getHours()).padStart(2, '0');
-        const minutes = String(today.getMinutes()).padStart(2, '0');
-        diyStore.editComponent.field.default = `${ hours }:${ minutes }`;
+        const today = new Date()
+        const hours = String(today.getHours()).padStart(2, '0')
+        const minutes = String(today.getMinutes()).padStart(2, '0')
+        diyStore.editComponent.field.default = `${hours}:${minutes}`
     }
-});
+})
 
 const changeDateDefaultControl = (val: any) => {
     if (val) {
-        const today = new Date();
-        const hours = String(today.getHours()).padStart(2, '0');
-        const minutes = String(today.getMinutes()).padStart(2, '0');
-        diyStore.editComponent.field.default = `${ hours }:${ minutes }`;
+        const today = new Date()
+        const hours = String(today.getHours()).padStart(2, '0')
+        const minutes = String(today.getMinutes()).padStart(2, '0')
+        diyStore.editComponent.field.default = `${hours}:${minutes}`
     }
 }
 
 watch(
     () => diyStore.editComponent.timeWay,
     (newVal) => {
-        const today = new Date();
-        const hours = String(today.getHours()).padStart(2, '0');
-        const minutes = String(today.getMinutes()).padStart(2, '0');
-        diyStore.editComponent.field.default = `${ hours }:${ minutes }`;
+        const today = new Date()
+        const hours = String(today.getHours()).padStart(2, '0')
+        const minutes = String(today.getMinutes()).padStart(2, '0')
+        diyStore.editComponent.field.default = `${hours}:${minutes}`
     }
-);
+)
 
 defineExpose({})
 

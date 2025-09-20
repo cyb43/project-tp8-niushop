@@ -189,7 +189,7 @@ watch(
         diyStore.editComponent.list.forEach((item: any) => {
             const image = new Image()
             image.src = img(item.imageUrl)
-            image.onload = async() => {
+            image.onload = async () => {
                 item.imgWidth = image.width
                 item.imgHeight = image.height
             }
@@ -239,9 +239,9 @@ onMounted(() => {
 
 const changePageCount = (value: any) => {
     if (value == '1') {
-        diyStore.editComponent.showStyle = 'singleSlide';
+        diyStore.editComponent.showStyle = 'singleSlide'
     } else if (value == '2') {
-        diyStore.editComponent.showStyle = 'fixed';
+        diyStore.editComponent.showStyle = 'fixed'
     }
 }
 

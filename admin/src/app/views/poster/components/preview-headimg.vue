@@ -16,16 +16,16 @@ const prop = defineProps({
 })
 
 const data = computed(() => {
-    return prop.value;
+    return prop.value
 })
 
 const componentStyle = computed(() => {
-    var style = '';
-    style += `width: ${ prop.value.width }px;`;
+    let style = ''
+    style += `width: ${prop.value.width}px;`
     if (prop.value.shape == 'circle') {
-        style += `border-radius: 50%; overflow: hidden;`;
+        style += 'border-radius: 50%; overflow: hidden;'
     }
-    return style;
+    return style
 })
 
 defineExpose({})

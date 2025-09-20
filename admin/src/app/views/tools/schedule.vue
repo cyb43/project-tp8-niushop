@@ -4,7 +4,11 @@
 
             <div class="flex justify-between items-center mb-[20px]">
                 <span class="text-page-title">{{ pageName }}</span>
-                <el-button type="primary" @click="showEvent">{{ t('addCron') }}</el-button>
+                <div>
+                    <el-button type="primary" @click="showEvent">{{ t('addCron') }}</el-button>
+                    <el-button type="primary" @click="resetCronFn">{{ t('重置计划任务') }}</el-button>
+                </div>
+               
             </div>
 
             <el-alert type="info">
@@ -22,13 +26,13 @@
                 <div class="flex justify-between">
                     <el-form :inline="true" :model="cronTableData.searchParam" ref="searchFormRef">
                         <el-form-item :label="t('title')" prop="key">
-                            <el-select v-model="cronTableData.searchParam.key" placeholder="全部" filterable remote clearable :remote-method="loadCronList">
+                            <el-select v-model="cronTableData.searchParam.key" placeholder="全部" filterable remote clearable>
                                 <el-option label="全部" value="all" />
                                 <el-option v-for="item in templateList" :key="item.key" :label="item.name" :value="item.key" />
                             </el-select>
                         </el-form-item>
                         <el-form-item :label="t('status')" prop="status">
-                            <el-select v-model="cronTableData.searchParam.status" placeholder="全部" filterable remote clearable :remote-method="loadCronList">
+                            <el-select v-model="cronTableData.searchParam.status" placeholder="全部" clearable>
                                 <el-option label="全部" value="all" />
                                 <el-option label="启用" value="1" />
                                 <el-option label="关闭" value="0" />
@@ -142,7 +146,8 @@ import {
     addCron,
     editCron,
     deleteCron,
-    doCron
+    doCron,
+    resetCron
 } from '@/app/api/sys'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { useRouter, useRoute } from 'vue-router'
@@ -220,14 +225,14 @@ const formData: Record<string, any> = reactive({ ...initialFormData })
 const formRef = ref<FormInstance>()
 
 const showEvent = () => {
-    formData.id = 0,
-    formData.key = '',
-    formData.status = 2,
-    formData.time.type = 'min',
-    formData.time.week = '',
-    formData.time.day = '',
-    formData.time.hour = '',
-    formData.time.min = '',
+    formData.id = 0
+    formData.key = ''
+    formData.status = 2
+    formData.time.type = 'min'
+    formData.time.week = ''
+    formData.time.day = ''
+    formData.time.hour = ''
+    formData.time.min = ''
     showDialog.value = true
 }
 
@@ -285,8 +290,8 @@ const addEvent = async (formEl: FormInstance | undefined) => {
 }
 
 const editEvent = (item:any) => {
-    formData.id = item.id,
-    formData.key = item.key,
+    formData.id = item.id
+    formData.key = item.key
     formData.status = item.status
     formData.time = item.time
     showDialog.value = true
@@ -320,6 +325,24 @@ const doEvent = (row: any) => {
         })
     })
 }
+
+// 重置任务
+const resetCronFn = (row: any) => {
+    ElMessageBox.confirm(t('确认要重置计划任务吗？'), t('warning'),
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
+    ).then(() => {
+        resetCron().then((res) => {
+            ElMessage.success(res.msg)
+        }).catch(() => {
+        })
+    })
+}
+
+
 
 const cronDialog: Record<string, any> | null = ref(null)
 /**

@@ -16,7 +16,7 @@
         <!-- 表单布局 页面设置 -->
         <slot name="content"></slot>
 
-        <div class="edit-attr-item-wrap">
+        <div class="edit-attr-item-wrap" v-if="diyStore.global.topStatusBar.control">
             <h3 class="mb-[10px]">{{ t('statusBarContent') }}</h3>
             <el-form label-width="80px" class="px-[10px]" @submit.prevent>
                 <el-form-item :label="t('topStatusBarNav')" class="display-block">
@@ -56,11 +56,11 @@
                 </template>
             </el-form>
         </div>
-        <div class="edit-attr-item-wrap">
+        <div class="edit-attr-item-wrap" v-if="diyStore.global.bottomTabBar.control">
             <h3 class="mb-[10px]">{{ t('bottomNavContent') }}</h3>
             <el-form label-width="80px" class="px-[10px]">
                 <el-form-item :label="t('tabbar')" class="display-block">
-                    <el-switch v-model="diyStore.global.bottomTabBarSwitch" />
+                    <el-switch v-model="diyStore.global.bottomTabBar.isShow" />
                     <div class="text-sm text-gray-400">{{ t('tabbarSwitchTips') }}</div>
                 </el-form-item>
             </el-form>
@@ -145,7 +145,7 @@
                 </el-form-item>
             </el-form>
         </div>
-        <div class="edit-attr-item-wrap">
+        <div class="edit-attr-item-wrap" v-if="diyStore.global.topStatusBar.control">
             <h3 class="mb-[10px]">{{ t('statusBarStyle') }}</h3>
             <el-form label-width="115px" class="px-[10px]">
                 <el-form-item :label="t('topStatusBarBgColor')" class="display-block">
@@ -187,7 +187,7 @@ watch(
         // 设置图片宽高
         const image = new Image()
         image.src = img(diyStore.global.bgUrl)
-        image.onload = async() => {
+        image.onload = async () => {
             diyStore.global.imgWidth = image.width
             diyStore.global.imgHeight = image.height
         }
@@ -201,7 +201,7 @@ watch(
 // 改变页面的左右边距时，更新所有组件的数值
 const inputBoth = (value: any) => {
     diyStore.value.forEach((item, index) => {
-        item.margin.both = value;
+        item.margin.both = value
     })
 }
 
@@ -217,7 +217,7 @@ const showStyle = () => {
     showDialog.value = true
 }
 
-const selectStyle = ref("style-1")
+const selectStyle = ref('style-1')
 const changeStyle = () => {
     switch (selectStyle.value) {
         case 'style-1':
@@ -240,7 +240,7 @@ const changeStyle = () => {
 const selectImg = (url: any) => {
     const image = new Image()
     image.src = img(url)
-    image.onload = async() => {
+    image.onload = async () => {
         diyStore.global.popWindow.imgWidth = image.width
         diyStore.global.popWindow.imgHeight = image.height
     }

@@ -1,5 +1,5 @@
 <template>
-    <el-drawer v-model="showDialog" title="核销记录详情" direction="rtl" :before-close="handleClose" class="member-detail-drawer">
+    <el-drawer v-model="showDialog" title="核销记录详情" direction="rtl" :before-close="handleClose" size="1300px">
         <div class="main-container" v-loading="loading">
             <el-tabs v-model="activeName" class="pb-[10px]" @tab-change="handleClick">
                 <el-tab-pane label="核销信息" name="verifyInfo" />
@@ -28,7 +28,7 @@
                         <div class="flex items-center mt-[15px]">
                             <span class="text-[14px] w-[130px] text-right mr-[20px]">{{ t('核销人员') }}</span>
                             <span class="text-[14px] text-[#666666]">
-                                {{ verifyData.member ? verifyData.member.nickname : '--' }}
+                                {{ (verifyData.is_admin == 1 ? '后台核销' : verifyData.member?.nickname) || '--' }}
                             </span>
                         </div>
                     </el-col>
@@ -147,7 +147,7 @@ const getVerifyDetailFn = async () => {
 
 const setFormData = async (row: any = null) => {
     code = row.code;
-    getVerifyDetailFn();
+    await getVerifyDetailFn();
 }
 
 defineExpose({
@@ -156,8 +156,4 @@ defineExpose({
 })
 </script>
 
-<style lang="scss">
-.member-detail-drawer{
-    width: 1300px !important;
-}
-</style>
+<style lang="scss" scoped></style>

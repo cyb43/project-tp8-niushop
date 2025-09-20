@@ -73,7 +73,7 @@ loadTableList()
 const confirm = (row: any) => {
     const name: string = row.Name
     tableTableData.loading = true
-    addGenerateTable({ 'table_name': name }).then(res => {
+    addGenerateTable({ table_name: name }).then(res => {
         tableTableData.loading = false
         showDialog.value = false
         router.push({ path: '/tools/code/edit', query: { id: res.data.id } })

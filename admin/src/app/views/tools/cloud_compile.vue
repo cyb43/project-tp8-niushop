@@ -73,6 +73,50 @@
             </div>
             <div class="mt-[10px]">
                 <div class="panel-title bg-[#F4F5F7] border-[#E6E6E6] border-solid border-b-[1px] h-[40px] flex items-center p-[10px]">
+                    <span class="text-[16px] font-500 text-[#1D1F3A]">第三方云编译</span>
+                     <el-switch v-model="isCloudCompilation" :active-value="1" :inactive-value="0" class="ml-[10px]" @change="confirm" />
+                     <span class="ml-[10px] text-[#9699B6] text-[12px]">自己搭建第三方云编译服务器，无需等待</span>
+                </div>
+                <div class="mt-[20px] flex mb-[14px] text-[16px] items-center text-[#1D1F3A]">
+                    <span class="flex ml-[20px] items-center">
+                        <!-- <i class="w-[3px] h-[12px] bg-primary mr-[6px] block"></i> -->
+                        温馨提示
+                    </span>
+                    <span class="text-[12px] text-[#9699B6] ml-[10px]">运行环境要求：需预先配置 Nodejs 环境</span>
+                    <span class="text-[14px]  text-primary cursor-pointer ml-[10px] border-b-[1px] border-solid border-primary"  @click="linkEvent('https://doc.niucloud.com/saas.html?keywords=/di-san-fang-yun-bian-yi-pei-zhi')">搭建教程</span>
+                </div>
+                 <div class="ml-[40px] text-[14px] text-[#4F516D] mb-[18px]">
+                    <span>1、下载第三方云编译服务器搭建程序包</span><span class="text-primary cursor-pointer "  @click="linkEvent('https://gitee.com/niucloud-team/niucloud-compile-server')"> niucloud-compile-server</span>
+                </div>
+                 <div class="ml-[40px] text-[14px] text-[#4F516D] mb-[18px]">
+                    <span>2、请在指定目录（不能包含中文）下执行 npm install 命令安装依赖包</span>
+                </div>
+                 <div class="ml-[40px] text-[14px] text-[#4F516D] mb-[18px]">
+                    <span>3、启动编译服务器：执行 node niucloud-compile-server.js 命令</span>
+                 </div>
+                 <div class="ml-[40px] text-[14px] text-[#4F516D] mb-[18px]">
+                    <span>4、填写服务器地址并成功连通测试后，点击开启即可享受自己搭建的云编译服务器，编译将无需排队等待。</span>
+                 </div>
+                <div class="mt-[20px] flex mb-[14px] text-[16px] items-center text-[#1D1F3A]">
+                    <span class="flex ml-[20px] items-center">
+                        <!-- <i class="w-[3px] h-[12px] bg-primary mr-[6px] block"></i> -->
+                        云编译服务器设置
+                    </span>
+                </div>
+                <div class="mt-[20px] flex mb-[14px] text-[16px] items-center text-[#1D1F3A] ml-[20px]">
+                    <span class="flex ml-[20px] items-center">
+                        <!-- <i class="w-[3px] h-[12px] bg-primary mr-[6px] block"></i> -->
+                        服务器地址
+                    </span>
+                </div>
+                <div class="flex ml-[40px] mb-[30px] items-center">
+                        <el-input clearable placeholder="请输入服务器地址" class="!w-[520px]"  maxlength="200" v-model="serverurl" />
+                        <el-button type="primary"  class="ml-[10px]" @click="confirm">确定</el-button>
+                        <el-button type="primary" plain class="ml-[10px]" @click="connect" :loading="testConnectLoading">连通测试</el-button>
+                </div>
+            </div>
+            <div class="mt-[10px]">
+                <div class="panel-title bg-[#F4F5F7] border-[#E6E6E6] border-solid border-b-[1px] h-[40px] flex items-center p-[10px]">
                     <span class="text-[16px] font-500 text-[#1D1F3A]">本地编译</span>
                 </div>
                 <div class="mt-[20px] flex mb-[14px] text-[16px] items-center text-[#1D1F3A]">
@@ -159,22 +203,25 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch } from "vue"
-import { ElMessage } from "element-plus"
-import { useClipboard } from "@vueuse/core"
-import { t } from "@/lang"
-import Upgrade from "@/app/components/upgrade/index.vue"
-import CloudBuild from "@/app/components/cloud-build/index.vue"
-
+import { ref, watch } from 'vue'
+import { ElMessage } from 'element-plus'
+import { useClipboard } from '@vueuse/core'
+import { t } from '@/lang'
+import Upgrade from '@/app/components/upgrade/index.vue'
+import CloudBuild from '@/app/components/cloud-build/index.vue'
+import { connectTest, setLocalUrl, getLocalUrl } from '@/app/api/upgrade'
+import Test from '@/utils/test'
 const loading = ref<Boolean>(false)
+const btnLoading = ref<Boolean>(false)
+const testConnectLoading = ref(false)
 
 // 云编译调用
 const cloudBuildRef = ref<any>(null)
 const handleCloudBuild = () => {
-    ElMessageBox.confirm(t("cloudBuildTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('cloudBuildTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         cloudBuildRef.value?.open()
     })
@@ -186,8 +233,8 @@ const { copy, isSupported, copied } = useClipboard()
 const copyEvent = (text: string) => {
     if (!isSupported.value) {
         ElMessage({
-            message: t("notSupportCopy"),
-            type: "warning"
+            message: t('notSupportCopy'),
+            type: 'warning'
         })
         return
     }
@@ -197,11 +244,81 @@ const copyEvent = (text: string) => {
 watch(copied, () => {
     if (copied.value) {
         ElMessage({
-            message: t("copySuccess"),
-            type: "success"
+            message: t('copySuccess'),
+            type: 'success'
         })
     }
 })
+
+const linkEvent = (url: string) => {
+    window.open(url, '_blank')
+}
+const isCloudCompilation = ref(0)
+const serverurl = ref('')
+const connect = async () => {
+    if (serverurl.value != '' && !Test.url(serverurl.value)) {
+        ElMessage({
+            message: '请输入正确的服务器地址，必须以http://或https://开头',
+            type: 'warning'
+        })
+        return
+    }
+    testConnectLoading.value = true
+    connectTest({
+        url: serverurl.value
+    }).then(res => {
+        if (res.data == false) {
+            ElMessage({
+                message: '连通测试失败',
+                type: 'error'
+            })
+        } else {
+            ElMessage({
+                message: '连通测试成功',
+                type: 'success'
+            })
+        }
+        testConnectLoading.value = false
+    }).catch(() => {
+        testConnectLoading.value = false
+    })
+}
+const confirm = async () => {
+    if (serverurl.value != '' && !Test.url(serverurl.value)) {
+        ElMessage({
+            message: '请输入正确的服务器地址，必须以http://或https://开头',
+            type: 'warning'
+        })
+        return
+    }
+    btnLoading.value = true
+    setLocalUrl({
+        url: serverurl.value,
+        is_open: isCloudCompilation.value
+    }).then(res => {
+        if (res.data == 1) {
+            ElMessage({
+                message: '保存成功',
+                type: 'success'
+            })
+            getLocalUrlFn()
+        }
+    }).catch(() => {
+        ElMessage({
+            message: '保存失败',
+            type: 'error'
+        })
+    }).finally(() => {
+        btnLoading.value = false
+    })
+}
+const getLocalUrlFn = async () => {
+    getLocalUrl({}).then(res => {
+        serverurl.value = res.data.baseUri
+        isCloudCompilation.value = res.data.isOpen
+    })
+}
+getLocalUrlFn()
 </script>
 
 <style lang="scss" scoped>

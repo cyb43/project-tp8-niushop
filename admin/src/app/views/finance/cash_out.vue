@@ -45,7 +45,7 @@
                     </el-form-item>
 
                     <el-form-item :label="t('memberInfo')" prop="keywords">
-                        <el-input v-model.trim="orderTableData.searchParam.keywords" class="w-[240px]"
+                        <el-input v-model.trim="orderTableData.searchParam.keywords" class="!w-[230px]"
                             :placeholder="t('memberInfoPlaceholder')" />
                     </el-form-item>
 

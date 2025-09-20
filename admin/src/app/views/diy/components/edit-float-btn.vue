@@ -122,7 +122,7 @@ templateList.value.forEach((item) => {
 })
 
 const changeTemplateList = (data: any) => {
-    selectTemplate.value = data;
+    selectTemplate.value = data
     diyStore.editComponent.bottomPosition = data.className
 }
 
@@ -134,7 +134,7 @@ const addImageAd = () => {
     })
 }
 
-const imageBoxRef = ref();
+const imageBoxRef = ref()
 diyStore.editComponent.list.forEach((item: any) => {
     if (!item.id) item.id = diyStore.generateRandom()
 })

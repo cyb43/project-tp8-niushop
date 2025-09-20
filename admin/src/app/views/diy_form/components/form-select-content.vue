@@ -39,7 +39,7 @@
 import { reactive, ref, nextTick } from 'vue'
 import { t } from '@/lang'
 import { getFormType, getDiyFormSelectPageList } from '@/app/api/diy_form'
-import { FormInstance, ElMessage } from "element-plus";
+import { FormInstance, ElMessage } from 'element-plus'
 
 const prop = defineProps({
     formId: {
@@ -52,7 +52,7 @@ const formType: any = reactive({}) // 表单类型
 
 const searchFormRef = ref<FormInstance>()
 
-const tableRef = ref();
+const tableRef = ref()
 
 const tableData: any = reactive({
     page: 1,
@@ -102,8 +102,8 @@ const loadList = (page: number = 1) => {
 // 获取万能表单类型
 const loadFormType = (addon = '') => {
     getFormType({}).then(res => {
-        for (let key in formType) {
-            delete formType[key];
+        for (const key in formType) {
+            delete formType[key]
         }
 
         for (const key in res.data) {
@@ -112,7 +112,7 @@ const loadFormType = (addon = '') => {
     })
 }
 
-loadFormType();
+loadFormType()
 loadList()
 
 const handleCheckChange = (isSelect: any, row: any) => {
@@ -147,14 +147,14 @@ const getData = () => {
     if (selectData.form_id == 0) {
         ElMessage({
             type: 'warning',
-            message: `${ t('formSelectContentTips') }`
+            message: `${t('formSelectContentTips')}`
         })
-        return;
+        return
     }
     return {
         name: 'DIY_FORM',
         title: selectData.page_title,
-        url: `/app/pages/index/diy_form?form_id=${ selectData.form_id }`,
+        url: `/app/pages/index/diy_form?form_id=${selectData.form_id}`,
         action: '',
         formId: selectData.form_id
     }

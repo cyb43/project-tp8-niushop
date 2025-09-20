@@ -113,3 +113,7 @@ export function getPreviewPoster(params: Record<string, any>) {
 export function getPosterGenerate(params: Record<string, any>) {
     return request.get(`sys/poster/generate`, { params, showErrorMessage: false })
 }
+// 判断是否安装imagemagick扩展
+export function checkImagick() {
+    return request.get(`sys/check_imagick`, { showErrorMessage: false })
+}

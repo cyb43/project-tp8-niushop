@@ -386,7 +386,7 @@ const back = () => {
 
 <style lang="scss" scoped>
     .member-info {
-        left: 0px
+        left: 0
     }
 
     .member-info-item {

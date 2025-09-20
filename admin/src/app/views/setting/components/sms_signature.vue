@@ -3,7 +3,7 @@
         <el-dialog v-model="visible" :title="t('选择签名')" width="1200px" destroy-on-close :close-on-click-modal="false">
             <el-alert type="warning" :closable="false" class="!mb-[10px]">
                 <template #default>
-                    <p class="">签名数据的变更（新增 / 删除）需经过五分钟的生效周期，在此期间系统将完成数据同步与更新</p>
+                    <p>签名数据的变更（新增 / 删除）需经过五分钟的生效周期，在此期间系统将完成数据同步与更新</p>
                 </template>
             </el-alert>
             <div class="flex justify-between items-center mb-[16px]">
@@ -141,8 +141,8 @@
 
 <script lang="ts" setup>
 import { ref, computed, reactive } from 'vue'
-import { getSignList,addSign,getSmsSignConfig,deleteSign } from '@/app/api/notice'
-import { t } from "@/lang";
+import { getSignList, addSign, getSmsSignConfig, deleteSign } from '@/app/api/notice'
+import { t } from '@/lang'
 
 const visible = ref(false)
 const visibleAdd = ref(false)
@@ -171,9 +171,9 @@ const formData = reactive({ ...initialFormData })
 
 const signConfig = reactive({
     signTypeList: [],
-    signSourceList:[]
+    signSourceList: []
 })
-const getSmsSignConfigFn = ()=> {
+const getSmsSignConfigFn = () => {
     getSmsSignConfig().then(res => {
         signConfig.signTypeList = res.data.sign_type_list
         signConfig.signSourceList = res.data.sign_source_list
@@ -191,24 +191,24 @@ const formRules = computed(() => {
             { required: true, message: '请输入短信签名', trigger: 'blur' },
             {
                 validator: (rule, value, callback) => {
-                    const singleBracketValid = /^【[^【】]*】$/.test(value);
+                    const singleBracketValid = /^【[^【】]*】$/.test(value)
                     if (!singleBracketValid) {
-                        return callback(new Error('短信签名必须被【】包裹'));
+                        return callback(new Error('短信签名必须被【】包裹'))
                     }
 
-                    const content = value.slice(1, -1);
+                    const content = value.slice(1, -1)
 
-                    const lengthValid = content.length >= 2 && content.length <= 20;
+                    const lengthValid = content.length >= 2 && content.length <= 20
                     if (!lengthValid) {
-                        return callback(new Error('短信签名内容需在 2-20 个字符之间'));
+                        return callback(new Error('短信签名内容需在 2-20 个字符之间'))
                     }
 
-                    const invalidChars = /[\s\-+=*&%#@~;]/;
+                    const invalidChars = /[\s\-+=*&%#@~;]/
                     if (invalidChars.test(content)) {
-                        return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'));
+                        return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'))
                     }
 
-                    callback();
+                    callback()
                 },
                 trigger: 'blur'
             }
@@ -218,19 +218,19 @@ const formRules = computed(() => {
             { validator: phoneVerify, trigger: 'blur' }
         ],
         companyName: [
-            { required: true, message: '请输入企业名称', trigger: 'blur' },
+            { required: true, message: '请输入企业名称', trigger: 'blur' }
         ],
         contentExample: [
-            { required: true, message: '请输入短信示例内容', trigger: 'blur' },
+            { required: true, message: '请输入短信示例内容', trigger: 'blur' }
         ],
         creditCode: [
-            { required: true, message: '请输入社会统一信用代码', trigger: 'blur' },
+            { required: true, message: '请输入社会统一信用代码', trigger: 'blur' }
         ],
         legalPerson: [
-            { required: true, message: '请输入法人姓名', trigger: 'blur' },
+            { required: true, message: '请输入法人姓名', trigger: 'blur' }
         ],
         principalName: [
-            { required: true, message: '请输入经办人姓名', trigger: 'blur' },
+            { required: true, message: '请输入经办人姓名', trigger: 'blur' }
         ],
         principalIdCard: [
             { required: true, message: '请输入经办人身份证', trigger: 'blur' },
@@ -239,22 +239,22 @@ const formRules = computed(() => {
         imgUrl: [
             {
                 validator: (rule, value, callback) => {
-                    const needImage = [3, 4, 5].includes(formData.signSource) || formData.signType === 1;
+                    const needImage = [3, 4, 5].includes(formData.signSource) || formData.signType === 1
                     if (needImage) {
                         if (!value || value.length === 0) {
-                            callback(new Error('请上传图片'));
+                            callback(new Error('请上传图片'))
                         } else {
-                            callback();
+                            callback()
                         }
                     } else {
-                        callback(); // 不需要校验
+                        callback() // 不需要校验
                     }
                 },
                 trigger: 'blur'
             }
         ]
 
-    };
+    }
 })
 
 const idCardVerify = (rule: any, value: any, callback: any) => {
@@ -276,14 +276,14 @@ const phoneVerify = (rule: any, value: any, callback: any) => {
 const onSave = async () => {
     await formRef.value?.validate(async (valid) => {
         if (valid) {
-            addSign(props.username,formData).then((res) => {
+            addSign(props.username, formData).then((res) => {
                 setTimeout(() => {
                     visibleAdd.value = false
                     loadSignList()
-                }, 500);
+                }, 500)
             })
         }
-    });
+    })
 }
 
 // 表单内容
@@ -293,8 +293,8 @@ const tableData = reactive({
     total: 0,
     loading: false,
     data: [],
-    searchParam: {},
-});
+    searchParam: {}
+})
 
 const open = () => {
     visible.value = true
@@ -302,19 +302,19 @@ const open = () => {
 }
 // 获取列表
 const loadSignList = () => {
-    tableData.loading = true;
-    let params = {
+    tableData.loading = true
+    const params = {
         page: tableData.page,
         limit: tableData.limit,
-        ...tableData.searchParam,
+        ...tableData.searchParam
     }
     getSignList(props.username, params).then((res) => {
-        tableData.loading = false;
-        tableData.data = res.data.data;
+        tableData.loading = false
+        tableData.data = res.data.data
         tableData.total = res.data.total
     }).catch(() => {
-        tableData.loading = false;
-    });
+        tableData.loading = false
+    })
 }
 
 const addEvent = () => {
@@ -328,14 +328,14 @@ const deleteTemplate = (row:any) => {
     ElMessageBox.confirm(t('确定删除该签名吗？'), t('提示'), {
         confirmButtonText: t('确定'),
         cancelButtonText: t('取消'),
-        type: 'warning',
+        type: 'warning'
     }).then(() => {
         deleteSign(props.username, { signatures: [row.sign] }).then((res) => {
             // loadSignList()
-            tableData.loading = true;
+            tableData.loading = true
             setTimeout(() => {
                 loadSignList()
-            },1000)
+            }, 1000)
         })
     })
 }
@@ -373,23 +373,23 @@ const handleSelectionChange = (val: []) => {
     }
 }
 const checkSelectable = (row: any, index: number) => {
-    return !row.is_default; // 只有不是“使用中”的行可选
+    return !row.is_default // 只有不是“使用中”的行可选
 }
 
 // 批量删除
 const batchDeleteEvent = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-            type: "warning",
-            message: `${ t("请选择要删除的签名") }`,
+            type: 'warning',
+            message: `${t('请选择要删除的签名')}`
         })
         return
     }
 
-    ElMessageBox.confirm(t("确定删除选中的签名吗？"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning"
+    ElMessageBox.confirm(t('确定删除选中的签名吗？'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
         const signatures: any = []
         multipleSelection.value.forEach((item: any) => {
@@ -399,7 +399,7 @@ const batchDeleteEvent = () => {
         deleteSign(props.username, {
             signatures
         }).then(() => {
-            tableData.loading = true;
+            tableData.loading = true
             setTimeout(() => {
                 loadSignList()
             }, 1000)

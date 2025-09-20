@@ -39,15 +39,17 @@
                     <template #empty>
                         <span>{{ !recordTable.loading ? t('emptyData') : '' }}</span>
                     </template>
-
-                    <el-table-column prop="code" :show-overflow-tooltip="true" :label="t('verifyCode')" align="left" min-width="150" />
-                    <el-table-column prop="type_name" :label="t('verifyType')" align="left" min-width="150" />
-                    <el-table-column :label="t('verifyTime')" min-width="180" align="center" :show-overflow-tooltip="true">
+                    <el-table-column :label="t('verifyTime')" min-width="180" align="left" :show-overflow-tooltip="true">
                         <template #default="{ row }">
                             {{ row.create_time || '' }}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="member.nickname" :label="t('verifyer')" min-width="180" align="center">
+                    <el-table-column prop="type_name" :label="t('verifyType')" align="left" min-width="150" />
+                    <el-table-column prop="code" :show-overflow-tooltip="true" :label="t('verifyCode')" align="left" min-width="150" />
+                    <el-table-column :label="t('verifyer')" min-width="180" align="center">
+                        <template #default="{ row }">
+                            {{ row.is_admin == 1 ? '后台核销' : row.member?.nickname }}
+                        </template>
                     </el-table-column>
                     <el-table-column :label="t('operation')" align="right" fixed="right" width="100">
                         <template #default="{ row }">
@@ -89,7 +91,7 @@ const recordTable = reactive({
     data: [],
     searchParam: {
         code: '',
-        type: '',
+        type: route.query.type || '',
         verifier_member_id: '',
         create_time: []
     }

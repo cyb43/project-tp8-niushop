@@ -48,9 +48,9 @@
 
             <div class="mt-[10px]">
                 <div class="mb-[10px] flex items-center">
-                    <el-dropdown class="mr-[20px] !text-primary">
+                    <el-dropdown class="mr-[20px] !text-primary w-[125px]">
                         <span class="el-dropdown-link">
-                            <span>{{ currentSelectMode === 'all' ? t('全选所有页') : t('全选当前页')}}</span>({{ selectedCount }})
+                            <span>{{ currentSelectMode === 'all' ? t('全选所有页') : t('全选当前页')}}</span>(<span class="text-center inline-block">{{ selectedCount }}</span>)
                             <el-icon>
                                 <arrow-down />
                             </el-icon>

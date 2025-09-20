@@ -132,7 +132,7 @@ const toAppStore = () => {
 }
 
 .app-item {
-    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.18);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.18);
 }
 .app-item:hover .app-item-head{
     background-color: #FDF4EF;

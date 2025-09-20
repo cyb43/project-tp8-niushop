@@ -181,7 +181,7 @@
 <script lang="ts" setup>
 import { reactive, ref, defineAsyncComponent } from 'vue'
 import { t } from '@/lang'
-import { getDiyFormFieldsList, getDiyFormFieldStat, getFormRecords,getFormRecordsInfo,deleteFormRecords,getFormRecordsMember} from '@/app/api/diy_form'
+import { getDiyFormFieldsList, getDiyFormFieldStat, getFormRecords, getFormRecordsInfo, deleteFormRecords, getFormRecordsMember } from '@/app/api/diy_form'
 import { useRouter } from 'vue-router'
 import { img } from '@/utils/common'
 import { ElMessageBox, FormInstance } from 'element-plus'
@@ -195,7 +195,7 @@ const searchFormDiyFormRef = ref<FormInstance>()
 const searchFormDiyMemberRef = ref<FormInstance>()
 const searchFormDiyFieldsRef = ref<FormInstance>()
 const handleClose = (done: () => void) => {
-    showDialog.value = false;
+    showDialog.value = false
 }
 
 const formData = reactive({
@@ -220,7 +220,7 @@ const getDiyFormFieldsListFn = (form_id: any) => {
         order: 'field_id',
         sort: 'asc'
     }).then((res: any) => {
-        formFieldsList.value = res.data;
+        formFieldsList.value = res.data
     })
 }
 
@@ -230,7 +230,7 @@ const getDiyFormFieldStatFn = (form_id: any) => {
     getDiyFormFieldStat({
         form_id
     }).then((res: any) => {
-        formFieldsStat.value = res.data;
+        formFieldsStat.value = res.data
     })
 }
 
@@ -238,7 +238,7 @@ const modules: any = import.meta.glob('@/**/*.vue')
 const formDetail = ref([])
 
 const formDetailEvent = (row: any) => {
-    getFormRecordsInfo(row.record_id).then((res:any)=>{
+    getFormRecordsInfo(row.record_id).then((res:any) => {
         formDetail.value = res.data.value
         dialogVisible.value = true
     })
@@ -257,7 +257,7 @@ const deleteEvent = (row: any) => {
             record_id: row.record_id,
             form_id: row.form_id
         }).then(() => {
-            initData();
+            initData()
         })
     })
 }
@@ -273,7 +273,7 @@ const resetFormMember = (formEl: FormInstance | undefined) => {
     getFormRecordsMemberFn()
 }
 
-const loadFormRecordsListFn= (page: number = 1)=> {
+const loadFormRecordsListFn = (page: number = 1) => {
     formData.loading = true
     formData.page = page
     getFormRecords({
@@ -284,7 +284,7 @@ const loadFormRecordsListFn= (page: number = 1)=> {
         formData.loading = false
         formData.data = res.data.data
         formData.data.forEach((item: any) => {
-            for (let key: any in item.recordsFieldList) {
+            for (const key: any in item.recordsFieldList) {
                 if (modules[item.recordsFieldList[key].detailComponent]) {
                     item.recordsFieldList[key].detailComponent && (item.recordsFieldList[key].detailComponent = defineAsyncComponent(modules[item.recordsFieldList[key].detailComponent]))
                 }
@@ -315,32 +315,32 @@ const getFormRecordsMemberFn = (page: number = 1) => {
         limit: formMemberList.limit,
         ...formMemberList.searchParam
     }).then((res: any) => {
-        formMemberList.data = res.data.data;
-        formMemberList.total = res.total;
-        formMemberList.loading = false;
+        formMemberList.data = res.data.data
+        formMemberList.total = res.total
+        formMemberList.loading = false
     }).catch((error) => {
-        formMemberList.loading = false;
+        formMemberList.loading = false
     })
 }
 
-//查看会员详情
+// 查看会员详情
 const detailEvent = (member_id:number) => {
-    let routeData = router.resolve(`/member/detail?id=${ member_id }`)
-    window.open(routeData.href, ' blank');
+    const routeData = router.resolve(`/member/detail?id=${member_id}`)
+    window.open(routeData.href, ' blank')
 }
 
 const setFormData = async (row: any = null) => {
-    formId.value = row.form_id;
-    formData.searchParam.form_id = row.form_id;
-    formMemberList.searchParam.form_id = row.form_id;
+    formId.value = row.form_id
+    formData.searchParam.form_id = row.form_id
+    formMemberList.searchParam.form_id = row.form_id
 
-    getDiyFormFieldsListFn(row.form_id);
-    initData();
+    getDiyFormFieldsListFn(row.form_id)
+    initData()
 }
 
 const initData = () => {
-    getFormRecordsMemberFn();
-    getDiyFormFieldStatFn(formId.value);
+    getFormRecordsMemberFn()
+    getDiyFormFieldStatFn(formId.value)
     loadFormRecordsListFn()
 }
 

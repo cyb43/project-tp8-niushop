@@ -135,11 +135,11 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref ,computed, onMounted} from 'vue'
+import { reactive, ref, computed, onMounted } from 'vue'
 import { t } from '@/lang'
-import { ArrowLeft } from "@element-plus/icons-vue"
-import { getAccountIsLogin,getAccountInfo,editAccount ,editSms,getSmsCaptcha,getSmsSend,enableNiusms} from '@/app/api/notice'
-import { useRoute, useRouter} from 'vue-router'
+import { ArrowLeft } from '@element-plus/icons-vue'
+import { getAccountIsLogin, getAccountInfo, editAccount, editSms, getSmsCaptcha, getSmsSend, enableNiusms } from '@/app/api/notice'
+import { useRoute, useRouter } from 'vue-router'
 import smsNiuLogin from '@/app/views/setting/components/sms_niu_login.vue'
 import smsTemplate from '@/app/views/setting/components/sms_template.vue'
 import smsRechargeRecord from '@/app/views/setting/components/sms_recharge_record.vue'
@@ -173,7 +173,7 @@ const backRecharge = () => {
     isRecharge.value = false
     getAccountIsLoginFn()
 }
-const getAccountIsLoginFn =()=> {
+const getAccountIsLoginFn = () => {
     loading.value = true
     getAccountIsLogin().then(res => {
         isLoginStatus.value = res.data.is_login
@@ -190,7 +190,6 @@ const getAccountIsLoginFn =()=> {
             loading.value = false
             isInit.value = true
         }
-
     }).catch(err => {
         loading.value = false
         isInit.value = true
@@ -206,7 +205,7 @@ const openDialog = () => {
 const beforeChangeIsEnable = (val) => {
     if (!isInit.value) return false
 
-    let enable = is_enable.value == 1 ? 0 : 1
+    const enable = is_enable.value == 1 ? 0 : 1
     return new Promise((resolve, reject) => {
         enableNiusms({ is_enable: enable }).then(() => {
             resolve(true)
@@ -218,7 +217,7 @@ const beforeChangeIsEnable = (val) => {
 
 const handleSelectTemplate = (val) => {
     loading.value = true
-    editAccount(username.value,{signature: val.sign}).then(res=>{
+    editAccount(username.value, { signature: val.sign }).then(res => {
         getAccountIsLoginFn()
     })
 }
@@ -269,48 +268,48 @@ const changeFormRules = computed(() => {
             }
         ],
         captcha_code: [
-            { required: true, message: '请输入验证码', trigger: 'blur' },
+            { required: true, message: '请输入验证码', trigger: 'blur' }
         ],
         code: [
-            { required: true, message: '请输入动态码', trigger: 'blur' },
+            { required: true, message: '请输入动态码', trigger: 'blur' }
         ]
-    };
-});
+    }
+})
 
-const sending = ref(false); // 发送中状态
-const countdown = ref(0); // 倒计时秒数
+const sending = ref(false) // 发送中状态
+const countdown = ref(0) // 倒计时秒数
 
 const getSmsSendFn = () => {
-    if (countdown.value > 0 || sending.value) return; // 正在倒计时或发送中，直接返回
+    if (countdown.value > 0 || sending.value) return // 正在倒计时或发送中，直接返回
     changeFormRef.value.validateField(['captcha_code'], (valid) => {
-        if (!valid) return;
-        sending.value = true; // 标记为发送中 
+        if (!valid) return
+        sending.value = true // 标记为发送中
         const params = {
             mobile: formData.mobiles,
             captcha_key: changeFormData.value.captcha_key,
             captcha_code: changeFormData.value.captcha_code
-        };
+        }
         getSmsSend(params).then((res) => {
-            changeFormData.value.key = res.data.key;
-            startCountdown(60); // 启动60秒倒计时
+            changeFormData.value.key = res.data.key
+            startCountdown(60) // 启动60秒倒计时
         }).catch((err) => {
             getSmsCaptchaFn()
-            sending.value = false;
+            sending.value = false
         }).finally(() => {
-            sending.value = false; // 无论成功失败都重置发送状态
-        });
-    });
-};
+            sending.value = false // 无论成功失败都重置发送状态
+        })
+    })
+}
 
 // 启动倒计时
 const startCountdown = (seconds) => {
-    countdown.value = seconds;
+    countdown.value = seconds
     const timer = setInterval(() => {
-        countdown.value--;
+        countdown.value--
         if (countdown.value <= 0) {
-            clearInterval(timer);
+            clearInterval(timer)
         }
-    }, 1000);
+    }, 1000)
 }
 
 const onSave = async () => {
@@ -326,7 +325,7 @@ const onSave = async () => {
                 }
             } else {
                 params = {
-                    new_mobile: changeFormData.value.new_mobile,
+                    new_mobile: changeFormData.value.new_mobile
                 }
             }
 
@@ -335,7 +334,7 @@ const onSave = async () => {
                 getAccountIsLoginFn()
             })
         }
-    });
+    })
 }
 
 const back = () => {

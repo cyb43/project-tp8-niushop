@@ -68,30 +68,30 @@ const dateFormat: any = reactive({
     format2: '',
     format3: '',
     format4: ''
-});
+})
 
 onMounted(() => {
     // 初始赋值当天日期
-    const today = new Date();
+    const today = new Date()
     if (!diyStore.editComponent.field.default.date) {
-        diyStore.editComponent.field.default.date = today.toISOString().split('T')[0];
-        diyStore.editComponent.field.default.timestamp = today.getTime() / 1000;
+        diyStore.editComponent.field.default.date = today.toISOString().split('T')[0]
+        diyStore.editComponent.field.default.timestamp = today.getTime() / 1000
     }
-    let year = today.getFullYear();
-    let month = String(today.getMonth() + 1).padStart(2, '0');
-    let day = String(today.getDate()).padStart(2, '0');
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
 
-    const hours = String(today.getHours()).padStart(2, '0');
-    const minutes = String(today.getMinutes()).padStart(2, '0');
-    dateFormat.format1 = `${ year }年${ month }月${ day }日`;
-    dateFormat.format2 = `${ year }-${ month }-${ day }`;
-    dateFormat.format3 = `${ year }/${ month }/${ day }`;
-    dateFormat.format4 = `${ year }-${ month }-${ day } ${ hours }:${ minutes }`;
-});
+    const hours = String(today.getHours()).padStart(2, '0')
+    const minutes = String(today.getMinutes()).padStart(2, '0')
+    dateFormat.format1 = `${year}年${month}月${day}日`
+    dateFormat.format2 = `${year}-${month}-${day}`
+    dateFormat.format3 = `${year}/${month}/${day}`
+    dateFormat.format4 = `${year}-${month}-${day} ${hours}:${minutes}`
+})
 
 const dateChange = (date: any) => {
-    diyStore.editComponent.field.default.date = date;
-    diyStore.editComponent.field.default.timestamp = timeTurnTimeStamp(date);
+    diyStore.editComponent.field.default.date = date
+    diyStore.editComponent.field.default.timestamp = timeTurnTimeStamp(date)
 }
 
 defineExpose({})

@@ -46,7 +46,7 @@
                 <el-form :inline="true" :model="memberAccountLogTableData.searchParam" ref="searchFormRef">
 
                     <el-form-item :label="t('memberInfo')" prop="keywords">
-                        <el-input v-model.trim="memberAccountLogTableData.searchParam.keywords" class="w-[240px]" :placeholder="t('memberInfoPlaceholder')" />
+                        <el-input v-model.trim="memberAccountLogTableData.searchParam.keywords" class="!w-[200px]" :placeholder="t('memberInfoPlaceholder')" />
                     </el-form-item>
 
                     <el-form-item :label="t('balanceType')" prop="balance_type">
@@ -257,9 +257,9 @@ checkBalanceInfo()
 const balanceStatus = ref([])
 const checkBalanceStatus = () => {
     getBalanceStatus().then(res => {
-        for (var i in res.data) {
+        for (const i in res.data) {
             if (i == 'balance' || i == 'money') {
-                balanceStatus.value.push({ 'name': res.data[i], 'type': i })
+                balanceStatus.value.push({ name: res.data[i], type: i })
             }
         }
     })

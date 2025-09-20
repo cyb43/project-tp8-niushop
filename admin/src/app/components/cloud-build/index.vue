@@ -5,7 +5,7 @@
             <div class="h-[50vh] flex flex-col" v-if="cloudBuildCheck && !cloudBuildTask">
                 <!-- <el-scrollbar> -->
                     <div class="bg-[#fff] my-3" v-if="cloudBuildCheck.dir">
-                        <div class="">
+                        <div>
                             <p class="pl-[20px] ">{{ t('cloudbuild.dirPermission') }}</p>
                             <div class="mt-[10px] mx-[20px] text-[14px] cursor-pointer text-primary flex items-center justify-between bg-[#EFF6FF] rounded-[4px] p-[10px]" @click="cloudBuildCheckDirFn">
                                 <div class="flex items-center">
@@ -14,7 +14,7 @@
                                 <div class="border-[1px] border-primary rounded-[3px] w-[72px] h-[26px] leading-[25px] text-center">立即查看</div>
                             </div>
                         </div>
-                       
+
                         <div class="px-[20px] pt-[10px] text-[14px] el-table">
                             <el-row class="py-[10px] items table-head-bg pl-[15px] mb-[10px]">
                                 <el-col :span="18">
@@ -66,7 +66,7 @@
                 <!-- </el-scrollbar> -->
             </div>
             <div class="h-[45vh]" v-show="cloudBuildTask">
-                <terminal ref="terminalRef" context="" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd"/>
+                <terminal ref="terminalRef" :name="`cloud-build-${terminalId}`" context="" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd"/>
             </div>
             <div class="flex justify-end mt-[20px]" v-show="cloudBuildTask">
                 <el-button @click="dialogCancel()" class="!w-[90px]">取消</el-button>
@@ -81,7 +81,7 @@
                             <img src="@/app/assets/images/error_icon.png" alt="">
                         </template>
                         <template #extra>
-                            <el-scrollbar class="max-h-[150px] overflow-auto text-[15px] text-[#4F516D] mb-[15px] mt-[-15px]">
+                            <el-scrollbar class="max-h-[150px] !overflow-auto text-[15px] text-[#4F516D] mb-[15px] mt-[-15px]">
                                 {{errorInfo}}
                             </el-scrollbar>
                             <el-button @click="handleReturn" class="!w-[90px]">错误信息</el-button>
@@ -110,15 +110,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, h, watch ,computed} from 'vue'
+import { ref, h, watch, computed } from 'vue'
 import { t } from '@/lang'
 import { getCloudBuildLog, getCloudBuildTask, cloudBuild, clearCloudBuildTask, preBuildCheck } from '@/app/api/cloud'
 import { Terminal, TerminalFlash } from 'vue-web-terminal'
 import 'vue-web-terminal/lib/theme/dark.css'
-import { AnyObject } from "@/types/global"
-import { ElNotification, ElMessageBox } from "element-plus"
+import { AnyObject } from '@/types/global'
+import { ElNotification, ElMessageBox } from 'element-plus'
 
 const showDialog = ref<boolean>(false)
+const terminalId = ref(Date.now());
 const cloudBuildTask = ref<null | AnyObject>(null)
 const active = ref('build')
 const cloudBuildCheck = ref<null | AnyObject>(null)
@@ -174,7 +175,7 @@ const getCloudBuildLogFn = () => {
             return
         }
 
-        const data = res.data.data ?? [];
+        const data = res.data.data ?? []
         let error = ''
 
         if (data[0] && data[0].length && showDialog.value) {
@@ -203,7 +204,7 @@ const getCloudBuildLogFn = () => {
                 if (!cloudBuildLog.includes(item.action)) {
                     terminalRef.value.pushMessage({ content: `${item.action}` })
                     cloudBuildLog.push(item.action)
-                   
+
                     if (item.code == 0) {
                         error = item.msg
                         terminalRef.value.pushMessage({ content: item.msg, class: 'error' })
@@ -243,8 +244,7 @@ const handleReturn = () => {
     closeType.value = 'success'
 }
 
-
-let notificationEl : any = null
+const notificationEl : any = null
 /**
  * 升级中任务提示
  */
@@ -315,9 +315,9 @@ const onExecCmd = (key, command, success, failed, name) => {
 }
 
 const makeIterator = (array: string[]) => {
-    var nextIndex = 0
+    let nextIndex = 0
     return {
-        next() {
+        next () {
             if ((nextIndex + 1) == array.length) {
                 nextIndex = 0
             }
@@ -397,7 +397,8 @@ defineExpose({
     open,
     cloudBuildTask,
     loading,
-    elNotificationClick
+    elNotificationClick,
+    getCloudBuildTaskFn
 })
 </script>
 

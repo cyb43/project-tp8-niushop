@@ -39,7 +39,7 @@
 <script lang="ts" setup>
 import { defineAsyncComponent, reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getSmsList ,getAccountIsLogin} from '@/app/api/notice'
+import { getSmsList, getAccountIsLogin } from '@/app/api/notice'
 import { useRoute, useRouter } from 'vue-router'
 
 const router = useRouter()

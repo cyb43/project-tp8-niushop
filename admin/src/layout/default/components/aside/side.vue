@@ -4,7 +4,7 @@
             <div class="logo flex items-center justify-center m-auto w-full h-[64px]" v-if="!systemStore.menuIsCollapse">
                 <template v-if="webSite">
                     <img class="max-h-[40px] max-w-[70%]" v-if="webSite.logo" :src="img(webSite.logo)" alt="">
-                    <img class="max-h-[40px] max-w-[70%]" src="@/app/assets/images/login_logo.png" alt="" v-else>
+                    <img class="max-h-[40px] max-w-[70%]" src="@/app/assets/images/icon-addon-one.png" alt="" v-else>
                 </template>
             </div>
             <div class="logo flex items-center justify-center h-[64px]" v-else>

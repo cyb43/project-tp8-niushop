@@ -110,7 +110,7 @@ diyStore.editComponent.verify = (index: number) => {
     let starTime = diyStore.value[index].field.default.start.date
     let endTime = diyStore.value[index].field.default.end.date
 
-    let today = new Date()
+    const today = new Date()
     const hours = String(today.getHours()).padStart(2, '0')
     const minutes = String(today.getMinutes()).padStart(2, '0')
 
@@ -162,8 +162,8 @@ const disabledEndDate = (time: Date) => {
 }
 
 onMounted(() => {
-    let today = new Date()
-    let endDate = new Date()
+    const today = new Date()
+    const endDate = new Date()
     endDate.setDate(endDate.getDate() + 7) // 设置日期为7天后的日期
 
     if (diyStore.editComponent.field.default.start.timestamp) {
@@ -176,16 +176,16 @@ onMounted(() => {
         diyStore.editComponent.field.default.end.timestamp = parseInt(endDate.getTime() / 1000)
     }
 
-    let year = today.getFullYear()
-    let month = String(today.getMonth() + 1).padStart(2, '0')
-    let day = String(today.getDate()).padStart(2, '0')
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
 
     const hours = String(today.getHours()).padStart(2, '0')
     const minutes = String(today.getMinutes()).padStart(2, '0')
-    dateFormat.format1 = `${ year }年${ month }月${ day }日`
-    dateFormat.format2 = `${ year }-${ month }-${ day }`
-    dateFormat.format3 = `${ year }/${ month }/${ day }`
-    dateFormat.format4 = `${ year }-${ month }-${ day } ${ hours }:${ minutes }`
+    dateFormat.format1 = `${year}年${month}月${day}日`
+    dateFormat.format2 = `${year}-${month}-${day}`
+    dateFormat.format3 = `${year}/${month}/${day}`
+    dateFormat.format4 = `${year}-${month}-${day} ${hours}:${minutes}`
 })
 
 // 开始日期选择器
@@ -193,7 +193,7 @@ const startDateChange = (date) => {
     diyStore.editComponent.field.default.start.date = date
     diyStore.editComponent.field.default.start.timestamp = timeTurnTimeStamp(date)
 
-    let endDate = new Date(date)
+    const endDate = new Date(date)
     endDate.setDate(endDate.getDate() + 7)
     diyStore.editComponent.field.default.end.date = endDate.toISOString().split('T')[0]
     diyStore.editComponent.field.default.end.timestamp = parseInt(endDate.getTime() / 1000)

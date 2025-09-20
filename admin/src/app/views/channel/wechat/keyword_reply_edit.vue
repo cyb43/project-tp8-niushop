@@ -139,7 +139,8 @@ const formRules = reactive<FormRules>({
             validator: (rule: any, value: any, callback: any) => {
                 if (!formData.content.length) callback(new Error(t('contentPlaceholder')))
                 callback()
-            }, trigger: 'blur'
+            },
+            trigger: 'blur'
         }
     ]
 })

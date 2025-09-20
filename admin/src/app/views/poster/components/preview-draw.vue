@@ -13,18 +13,18 @@ const prop = defineProps({
 })
 
 const data = computed(() => {
-    return prop.value;
+    return prop.value
 })
 
 const componentStyle = computed(() => {
-    var style = '';
-    style += `background-color: ${ prop.value.bgColor };`;
-    style += `width: ${ prop.value.width }px;height: ${ prop.value.height }px;`;
-    let box: any = document.getElementById(prop.value.id)
+    let style = ''
+    style += `background-color: ${prop.value.bgColor};`
+    style += `width: ${prop.value.width}px;height: ${prop.value.height}px;`
+    const box: any = document.getElementById(prop.value.id)
     if (box) {
-        style += `width:${ box.offsetWidth }px;height:${ box.offsetHeight }px;`;
+        style += `width:${box.offsetWidth}px;height:${box.offsetHeight}px;`
     }
-    return style;
+    return style
 })
 
 defineExpose({})

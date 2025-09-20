@@ -1,5 +1,5 @@
 <template>
-    <div class="flex border-t border-b main-wrap border-color w-full" :class="scene == 'select' ? 'h-[40vh]' : 'h-full'">
+    <div class="flex border-t border-b main-wrap border-color w-full attachment-wrap" :class="scene == 'select' ? 'h-[546px]' : 'h-full'">
 
         <!-- 分组 -->
         <div class="group-wrap w-[180px] p-[15px] h-full border-r border-color flex flex-col">
@@ -67,8 +67,8 @@
                         <div class="attachment-item mr-[10px]" :class="scene == 'select' ? 'w-[100px]' : 'w-[120px]'" v-for="(item, index) in attachment.data" :key="index">
                             <div class="attachment-wrap w-full rounded cursor-pointer overflow-hidden relative flex items-center justify-center" :class="scene == 'select' ? 'h-[100px]' : 'h-[120px]'" @click="selectFile(item)">
 
-                                <el-image :src="img(item.url)" fit="contain" v-if="type == 'image'"/>
-                                <video :src="img(item.url)" v-else-if="type == 'video'"/>
+                                <el-image :src="img(item.thumb)" fit="contain" v-if="type == 'image'"/>
+                                <video :src="img(item.thumb)" v-else-if="type == 'video'"/>
                                 <icon :name="item.url" size="24px" v-else-if="type == 'icon'"/>
                                 <div class="absolute z-[1] flex items-center justify-center w-full h-full inset-0 bg-black bg-opacity-60" v-show="selectedFile[item.att_id]">
                                     <icon name="element Select" color="#fff" size="40px" />
@@ -82,7 +82,7 @@
                             <div class="flex items-center">
                                 <el-tooltip placement="top">
                                     <template #content>{{ item.real_name }}</template>
-                                    <div class="truncate my-[10px] cursor-pointer text-base flex-1 text-center">{{ item.real_name }}</div>
+                                    <div class="truncate my-[10px] cursor-pointer text-base flex-1 text-center h-[20px] leading-[20px]">{{ item.real_name }}</div>
                                 </el-tooltip>
                                 <!-- 图片操作 -->
                                 <el-dropdown :hide-on-click="false" v-if="scene == 'attachment'" class="attachment-action hidden ">
@@ -112,8 +112,8 @@
                     <div class="flex flex-wrap" v-else-if="attachment.data.length && operate === false">
                         <div class="attachment-item mr-[10px] w-[120px]" v-for="(item, index) in attachment.data" :key="index">
                             <div class="attachment-wrap w-full rounded cursor-pointer overflow-hidden relative flex items-center justify-center h-[120px]">
-                                <el-image :src="img(item.url)" fit="contain" v-if="type == 'image'" :preview-src-list="item.image_list"/>
-                                <video :src="img(item.url)" v-else-if="type == 'video'" @click="previewVideo(index)"></video>
+                                <el-image :src="img(item.thumb)" fit="contain" v-if="type == 'image'" :preview-src-list="item.image_list"/>
+                                <video :src="img(item.thumb)" v-else-if="type == 'video'" @click="previewVideo(index)"></video>
                                 <icon :name="item.url" size="24px" v-else-if="type == 'icon'"></icon>
                             </div>
                             <div class="flex items-center">
@@ -232,12 +232,12 @@ const attachment: Record<string, any> = reactive({
     loading: true,
     page: 1,
     total: 0,
-    limit: prop.scene == 'select' ? 10 : 20,
+    limit: prop.scene == 'select' ? 18 : 20,
     data: []
 })
 
 if (prop.scene == 'select') {
-    attachment.limit = 10
+    attachment.limit = 18
     if (prop.type == 'icon') {
         attachment.limit = 20
     }
@@ -271,7 +271,7 @@ const getIconCategoryList = (search) => {
             }
 
             Object.keys(iconJsonFile).reverse().forEach(key => {
-                let item = iconJsonFile[key].default
+                const item = iconJsonFile[key].default
                 if (search.name && item.name.indexOf(search.name) != -1) {
                     result.data.push(item)
                 } else if (!search.name) {
@@ -280,7 +280,7 @@ const getIconCategoryList = (search) => {
 
                 if (!iconList[item.id]) {
                     item.glyphs = item.glyphs.map(iconItem => {
-                        iconItem.url = `${ item.font_family } ${ item.css_prefix_text }${ iconItem.font_class }`
+                        iconItem.url = `${item.font_family} ${item.css_prefix_text}${iconItem.font_class}`
                         iconItem.real_name = iconItem.name
                         iconItem.att_id = iconItem.icon_id
                         return iconItem
@@ -361,11 +361,14 @@ const getAttachmentList = debounce((page: number = 1) => {
 
         if (prop.type != 'icon') {
             for (let i = 0; i < attachment.data.length; i++) {
-                attachment.data[i]['image_list'] = []
-                attachment.data[i]['image_list'].push(img(res.data.data[i]['url']))
+                attachment.data[i].image_list = []
+                attachment.data[i].image_list.push(img(res.data.data[i].thumb))
             }
         }
-    }).catch(() => {
+    }).catch((err) => {
+        if (prop.type == 'image' && err.response.status == 500) {
+            showElMessage({ message: 'php脚本内存不足请加大php配置中memory_limit的数值, <a style="text-decoration: underline;" href="https://www.kancloud.cn/niucloud/niucloud-admin-develop/3249216" target="blank">点击查看相关手册</a>', type: 'error', dangerouslyUseHTMLString: true })
+        }
         attachment.loading = false
     })
 })
@@ -442,9 +445,10 @@ const time = ref<any>(null)
 const upload = computed(() => {
     const headers: Record<string, any> = {}
     headers[import.meta.env.VITE_REQUEST_HEADER_TOKEN_KEY] = getToken()
+    const baseURL = import.meta.env.VITE_APP_BASE_URL.substr(-1) == '/' ? import.meta.env.VITE_APP_BASE_URL : `${import.meta.env.VITE_APP_BASE_URL}/`
 
     return {
-        action: `${import.meta.env.VITE_APP_BASE_URL}/sys/${prop.type}`,
+        action: `${baseURL}sys/${prop.type}`,
         multiple: true,
         data: {
             cate_id: attachmentParam.cate_id
@@ -519,30 +523,30 @@ const clearSelected = () => {
 const selectFile = (data: any) => {
     if (selectedFile[data.att_id]) {
         delete selectedFile[data.att_id]
-        selectedFileIndex.splice(selectedFileIndex.indexOf(data.att_id),1);
+        selectedFileIndex.splice(selectedFileIndex.indexOf(data.att_id), 1)
     } else if (prop.scene == 'select') {
         const keys = Object.keys(toRaw(selectedFile))
         const length = keys.length
         if (prop.limit == 1 && length == prop.limit) {
             delete selectedFile[keys[0]]
-            selectedFileIndex.splice(selectedFileIndex.indexOf(keys[0]),1);
+            selectedFileIndex.splice(selectedFileIndex.indexOf(keys[0]), 1)
         } else if (prop.limit && length >= prop.limit) {
             ElMessage.info(t('upload.triggerUpperLimit'))
             return
         }
         selectedFile[data.att_id] = toRaw(data)
-        selectedFileIndex.push(data.att_id);
+        selectedFileIndex.push(data.att_id)
     } else {
         selectedFile[data.att_id] = toRaw(data)
-        selectedFileIndex.push(data.att_id);
+        selectedFileIndex.push(data.att_id)
     }
 }
 
 // 获取当前选中文件的下标
-const getFileIndex = (att_id:any)=>{
-    let index = selectedFileIndex.indexOf(att_id);
-    if(index == -1) return 0;
-    return index + 1;
+const getFileIndex = (att_id:any) => {
+    const index = selectedFileIndex.indexOf(att_id)
+    if (index == -1) return 0
+    return index + 1
 }
 
 /**
@@ -612,7 +616,7 @@ const previewImage = (index: number) => {
 }
 const previewImageList = computed(() => {
     return toRaw(attachment.data).map((item: Record<string, any>) => {
-        return img(item.url)
+        return img(item.thumb)
     })
 })
 
@@ -626,7 +630,7 @@ const videoViewer = reactive({
 
 const previewVideo = (index: number) => {
     videoViewer.visible = true
-    videoViewer.src = img(attachment.data[index].url)
+    videoViewer.src = img(attachment.data[index].thumb)
 }
 
 defineExpose({
@@ -676,11 +680,9 @@ defineExpose({
         content: '';
         display: block;
         position: absolute;
-        border: 15px solid;
-        border-bottom-color: var(--el-color-primary);
+        border: 15px solid transparent;
         border-right-color: var(--el-color-primary);
-        border-top-color: transparent;
-        border-left-color: transparent;
+        border-bottom-color: var(--el-color-primary);
         bottom: 0;
         right: 0;
     }
@@ -713,4 +715,8 @@ defineExpose({
         background: #fff !important;
         box-shadow: var(--el-box-shadow-light);
     }
-}</style>
+}
+.attachment-wrap .el-upload-list__item .el-upload-list__item-info {
+    width: 150px!important;
+}
+</style>

@@ -20,7 +20,7 @@ const data = computed(() => {
 })
 
 const componentStyle = computed(() => {
-    var style = '';
+    let style = '';
     style += `width: ${ prop.value.width }px;`;
     return style;
 })

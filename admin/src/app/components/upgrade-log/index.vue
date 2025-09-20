@@ -147,8 +147,7 @@ defineExpose({
     left: 125px;
     border-left-color: #dddddd;
     border-left-style: dashed;
-    margin: 12px 0;
-    margin-top: 24px;
+    margin: 24px 0 12px;
     height: calc(100% - 24px - 12px);
 }
 
@@ -201,7 +200,7 @@ defineExpose({
 
 .time-dialog >>> .el-collapse-item__content {
     margin-top: 15px;
-    padding-bottom: 0px !important;
+    padding-bottom: 0 !important;
 }
 
 .time-dialog >>> .el-timeline-item__node--01 {

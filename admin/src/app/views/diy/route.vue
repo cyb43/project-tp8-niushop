@@ -94,7 +94,7 @@
 <script lang="ts" setup>
 import { reactive, ref, watch, computed } from 'vue'
 import { t } from '@/lang'
-import { getDiyRouteAppList,getDiyTemplate, getDiyRouteList, getDiyRouteInfo, editDiyRouteShare } from '@/app/api/diy'
+import { getDiyRouteAppList, getDiyTemplate, getDiyRouteList, getDiyRouteInfo, editDiyRouteShare } from '@/app/api/diy'
 import { ElMessage, FormInstance } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
 import { useClipboard } from '@vueuse/core'
@@ -118,7 +118,7 @@ const diyRouteTableData = reactive({
     data: [],
     searchParam: {
         title: '',
-        addon_name:''
+        addon_name: ''
     }
 })
 
@@ -133,13 +133,13 @@ getDomain()
 
 const apps: any = reactive({}) // 应用插件列表
 
-getDiyRouteAppList().then(res=> {
+getDiyRouteAppList().then(res => {
     if (res.data) {
         for (const key in res.data) {
-            apps[key] = res.data[key];
+            apps[key] = res.data[key]
         }
     }
-});
+})
 
 const getDiyRouteListFn = () => {
     getDiyRouteList({}).then(res => {
@@ -148,10 +148,10 @@ const getDiyRouteListFn = () => {
         loadDiyRouteList(diyRouteTableData.page)
     }).catch(() => {
         diyRouteTableData.loading = false
-    });
+    })
 }
 
-getDiyRouteListFn();
+getDiyRouteListFn()
 
 /**
  * 获取自定义路由列表
@@ -160,21 +160,21 @@ const loadDiyRouteList = (page: number = 1) => {
     diyRouteTableData.page = page
 
     const tempData = cloneDeep(diyRouteList.value)
-    const data: any = [];
+    const data: any = []
 
     // 筛选条件
     for (let i = 0; i < tempData.length; i++) {
-        let isAdd = true;
+        let isAdd = true
         if (diyRouteTableData.searchParam.title && tempData[i].title.indexOf(diyRouteTableData.searchParam.title) == -1) {
-            isAdd = false;
+            isAdd = false
         }
 
         if (diyRouteTableData.searchParam.addon_name && tempData[i].addon_info && tempData[i].addon_info.key != diyRouteTableData.searchParam.addon_name) {
-            isAdd = false;
+            isAdd = false
         }
 
         if (isAdd) {
-            data.push(tempData[i]);
+            data.push(tempData[i])
         }
     }
 
@@ -271,10 +271,12 @@ const openShare = async (row: any) => {
 
     shareFormId.value = row.id
     sharePage.value = row.title
-    const share = row.share ? JSON.parse(row.share) : {
-        wechat: { title: '', desc: '', url: '' },
-        weapp: { title: '', url: '' }
-    }
+    const share = row.share
+        ? JSON.parse(row.share)
+        : {
+            wechat: { title: '', desc: '', url: '' },
+            weapp: { title: '', url: '' }
+        }
     if (share) {
         shareFormData.wechat = share.wechat
         shareFormData.weapp = share.weapp

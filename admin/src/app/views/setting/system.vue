@@ -1,9 +1,10 @@
 <template>
     <div class="main-container">
 
-        <el-form class="page-form" :model="formData" label-width="150px" ref="formRef" :rules="formRules" v-loading="loading">
+        <el-form class="page-form loading-box" :model="formData" label-width="150px" ref="formRef" :rules="formRules" v-loading="loading">
             <el-card class="box-card !border-none" shadow="never">
-                <h3 class="panel-title !text-sm">{{ t('websiteInfo') }}</h3>
+                <h3 class="text-[16px] text-[#1D1F3A] font-bold mb-4">{{ pageName }}</h3>
+                <h3 class="panel-title !text-[14px] bg-[#F4F5F7] p-3 border-[#E6E6E6] border-solid border-b-[1px]">{{ t('websiteInfo') }}</h3>
 
                 <el-form-item :label="t('siteName')" prop="site_name">
                     <el-input v-model.trim="formData.site_name" :placeholder="t('siteNamePlaceholder')" class="input-width" clearable maxlength="20" show-word-limit />
@@ -29,7 +30,7 @@
             </el-card>
 
             <el-card class="box-card mt-[15px] !border-none" shadow="never">
-                <h3 class="panel-title !text-sm">{{ t('frontEndInfo') }}</h3>
+                <h3 class="panel-title !text-[14px] bg-[#F4F5F7] p-3 border-[#E6E6E6] border-solid border-b-[1px]">{{ t('frontEndInfo') }}</h3>
                 <el-form-item :label="t('frontEndName')">
                     <el-input v-model.trim="formData.front_end_name" :placeholder="t('frontEndNamePlaceholder')" class="input-width" clearable maxlength="20" show-word-limit />
                 </el-form-item>
@@ -45,7 +46,7 @@
             </el-card>
 
             <el-card class="box-card mt-[15px] !border-none" shadow="never">
-                <h3 class="panel-title !text-sm">{{ t('serviceInformation') }}</h3>
+                <h3 class="panel-title !text-[14px] bg-[#F4F5F7] p-3 border-[#E6E6E6] border-solid border-b-[1px]">{{ t('serviceInformation') }}</h3>
 
                 <el-form-item :label="t('contactsTel')">
                     <el-input v-model.trim="formData.tel" :placeholder="t('contactsTelPlaceholder')" class="input-width" clearable maxlength="20" show-word-limit />
@@ -150,4 +151,8 @@ const save = async (formEl: FormInstance | undefined) => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+:deep(.loading-box .el-loading-spinner){
+    top: 33%;
+}
+</style>

@@ -186,17 +186,17 @@ const waterfall = debounce(() => {
                 const position = {}
                 position.top = '0px'
                 if (i % column == 0) {
-                    position.left = item.clientWidth * i + "px"
+                    position.left = item.clientWidth * i + 'px'
                 } else {
-                    position.left = item.clientWidth * i + (i % column * 10) + "px"
+                    position.left = item.clientWidth * i + (i % column * 10) + 'px'
                 }
                 positions[i] = position
                 heights[i] = item.clientHeight + 10
             } else {
-                let minHeight = Math.min(...heights) //  找到第一列的最小高度
-                let minIndex = heights.findIndex(item => item === minHeight) // 找到最小高度的索引
-                let position = {}
-                position.top = minHeight + 10 + "px"
+                const minHeight = Math.min(...heights) //  找到第一列的最小高度
+                const minIndex = heights.findIndex(item => item === minHeight) // 找到最小高度的索引
+                const position = {}
+                position.top = minHeight + 10 + 'px'
                 position.left = positions[minIndex].left
                 positions[i] = position
                 heights[minIndex] += item.clientHeight + 10

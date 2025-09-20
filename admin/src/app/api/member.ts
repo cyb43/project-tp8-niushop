@@ -393,7 +393,7 @@ export function memberRemark(params: Record<string, any>) {
 }
 /**
  * 检查打款进度
- * @param params
+ * @param id
  */
 export function memberCheck(id: number) {
     return request.put(`member/cash_out/check/${id}`, {}, { showSuccessMessage: true })

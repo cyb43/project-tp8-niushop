@@ -50,15 +50,19 @@ import { img } from '@/utils/common'
 
 const showDialog = ref(false)
 const channel = ref('h5')
+
+// H5相关变量
 const wapUrl = ref('')
 const wapDomain = ref('')
 const wapImage = ref('')
 const wapPreview = ref('')
-const pageName = ref('')
+
+// 小程序相关变量
 const weappData = reactive({
     path: ''
 })
 
+// 基础配置获取
 getUrl().then((res: any) => {
     wapUrl.value = res.data.wap_url
 
@@ -66,42 +70,53 @@ getUrl().then((res: any) => {
     if (import.meta.env.MODE == 'production') return
 
     wapDomain.value = res.data.wap_domain
-
     // env文件配置过wap域名
     if (wapDomain.value) {
         wapUrl.value = wapDomain.value + '/wap'
     }
-
     const wapDomainStorage = storage.get('wap_domain')
     if (wapDomainStorage) {
         wapUrl.value = wapDomainStorage
     }
 })
 
-// **生成H5二维码**
+// 生成H5二维码（支持多参数）
 const generateH5QRCode = () => {
-    wapPreview.value = `${ wapUrl.value }${ pageName.value }`
-    QRCode.toDataURL(wapPreview.value, { errorCorrectionLevel: 'L', margin: 0, width: 120 }).then(url => {
+    // 处理参数为URL格式
+    const queryStr = params.value
+        .map(item => `${encodeURIComponent(item.name)}=${encodeURIComponent(item.value)}`)
+        .join('&')
+    
+    // 拼接完整H5链接
+    wapPreview.value = `${wapUrl.value}${pagePath.value}${queryStr ? '?' + queryStr : ''}`
+    
+    // 生成二维码
+    QRCode.toDataURL(wapPreview.value, { 
+        errorCorrectionLevel: 'L', 
+        margin: 0, 
+        width: 120 
+    }).then(url => {
         wapImage.value = url
     })
 }
 
-// **获取小程序二维码**
+// 获取小程序二维码（支持多参数）
 const fetchWeAppQRCode = () => {
-    // 去掉 page 参数前面的 '/'
-    if (pagePath.value.startsWith('/')) {
-        pagePath.value = pagePath.value.slice(1);
+    // 处理页面路径（去掉前缀的 '/'）
+    let page = pagePath.value
+    if (page.startsWith('/')) {
+        page = page.slice(1)
     }
 
+    // 调用接口获取小程序二维码
     getQrcode({
-        page: pagePath.value, // 传递页面路径
-        folder: folder.value, // 传递模块目录
-        params: [
-            {
-                column_name: columnName.value,
-                column_value: columnValue.value
-            }
-        ]
+        page: page,
+        folder: folder.value,
+        // 转换参数格式为接口要求的 { column_name, column_value }
+        params: params.value.map(item => ({
+            column_name: item.name,
+            column_value: item.value
+        }))
     }).then((res: any) => {
         if (res.data) {
             weappData.path = res.data.weapp_path
@@ -109,24 +124,30 @@ const fetchWeAppQRCode = () => {
     })
 }
 
-// 定义变量存储传入的数据
-const pagePath = ref("")
-const columnName = ref("")
-const columnValue = ref("")
-const titleName = ref("")
-const folder: any = ref("")
+// 核心参数存储
+const pagePath = ref("") // 页面路径（如 "/addon/pintuan/pages/goods/detail"）
+const params = ref<Array<{name: string; value: string | number}>>([]) // 多参数数组
+const titleName = ref("") // 弹窗标题
+const folder: any = ref("") // 模块目录
 
-// **显示对话框**
-const show = (page: string, column: string, value: string, title: string, dir: string) => {
+// 显示弹窗（对外暴露的方法）
+const show = (
+    page: string, 
+    paramsArr: Array<{name: string; value: string | number}>, 
+    title: string, 
+    dir: string
+) => {
+    // 重置参数
     pagePath.value = page
-    columnName.value = column
-    columnValue.value = value
+    params.value = paramsArr
     titleName.value = title
     folder.value = dir
-    pageName.value = `${ pagePath.value }?${ columnName.value }=${ columnValue.value }`
-
+    
+    // 生成二维码
     generateH5QRCode()
     fetchWeAppQRCode()
+    
+    // 显示弹窗
     showDialog.value = true
 }
 
@@ -156,3 +177,4 @@ defineExpose({
     show
 })
 </script>
+    

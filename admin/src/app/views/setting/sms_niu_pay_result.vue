@@ -26,7 +26,7 @@
 import { onMounted, onBeforeUnmount, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { t } from '@/lang'
-import { ArrowLeft } from "@element-plus/icons-vue"
+import { ArrowLeft } from '@element-plus/icons-vue'
 import { getOrderPayStatus } from '@/app/api/notice'
 
 const router = useRouter()

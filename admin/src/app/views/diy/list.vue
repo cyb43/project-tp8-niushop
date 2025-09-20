@@ -127,10 +127,10 @@
 <script lang="ts" setup>
 import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
-import { getApps,getDiyPageList, deleteDiyPage, getDiyTemplate, editDiyPageShare, setUseDiyPage,copyDiy } from '@/app/api/diy'
+import { getApps, getDiyPageList, deleteDiyPage, getDiyTemplate, editDiyPageShare, setUseDiyPage, copyDiy } from '@/app/api/diy'
 import { ElMessageBox, FormInstance } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()
@@ -177,10 +177,10 @@ const addEvent = async (formEl: FormInstance | undefined) => {
 }
 
 // 获取自定义页面类型
-const loadDiyTemplate = (addon = '')=> {
-    getDiyTemplate({mode: '', addon}).then(res => {
-        for (let key in pageType) {
-            delete pageType[key];
+const loadDiyTemplate = (addon = '') => {
+    getDiyTemplate({ mode: '', addon }).then(res => {
+        for (const key in pageType) {
+            delete pageType[key]
         }
 
         for (const key in res.data) {
@@ -189,21 +189,21 @@ const loadDiyTemplate = (addon = '')=> {
     })
 }
 
-loadDiyTemplate();
+loadDiyTemplate()
 
 const apps: any = reactive({}) // 应用插件列表
 
-getApps({}).then(res=>{
-    if(res.data){
+getApps({}).then(res => {
+    if (res.data) {
         for (const key in res.data) {
-            apps[key] = res.data[key];
+            apps[key] = res.data[key]
         }
     }
-});
+})
 
 // 根据所属插件，查询页面类型
 const handleSelectAddonChange = (value: any) => {
-    diyPageTableData.searchParam.type = '';
+    diyPageTableData.searchParam.type = ''
     loadDiyTemplate(value)
 }
 
@@ -236,13 +236,13 @@ const loadDiyPageList = (page: number = 1) => {
         diyPageTableData.loading = false
         diyPageTableData.data = res.data.data
         diyPageTableData.total = res.data.total
-        setTablePageStorage(diyPageTableData.page, diyPageTableData.limit, diyPageTableData.searchParam);
+        setTablePageStorage(diyPageTableData.page, diyPageTableData.limit, diyPageTableData.searchParam)
     }).catch(() => {
         diyPageTableData.loading = false
     })
 }
 
-loadDiyPageList(getTablePageStorage(diyPageTableData.searchParam).page);
+loadDiyPageList(getTablePageStorage(diyPageTableData.searchParam).page)
 
 // 编辑自定义页面
 const editEvent = (data: any) => {
@@ -255,7 +255,7 @@ const editEvent = (data: any) => {
 
 // 设为使用
 const setUse = (id: any) => {
-    setUseDiyPage({id}).then(() => {
+    setUseDiyPage({ id }).then(() => {
         loadDiyPageList()
     })
 }
@@ -273,7 +273,7 @@ const copyEvent = (id: any) => {
         if (repeat.value) return
         repeat.value = true
 
-        copyDiy({id: id}).then((res: any) => {
+        copyDiy({ id }).then((res: any) => {
             if (res.code == 1) {
                 loadDiyPageList()
             }
@@ -307,7 +307,7 @@ const toPreview = (data: any) => {
         query: {
             page: data.type_page + '?id=' + data.id
         }
-    });
+    })
     window.open(url.href)
 }
 
@@ -335,10 +335,12 @@ const shareFormRef = ref<FormInstance>()
 const openShare = async (row: any) => {
     shareFormId.value = row.id
     sharePage.value = row.title
-    const share = row.share ? JSON.parse(row.share) : {
-        wechat: { title: '', desc: '', url: '' },
-        weapp: { title: '', url: '' }
-    }
+    const share = row.share
+        ? JSON.parse(row.share)
+        : {
+            wechat: { title: '', desc: '', url: '' },
+            weapp: { title: '', url: '' }
+        }
     if (share) {
         shareFormData.wechat = share.wechat
         shareFormData.weapp = share.weapp

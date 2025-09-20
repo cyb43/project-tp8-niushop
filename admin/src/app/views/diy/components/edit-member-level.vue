@@ -7,7 +7,7 @@
                 <el-form-item :label="t('selectStyle')" class="flex">
                     <span class="text-primary flex-1 cursor-pointer"
                           @click="showStyle">{{ diyStore.editComponent.styleName }}</span>
-                    <el-icon>
+                    <el-icon @click="showStyle" class="cursor-pointer">
                         <ArrowRight />
                     </el-icon>
                 </el-form-item>
@@ -65,8 +65,8 @@ const showDialog = ref(false)
 
 const showStyle = () => {
     showDialog.value = true
-    selectStyle.title = diyStore.editComponent.styleName;
-    selectStyle.value = diyStore.editComponent.style;
+    selectStyle.title = diyStore.editComponent.styleName
+    selectStyle.value = diyStore.editComponent.style
 }
 
 const styleList = reactive([
@@ -98,36 +98,34 @@ const styleList = reactive([
 ])
 
 const changeStyle = (item: any) => {
-    selectStyle.title = item.title;
-    selectStyle.value = item.value;
+    selectStyle.title = item.title
+    selectStyle.value = item.value
 }
 
 const confirmStyle = () => {
-    diyStore.editComponent.styleName = selectStyle.title;
-    diyStore.editComponent.style = selectStyle.value;
-    initStyle(diyStore.editComponent.style);
+    diyStore.editComponent.styleName = selectStyle.title
+    diyStore.editComponent.style = selectStyle.value
+    initStyle(diyStore.editComponent.style)
     showDialog.value = false
 }
 
-
 const initStyle = (style: any) => {
     if (style == 'style-1') {
-        diyStore.editComponent.bottomRounded = 0;
-        diyStore.editComponent.topRounded = 12;
+        diyStore.editComponent.bottomRounded = 0
+        diyStore.editComponent.topRounded = 12
     } else if (style == 'style-2') {
-        diyStore.editComponent.bottomRounded = 0;
-        diyStore.editComponent.topRounded = 12;
+        diyStore.editComponent.bottomRounded = 0
+        diyStore.editComponent.topRounded = 12
     } else if (style == 'style-3') {
-        diyStore.editComponent.bottomRounded = 12;
-        diyStore.editComponent.topRounded = 12;
+        diyStore.editComponent.bottomRounded = 12
+        diyStore.editComponent.topRounded = 12
     } else if (style == 'style-4') {
-        diyStore.editComponent.bottomRounded = 12;
-        diyStore.editComponent.topRounded = 12;
+        diyStore.editComponent.bottomRounded = 12
+        diyStore.editComponent.topRounded = 12
     } else if (style == 'style-5') {
-        diyStore.editComponent.bottomRounded = 12;
-        diyStore.editComponent.topRounded = 12;
+        diyStore.editComponent.bottomRounded = 12
+        diyStore.editComponent.topRounded = 12
     }
-
 }
 
 defineExpose({})

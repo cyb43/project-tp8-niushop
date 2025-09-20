@@ -176,10 +176,10 @@
 import { reactive, ref, computed } from 'vue'
 import { t } from '@/lang'
 import { getFormType, getApps, getDiyFormPageList, deleteDiyForm, editDiyFormShare, editFormStatus, copyForm } from '@/app/api/diy_form'
-import { FormInstance, ElMessage, ElMessageBox } from "element-plus";
+import { FormInstance, ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute, useRouter } from 'vue-router'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
-import { img } from '@/utils/common'
+import { setTablePageStorage, getTablePageStorage, img } from '@/utils/common'
+
 import recordsDetail from '@/app/views/diy_form/records.vue'
 import formSubmitPopup from '@/app/views/diy_form/components/form-submit-popup.vue'
 import formWritePopup from '@/app/views/diy_form/components/form-write-popup.vue'
@@ -198,12 +198,12 @@ const formData = reactive({
     type: ''
 })
 
-//详情
+// 详情
 const recordsDetailDialog: Record<string, any> | null = ref(null)
-const detailEvent=(row: any)=>{
-    let data = {form_id: row.form_id};
-    recordsDetailDialog.value.setFormData(data);
-    recordsDetailDialog.value.showDialog = true;
+const detailEvent = (row: any) => {
+    const data = { form_id: row.form_id }
+    recordsDetailDialog.value.setFormData(data)
+    recordsDetailDialog.value.showDialog = true
 }
 
 // 表单验证规则
@@ -223,7 +223,7 @@ const dialogVisible = ref(false)
 const addEvent = async (formEl: FormInstance | undefined) => {
     if (!formEl) return
 
-    await formEl.validate(async(valid) => {
+    await formEl.validate(async (valid) => {
         if (valid) {
             const query = { type: formData.type } // , title: formData.title
             const url = router.resolve({
@@ -250,10 +250,10 @@ const showClick = (row: any) => {
 }
 
 // 获取万能表单类型
-const loadFormType = (addon = '')=> {
+const loadFormType = (addon = '') => {
     getFormType({}).then(res => {
-        for (let key in formType) {
-            delete formType[key];
+        for (const key in formType) {
+            delete formType[key]
         }
 
         for (const key in res.data) {
@@ -263,7 +263,7 @@ const loadFormType = (addon = '')=> {
     })
 }
 
-loadFormType();
+loadFormType()
 
 const apps: any = reactive({}) // 应用插件列表
 
@@ -278,7 +278,7 @@ const apps: any = reactive({}) // 应用插件列表
 
 // 根据所属插件，查询表单类型
 const handleSelectAddonChange = (value: any) => {
-    diyFormTableData.searchParam.type = '';
+    diyFormTableData.searchParam.type = ''
     loadFormType(value)
 }
 
@@ -311,16 +311,16 @@ const loadDiyFormList = (page: number = 1) => {
         diyFormTableData.loading = false
         diyFormTableData.data = res.data.data
         diyFormTableData.total = res.data.total
-        setTablePageStorage(diyFormTableData.page, diyFormTableData.limit, diyFormTableData.searchParam);
+        setTablePageStorage(diyFormTableData.page, diyFormTableData.limit, diyFormTableData.searchParam)
     }).catch(() => {
         diyFormTableData.loading = false
     })
 }
 
-loadDiyFormList(getTablePageStorage(diyFormTableData.searchParam).page);
+loadDiyFormList(getTablePageStorage(diyFormTableData.searchParam).page)
 
 const selectType = (index: number) => {
-    formData.type = index.toString();
+    formData.type = index.toString()
 }
 
 const resetForm = (formEl: FormInstance | undefined) => {
@@ -350,7 +350,7 @@ const copyEvent = (id: any) => {
         if (repeat.value) return
         repeat.value = true
 
-        copyForm({form_id: id}).then((res: any) => {
+        copyForm({ form_id: id }).then((res: any) => {
             if (res.code == 1) {
                 loadDiyFormList()
             }
@@ -377,74 +377,74 @@ const deleteEvent = (form_id: number) => {
     })
 }
 // 批量复选框
-const toggleCheckbox = ref();
+const toggleCheckbox = ref()
 
 // 复选框中间状态
-const isIndeterminate = ref(false);
+const isIndeterminate = ref(false)
 
 // 监听批量复选框事件
 const toggleChange = (value: any) => {
-  isIndeterminate.value = false;
-  diyFormListTableRef.value.toggleAllSelection();
-};
+    isIndeterminate.value = false
+    diyFormListTableRef.value.toggleAllSelection()
+}
 
-const diyFormListTableRef = ref();
+const diyFormListTableRef = ref()
 
 // 选中数据
-const multipleSelection: any = ref([]);
+const multipleSelection: any = ref([])
 
 // 监听表格单行选中
 const handleSelectionChange = (val: []) => {
-    multipleSelection.value = val;
+    multipleSelection.value = val
 
-    toggleCheckbox.value = false;
+    toggleCheckbox.value = false
     if (
         multipleSelection.value.length > 0 &&
         multipleSelection.value.length < diyFormTableData.data.length
     ) {
-        isIndeterminate.value = true;
+        isIndeterminate.value = true
     } else {
-        isIndeterminate.value = false;
+        isIndeterminate.value = false
     }
 
     if (multipleSelection.value.length == diyFormTableData.data.length) {
-        toggleCheckbox.value = true;
+        toggleCheckbox.value = true
     }
-};
+}
 
 // 批量删除
 const batchDeleteForms = () => {
     if (multipleSelection.value.length == 0) {
         ElMessage({
-        type: "warning",
-        message: `${t("batchEmptySelectedFormsTips")}`,
-        });
-        return;
+            type: 'warning',
+            message: `${t('batchEmptySelectedFormsTips')}`
+        })
+        return
     }
 
-    ElMessageBox.confirm(t("batchFormsDeleteTips"), t("warning"), {
-        confirmButtonText: t("confirm"),
-        cancelButtonText: t("cancel"),
-        type: "warning",
+    ElMessageBox.confirm(t('batchFormsDeleteTips'), t('warning'), {
+        confirmButtonText: t('confirm'),
+        cancelButtonText: t('cancel'),
+        type: 'warning'
     }).then(() => {
-        if (repeat.value) return;
-        repeat.value = true;
+        if (repeat.value) return
+        repeat.value = true
 
-        const form_ids: any = [];
+        const form_ids: any = []
         multipleSelection.value.forEach((item: any) => {
-            form_ids.push(item.form_id);
-        });
+            form_ids.push(item.form_id)
+        })
 
         deleteDiyForm({
-            form_ids: form_ids,
+            form_ids
         }).then(() => {
-            loadDiyFormList();
-        repeat.value = false;
+            loadDiyFormList()
+            repeat.value = false
         }).catch(() => {
-        repeat.value = false;
-        });
-    });
-};
+            repeat.value = false
+        })
+    })
+}
 
 // 跳转去预览
 const toPreview = (data: any) => {
@@ -453,7 +453,7 @@ const toPreview = (data: any) => {
         query: {
             page: '/app/pages/index/diy_form?form_id=' + data.form_id
         }
-    });
+    })
     window.open(url.href)
 }
 
@@ -509,15 +509,14 @@ const shareEvent = async (formEl: FormInstance | undefined) => {
 const spreadPopupRef = ref(null)
 
 const spreadEvent = (data: any) => {
-    const pagePath = "/app/pages/index/diy_form"
-    const columnName = "form_id"
-    const columnValue = data.form_id
-    const title = "表单推广"
-    const folder = "diy_form"
-
-    spreadPopupRef.value?.show(pagePath, columnName, columnValue, title,folder)
+    const pagePath = '/app/pages/index/diy_form'
+    const paramsArr = [
+        { name: 'form_id', value: data.form_id },
+    ];
+    const title = '表单推广'
+    const folder = 'diy_form'
+    spreadPopupRef.value?.show(pagePath, paramsArr, title, folder);
 }
-
 
 // 表单提交成功页弹出框
 const formSubmitPopupRef: any = ref(null)
@@ -545,7 +544,7 @@ const handleExportClose = (val) => {
 }
 
 const diyFormDetailData: any = reactive({
-    form_id: 0,
+    form_id: 0
 })
 const exportEvent = (data: any) => {
     diyFormDetailData.form_id = data.form_id

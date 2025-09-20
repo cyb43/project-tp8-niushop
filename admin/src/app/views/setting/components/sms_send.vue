@@ -47,10 +47,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref ,reactive,onMounted} from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { getSmsSendList } from '@/app/api/notice'
 import { timeStampTurnTime } from '@/utils/common'
-import { t } from "@/lang";
+import { t } from '@/lang'
 
 const props = defineProps({
     username: {
@@ -75,26 +75,26 @@ const tableData = reactive({
 
 // 获取列表
 const loadRankList = () => {
-    tableData.loading = true;
-    let params = {
+    tableData.loading = true
+    const params = {
         page: tableData.page,
         limit: tableData.limit,
         ...tableData.searchParam
     }
     getSmsSendList(props.username, params).then((res) => {
-        tableData.loading = false;
-        tableData.data = res.data.data;
-        tableData.total = res.data.total;
+        tableData.loading = false
+        tableData.data = res.data.data
+        tableData.total = res.data.total
     }).catch(() => {
-        tableData.loading = false;
-    });
+        tableData.loading = false
+    })
 }
 onMounted(() => {
     if (props.username) {
-        loadRankList();
+        loadRankList()
     }
 })
-const searchFormRef = ref<FormInstance>();
+const searchFormRef = ref<FormInstance>()
 const resetForm = (formEl: FormInstance | undefined) => {
     if (!formEl) return
     formEl.resetFields()

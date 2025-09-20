@@ -56,7 +56,6 @@ export function getPayRefundInfo(refund_no: string) {
 
 /**
  * 获取退款状态字典
- * @param refund_no
  */
 export function getRefundStatus() {
     return request.get(`pay/refund/status`)

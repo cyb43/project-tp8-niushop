@@ -107,7 +107,7 @@ const loadNoticeList = () => {
         noticeTableData.seller = []
         res.data.forEach(item => {
             if (item.notice.length) {
-                const buyer = [], seller = []
+                const buyer = []; const seller = []
                 Object.keys(item.notice).forEach((key, index) => {
                     const notice = item.notice[key]
                     notice.addon_name = item.title

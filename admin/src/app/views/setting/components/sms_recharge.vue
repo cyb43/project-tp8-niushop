@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref ,watch} from 'vue'
+import { ref, watch } from 'vue'
 import { getSmsPackagesList, smsOrderCreate, getOrderPayInfo, getOrderPayStatus, calculateOrderPay } from '@/app/api/notice'
 
 const props = defineProps({
@@ -100,7 +100,7 @@ const submitPayment = async () => {
             await ElMessageBox.confirm('请确认支付是否完成', '支付提示', {
                 confirmButtonText: '已完成支付',
                 cancelButtonText: '返回',
-                type: 'warning',
+                type: 'warning'
             })
             emit('complete')
         }
@@ -115,13 +115,13 @@ const goBack = () => {
     emit('back')
 }
 
-const showRecharge = ref(false);
+const showRecharge = ref(false)
 watch(() => props.isRecharge, (newVal) => {
-    showRecharge.value = newVal;
+    showRecharge.value = newVal
     if (newVal) {
-        getSmsPackagesListFn();
+        getSmsPackagesListFn()
     }
-});
+})
 
 </script>
 

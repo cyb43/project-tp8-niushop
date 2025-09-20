@@ -96,7 +96,6 @@ const router = useRouter()
 const pageName = route.meta.title
 
 const activeName = ref('/channel/wechat')
-const active = ref(2)
 const qrcode = ref('')
 const wechatConfig = ref({})
 const oplatformConfig = ref({})
@@ -110,6 +109,11 @@ const onShowGetWechatConfig = async () => {
 
 onMounted(async () => {
     onShowGetWechatConfig()
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            onShowGetWechatConfig()
+        }
+    })
 })
 
 onUnmounted(() => {

@@ -1,17 +1,17 @@
 import { defineStore } from 'pinia'
 import { getToken, setToken, removeToken } from '@/utils/common'
-import { login, getAuthMenus } from '@/app/api/auth'
+import { login, logout, getAuthMenus } from '@/app/api/auth'
 import storage from '@/utils/storage'
 import router from '@/router'
-import { formatRouters, findFirstValidRoute } from '@/router/routers'
+import { formatRouters, findFirstValidRoute, findRules } from '@/router/routers'
 import useTabbarStore from './tabbar'
 
 interface User {
     token: string,
     userInfo: object,
     routers: any[],
-    addonIndexRoute: Record<string, symbol>,
-    rules: any[]
+    rules: any[],
+    addonIndexRoute: Record<string, symbol>
 }
 
 const useUserStore = defineStore('user', {
@@ -20,14 +20,14 @@ const useUserStore = defineStore('user', {
             token: getToken() || '',
             userInfo: storage.get('userinfo') || {},
             routers: [],
-            addonIndexRoute: {},
-            rules: []
+            rules: [],
+            addonIndexRoute: {}
         }
     },
     actions: {
         login(form: object) {
             return new Promise((resolve, reject) => {
-                login(form).then((res) => {
+                login(form).then(async (res) => {
                     this.token = res.data.token
                     this.userInfo = res.data.userinfo
                     setToken(res.data.token)
@@ -47,9 +47,10 @@ const useUserStore = defineStore('user', {
             this.token = ''
             this.userInfo = {}
             removeToken()
-            storage.remove(['userinfo'])
+            storage.remove(['userinfo','comparisonTokenStorage','defaultMarketingKeys'])
             this.routers = []
             this.rules = []
+            logout()
             // 清除tabbar
             useTabbarStore().clearTab()
             router.push('/login')
@@ -68,6 +69,7 @@ const useUserStore = defineStore('user', {
                             }
                         }
                     })
+                    this.rules = findRules(res.data)
                     resolve(res)
                 }).catch((error) => {
                     reject(error)

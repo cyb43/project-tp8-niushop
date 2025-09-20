@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts" setup async>
-import { ref, reactive, computed, watch, toRaw } from 'vue'
+import { ref, reactive, computed, watch, toRaw, nextTick } from 'vue'
 import { t } from '@/lang'
 import type { FormInstance } from 'element-plus'
 import { addRole, editRole, getRoleInfo } from '@/app/api/sys'
@@ -56,17 +56,18 @@ const menus = ref<Record<string, any>[]>([])
 getAuthMenus({ is_button: 0 }).then((res) => {
     menus.value = res.data
 })
-
 // 全选
 const selectAll = ref(false)
 const checkStrictly = ref(false)
 const treeRef: Record<string, any> | null = ref(null)
 watch(selectAll, () => {
-    if (selectAll.value) {
-        treeRef.value.setCheckedNodes(toRaw(menus.value))
-    } else {
-        treeRef.value.setCheckedNodes([])
-    }
+    nextTick(() => {
+        if (selectAll.value) {
+            treeRef.value.setCheckedNodes(toRaw(menus.value))
+        } else {
+            treeRef.value.setCheckedNodes([])
+        }
+    })
 })
 
 const handleCheckChange = debounce((e) => {
@@ -97,6 +98,7 @@ const collapseAll = (data:any) => {
         if (data[key].children && data[key].children.length > 0) collapseAll(data[key].children)
     })
 }
+
 /**
  * 表单数据
  */

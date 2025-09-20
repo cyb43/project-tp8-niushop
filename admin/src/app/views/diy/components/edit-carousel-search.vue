@@ -29,7 +29,7 @@
             <el-form label-width="100px" class="px-[10px]" @submit.prevent>
                 <el-form-item :label="t('selectStyle')" class="flex">
                     <span class="text-primary flex-1 cursor-pointer" @click="showSearchStyle">{{ diyStore.editComponent.search.styleName }}</span>
-                    <el-icon>
+                    <el-icon @click="showSearchStyle" class="cursor-pointer">
                         <ArrowRight />
                     </el-icon>
                 </el-form-item>
@@ -348,7 +348,7 @@ diyStore.editComponent.verify = (index: number) => {
             res.message = t('carouselSearchHotWordTextPlaceholder')
             return res
         }
-    });
+    })
 
     diyStore.value[index].tab.list.forEach((item: any) => {
         if (item.text == '') {
@@ -361,7 +361,7 @@ diyStore.editComponent.verify = (index: number) => {
         //     res.message = t('selectDiyPagePlaceholder')
         //     return res
         // }
-    });
+    })
 
     if (diyStore.value[index].swiper.control) {
         diyStore.value[index].swiper.list.forEach((item: any) => {
@@ -370,13 +370,13 @@ diyStore.editComponent.verify = (index: number) => {
                 res.message = t('imageUrlTip')
                 return res
             }
-        });
+        })
     }
 
     return res
 }
 
-/************** 搜索框样式选择-start ********************/
+/** ************ 搜索框样式选择-start ********************/
 const selectSearchStyle = reactive({
     title: diyStore.editComponent.search.styleName,
     value: diyStore.editComponent.search.style
@@ -386,18 +386,18 @@ const showSearchDialog = ref(false)
 
 const showSearchStyle = () => {
     showSearchDialog.value = true
-    selectSearchStyle.title = diyStore.editComponent.search.styleName;
-    selectSearchStyle.value = diyStore.editComponent.search.style;
+    selectSearchStyle.title = diyStore.editComponent.search.styleName
+    selectSearchStyle.value = diyStore.editComponent.search.style
 }
 
 const changeSearchStyle = (item: any) => {
-    selectSearchStyle.title = item.title;
-    selectSearchStyle.value = item.value;
+    selectSearchStyle.title = item.title
+    selectSearchStyle.value = item.value
 }
 
 const confirmSearchStyle = () => {
-    diyStore.editComponent.search.styleName = selectSearchStyle.title;
-    diyStore.editComponent.search.style = selectSearchStyle.value;
+    diyStore.editComponent.search.styleName = selectSearchStyle.title
+    diyStore.editComponent.search.style = selectSearchStyle.value
     showSearchDialog.value = false
 }
 
@@ -414,7 +414,7 @@ const searchStyleList = reactive([
     }
 ])
 
-/************** 搜索框样式选择-end ********************/
+/** ************ 搜索框样式选择-end ********************/
 
 diyStore.editComponent.search.hotWord.list.forEach((item: any) => {
     if (!item.id) item.id = diyStore.generateRandom()
@@ -439,13 +439,13 @@ onMounted(() => {
 const addHotWordItem = () => {
     diyStore.editComponent.search.hotWord.list.push({
         id: diyStore.generateRandom(),
-        text: '关键词',
+        text: '关键词'
     })
 }
 
 const tabClear = (index: any) => {
-    diyStore.editComponent.tab.list[index].diy_id = 0;
-    diyStore.editComponent.tab.list[index].diy_title = '';
+    diyStore.editComponent.tab.list[index].diy_id = 0
+    diyStore.editComponent.tab.list[index].diy_title = ''
 }
 
 const addTabItem = () => {
@@ -539,24 +539,24 @@ const loadDiyPageList = (page: number = 1) => {
         ...diyPageTable.searchParam
     }).then(res => {
         diyPageTable.loading = false
-        let data = res.data.data;
-        let newData: any = [];
-        let isExistCount = 0;
+        const data = res.data.data
+        let newData: any = []
+        let isExistCount = 0
 
         // 排除当前编辑的微页面以及存在 置顶组件的数据
         if (diyStore.id) {
             for (let i = 0; i < data.length; i++) {
                 if (data[i].id == diyStore.id) {
-                    isExistCount++;
+                    isExistCount++
                 } else {
-                    newData.push(data[i]);
+                    newData.push(data[i])
                 }
             }
         } else {
-            newData = cloneDeep(data); // 添加
+            newData = cloneDeep(data) // 添加
         }
         if (isExistCount) {
-            res.data.total = res.data.total - isExistCount;
+            res.data.total = res.data.total - isExistCount
         }
         diyPageTable.data = newData
         diyPageTable.total = res.data.total
@@ -567,20 +567,20 @@ const loadDiyPageList = (page: number = 1) => {
 
 // 选择微页面
 let currDiyPage: any = {}
-let currTabIndexForDiyPage = 0;
+let currTabIndexForDiyPage = 0
 const handleCurrentDiyPageChange = (val: string | any[]) => {
     currDiyPage = val
 }
 
 const saveDiyPageId = () => {
-    diyStore.editComponent.tab.list[currTabIndexForDiyPage].diy_id = currDiyPage.id;
-    diyStore.editComponent.tab.list[currTabIndexForDiyPage].diy_title = currDiyPage.title;
+    diyStore.editComponent.tab.list[currTabIndexForDiyPage].diy_id = currDiyPage.id
+    diyStore.editComponent.tab.list[currTabIndexForDiyPage].diy_title = currDiyPage.title
     diyPageShowDialog.value = false
 }
 
 const diyPageShowDialogOpen = (index: any) => {
     diyPageShowDialog.value = true
-    currTabIndexForDiyPage = index;
+    currTabIndexForDiyPage = index
     if (currDiyPage) {
         setTimeout(() => {
             diyPageTableRef.value!.setCurrentRow(currDiyPage)
@@ -620,7 +620,7 @@ const handleHeight = (isCalcHeight: boolean = false) => {
     diyStore.editComponent.swiper.list.forEach((item: any, index: number) => {
         const image = new Image()
         image.src = img(item.imageUrl)
-        image.onload = async() => {
+        image.onload = async () => {
             item.imgWidth = image.width
             item.imgHeight = image.height
             // 计算第一张图片高度

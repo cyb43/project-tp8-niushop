@@ -68,14 +68,14 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getPrinterPageList, modifyPrinterStatus, deletePrinter,refreshPrinterToken,testPrint } from '@/app/api/printer'
-import { ElMessageBox,FormInstance } from 'element-plus'
-import { useRoute,useRouter } from 'vue-router'
-import { setTablePageStorage,getTablePageStorage } from "@/utils/common";
+import { getPrinterPageList, modifyPrinterStatus, deletePrinter, refreshPrinterToken, testPrint } from '@/app/api/printer'
+import { ElMessageBox, FormInstance } from 'element-plus'
+import { useRoute, useRouter } from 'vue-router'
+import { setTablePageStorage, getTablePageStorage } from '@/utils/common'
 
 const route = useRoute()
 const router = useRouter()
-const pageName = route.meta.title;
+const pageName = route.meta.title
 const repeat = ref(false)
 
 const handleClick = (path: string) => {
@@ -110,7 +110,7 @@ const loadPrinterList = (page: number = 1) => {
         printerTable.loading = false
         printerTable.data = res.data.data
         printerTable.total = res.data.total
-        setTablePageStorage(printerTable.page, printerTable.limit, printerTable.searchParam);
+        setTablePageStorage(printerTable.page, printerTable.limit, printerTable.searchParam)
     }).catch(() => {
         printerTable.loading = false
     })
@@ -154,11 +154,11 @@ const editEvent = (data: any) => {
  */
 const deleteEvent = (id: number) => {
     ElMessageBox.confirm(t('printerDeleteTips'), t('warning'),
-            {
-                confirmButtonText: t('confirm'),
-                cancelButtonText: t('cancel'),
-                type: 'warning',
-            }
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
     ).then(() => {
         if (repeat.value) return
         repeat.value = true
@@ -183,11 +183,11 @@ const resetForm = (formEl: FormInstance | undefined) => {
  */
 const testPrintEvent = (printer_id: any) => {
     ElMessageBox.confirm(t('testPrintTips'), t('warning'),
-            {
-                confirmButtonText: t('confirm'),
-                cancelButtonText: t('cancel'),
-                type: 'warning',
-            }
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
     ).then(() => {
         if (repeat.value) return
         repeat.value = true
@@ -205,11 +205,11 @@ const testPrintEvent = (printer_id: any) => {
  */
 const refreshTokenEvent = (printer_id: any) => {
     ElMessageBox.confirm(t('refreshTokenTips'), t('warning'),
-            {
-                confirmButtonText: t('confirm'),
-                cancelButtonText: t('cancel'),
-                type: 'warning',
-            }
+        {
+            confirmButtonText: t('confirm'),
+            cancelButtonText: t('cancel'),
+            type: 'warning'
+        }
     ).then(() => {
         if (repeat.value) return
         repeat.value = true

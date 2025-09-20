@@ -2,7 +2,7 @@
     <el-card class="box-card !border-none"  shadow="never" v-loading="loading">
         <div v-if="type=='login'" >
             <div class="bg-[var(--el-color-primary-light-9)] p-2 text-[14px] rounded-[6px]">
-                <span class="">还未注册牛云短信?</span>
+                <span>还未注册牛云短信?</span>
                 <span @click="toRegister" class="cursor-pointer text-primary">去注册</span>
             </div>
             <el-form :model="formData" label-width="150px" ref="formRef" :rules="formRules" class="page-form mt-[20px]">
@@ -21,7 +21,7 @@
         </div>
         <div v-if="type=='register'" >
             <div class="bg-[var(--el-color-primary-light-9)] p-2 text-[14px] rounded-[6px]">
-                <span class="">已有账号，</span>
+                <span>已有账号，</span>
                 <span @click="type='login'" class="cursor-pointer text-primary">去登录</span>
             </div>
             <el-form :model="registerFormData" label-width="150px" ref="registerFormRef" :rules="registerFormRules" class="page-form mt-[20px]">
@@ -111,6 +111,9 @@
                 <span class="text-primary">忘记密码，快去修改</span>
             </div>
             <el-form :model="changeFormData" label-width="150px" ref="changeFormRef" :rules="changeFormRules" class="page-form mt-[20px]">
+                <el-form-item label="用户名" prop="username">
+                    <el-input placeholder="请输入用户名" class="input-width" maxlength="50" show-word-limit v-model="changeFormData.username" clearable />
+                </el-form-item>
                 <el-form-item label="手机号" prop="mobile">
                     <el-input placeholder="请输入手机号" class="input-width" maxlength="11" show-word-limit v-model="changeFormData.mobile" clearable />
                 </el-form-item>
@@ -139,16 +142,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref ,computed,reactive} from 'vue'
-import { loginAccount,getSmsCaptcha,getSmsSend,resetPassword,registerAccount ,getSmsSignConfig} from '@/app/api/notice'
-import { t } from "@/lang";
+import { ref, computed, reactive } from 'vue'
+import { loginAccount, getSmsCaptcha, getSmsSend, resetPassword, registerAccount, getSmsSignConfig } from '@/app/api/notice'
+import { t } from '@/lang'
 
 const props = defineProps({
-    info:{
+    info: {
         type: Object,
         default: () => ({})
     },
-    isLogin:{
+    isLogin: {
         type: Boolean,
         default: false
     }
@@ -164,7 +167,7 @@ const formData = ref({
 })
 
 const isBack = computed(() => {
-    return !!props.info && Object.keys(props.info).length > 0;
+    return !!props.info && Object.keys(props.info).length > 0
 })
 
 const formRules = computed(() => {
@@ -194,9 +197,9 @@ const back = () => {
 // 注册
 const signConfig = reactive({
     signTypeList: [],
-    signSourceList:[]
+    signSourceList: []
 })
-const getSmsSignConfigFn = ()=> {
+const getSmsSignConfigFn = () => {
     getSmsSignConfig().then(res => {
         signConfig.signTypeList = res.data.sign_type_list
         signConfig.signSourceList = res.data.sign_source_list
@@ -263,39 +266,39 @@ const registerFormRules = computed(() => {
             }
         ],
         mobile: [
-            { required: true, message: '请输入手机号', trigger: 'blur' },
+            { required: true, message: '请输入手机号', trigger: 'blur' }
         ],
         captcha_code: [
-            { required: true, message: '请输入验证码', trigger: 'blur' },
+            { required: true, message: '请输入验证码', trigger: 'blur' }
         ],
         code: [
-            { required: true, message: '请输入动态码', trigger: 'blur' },
+            { required: true, message: '请输入动态码', trigger: 'blur' }
         ],
         company: [
-            { required: true, message: '请输入公司名称', trigger: 'blur' },
+            { required: true, message: '请输入公司名称', trigger: 'blur' }
         ],
         signature: [
             { required: true, message: '请输入短信签名', trigger: 'blur' },
             {
                 validator: (rule, value, callback) => {
-                    const singleBracketValid = /^【[^【】]*】$/.test(value);
+                    const singleBracketValid = /^【[^【】]*】$/.test(value)
                     if (!singleBracketValid) {
-                        return callback(new Error('短信签名必须被【】包裹'));
+                        return callback(new Error('短信签名必须被【】包裹'))
                     }
 
-                    const content = value.slice(1, -1);
+                    const content = value.slice(1, -1)
 
-                    const lengthValid = content.length >= 2 && content.length <= 20;
+                    const lengthValid = content.length >= 2 && content.length <= 20
                     if (!lengthValid) {
-                        return callback(new Error('短信签名内容需在 2-20 个字符之间'));
+                        return callback(new Error('短信签名内容需在 2-20 个字符之间'))
                     }
 
-                    const invalidChars = /[\s\-+=*&%#@~;]/;
+                    const invalidChars = /[\s\-+=*&%#@~;]/
                     if (invalidChars.test(content)) {
-                        return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'));
+                        return callback(new Error('短信签名不能包含空格或特殊字符 - + = * & % # @ ~ ;'))
                     }
 
-                    callback();
+                    callback()
                 },
                 trigger: 'blur'
             }
@@ -305,19 +308,19 @@ const registerFormRules = computed(() => {
             { validator: phoneVerify, trigger: 'blur' }
         ],
         companyName: [
-            { required: true, message: '请输入企业名称', trigger: 'blur' },
+            { required: true, message: '请输入企业名称', trigger: 'blur' }
         ],
         contentExample: [
-            { required: true, message: '请输入短信示例内容', trigger: 'blur' },
+            { required: true, message: '请输入短信示例内容', trigger: 'blur' }
         ],
         creditCode: [
-            { required: true, message: '请输入社会统一信用代码', trigger: 'blur' },
+            { required: true, message: '请输入社会统一信用代码', trigger: 'blur' }
         ],
         legalPerson: [
-            { required: true, message: '请输入法人姓名', trigger: 'blur' },
+            { required: true, message: '请输入法人姓名', trigger: 'blur' }
         ],
         principalName: [
-            { required: true, message: '请输入经办人姓名', trigger: 'blur' },
+            { required: true, message: '请输入经办人姓名', trigger: 'blur' }
         ],
         principalIdCard: [
             { required: true, message: '请输入经办人身份证', trigger: 'blur' },
@@ -326,22 +329,22 @@ const registerFormRules = computed(() => {
         imgUrl: [
             {
                 validator: (rule, value, callback) => {
-                    const needImage = [3, 4, 5].includes(registerFormData.value.signSource) || registerFormData.value.signType == 1;
+                    const needImage = [3, 4, 5].includes(registerFormData.value.signSource) || registerFormData.value.signType == 1
                     if (needImage) {
                         if (!value || value.length === 0) {
-                            callback(new Error('请上传图片'));
+                            callback(new Error('请上传图片'))
                         } else {
-                            callback();
+                            callback()
                         }
                     } else {
-                        callback(); // 不需要校验
+                        callback() // 不需要校验
                     }
                 },
                 trigger: 'blur'
             }
         ]
-    };
-});
+    }
+})
 const idCardVerify = (rule: any, value: any, callback: any) => {
     if (value && !/^[1-9]\d{5}(19|20)\d{2}((0\d)|(1[0-2]))(([0-2]\d)|3[0-1])\d{3}([0-9Xx])$/.test(value)) {
         callback(new Error(t('请输入正确的身份证号码')))
@@ -360,25 +363,26 @@ const phoneVerify = (rule: any, value: any, callback: any) => {
 const register = async () => {
     await registerFormRef.value?.validate(async (valid) => {
         if (valid) {
-            const { captcha_key, captcha_code, captcha_img, ...params } = registerFormData.value;
+            const { captcha_key, captcha_code, captcha_img, ...params } = registerFormData.value
             registerAccount(params).then((res) => {
-                type.value='login'
+                type.value = 'login'
             }).catch((err) => {
                 getSmsCaptchaFn()
             })
         }
-    });
+    })
 }
 
 // 重置密码
 const changeFormRef = ref()
 const changeFormData = ref({
     mobile: '',
-    captcha_key : '',
+    captcha_key: '',
     captcha_code: '',
     captcha_img: '',
     code: '',
-    key: ''
+    key: '',
+    username: props.info.username || '',
 })
 
 const getSmsCaptchaFn = async () => {
@@ -398,11 +402,11 @@ const getSmsCaptchaFn = async () => {
     }
 }
 
-const sending = ref(false); // 发送中状态
-const countdown = ref(0); // 倒计时秒数
+const sending = ref(false) // 发送中状态
+const countdown = ref(0) // 倒计时秒数
 
 const getSmsSendFn = () => {
-    if (countdown.value > 0 || sending.value) return; // 正在倒计时或发送中，直接返回
+    if (countdown.value > 0 || sending.value) return // 正在倒计时或发送中，直接返回
     if (type.value === 'register') {
         registerFormRef.value.validateField(['mobile', 'captcha_code'], (valid) => {
             if (!valid) return
@@ -413,13 +417,13 @@ const getSmsSendFn = () => {
                 captcha_code: registerFormData.value.captcha_code
             }
             getSmsSend(params).then((res) => {
-                startCountdown(60); // 启动60秒倒计时
-                registerFormData.value.key = res.data.key;
+                startCountdown(60) // 启动60秒倒计时
+                registerFormData.value.key = res.data.key
             }).catch((err) => {
                 getSmsCaptchaFn()
-                sending.value = false;
+                sending.value = false
             }).finally(() => {
-                sending.value = false; // 无论成功失败都重置发送状态
+                sending.value = false // 无论成功失败都重置发送状态
             })
         })
     } else if (type.value === 'password') {
@@ -433,28 +437,28 @@ const getSmsSendFn = () => {
                 captcha_code: changeFormData.value.captcha_code
             }
             getSmsSend(params).then((res) => {
-                startCountdown(60); // 启动60秒倒计时
-                changeFormData.value.key = res.data.key;
+                startCountdown(60) // 启动60秒倒计时
+                changeFormData.value.key = res.data.key
             }).catch((err) => {
                 getSmsCaptchaFn()
-                sending.value = false;
+                sending.value = false
             }).finally(() => {
-                sending.value = false; // 无论成功失败都重置发送状态
-            });
-        });
+                sending.value = false // 无论成功失败都重置发送状态
+            })
+        })
     }
 }
 
 // 启动倒计时
 const startCountdown = (seconds) => {
-    countdown.value = seconds;
+    countdown.value = seconds
     const timer = setInterval(() => {
-        countdown.value--;
+        countdown.value--
         if (countdown.value <= 0) {
-            clearInterval(timer);
-            sending.value = false; // 发送状态重置
+            clearInterval(timer)
+            sending.value = false // 发送状态重置
         }
-    }, 1000);
+    }, 1000)
 }
 
 const changeFormRules = computed(() => {
@@ -468,13 +472,16 @@ const changeFormRules = computed(() => {
             }
         ],
         captcha_code: [
-            { required: true, message: '请输入验证码', trigger: 'blur' },
+            { required: true, message: '请输入验证码', trigger: 'blur' }
         ],
         code: [
-            { required: true, message: '请输入动态码', trigger: 'blur' },
+            { required: true, message: '请输入动态码', trigger: 'blur' }
+        ],
+        username: [
+            { required: true, message: '请输入用户名', trigger: 'blur' }
         ]
-    };
-});
+    }
+})
 const editPass = async () => {
     loading.value = true
     captchaType.value = 'password'
@@ -488,16 +495,16 @@ const editPass = async () => {
 const reset = async () => {
     await changeFormRef.value?.validate(async (valid) => {
         if (valid) {
-            let params = {
+            const params = {
                 key: changeFormData.value.key,
                 code: changeFormData.value.code,
                 mobile: changeFormData.value.mobile
             }
-            resetPassword(props.info.username, { ...params }).then((res) => {
-                let newPassword = res.data.password
-                ElMessageBox.confirm(`新密码为：${ newPassword }`, '请保存好新密码', {
+            resetPassword(changeFormData.value.username, { ...params }).then((res) => {
+                const newPassword = res.data.password
+                ElMessageBox.confirm(`新密码为：${newPassword}`, '请保存好新密码', {
                     confirmButtonText: '确定',
-                    showCancelButton: false,
+                    showCancelButton: false
                 }).then(() => {
                     type.value = 'login'
                     emit('complete')

@@ -7,7 +7,7 @@
             </el-form-item>
 
             <el-form-item :label="t('mobile')" prop="mobile">
-                <el-input v-model.trim="formData.mobile" clearable :placeholder="t('mobilePlaceholder')" @keyup="filterNumber($event)" class="input-width" />
+                <el-input v-model.trim="formData.mobile" clearable :placeholder="t('mobilePlaceholder')" maxlength="11" @keyup="filterNumber($event)" class="input-width" />
             </el-form-item>
 
             <el-form-item :label="t('nickname')">

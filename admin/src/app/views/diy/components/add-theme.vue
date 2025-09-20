@@ -46,21 +46,21 @@ const initialData = {
     value: '',
     tip: ''
 }
-let keyArr = []; // 存储现有颜色的key
-let type = ref('') // 区分编辑和添加
+let keyArr = [] // 存储现有颜色的key
+const type = ref('') // 区分编辑和添加
 const formData: Record<string, any> = reactive({ ...initialData })
 
 const open = (option:any) => {
-    keyArr = option.key;
-    type.value = '';
+    keyArr = option.key
+    type.value = ''
     // 恢复默认值
-    for(let key in formData){
+    for (const key in formData) {
         formData[key] = ''
     }
-    if(option.data && Object.keys(option.data).length){
-        type.value = 'edit';
-        Object.keys(formData).forEach((item,index)=>{
-            formData[item] = option.data[item] ? option.data[item] : '';
+    if (option.data && Object.keys(option.data).length) {
+        type.value = 'edit'
+        Object.keys(formData).forEach((item, index) => {
+            formData[item] = option.data[item] ? option.data[item] : ''
         })
     }
     dialogThemeVisible.value = true
@@ -72,7 +72,7 @@ const formRef = ref<FormInstance>()
 const formRules = computed(() => {
     return {
         title: [
-            { required: true, message: "请输入颜色名称", trigger: 'blur' }
+            { required: true, message: '请输入颜色名称', trigger: 'blur' }
         ],
         value: [
             {
@@ -80,15 +80,15 @@ const formRules = computed(() => {
                 validator: (rule: any, value: any, callback: any) => {
                     if (!value) {
                         callback('请输入颜色value值')
-                    } else{
-                        callback();
+                    } else {
+                        callback()
                     }
                 },
                 trigger: ['blur', 'change']
             }
         ],
         label: [
-            { required: true, message: "请输入颜色key值", trigger: 'blur' },
+            { required: true, message: '请输入颜色key值', trigger: 'blur' },
             {
                 validator: (rule: any, value: any, callback: any) => {
                     const regex = /^[a-zA-Z0-9-]+$/
@@ -96,8 +96,8 @@ const formRules = computed(() => {
                         callback('新增颜色key值与已存在颜色key值命名重复，请修改命名')
                     } if (!regex.test(value)) {
                         callback('颜色key值只能输入字母、数字和连字符')
-                    } else{
-                        callback();
+                    } else {
+                        callback()
                     }
                 },
                 trigger: 'blur'
@@ -113,8 +113,8 @@ const confirmFn = async (formEl: FormInstance | undefined) => {
         confirmRepeat.value = true
         if (valid) {
             confirmRepeat.value = false
-            emit('confirm', cloneDeep(formData));
-            dialogThemeVisible.value = false;
+            emit('confirm', cloneDeep(formData))
+            dialogThemeVisible.value = false
         }
     })
 }

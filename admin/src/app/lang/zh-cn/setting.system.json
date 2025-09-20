@@ -31,5 +31,11 @@
   "contactsTel": "联系电话",
   "contactsTelPlaceholder": "请输入联系电话",
   "logoPlaceholder": "建议图片尺寸：210*30像素；图片格式：jpg、png、jpeg。",
-  "iconPlaceholder": "建议图片尺寸：100*100像素；图片格式：jpg、png、jpeg。"
+  "iconPlaceholder": "建议图片尺寸：100*100像素；图片格式：jpg、png、jpeg。",
+   "metaTitle": "Meta 标题",
+  "MetaPlaceholder": "请输入Meta 标题",
+  "metaDescription": "Meta 描述",
+  "metaDescriptionPlaceholder": "请输入Meta描述",
+  "metaKeywords": "Meta 关键字",
+  "metaKeywordsPlaceholder": "请输入Meta关键字"
 }

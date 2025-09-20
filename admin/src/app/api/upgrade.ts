@@ -19,6 +19,7 @@ export function getUpgradeTask() {
 /**
  * 升级
  * @param addon
+ * @param params
  */
 export function upgradeAddon(addon: string = '', params: Record<string, any> = {}) {
     return request.post(addon ? `upgrade/${ addon }` : 'upgrade', params)
@@ -136,4 +137,26 @@ export function performRecoveryTasks(params: Record<string, any>) {
  */
 export function performBackupTasks(params: Record<string, any>) {
     return request.get("backup/task", params)
+}
+
+/**
+ * 连通测试
+ * @param params
+ */
+export function connectTest(params: Record<string, any>) {
+    return request.post("niucloud/build/connect_test", params)
+}
+/**
+ * 保存服务器地址
+ * @param params
+ */
+export function setLocalUrl(params: Record<string, any>) {
+    return request.post("niucloud/build/set_local_url", params)
+}
+/**
+ * 获取服务器地址
+ * @param params
+ */
+export function getLocalUrl(params: Record<string, any>) {
+    return request.get("niucloud/build/get_local_url", params)
 }

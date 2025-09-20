@@ -166,7 +166,7 @@
 <script lang="ts" setup>
 import { t } from '@/lang'
 import Sortable from 'sortablejs'
-import { ref, watch, onMounted, nextTick ,reactive, computed} from 'vue'
+import { ref, watch, onMounted, nextTick, reactive, computed } from 'vue'
 import useDiyStore from '@/stores/modules/diy'
 import { range } from 'lodash-es'
 const diyStore = useDiyStore()
@@ -221,7 +221,7 @@ const addOption = (item) => {
         id: generateId(),
         name: item.label,
         type: item.value, // 列类型
-        value: ''         // 默认值（可选）
+        value: '' // 默认值（可选）
     }
 
     // 如果是单选项，初始化 options
@@ -233,11 +233,11 @@ const addOption = (item) => {
     }
     // 如果是日期，初始化 dateFormat
     if (item.value === 'date') {
-        newColumn.dateFormat  = 'YYYY年M月D日' // 默认日期格式
+        newColumn.dateFormat = 'YYYY年M月D日' // 默认日期格式
     }
     // 如果是地址，初始化 addressFormat
     if (item.value === 'address') {
-        newColumn.addressFormat  = 'province/city/district/address' // 默认日期格式
+        newColumn.addressFormat = 'province/city/district/address' // 默认日期格式
     }
 
     diyStore.editComponent.columnList.push(newColumn)
@@ -246,7 +246,6 @@ const addOption = (item) => {
 const removeOption = (index: number) => {
     diyStore.editComponent.columnList.splice(index, 1)
 }
-
 
 onMounted(() => {
     // nextTick(() => {
@@ -266,8 +265,7 @@ onMounted(() => {
     //         }
     //     })
     // })
-    console.log(diyStore.editComponent.columnList);
-
+    console.log(diyStore.editComponent.columnList)
 })
 
 const activeColumn = ref<any>({}) // 真正数据（原始数据，不动它）
@@ -284,31 +282,31 @@ const dateFormat: any = reactive({
     format2: '',
     format3: '',
     format4: ''
-});
+})
 
 const openRadioDialog = (item, index) => {
     activeRadioIndex.value = index // 记录当前列的下标，方便确定时更新
     activeColumn.value = item
     activeColumnTemp.value = JSON.parse(JSON.stringify(item)) // 深拷贝，避免联动
-    if(item.type == 'radio'){
+    if (item.type == 'radio') {
         if (!activeColumnTemp.value.options) activeColumnTemp.value.options = []
         radioDialogVisible.value = true
         // nextTick(() => initRadioSortable()) // 拖拽初始化
-    }else if(item.type == 'date'){
+    } else if (item.type == 'date') {
         // 初始赋值当天日期
-    const today = new Date();
-    let year = today.getFullYear();
-    let month = String(today.getMonth() + 1).padStart(2, '0');
-    let day = String(today.getDate()).padStart(2, '0');
+        const today = new Date()
+        const year = today.getFullYear()
+        const month = String(today.getMonth() + 1).padStart(2, '0')
+        const day = String(today.getDate()).padStart(2, '0')
 
-    const hours = String(today.getHours()).padStart(2, '0');
-    const minutes = String(today.getMinutes()).padStart(2, '0');
-    dateFormat.format1 = `${ year }年${ month }月${ day }日`;
-    dateFormat.format2 = `${ year }-${ month }-${ day }`;
-    dateFormat.format3 = `${ year }/${ month }/${ day }`;
-    dateFormat.format4 = `${ year }-${ month }-${ day } ${ hours }:${ minutes }`;
-    radioDialogVisible.value = true
-    } else if(item.type == 'address'){
+        const hours = String(today.getHours()).padStart(2, '0')
+        const minutes = String(today.getMinutes()).padStart(2, '0')
+        dateFormat.format1 = `${year}年${month}月${day}日`
+        dateFormat.format2 = `${year}-${month}-${day}`
+        dateFormat.format3 = `${year}/${month}/${day}`
+        dateFormat.format4 = `${year}-${month}-${day} ${hours}:${minutes}`
+        radioDialogVisible.value = true
+    } else if (item.type == 'address') {
         radioDialogVisible.value = true
     }
 }
@@ -329,7 +327,7 @@ const openRadioDialog = (item, index) => {
 // }
 
 const handleDialogConfirm = () => {
-    console.log(activeColumnTemp.value);
+    console.log(activeColumnTemp.value)
 
     diyStore.editComponent.columnList[activeRadioIndex.value] = JSON.parse(JSON.stringify(activeColumnTemp.value)) // 同步副本到原数据
     radioDialogVisible.value = false // 关闭弹窗
@@ -351,11 +349,11 @@ const removeOptionItem = (index: number) => {
 
 // 数组去重
 const uniqueByKey = (arr: any, key: any) => {
-    const seen = new Set();
+    const seen = new Set()
     return arr.filter((item: any) => {
-        const serializedKey = JSON.stringify(item[key]);
-        return seen.has(serializedKey) ? false : seen.add(serializedKey);
-    });
+        const serializedKey = JSON.stringify(item[key])
+        return seen.has(serializedKey) ? false : seen.add(serializedKey)
+    })
 }
 // 批量添加
 const batchAddOptions = () => {
@@ -364,36 +362,31 @@ const batchAddOptions = () => {
             return {
                 id: diyStore.generateRandom(),
                 label: option.trim()
-            };
-        }).filter((option: any) => option.label !== '');
+            }
+        }).filter((option: any) => option.label !== '')
 
         // 去除重复的选项
-        const uniqueNewOptions = uniqueByKey(newOptions, 'label');
+        const uniqueNewOptions = uniqueByKey(newOptions, 'label')
 
         // 过滤掉已存在的选项
         const filteredNewOptions = uniqueNewOptions.filter(newOption =>
             !activeColumnTemp.value.options.some(existingOption => existingOption.label === newOption.label)
-        );
+        )
 
         // 如果有新的选项，添加到选项列表中
         if (filteredNewOptions.length > 0) {
-            activeColumnTemp.value.options.push(...filteredNewOptions);
+            activeColumnTemp.value.options.push(...filteredNewOptions)
         } else {
             ElMessage({
                 message: t('errorTipsTwo'),
-                type: "warning",
-            });
+                type: 'warning'
+            })
         }
 
-        optionsValue.value = '';
-        visible.value = false;
+        optionsValue.value = ''
+        visible.value = false
     }
-};
-
-
-
-
-
+}
 
 defineExpose({})
 

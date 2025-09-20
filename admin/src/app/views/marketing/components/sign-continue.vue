@@ -49,7 +49,7 @@ const formData = ref({
     continue_sign: 0,
     continue_tag: guid(),
     receive_limit: 1,
-    receive_num: 0,
+    receive_num: 0
 })
 
 const value = computed({
@@ -101,7 +101,7 @@ const formRules = reactive<FormRules>({
                 } else if (Number(value) > Number(props.sign_period)) {
                     callback(t('continueSignMustLessThanSignPeriod')) // 添加这个校验
                 } else {
-                    callback();
+                    callback()
                 }
             },
             trigger: 'blur'

@@ -7,7 +7,7 @@
             <el-form label-width="80px" class="px-[10px]" @submit.prevent>
                 <el-form-item :label="t('selectStyle')" class="flex">
                     <span class="text-primary flex-1 cursor-pointer" @click="showTitleStyle">{{ diyStore.editComponent.titleStyle.title }}</span>
-                    <el-icon>
+                    <el-icon @click="showTitleStyle" class="cursor-pointer">
                         <ArrowRight />
                     </el-icon>
                 </el-form-item>
@@ -57,7 +57,7 @@
                 <el-form-item :label="t('selectStyle')" class="flex">
                     <span class="text-primary flex-1 cursor-pointer"
                           @click="showBlockStyle">{{ diyStore.editComponent.blockStyle.title }}</span>
-                    <el-icon>
+                    <el-icon @click="showBlockStyle" class="cursor-pointer">
                         <ArrowRight />
                     </el-icon>
                 </el-form-item>
@@ -271,8 +271,8 @@ diyStore.editComponent.list.forEach((item: any) => {
 const showTitleDialog = ref(false)
 
 const showTitleStyle = () => {
-    selectTitleStyle.title = diyStore.editComponent.titleStyle.title;
-    selectTitleStyle.value = diyStore.editComponent.titleStyle.value;
+    selectTitleStyle.title = diyStore.editComponent.titleStyle.title
+    selectTitleStyle.value = diyStore.editComponent.titleStyle.value
     showTitleDialog.value = true
 }
 
@@ -306,43 +306,43 @@ const selectTitleStyle = reactive({
 })
 
 const changeTitleStyle = (item: any) => {
-    selectTitleStyle.title = item.title;
-    selectTitleStyle.value = item.value;
+    selectTitleStyle.title = item.title
+    selectTitleStyle.value = item.value
 }
 
 const confirmTitleStyle = () => {
-    diyStore.editComponent.titleStyle.title = selectTitleStyle.title;
-    diyStore.editComponent.titleStyle.value = selectTitleStyle.value;
-    initTitleStyle(diyStore.editComponent.titleStyle.value);
+    diyStore.editComponent.titleStyle.title = selectTitleStyle.title
+    diyStore.editComponent.titleStyle.value = selectTitleStyle.value
+    initTitleStyle(diyStore.editComponent.titleStyle.value)
     showTitleDialog.value = false
 }
 
 const initTitleStyle = (style) => {
     if (diyStore.editComponent.titleStyle.value == 'style-1') {
-        diyStore.editComponent.titleColor = "#F91700";
-        diyStore.editComponent.subTitle.textColor = "#FFFFFF";
-        diyStore.editComponent.subTitle.startColor = "#FB792F";
-        diyStore.editComponent.subTitle.endColor = "#F91700";
+        diyStore.editComponent.titleColor = '#F91700'
+        diyStore.editComponent.subTitle.textColor = '#FFFFFF'
+        diyStore.editComponent.subTitle.startColor = '#FB792F'
+        diyStore.editComponent.subTitle.endColor = '#F91700'
     } else if (diyStore.editComponent.titleStyle.value == 'style-2') {
-        diyStore.editComponent.titleColor = "#F91700";
-        diyStore.editComponent.subTitle.textColor = "#FFFFFF";
-        diyStore.editComponent.subTitle.startColor = "#FB792F";
-        diyStore.editComponent.subTitle.endColor = "#F91700";
+        diyStore.editComponent.titleColor = '#F91700'
+        diyStore.editComponent.subTitle.textColor = '#FFFFFF'
+        diyStore.editComponent.subTitle.startColor = '#FB792F'
+        diyStore.editComponent.subTitle.endColor = '#F91700'
     } else if (diyStore.editComponent.titleStyle.value == 'style-3') {
-        diyStore.editComponent.titleColor = "#F91700";
-        diyStore.editComponent.subTitle.textColor = "#FFFFFF";
-        diyStore.editComponent.subTitle.startColor = "#FB792F";
-        diyStore.editComponent.subTitle.endColor = "#F91700";
+        diyStore.editComponent.titleColor = '#F91700'
+        diyStore.editComponent.subTitle.textColor = '#FFFFFF'
+        diyStore.editComponent.subTitle.startColor = '#FB792F'
+        diyStore.editComponent.subTitle.endColor = '#F91700'
     } else if (diyStore.editComponent.titleStyle.value == 'style-4') {
-        diyStore.editComponent.titleColor = "#FFFFFF";
-        diyStore.editComponent.subTitle.textColor = "#333333";
-        diyStore.editComponent.subTitle.startColor = "#FFFFFF";
-        diyStore.editComponent.subTitle.endColor = "#FFFFFF";
+        diyStore.editComponent.titleColor = '#FFFFFF'
+        diyStore.editComponent.subTitle.textColor = '#333333'
+        diyStore.editComponent.subTitle.startColor = '#FFFFFF'
+        diyStore.editComponent.subTitle.endColor = '#FFFFFF'
     } else if (diyStore.editComponent.titleStyle.value == 'style-5') {
-        diyStore.editComponent.titleColor = "";
-        diyStore.editComponent.subTitle.textColor = "#999999";
-        diyStore.editComponent.subTitle.startColor = "#FFFFFF";
-        diyStore.editComponent.subTitle.endColor = "#FFFFFF";
+        diyStore.editComponent.titleColor = ''
+        diyStore.editComponent.subTitle.textColor = '#999999'
+        diyStore.editComponent.subTitle.startColor = '#FFFFFF'
+        diyStore.editComponent.subTitle.endColor = '#FFFFFF'
     }
 }
 
@@ -382,178 +382,177 @@ const selectBlockStyle = reactive({
 })
 
 const changeBlockStyle = (item: any) => {
-    selectBlockStyle.title = item.title;
-    selectBlockStyle.value = item.value;
+    selectBlockStyle.title = item.title
+    selectBlockStyle.value = item.value
 }
 
 const confirmBlockStyle = () => {
-    diyStore.editComponent.blockStyle.title = selectBlockStyle.title;
-    diyStore.editComponent.blockStyle.value = selectBlockStyle.value;
-    initBlockStyle(diyStore.editComponent.blockStyle.value);
+    diyStore.editComponent.blockStyle.title = selectBlockStyle.title
+    diyStore.editComponent.blockStyle.value = selectBlockStyle.value
+    initBlockStyle(diyStore.editComponent.blockStyle.value)
     showListDialog.value = false
 }
 
 const initBlockStyle = (style: any) => {
     if (style == 'style-1') {
-        diyStore.editComponent.blockStyle.fontWeight = "normal";
-        diyStore.editComponent.blockStyle.btnText = "normal";
+        diyStore.editComponent.blockStyle.fontWeight = 'normal'
+        diyStore.editComponent.blockStyle.btnText = 'normal'
 
-        diyStore.editComponent.list[0].title.textColor = "#303133";
-        diyStore.editComponent.list[0].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[0].subTitle.startColor = "";
-        diyStore.editComponent.list[0].subTitle.endColor = "";
-        diyStore.editComponent.list[0].moreTitle.startColor = "#FEA715";
-        diyStore.editComponent.list[0].moreTitle.endColor = "#FE1E00";
-        diyStore.editComponent.list[0].listFrame.startColor = "#FFFAF5";
-        diyStore.editComponent.list[0].listFrame.endColor = "#FFFFFF";
+        diyStore.editComponent.list[0].title.textColor = '#303133'
+        diyStore.editComponent.list[0].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[0].subTitle.startColor = ''
+        diyStore.editComponent.list[0].subTitle.endColor = ''
+        diyStore.editComponent.list[0].moreTitle.startColor = '#FEA715'
+        diyStore.editComponent.list[0].moreTitle.endColor = '#FE1E00'
+        diyStore.editComponent.list[0].listFrame.startColor = '#FFFAF5'
+        diyStore.editComponent.list[0].listFrame.endColor = '#FFFFFF'
 
-        diyStore.editComponent.list[1].title.textColor = "#303133";
-        diyStore.editComponent.list[1].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[1].subTitle.startColor = "";
-        diyStore.editComponent.list[1].subTitle.endColor = "";
-        diyStore.editComponent.list[1].moreTitle.startColor = "#FFBF50";
-        diyStore.editComponent.list[1].moreTitle.endColor = "#FF9E03";
-        diyStore.editComponent.list[1].listFrame.startColor = "#FFFAF5";
-        diyStore.editComponent.list[1].listFrame.endColor = "#FFFFFF";
+        diyStore.editComponent.list[1].title.textColor = '#303133'
+        diyStore.editComponent.list[1].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[1].subTitle.startColor = ''
+        diyStore.editComponent.list[1].subTitle.endColor = ''
+        diyStore.editComponent.list[1].moreTitle.startColor = '#FFBF50'
+        diyStore.editComponent.list[1].moreTitle.endColor = '#FF9E03'
+        diyStore.editComponent.list[1].listFrame.startColor = '#FFFAF5'
+        diyStore.editComponent.list[1].listFrame.endColor = '#FFFFFF'
 
-        diyStore.editComponent.list[2].title.textColor = "#303133";
-        diyStore.editComponent.list[2].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[2].subTitle.startColor = "";
-        diyStore.editComponent.list[2].subTitle.endColor = "";
-        diyStore.editComponent.list[2].moreTitle.startColor = "#A2E792";
-        diyStore.editComponent.list[2].moreTitle.endColor = "#49CD2D";
-        diyStore.editComponent.list[2].listFrame.startColor = "#FFFAF5";
-        diyStore.editComponent.list[2].listFrame.endColor = "#FFFFFF";
+        diyStore.editComponent.list[2].title.textColor = '#303133'
+        diyStore.editComponent.list[2].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[2].subTitle.startColor = ''
+        diyStore.editComponent.list[2].subTitle.endColor = ''
+        diyStore.editComponent.list[2].moreTitle.startColor = '#A2E792'
+        diyStore.editComponent.list[2].moreTitle.endColor = '#49CD2D'
+        diyStore.editComponent.list[2].listFrame.startColor = '#FFFAF5'
+        diyStore.editComponent.list[2].listFrame.endColor = '#FFFFFF'
 
-        diyStore.editComponent.list[3].title.textColor = "#303133";
-        diyStore.editComponent.list[3].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[3].subTitle.startColor = "";
-        diyStore.editComponent.list[3].subTitle.endColor = "";
-        diyStore.editComponent.list[3].moreTitle.startColor = "#4AC1FF";
-        diyStore.editComponent.list[3].moreTitle.endColor = "#1D7CFF";
-        diyStore.editComponent.list[3].listFrame.startColor = "#FFFAF5";
-        diyStore.editComponent.list[3].listFrame.endColor = "#FFFFFF";
-
+        diyStore.editComponent.list[3].title.textColor = '#303133'
+        diyStore.editComponent.list[3].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[3].subTitle.startColor = ''
+        diyStore.editComponent.list[3].subTitle.endColor = ''
+        diyStore.editComponent.list[3].moreTitle.startColor = '#4AC1FF'
+        diyStore.editComponent.list[3].moreTitle.endColor = '#1D7CFF'
+        diyStore.editComponent.list[3].listFrame.startColor = '#FFFAF5'
+        diyStore.editComponent.list[3].listFrame.endColor = '#FFFFFF'
     } else if (style == 'style-2') {
-        diyStore.editComponent.blockStyle.fontWeight = "normal";
-        diyStore.editComponent.blockStyle.btnText = "normal";
+        diyStore.editComponent.blockStyle.fontWeight = 'normal'
+        diyStore.editComponent.blockStyle.btnText = 'normal'
 
-        diyStore.editComponent.blockStyle.fontWeight = "bold";
-        diyStore.editComponent.blockStyle.btnText = "italics";
+        diyStore.editComponent.blockStyle.fontWeight = 'bold'
+        diyStore.editComponent.blockStyle.btnText = 'italics'
 
-        diyStore.editComponent.list[0].title.textColor = "#303133";
-        diyStore.editComponent.list[0].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[0].subTitle.startColor = "";
-        diyStore.editComponent.list[0].subTitle.endColor = "";
-        diyStore.editComponent.list[0].moreTitle.startColor = "#FFC051";
-        diyStore.editComponent.list[0].moreTitle.endColor = "#FF9C00";
-        diyStore.editComponent.list[0].listFrame.startColor = "#FFF1DB";
-        diyStore.editComponent.list[0].listFrame.endColor = "#FFFBF4";
+        diyStore.editComponent.list[0].title.textColor = '#303133'
+        diyStore.editComponent.list[0].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[0].subTitle.startColor = ''
+        diyStore.editComponent.list[0].subTitle.endColor = ''
+        diyStore.editComponent.list[0].moreTitle.startColor = '#FFC051'
+        diyStore.editComponent.list[0].moreTitle.endColor = '#FF9C00'
+        diyStore.editComponent.list[0].listFrame.startColor = '#FFF1DB'
+        diyStore.editComponent.list[0].listFrame.endColor = '#FFFBF4'
 
-        diyStore.editComponent.list[1].title.textColor = "#303133";
-        diyStore.editComponent.list[1].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[1].subTitle.startColor = "";
-        diyStore.editComponent.list[1].subTitle.endColor = "";
-        diyStore.editComponent.list[1].moreTitle.startColor = "#A4E894";
-        diyStore.editComponent.list[1].moreTitle.endColor = "#45CC2A";
-        diyStore.editComponent.list[1].listFrame.startColor = "#E6F6E2";
-        diyStore.editComponent.list[1].listFrame.endColor = "#F5FDF3";
+        diyStore.editComponent.list[1].title.textColor = '#303133'
+        diyStore.editComponent.list[1].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[1].subTitle.startColor = ''
+        diyStore.editComponent.list[1].subTitle.endColor = ''
+        diyStore.editComponent.list[1].moreTitle.startColor = '#A4E894'
+        diyStore.editComponent.list[1].moreTitle.endColor = '#45CC2A'
+        diyStore.editComponent.list[1].listFrame.startColor = '#E6F6E2'
+        diyStore.editComponent.list[1].listFrame.endColor = '#F5FDF3'
 
-        diyStore.editComponent.list[2].title.textColor = "#303133";
-        diyStore.editComponent.list[2].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[2].subTitle.startColor = "";
-        diyStore.editComponent.list[2].subTitle.endColor = "";
-        diyStore.editComponent.list[2].moreTitle.startColor = "#4BC2FF";
-        diyStore.editComponent.list[2].moreTitle.endColor = "#1F7DFF";
-        diyStore.editComponent.list[2].listFrame.startColor = "#E2F6FF";
-        diyStore.editComponent.list[2].listFrame.endColor = "#F2FAFF";
+        diyStore.editComponent.list[2].title.textColor = '#303133'
+        diyStore.editComponent.list[2].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[2].subTitle.startColor = ''
+        diyStore.editComponent.list[2].subTitle.endColor = ''
+        diyStore.editComponent.list[2].moreTitle.startColor = '#4BC2FF'
+        diyStore.editComponent.list[2].moreTitle.endColor = '#1F7DFF'
+        diyStore.editComponent.list[2].listFrame.startColor = '#E2F6FF'
+        diyStore.editComponent.list[2].listFrame.endColor = '#F2FAFF'
 
-        diyStore.editComponent.list[3].title.textColor = "#303133";
-        diyStore.editComponent.list[3].subTitle.textColor = "#999999";
-        diyStore.editComponent.list[3].subTitle.startColor = "";
-        diyStore.editComponent.list[3].subTitle.endColor = "";
-        diyStore.editComponent.list[3].moreTitle.startColor = "#FB792F";
-        diyStore.editComponent.list[3].moreTitle.endColor = "#F91700";
-        diyStore.editComponent.list[3].listFrame.startColor = "#FFEAEA";
-        diyStore.editComponent.list[3].listFrame.endColor = "#FFFCFB";
+        diyStore.editComponent.list[3].title.textColor = '#303133'
+        diyStore.editComponent.list[3].subTitle.textColor = '#999999'
+        diyStore.editComponent.list[3].subTitle.startColor = ''
+        diyStore.editComponent.list[3].subTitle.endColor = ''
+        diyStore.editComponent.list[3].moreTitle.startColor = '#FB792F'
+        diyStore.editComponent.list[3].moreTitle.endColor = '#F91700'
+        diyStore.editComponent.list[3].listFrame.startColor = '#FFEAEA'
+        diyStore.editComponent.list[3].listFrame.endColor = '#FFFCFB'
     } else if (style == 'style-3') {
-        diyStore.editComponent.blockStyle.fontWeight = "normal";
-        diyStore.editComponent.blockStyle.btnText = "normal";
+        diyStore.editComponent.blockStyle.fontWeight = 'normal'
+        diyStore.editComponent.blockStyle.btnText = 'normal'
 
-        diyStore.editComponent.list[0].title.textColor = "#FF1128";
-        diyStore.editComponent.list[0].subTitle.textColor = "";
-        diyStore.editComponent.list[0].subTitle.startColor = "";
-        diyStore.editComponent.list[0].subTitle.endColor = "";
-        diyStore.editComponent.list[0].moreTitle.startColor = "";
-        diyStore.editComponent.list[0].moreTitle.endColor = "";
-        diyStore.editComponent.list[0].listFrame.startColor = "";
-        diyStore.editComponent.list[0].listFrame.endColor = "";
+        diyStore.editComponent.list[0].title.textColor = '#FF1128'
+        diyStore.editComponent.list[0].subTitle.textColor = ''
+        diyStore.editComponent.list[0].subTitle.startColor = ''
+        diyStore.editComponent.list[0].subTitle.endColor = ''
+        diyStore.editComponent.list[0].moreTitle.startColor = ''
+        diyStore.editComponent.list[0].moreTitle.endColor = ''
+        diyStore.editComponent.list[0].listFrame.startColor = ''
+        diyStore.editComponent.list[0].listFrame.endColor = ''
 
-        diyStore.editComponent.list[1].title.textColor = "#303133";
-        diyStore.editComponent.list[1].subTitle.textColor = "";
-        diyStore.editComponent.list[1].subTitle.startColor = "";
-        diyStore.editComponent.list[1].subTitle.endColor = "";
-        diyStore.editComponent.list[1].moreTitle.startColor = "";
-        diyStore.editComponent.list[1].moreTitle.endColor = "";
-        diyStore.editComponent.list[1].listFrame.startColor = "";
-        diyStore.editComponent.list[1].listFrame.endColor = "";
+        diyStore.editComponent.list[1].title.textColor = '#303133'
+        diyStore.editComponent.list[1].subTitle.textColor = ''
+        diyStore.editComponent.list[1].subTitle.startColor = ''
+        diyStore.editComponent.list[1].subTitle.endColor = ''
+        diyStore.editComponent.list[1].moreTitle.startColor = ''
+        diyStore.editComponent.list[1].moreTitle.endColor = ''
+        diyStore.editComponent.list[1].listFrame.startColor = ''
+        diyStore.editComponent.list[1].listFrame.endColor = ''
 
-        diyStore.editComponent.list[2].title.textColor = "#303133";
-        diyStore.editComponent.list[2].subTitle.textColor = "";
-        diyStore.editComponent.list[2].subTitle.startColor = "";
-        diyStore.editComponent.list[2].subTitle.endColor = "";
-        diyStore.editComponent.list[2].moreTitle.startColor = "";
-        diyStore.editComponent.list[2].moreTitle.endColor = "";
-        diyStore.editComponent.list[2].listFrame.startColor = "";
-        diyStore.editComponent.list[2].listFrame.endColor = "";
+        diyStore.editComponent.list[2].title.textColor = '#303133'
+        diyStore.editComponent.list[2].subTitle.textColor = ''
+        diyStore.editComponent.list[2].subTitle.startColor = ''
+        diyStore.editComponent.list[2].subTitle.endColor = ''
+        diyStore.editComponent.list[2].moreTitle.startColor = ''
+        diyStore.editComponent.list[2].moreTitle.endColor = ''
+        diyStore.editComponent.list[2].listFrame.startColor = ''
+        diyStore.editComponent.list[2].listFrame.endColor = ''
 
-        diyStore.editComponent.list[3].title.textColor = "#303133";
-        diyStore.editComponent.list[3].subTitle.textColor = "";
-        diyStore.editComponent.list[3].subTitle.startColor = "";
-        diyStore.editComponent.list[3].subTitle.endColor = "";
-        diyStore.editComponent.list[3].moreTitle.startColor = "";
-        diyStore.editComponent.list[3].moreTitle.endColor = "";
-        diyStore.editComponent.list[3].listFrame.startColor = "";
-        diyStore.editComponent.list[3].listFrame.endColor = "";
+        diyStore.editComponent.list[3].title.textColor = '#303133'
+        diyStore.editComponent.list[3].subTitle.textColor = ''
+        diyStore.editComponent.list[3].subTitle.startColor = ''
+        diyStore.editComponent.list[3].subTitle.endColor = ''
+        diyStore.editComponent.list[3].moreTitle.startColor = ''
+        diyStore.editComponent.list[3].moreTitle.endColor = ''
+        diyStore.editComponent.list[3].listFrame.startColor = ''
+        diyStore.editComponent.list[3].listFrame.endColor = ''
     } else if (style == 'style-4') {
-        diyStore.editComponent.blockStyle.fontWeight = "bold";
-        diyStore.editComponent.blockStyle.btnText = "normal";
+        diyStore.editComponent.blockStyle.fontWeight = 'bold'
+        diyStore.editComponent.blockStyle.btnText = 'normal'
 
-        diyStore.editComponent.list[0].title.textColor = "#303133";
-        diyStore.editComponent.list[0].subTitle.textColor = "#ED6E00";
-        diyStore.editComponent.list[0].subTitle.startColor = "#FFE4D9";
-        diyStore.editComponent.list[0].subTitle.endColor = "#FFE4D9";
-        diyStore.editComponent.list[0].moreTitle.startColor = "";
-        diyStore.editComponent.list[0].moreTitle.endColor = "";
-        diyStore.editComponent.list[0].listFrame.startColor = "#FFAD4D";
-        diyStore.editComponent.list[0].listFrame.endColor = "#F93D02";
+        diyStore.editComponent.list[0].title.textColor = '#303133'
+        diyStore.editComponent.list[0].subTitle.textColor = '#ED6E00'
+        diyStore.editComponent.list[0].subTitle.startColor = '#FFE4D9'
+        diyStore.editComponent.list[0].subTitle.endColor = '#FFE4D9'
+        diyStore.editComponent.list[0].moreTitle.startColor = ''
+        diyStore.editComponent.list[0].moreTitle.endColor = ''
+        diyStore.editComponent.list[0].listFrame.startColor = '#FFAD4D'
+        diyStore.editComponent.list[0].listFrame.endColor = '#F93D02'
 
-        diyStore.editComponent.list[1].title.textColor = "#303133";
-        diyStore.editComponent.list[1].subTitle.textColor = "#2E59E9";
-        diyStore.editComponent.list[1].subTitle.startColor = "#CAD7F8";
-        diyStore.editComponent.list[1].subTitle.endColor = "#CAD7F8";
-        diyStore.editComponent.list[1].moreTitle.startColor = "";
-        diyStore.editComponent.list[1].moreTitle.endColor = "";
-        diyStore.editComponent.list[1].listFrame.startColor = "#7CA7F4";
-        diyStore.editComponent.list[1].listFrame.endColor = "#2B56E9";
+        diyStore.editComponent.list[1].title.textColor = '#303133'
+        diyStore.editComponent.list[1].subTitle.textColor = '#2E59E9'
+        diyStore.editComponent.list[1].subTitle.startColor = '#CAD7F8'
+        diyStore.editComponent.list[1].subTitle.endColor = '#CAD7F8'
+        diyStore.editComponent.list[1].moreTitle.startColor = ''
+        diyStore.editComponent.list[1].moreTitle.endColor = ''
+        diyStore.editComponent.list[1].listFrame.startColor = '#7CA7F4'
+        diyStore.editComponent.list[1].listFrame.endColor = '#2B56E9'
 
-        diyStore.editComponent.list[2].title.textColor = "#303133";
-        diyStore.editComponent.list[2].subTitle.textColor = "#F62F55";
-        diyStore.editComponent.list[2].subTitle.startColor = "#FCD6D9";
-        diyStore.editComponent.list[2].subTitle.endColor = "#FCD6D9";
-        diyStore.editComponent.list[2].moreTitle.startColor = "";
-        diyStore.editComponent.list[2].moreTitle.endColor = "";
-        diyStore.editComponent.list[2].listFrame.startColor = "#FF7F48";
-        diyStore.editComponent.list[2].listFrame.endColor = "#EE335B";
+        diyStore.editComponent.list[2].title.textColor = '#303133'
+        diyStore.editComponent.list[2].subTitle.textColor = '#F62F55'
+        diyStore.editComponent.list[2].subTitle.startColor = '#FCD6D9'
+        diyStore.editComponent.list[2].subTitle.endColor = '#FCD6D9'
+        diyStore.editComponent.list[2].moreTitle.startColor = ''
+        diyStore.editComponent.list[2].moreTitle.endColor = ''
+        diyStore.editComponent.list[2].listFrame.startColor = '#FF7F48'
+        diyStore.editComponent.list[2].listFrame.endColor = '#EE335B'
 
-        diyStore.editComponent.list[3].title.textColor = "#303133";
-        diyStore.editComponent.list[3].subTitle.textColor = "#139B3C";
-        diyStore.editComponent.list[3].subTitle.startColor = "#D3F1DA";
-        diyStore.editComponent.list[3].subTitle.endColor = "#D3F1DA";
-        diyStore.editComponent.list[3].moreTitle.startColor = "";
-        diyStore.editComponent.list[3].moreTitle.endColor = "";
-        diyStore.editComponent.list[3].listFrame.startColor = "#90D48C";
-        diyStore.editComponent.list[3].listFrame.endColor = "#299F4F";
+        diyStore.editComponent.list[3].title.textColor = '#303133'
+        diyStore.editComponent.list[3].subTitle.textColor = '#139B3C'
+        diyStore.editComponent.list[3].subTitle.startColor = '#D3F1DA'
+        diyStore.editComponent.list[3].subTitle.endColor = '#D3F1DA'
+        diyStore.editComponent.list[3].moreTitle.startColor = ''
+        diyStore.editComponent.list[3].moreTitle.endColor = ''
+        diyStore.editComponent.list[3].listFrame.startColor = '#90D48C'
+        diyStore.editComponent.list[3].listFrame.endColor = '#299F4F'
     }
 }
 
@@ -562,17 +561,17 @@ const addItem = () => {
         id: diyStore.generateRandom(),
         title: {
             title: '标题',
-            textColor: "#000000"
+            textColor: '#000000'
         },
         subTitle: {
             text: '副标题',
-            textColor: "#999999",
+            textColor: '#999999',
             startColor: '',
             endColor: ''
         },
         listFrame: {
-            startColor: "#4AC1FF",
-            endColor: "#1D7CFF"
+            startColor: '#4AC1FF',
+            endColor: '#1D7CFF'
         },
         moreTitle: {
             text: '去看看',

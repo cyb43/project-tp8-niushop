@@ -139,17 +139,17 @@ diyStore.editComponent.list.forEach((item: any) => {
 })
 
 const changeStyle = (value: any) => {
-    diyStore.editComponent.systemUrl = value;
-    diyStore.editComponent.imgType = 'system';
+    diyStore.editComponent.systemUrl = value
+    diyStore.editComponent.imgType = 'system'
 }
 
 watch(
     () => diyStore.editComponent.imageUrl,
     (newValue, oldValue) => {
         if (newValue) {
-            diyStore.editComponent.imgType = 'diy';
+            diyStore.editComponent.imgType = 'diy'
         } else {
-            changeStyle('style_1');
+            changeStyle('style_1')
         }
     }
 )
@@ -158,7 +158,7 @@ const addNotice = () => {
     diyStore.editComponent.list.push({
         id: diyStore.generateRandom(),
         text: '公告',
-        link: { name: '' },
+        link: { name: '' }
     })
 }
 

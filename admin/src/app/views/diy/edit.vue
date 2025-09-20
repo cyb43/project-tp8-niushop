@@ -406,6 +406,17 @@ initPage({
     template.value = data.template;
     diyStore.isDefault = data.is_default
     diyStore.pageMode = data.mode
+    if (data.global) {
+        for (const key in data.global) {
+            if(data.global[key]) {
+                for (const childKey in data.global[key]) {
+                    diyStore.global[key][childKey] = data.global[key][childKey]
+                }
+            }else{
+                diyStore.global[key] = data.global[key]
+            }
+        }
+    }
     if (data.value) {
         const sources = JSON.parse(data.value)
         diyStore.global = sources.global
@@ -472,7 +483,7 @@ initPage({
         }
     }
 
-    if(repeat) {
+    if (repeat) {
         setDomain()
     }
 

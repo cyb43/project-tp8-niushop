@@ -143,16 +143,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ref ,computed,reactive,onMounted,watch} from 'vue'
-import { getTemplateList,getTemplateReportConfig,reportTemplate,templateSync ,getreportTemplateInfo,clearTemplate} from '@/app/api/notice'
-import { t } from "@/lang";
+import { ref, computed, reactive, onMounted, watch } from 'vue'
+import { getTemplateList, getTemplateReportConfig, reportTemplate, templateSync, getreportTemplateInfo, clearTemplate } from '@/app/api/notice'
+import { t } from '@/lang'
 
 const props = defineProps({
     username: {
         type: String,
         default: ''
     },
-    signature:{
+    signature: {
         type: String,
         default: ''
     }
@@ -163,22 +163,22 @@ const tableData = reactive({
     limit: 10,
     total: 0,
     loading: false,
-    data: [],          // 当前页展示的数据（通过 computed 生成）
-    allData: [],       // 原始完整数据
+    data: [], // 当前页展示的数据（通过 computed 生成）
+    allData: [], // 原始完整数据
     searchParam: {
-        template_id: "",
+        template_id: '',
         name: '',
         status: ''
     }
-});
+})
 const filterData = () => {
-    const { template_id, name, status } = tableData.searchParam;
+    const { template_id, name, status } = tableData.searchParam
     return tableData.allData.filter(item => {
-        const matchId = !template_id || String(item.template_id || '').includes(template_id);
-        const matchName = !name || String(item.name || '').includes(name);
-        const matchStatus = !status || item.audit_info.audit_status == status;
-        return matchId && matchName && matchStatus;
-    });
+        const matchId = !template_id || String(item.template_id || '').includes(template_id)
+        const matchName = !name || String(item.name || '').includes(name)
+        const matchStatus = !status || item.audit_info.audit_status == status
+        return matchId && matchName && matchStatus
+    })
 }
 
 watch(() => [tableData.limit, tableData.page], () => {
@@ -187,33 +187,33 @@ watch(() => [tableData.limit, tableData.page], () => {
 
 // 获取列表
 const loadSmsTemplateList = () => {
-    tableData.loading = true;
+    tableData.loading = true
     getTemplateList({ sms_type: 'niuyun', username: props.username }).then((res) => {
-        tableData.allData = res.data;
-        tableData.page = 1; // 搜索后回到第一页
+        tableData.allData = res.data
+        tableData.page = 1 // 搜索后回到第一页
         pagedDataChange()
     }).catch(() => {
-        tableData.loading = false;
-    });
+        tableData.loading = false
+    })
 }
 const searchFormRef = ref(null)
 const resetForm = (formRef) => {
-    if (!formRef) return;
+    if (!formRef) return
     tableData.searchParam = {
-        template_id: "",
+        template_id: '',
         name: '',
         status: ''
     }
     loadSmsTemplateList()
-};
+}
 const pagedData = ref([])
 const pagedDataChange = () => {
-    const filtered = filterData(); // 使用筛选后的数据
-    tableData.total = filtered.length;
-    const start = (tableData.page - 1) * tableData.limit;
-    const end = start + tableData.limit;
-    pagedData.value = filtered.slice(start, end);
-    tableData.loading = false;
+    const filtered = filterData() // 使用筛选后的数据
+    tableData.total = filtered.length
+    const start = (tableData.page - 1) * tableData.limit
+    const end = start + tableData.limit
+    pagedData.value = filtered.slice(start, end)
+    tableData.loading = false
 }
 
 onMounted(() => {
@@ -226,7 +226,7 @@ const visibleAsync = ref(false)
 const repeatList = ref({})
 const syncEvent = () => {
     templateSync('niuyun', props.username).then((res) => {
-        repeatList.value = res.data.repeat_list;
+        repeatList.value = res.data.repeat_list
         if (repeatList.value && Object.keys(repeatList.value).length > 0) {
             visibleAsync.value = true
         } else {
@@ -255,7 +255,7 @@ const clearEvent = (row:any) => {
     ElMessageBox.confirm(t('确定要清除报备信息吗'), t('提示'), {
         confirmButtonText: t('确定'),
         cancelButtonText: t('取消'),
-        type: 'warning',
+        type: 'warning'
     }).then(() => {
         clearTemplate(props.username, row.template_id).then(() => {
             loadSmsTemplateList()
@@ -271,7 +271,7 @@ const visibleReport = ref(false)
 const reportData = ref({
     template_type: 1,
     template_key: '',
-    params_json:{}
+    params_json: {}
 })
 const getTemplateReportConfigFn = () => {
     getTemplateReportConfig().then((res) => {
@@ -296,33 +296,32 @@ const isMarketingWithVariable = computed(() => {
 
 watch(isMarketingWithVariable, (val) => {
     if (val) {
-        ElMessage.error('营销推广类型不支持变量');
+        ElMessage.error('营销推广类型不支持变量')
     }
-});
+})
 
 const reportLoading = ref(false)
 const reportEvent = (row:any) => {
     reportLoading.value = true
-    let signature = props.signature
+    const signature = props.signature
     if (!signature) {
         ElMessage.error('请先配置签名')
-        return
     } else {
         if (row.template_id) {
-            visibleReport.value = true;
-            detail.value = row;
+            visibleReport.value = true
+            detail.value = row
             getreportTemplateInfo('niuyun', props.username, { template_key: row.key }).then((res) => {
-                const paramJson = res.data?.param_json ?? {};
-                reportData.value.template_key = res.data.template_key;
-                reportData.value.template_type = Number(res.data.template_type);
-                reportData.value.params_json = {};
+                const paramJson = res.data?.param_json ?? {}
+                reportData.value.template_key = res.data.template_key
+                reportData.value.template_type = Number(res.data.template_type)
+                reportData.value.params_json = {}
                 if (detail.value.variable) {
                     for (const key in detail.value.variable) {
-                        reportData.value.params_json[key] = paramJson[key] ?? '';
+                        reportData.value.params_json[key] = paramJson[key] ?? ''
                     }
                 }
-                reportLoading.value = false;
-            });
+                reportLoading.value = false
+            })
         } else {
             visibleReport.value = true
             reportLoading.value = false
@@ -331,7 +330,6 @@ const reportEvent = (row:any) => {
             reportData.value.template_key = detail.value.key
             reportData.value.params_json = {}
         }
-
     }
 }
 
@@ -343,10 +341,10 @@ const reportTemplateFn = () => {
     // 校验每个变量是否已选择类型
     const missingParams = Object.entries(detail.value.variable).some(
         ([key]) => !reportData.value.params_json[key]
-    );
+    )
     if (missingParams) {
-        ElMessage.error('请为每个变量选择类型');
-        return;
+        ElMessage.error('请为每个变量选择类型')
+        return
     }
     if (detail.value.template_id) {
         reportData.value.template_id = Number(detail.value.template_id)

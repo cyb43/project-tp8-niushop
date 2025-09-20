@@ -24,6 +24,7 @@ class Language {
 
     /**
      * 加载语言包
+     * @param app
      * @param path
      * @param locale
      * @returns
@@ -43,7 +44,7 @@ class Language {
             // 查询插件的公共语言包
             if (app) {
                 try {
-                    var messagesCommon = await import( `@/${app}/lang/${locale}/common.json`)
+                    const messagesCommon = await import( `@/${ app }/lang/${ locale }/common.json`);
                     Object.keys(messagesCommon.default).forEach(key => {
                         data[`${file}.${key}`] = messagesCommon.default[key]
                     })

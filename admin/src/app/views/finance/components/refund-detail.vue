@@ -1,5 +1,5 @@
 <template>
-    <el-drawer v-model="showDialog" title="退款详情" direction="rtl" :before-close="handleClose" class="member-detail-drawer">
+    <el-drawer v-model="showDialog" title="退款详情" direction="rtl" :before-close="handleClose" size="1300px">
         <div class="main-container" v-loading="loading">
             <div class="relative" v-if="formData">
                 <div class="flex mb-[20px] justify-between text-[15px]">
@@ -152,8 +152,4 @@ defineExpose({
     setFormData
 })
 </script>
-<style lang="scss">
-.member-detail-drawer{
-    width: 1300px !important;
-}
-</style>
+<style lang="scss" scoped></style>

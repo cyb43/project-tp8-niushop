@@ -62,7 +62,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getPayRefundPages ,getRefundStatus} from '@/app/api/pay'
+import { getPayRefundPages, getRefundStatus } from '@/app/api/pay'
 import { useRoute } from 'vue-router'
 import type { FormInstance } from 'element-plus'
 import refundDetail from '@/app/views/finance/components/refund-detail.vue'
@@ -114,9 +114,9 @@ const handleMessage = () => {
 }
 const refundDetailDialog: Record<string, any> | null = ref(null)
 const infoEvent = (res:any) => {
-    let data = {no: res.refund_no};
-    refundDetailDialog.value.setFormData(data);
-    refundDetailDialog.value.showDialog = true;
+    const data = { no: res.refund_no }
+    refundDetailDialog.value.setFormData(data)
+    refundDetailDialog.value.showDialog = true
 }
 
 const resetForm = (formEl: FormInstance | undefined) => {

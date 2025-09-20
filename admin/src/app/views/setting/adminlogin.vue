@@ -3,8 +3,8 @@
 
         <el-form class="page-form" :model="formData" label-width="150px" ref="ruleFormRef" v-loading="loading">
             <el-card class="box-card !border-none" shadow="never">
-                <h3 class="panel-title !text-sm">{{ t('admin') }}</h3>
-
+                <h3 class="text-[16px] text-[#1D1F3A] font-bold mb-4">{{ pageName }}</h3>
+                <h3 class="panel-title !text-[14px] bg-[#F4F5F7] p-3 border-[#E6E6E6] border-solid border-b-[1px]">{{ t('admin') }}</h3>
                 <el-form-item :label="t('isCaptcha')">
                     <el-switch v-model="formData.is_captcha" :active-value="1" :inactive-value="0" />
                 </el-form-item>
@@ -12,8 +12,8 @@
                     <upload-image v-model="formData.bg" />
                     <div class="form-tip">{{t('adminBgImgTip')}}</div>
                 </el-form-item>
-            </el-card>
 
+            </el-card>
         </el-form>
 
         <div class="fixed-footer-wrap">
@@ -29,12 +29,11 @@ import { reactive, ref } from 'vue'
 import { t } from '@/lang'
 import { getConfigLogin, setConfigLogin } from '@/app/api/sys'
 import { FormInstance } from 'element-plus'
-import { useRoute } from 'vue-router'
 import { cloneDeep } from 'lodash-es'
+import { useRoute } from 'vue-router'
 
 const route = useRoute()
 const pageName = route.meta.title
-
 const loading = ref(true)
 const ruleFormRef = ref<FormInstance>()
 const formData = reactive<Record<string, number | string>>({

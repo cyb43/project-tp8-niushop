@@ -1,5 +1,5 @@
 <template>
-    <el-drawer v-model="showDialog" :title="popTitle" direction="rtl" :before-close="handleClose" class="member-detail-drawer">
+    <el-drawer v-model="showDialog" :title="popTitle" direction="rtl" :before-close="handleClose" class="member-detail-drawer" size="1300px">
         <div class="main-container" v-loading="loading">
             <div class="bg-page py-[20px] pr-[30px] relative flex">
                 <div class="member-info w-[250px]">
@@ -375,17 +375,20 @@ const getMemberInfoFn = async (bool=false) => {
         Object.keys(data).forEach((item) => {
             formData[item] = data[item]
         })
-
+        if(!data.member_label_array){
+            formData.member_label_array =[]
+             formData.member_label_name=''
+        }
         if (formData?.member_label_array && Object.keys(formData.member_label_array)?.length) {
             formData.member_label = Object.values(formData.member_label_array).map((item: any, index) => {
                 return item.label_id
             })
-
+            
             formData.member_label_name = Object.values(formData.member_label_array).map((item: any, index) => {
                 return item.label_name
             })
         }
-        loading.value = false
+         loading.value = false
     } else {
         loading.value = false
     }
@@ -397,7 +400,7 @@ const getMemberInfoFn = async (bool=false) => {
 const setFormData = async (row: any = null) => {
     id = row.id;
     Object.assign(formData, initialFormData)
-    getMemberInfoFn(true);
+    await getMemberInfoFn(true);
 }
 
 defineExpose({
@@ -406,8 +409,4 @@ defineExpose({
 })
 </script>
 
-<style lang="scss">
-.member-detail-drawer{
-    width: 1300px !important;
-}
-</style>
+<style lang="scss" scoped></style>

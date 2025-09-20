@@ -160,11 +160,11 @@
 
                 <!-- 执行任务 -->
                 <div class="h-[370px] mt-[30px]" v-show="active == 'execute'">
-                    <terminal ref="terminalRef" context="" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd"/>
+                    <terminal ref="terminalRef" :name="`backup-restore-${terminalId}`" context="" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd"/>
                 </div>
 
                 <!-- 完成 -->
-                <div class="mt-[50px]" v-show="active == 'complete'">
+                <div class="mt-[20px]" v-show="active == 'complete'">
                     <el-result icon="success" :title="iSBackupRecovery == 1 ? t('backupCompleteTips') : t('restoreCompleteTips')" :sub-title="iSBackupRecovery == 1 ?`备份耗时${formattedDuration}，成功备份完成。` : `恢复耗时${formattedDuration}，成功恢复完成。`">
                         <template #icon>
                             <img src="@/app/assets/images/success_icon.png" alt="">
@@ -176,12 +176,15 @@
                     </el-result>
                 </div>
                 <!-- 失败 -->
-                <div class="mt-[50px]" v-show="active == 'error'">
-                    <el-result icon="success" :title="iSBackupRecovery == 1 ? t('备份失败') : t('恢复失败')" :sub-title="backupErrorMessage" >
+                <div class="mt-[20px] h-[370px]" v-show="active == 'error'">
+                    <el-result icon="success" :title="iSBackupRecovery == 1 ? t('备份失败') : t('恢复失败')">
                         <template #icon>
                             <img src="@/app/assets/images/error_icon.png" alt="">
                         </template>
                         <template #extra>
+                            <el-scrollbar class="max-h-[120px] !overflow-auto text-[15px] text-[#4F516D] mb-[15px] mt-[-15px]">
+                                {{backupErrorMessage}}
+                            </el-scrollbar>
                             <el-button @click="handleReturn" class="!w-[90px]">错误信息</el-button>
                             <el-button @click="showDialog=false" type="primary" class="!w-[90px]">完成</el-button>
                         </template>
@@ -196,6 +199,9 @@
 
                     <!-- 恢复 -->
                     <el-button v-else type="primary" :loading="uploading" :disabled="isPass" @click="restoreUpgradeBackupFn(currentId)">{{ t("nextStep") }}</el-button>
+                </div>
+                <div class="dialog-footer" v-if="active == 'execute'">
+                    <el-button type="primary"  :loading="timeloading" class="!w-[140px]">已用时 {{ formattedDuration }}</el-button>
                 </div>
             </template>
 
@@ -218,7 +224,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, nextTick, watch, h,computed } from 'vue'
+import { ref, reactive, nextTick, watch, h, computed } from 'vue'
 import { t } from '@/lang'
 import { ElMessage, ElMessageBox, FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'
@@ -228,6 +234,7 @@ import 'vue-web-terminal/lib/theme/dark.css'
 import { AnyObject } from '@/types/global'
 
 const route = useRoute()
+const terminalId = ref(Date.now());
 const pageName = route.meta.title
 const searchFormRef = ref<FormInstance>()
 const multipleSelection: any = ref([]) // 选中数据
@@ -315,6 +322,7 @@ const manualBackupEvent = () => {
     })
 }
 // 计时器相关
+const timeloading = ref(false)
 const buildStartTime = ref<number | null>(null)
 const buildDuration = ref<number>(0)
 let buildTimer: number | null = null
@@ -340,6 +348,7 @@ const manualBackupFn = (task: any = '') => {
         if (task == '') {
             terminalRef.value.execute('clear')
             terminalRef.value.execute('开始执行')
+            timeloading.value = true
             const storedTime = localStorage.getItem('manual_back_start_time')
             if (storedTime) {
                 buildStartTime.value = Number(storedTime)
@@ -358,13 +367,14 @@ const manualBackupFn = (task: any = '') => {
         }
         if (data.content && !backupContents.includes(data.content)) {
             backupContents.push(data.content)
-            terminalRef.value.pushMessage({ content: `${ data.content }` })
+            terminalRef.value.pushMessage({ content: `${data.content}` })
         }
         if (data.task == 'end') {
             numberOfSteps.value = 2
             setTimeout(() => {
                 numberOfSteps.value = 3
                 active.value = 'complete'
+                timeloading.value = true
                 buildTimer && clearInterval(buildTimer) // 清除计时器
                 localStorage.removeItem('manual_back_start_time')
                 loadList()
@@ -378,6 +388,7 @@ const manualBackupFn = (task: any = '') => {
             }, 2000)
             backupErrorMessage.value = data.content
             active.value = 'error'
+            timeloading.value = true
             // 停止计时器
             if (buildTimer) {
                 clearInterval(buildTimer)
@@ -555,7 +566,7 @@ const restoreUpgradeBackupFn = (id: any, task: any = '') => {
         }
         if (data.content && !restoreContents.includes(data.content)) {
             restoreContents.push(data.content)
-            terminalRef.value.pushMessage({ content: `${ data.content }` })
+            terminalRef.value.pushMessage({ content: `${data.content}` })
         }
         if (data.task == 'end') {
             numberOfSteps.value = 2

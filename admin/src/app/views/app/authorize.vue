@@ -4,7 +4,7 @@
         <el-card class="box-card !border-none min-h-[300px]" shadow="never" v-loading="loading">
             <div v-if="!loading">
                 <div class="title text-[16px] font-bold text-[#1D1F3A] mb-[30px]">授权信息</div>
-                <div class="">
+                <div>
                     <div class="flex items-center">
                         <div class="w-[92px] h-[92px] rounded-[10px] flex justify-center items-center mr-[20px]">
                             <img src="@/app/assets/images/tools/authorize.png" class="w-[92px] h-[92px]" />

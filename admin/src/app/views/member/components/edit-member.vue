@@ -1,7 +1,7 @@
 <template>
     <el-dialog v-model="showDialog" :title="title || t('updateMember')" width="500px" :destroy-on-close="true">
 
-        <el-form :model="saveData" label-width="90px" :rules="formRules" ref="formRef" class="page-form" v-loading="loading">
+        <el-form :model="saveData" label-width="90px" :rules="formRules" ref="formRef" class="page-form" @submit.prevent v-loading="loading">
             <el-form-item :label="t('headimg')" v-if="type == 'headimg'">
                 <upload-image v-model="saveData.headimg" />
             </el-form-item>
@@ -23,7 +23,7 @@
             <el-form-item :label="t('sex')" v-if="type == 'sex'">
                 <el-select v-model="saveData.sex" clearable :placeholder="t('sexPlaceholder')" class="input-width">
                     <el-option :label="item['name']" :value="item['id']" v-for="(item,index) in sexSelectData" :key="index" />
-                </el-select>
+                </el-select> 
             </el-form-item>
             <el-form-item :label="t('memberLabel')" v-if="type == 'member_label'">
                 <el-select v-model="saveData.member_label" multiple collapse-tags :placeholder="t('memberLabelPlaceholder')" class="input-width">
@@ -33,7 +33,7 @@
             <div v-if="type == 'member_level'">
                 <el-form-item :label="t('memberLevelUpdate')" prop="member_level">
                     <el-select v-model="saveData.member_level" :placeholder="t('memberLevelPlaceholder')"  clearable class="input-width">
-                        <el-option :label="t('memberLevelPlaceholder')" :value="0" />
+                        <!-- <el-option :label="t('memberLevelPlaceholder')" :value="0" /> -->
                         <el-option :label="item['level_name']" :value="item['level_id']" v-for="(item,index) in levelSelectData"  :key="index"/>
                     </el-select>
                     <div class="text-sm text-gray-400">{{ t('memberLevelUpdateTips') }}</div>
@@ -56,7 +56,7 @@ import { ref, reactive, computed } from 'vue'
 import { t } from '@/lang'
 import { deepClone } from '@/utils/common'
 import type { FormInstance } from 'element-plus'
-import { editMemberDetail, getMemberLabelAll, getMemberLevelAll,memberBatchModify } from '@/app/api/member'
+import { editMemberDetail, getMemberLabelAll, getMemberLevelAll, memberBatchModify } from '@/app/api/member'
 import Test from '@/utils/test'
 
 // 修改类型
@@ -99,34 +99,34 @@ const formRules = computed(() => {
     return {
         mobile: [
             {
-                validator(rule, value, callback) {
+                validator (rule, value, callback) {
                 // 允许为空，直接通过验证
-                if (!value) return callback();
-                
-                // 非空值时，验证手机号格式 
-                const reg = /^1[3-9]\d{9}$/;
-                if (!reg.test(value)) {
-                    callback(new Error('请输入正确的手机号'));
-                } else {
-                    callback();
-                }
+                    if (!value) return callback()
+
+                    // 非空值时，验证手机号格式
+                    const reg = /^1[3-9]\d{9}$/
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入正确的手机号'))
+                    } else {
+                        callback()
+                    }
                 },
                 trigger: 'blur'
             }
         ],
-        id_card:[
+        id_card: [
             {
-                validator(rule, value, callback) {
+                validator (rule, value, callback) {
                 // 允许为空，直接通过验证
-                if (!value) return callback();
+                    if (!value) return callback()
 
-                // 非空值时，验证身份证号格式 
-                const reg = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
-                if (!reg.test(value)) {
-                    callback(new Error('请输入正确的身份证号'));
-                } else {
-                    callback();
-                }
+                    // 非空值时，验证身份证号格式
+                    const reg = /^[1-9]\d{5}[1-9]\d{3}((0\d)|(1[0-2]))(([0|1|2]\d)|3[0-1])\d{3}([0-9]|X)$/
+                    if (!reg.test(value)) {
+                        callback(new Error('请输入正确的身份证号'))
+                    } else {
+                        callback()
+                    }
                 },
                 trigger: 'blur'
             }
@@ -171,10 +171,10 @@ const confirm = async (formEl: FormInstance | undefined) => {
             if (repeat.value) return
             repeat.value = true
 
-            let val = saveData[type.value];
-            if(type.value == 'member_label'){
+            let val = saveData[type.value]
+            if (type.value == 'member_label') {
                 // 将saveData[type.value]中的值，转换为字符串
-                val = saveData[type.value] && saveData[type.value].length  ? deepClone(saveData[type.value]).join(',').split(',') : '';
+                val = saveData[type.value] && saveData[type.value].length ? deepClone(saveData[type.value]).join(',').split(',') : ''
             }
 
             const data = ref({
@@ -204,19 +204,18 @@ const setDialogType = async (row: any = null) => {
     saveData[type.value] = row.data[type.value]
     if (type.value == 'member_label' && saveData[type.value]) {
         saveData[type.value].forEach((item: any, index: any) => {
-            let isExist = false;
+            let isExist = false
             for (let i = 0; i < labelSelectData.value.length; i++) {
                 if (labelSelectData.value[i].label_id == item) {
-                    isExist = true;
-                    break;
+                    isExist = true
+                    break
                 }
             }
             if (isExist) {
                 saveData[type.value][index] = Number.parseFloat(item)
             } else {
-                saveData[type.value].splice(index, 1); // 删除不存在的id
+                saveData[type.value].splice(index, 1) // 删除不存在的id
             }
-
         })
     }
     loading.value = false
@@ -229,9 +228,9 @@ const batchInfo = ref({
     ids: [],
     where: {}
 })
-const batchSetDialogType = (data)=>{
+const batchSetDialogType = (data) => {
     loading.value = true
-    type.value =data.type
+    type.value = data.type
     method.value = data.method
     batchInfo.value.is_all = data.data.is_all
     batchInfo.value.ids = data.data.ids
@@ -249,14 +248,14 @@ const batchSetConfirm = async (formEl: FormInstance | undefined) => {
             if (repeat.value) return
             repeat.value = true
 
-            let val = saveData[type.value];
-            if(type.value == 'member_label'){
-                val = saveData[type.value] && saveData[type.value].length  ? deepClone(saveData[type.value]).join(',').split(',') : '';
+            let val = saveData[type.value]
+            if (type.value == 'member_label') {
+                val = saveData[type.value] && saveData[type.value].length ? deepClone(saveData[type.value]).join(',').split(',') : ''
             }
 
             const data = ref({
                 is_all: batchInfo.value.is_all,
-                member_ids:batchInfo.value.ids,
+                member_ids: batchInfo.value.ids,
                 where: batchInfo.value.where,
                 field: type.value,
                 value: val

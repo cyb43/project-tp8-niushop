@@ -108,7 +108,6 @@ const router = useRouter()
 const pageName = route.meta.title
 
 const activeName = ref('/channel/weapp')
-const active = ref(2)
 const qrCode = ref('')
 const weappConfig = ref({})
 
@@ -121,6 +120,12 @@ const onShowGetWeappConfig = async () => {
 
 onMounted(async () => {
     onShowGetWeappConfig()
+    
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+            onShowGetWeappConfig()
+        }
+    })
 })
 
 onUnmounted(() => {

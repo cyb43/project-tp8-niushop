@@ -94,10 +94,10 @@ diyStore.editComponent.verify = (index: number) => {
     const res = { code: true, message: '' }
     if (diyStore.value[index].field.default) {
         if (isNaN(diyStore.value[index].field.default) || !regExp.digit.test(diyStore.value[index].field.default)) {
-            res.code = false;
-            res.message = t('defaultErrorTips');
+            res.code = false
+            res.message = t('defaultErrorTips')
         } else if (diyStore.value[index].field.default < 0) {
-            res.code = false;
+            res.code = false
             res.message = t('defaultMustZeroTips')
         }
     }

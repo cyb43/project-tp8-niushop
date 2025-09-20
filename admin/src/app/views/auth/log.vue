@@ -67,7 +67,7 @@
 <script lang="ts" setup>
 import { reactive, ref } from 'vue'
 import { t } from '@/lang'
-import { getLogList ,logDestroy} from '@/app/api/user'
+import { getLogList, logDestroy } from '@/app/api/user'
 import UserLogDetail from '@/app/views/auth/components/user-log-detail.vue'
 import { FormInstance } from 'element-plus'
 import { useRoute } from 'vue-router'

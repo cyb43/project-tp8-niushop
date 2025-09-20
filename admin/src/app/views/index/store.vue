@@ -56,7 +56,7 @@
                                 <el-image class="w-[54px] h-[54px]" :src="row.icon" fit="contain">
                                     <template #error>
                                         <div class="flex items-center w-full h-full">
-                                        <img class="max-w-full max-h-full" src="@/app/assets/images/icon-addon.png" alt="" />
+                                        <img class="max-w-full max-h-full" src="@/app/assets/images/icon-addon-one.png" alt="" />
                                         </div>
                                     </template>
                                 </el-image>
@@ -351,7 +351,7 @@
                     </div>
                 </div>
                 <div v-show="installStep == 1 && !errorDialog" class="h-[50vh] mt-[20px]">
-                    <terminal ref="terminalRef" :context="currAddon" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd" />
+                    <terminal ref="terminalRef" :name="`install-${terminalId}`" :context="currAddon" :init-log="null" :show-header="false" :show-log-time="true" @exec-cmd="onExecCmd" />
                 </div>
                 <div v-show="installStep == 2" class="h-[50vh] mt-[20px] flex flex-col">
                     <!-- <el-result icon="success" :title="t('addonInstallSuccess')"></el-result> -->
@@ -375,12 +375,15 @@
                         </template>
                     </el-result>
                 </div>
-                <div class="mt-[50px]" v-show="errorDialog">
-                    <el-result icon="error" :title="t('安装失败')" :sub-title="errorMsg">
+                <div class="h-[50vh] mt-[20px] flex flex-col" v-show="errorDialog">
+                    <el-result icon="error" :title="t('安装失败')">
                         <template #icon>
                             <img src="@/app/assets/images/error_icon.png" alt="">
                         </template>
                         <template #extra>
+                            <el-scrollbar class="max-h-[120px] !overflow-auto text-[15px] text-[#4F516D] mb-[15px] mt-[-15px]">
+                                {{errorMsg}}
+                            </el-scrollbar>
                             <el-button @click="handleBack()" v-if="installType=='cloud'" class="!w-[90px]">错误信息</el-button>
                             <el-button @click="installShowDialog=false" type="primary" class="!w-[90px]">完成</el-button>
                         </template>
@@ -500,6 +503,7 @@ import UpgradeLog from '@/app/components/upgrade-log/index.vue'
 
 const router = useRouter()
 const route = useRoute()
+const terminalId = ref(Date.now());
 const activeName = ref(storage.get('storeActiveName') || 'installed')
 const upgradeRef = ref(null)
 const cloudBuildRef = ref(null)

@@ -91,18 +91,18 @@ diyStore.editComponent.ignore = ['componentBgUrl'] // 忽略公共属性
 // 组件验证
 diyStore.editComponent.verify = (index: number) => {
     const res = { code: true, message: '' }
-    let starTime = diyStore.value[index].field.default.start.date;
-    let endTime = diyStore.value[index].field.default.end.date;
+    let starTime = diyStore.value[index].field.default.start.date
+    let endTime = diyStore.value[index].field.default.end.date
 
-    const today = new Date();
-    const hours = String(today.getHours()).padStart(2, '0');
-    const minutes = String(today.getMinutes()).padStart(2, '0');
+    const today = new Date()
+    const hours = String(today.getHours()).padStart(2, '0')
+    const minutes = String(today.getMinutes()).padStart(2, '0')
 
     if (diyStore.editComponent.start.timeWay == 'current') {
-        starTime = `${ hours }:${ minutes }`;
+        starTime = `${hours}:${minutes}`
     }
     if (diyStore.editComponent.end.timeWay == 'current') {
-        endTime = `${ hours }:${ minutes }`;
+        endTime = `${hours}:${minutes}`
     }
 
     if (diyStore.editComponent.start.defaultControl && starTime == '') {
@@ -125,51 +125,51 @@ diyStore.editComponent.verify = (index: number) => {
 }
 
 onMounted(() => {
-    const today = new Date();
-    const hours = String(today.getHours()).padStart(2, '0');
-    const minutes = String(today.getMinutes()).padStart(2, '0');
+    const today = new Date()
+    const hours = String(today.getHours()).padStart(2, '0')
+    const minutes = String(today.getMinutes()).padStart(2, '0')
 
     if (!diyStore.editComponent.field.default.start.date) {
-        diyStore.editComponent.field.default.start.date = `${ hours }:${ minutes }`;
-        diyStore.editComponent.field.default.start.timestamp = timeInvertSecond(`${ hours }:${ minutes }`);
+        diyStore.editComponent.field.default.start.date = `${hours}:${minutes}`
+        diyStore.editComponent.field.default.start.timestamp = timeInvertSecond(`${hours}:${minutes}`)
     }
     if (!diyStore.editComponent.field.default.end.date) {
-        let endDate = new Date();
-        endDate.setHours(today.getHours(), today.getMinutes() + 10, 0, 0); // 在当前时间基础上加 10 分钟
-        const endHours = String(endDate.getHours()).padStart(2, '0');
-        const endMinutes = String(endDate.getMinutes()).padStart(2, '0');
+        const endDate = new Date()
+        endDate.setHours(today.getHours(), today.getMinutes() + 10, 0, 0) // 在当前时间基础上加 10 分钟
+        const endHours = String(endDate.getHours()).padStart(2, '0')
+        const endMinutes = String(endDate.getMinutes()).padStart(2, '0')
 
-        diyStore.editComponent.field.default.end.date = `${ endHours }:${ endMinutes }`;
-        diyStore.editComponent.field.default.end.timestamp = timeInvertSecond(`${ endHours }:${ endMinutes }`);
+        diyStore.editComponent.field.default.end.date = `${endHours}:${endMinutes}`
+        diyStore.editComponent.field.default.end.timestamp = timeInvertSecond(`${endHours}:${endMinutes}`)
     }
-});
+})
 
 // 开始时间选择器
 const startTimePickerChange = (e) => {
-    diyStore.editComponent.field.default.start.timestamp = timeInvertSecond(e);
+    diyStore.editComponent.field.default.start.timestamp = timeInvertSecond(e)
 
-    const startTimeArr = e.split(":");
-    const date = new Date();
-    date.setHours(parseInt(startTimeArr[0]), parseInt(startTimeArr[1]), 0, 0);
-    date.setMinutes(date.getMinutes() + 10);
-    const updatedEndTime = `${ String(date.getHours()).padStart(2, '0') }:${ String(date.getMinutes()).padStart(2, '0') }`;
-    diyStore.editComponent.field.default.end.date = updatedEndTime;
-    diyStore.editComponent.field.default.end.timestamp = timeInvertSecond(updatedEndTime);
+    const startTimeArr = e.split(':')
+    const date = new Date()
+    date.setHours(parseInt(startTimeArr[0]), parseInt(startTimeArr[1]), 0, 0)
+    date.setMinutes(date.getMinutes() + 10)
+    const updatedEndTime = `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+    diyStore.editComponent.field.default.end.date = updatedEndTime
+    diyStore.editComponent.field.default.end.timestamp = timeInvertSecond(updatedEndTime)
 }
 
 // 结束时间选择器
 const endTimePickerChange = (e) => {
-    diyStore.editComponent.field.default.end.timestamp = timeInvertSecond(e);
+    diyStore.editComponent.field.default.end.timestamp = timeInvertSecond(e)
 }
 
 const disabledHours = () => {
-    let timeArr = diyStore.editComponent.field.default.start.date.split(":")
-    return makeRange(0, timeArr[0]);
+    const timeArr = diyStore.editComponent.field.default.start.date.split(':')
+    return makeRange(0, timeArr[0])
 }
 
 const disabledMinutes = (hour: number) => {
-    let timeArr = diyStore.editComponent.field.default.start.date.split(":")
-    return makeRange(0, timeArr[1]);
+    const timeArr = diyStore.editComponent.field.default.start.date.split(':')
+    return makeRange(0, timeArr[1])
 }
 
 const makeRange = (start: number, end: number) => {
@@ -181,18 +181,18 @@ const makeRange = (start: number, end: number) => {
 }
 
 const timeInvertSecond = (time: any) => {
-    let arr = time.split(":");
-    let num = 0;
+    const arr = time.split(':')
+    let num = 0
     if (arr[0]) {
-        num += arr[0] * 60 * 60;
+        num += arr[0] * 60 * 60
     }
     if (arr[1]) {
-        num += arr[1] * 60;
+        num += arr[1] * 60
     }
     if (arr[2]) {
-        num += arr[2];
+        num += arr[2]
     }
-    return num;
+    return num
 }
 
 defineExpose({})

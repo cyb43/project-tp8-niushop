@@ -746,7 +746,7 @@ const initLoad = () => {
 
 // 验证表单组件公共属性
 const verifyFormComponent = () => {
-    for (var i = 0; i < diyStore.value.length; i++) {
+    for (let i = 0; i < diyStore.value.length; i++) {
         try {
             if (diyStore.value[i].componentType == 'diy_form' && diyStore.value[i].componentName != 'FormSubmit' && diyStore.value[i].field.name == '') {
                 diyStore.changeCurrentIndex(i, diyStore.value[i])

@@ -252,17 +252,17 @@ export function moneyFormat(money: string): string {
  */
 export function timeStampTurnTime(timeStamp: any, type = "") {
     if (timeStamp != undefined && timeStamp != "" && timeStamp > 0) {
-        var date = new Date();
+        const date = new Date();
         date.setTime(timeStamp * 1000);
-        var y: any = date.getFullYear();
-        var m: any = date.getMonth() + 1;
+        const y: any = date.getFullYear();
+        let m: any = date.getMonth() + 1;
         m = m < 10 ? ('0' + m) : m;
-        var d: any = date.getDate();
+        let d: any = date.getDate();
         d = d < 10 ? ('0' + d) : d;
-        var h: any = date.getHours();
+        let h: any = date.getHours();
         h = h < 10 ? ('0' + h) : h;
-        var minute: any = date.getMinutes();
-        var second: any = date.getSeconds();
+        let minute: any = date.getMinutes();
+        let second: any = date.getSeconds();
         minute = minute < 10 ? ('0' + minute) : minute;
         second = second < 10 ? ('0' + second) : second;
         if (type) {
@@ -280,13 +280,33 @@ export function timeStampTurnTime(timeStamp: any, type = "") {
 }
 
 /**
+ * 获取当前日期时间
+ */
+export function getCurrentDataTime(timeStamp: any) {
+    const addZero = (t) => {
+        return t < 10 ? '0' + t : t;
+    }
+    const time = new Date(timeStamp);
+    let Y = time.getFullYear(), // 年
+        M = time.getMonth() + 1, // 月
+        D = time.getDate(), // 日
+        h = time.getHours(), // 时
+        m = time.getMinutes(), // 分
+        s = time.getSeconds(); // 秒
+    if (M > 12) {
+        M = M - 12;
+    }
+    return `${Y}-${addZero(M)}-${addZero(D)} ${addZero(h)}:${addZero(m)}:${addZero(s)}`
+}
+
+/**
  * 日期格式转时间戳
  * @param {Object} date
  */
 export function timeTurnTimeStamp(date: string) {
-    var f = date.split(' ', 2);
-    var d = (f[0] ? f[0] : '').split('-', 3);
-    var t = (f[1] ? f[1] : '').split(':', 3);
+    const f = date.split(' ', 2);
+    const d = (f[0] ? f[0] : '').split('-', 3);
+    const t = (f[1] ? f[1] : '').split(':', 3);
     return (new Date(
         parseInt(d[0], 10) || null,
         (parseInt(d[1], 10) || 1) - 1,
@@ -344,18 +364,18 @@ export function filterBlank(event: any) {
  * @param where
  */
 export function setTablePageStorage(page: any = 1, limit: any = 10, where: any = {}) {
-    var data = storage.get('tablePageStorage');
+    let data = storage.get('tablePageStorage');
     if (!data) {
         data = {};
     }
 
-    var key = location.pathname + JSON.stringify(where);
+    const key = location.pathname + JSON.stringify(where);
     data[key] = {
         page,
         limit
     };
 
-    var MAX_COUNT = 5; // 最多存储 5 个页面的分页缓存，超出则删除最开始的第一个页面
+    const MAX_COUNT = 5; // 最多存储 5 个页面的分页缓存，超出则删除最开始的第一个页面
     if (Object.keys(data).length > MAX_COUNT) {
         delete data[Object.keys(data)[0]];
     }
@@ -368,8 +388,8 @@ export function setTablePageStorage(page: any = 1, limit: any = 10, where: any =
  * @param where
  */
 export function getTablePageStorage(where: any = {}) {
-    var data = storage.get('tablePageStorage');
-    var key = location.pathname + JSON.stringify(where);
+    let data = storage.get('tablePageStorage');
+    const key = location.pathname + JSON.stringify(where);
     if (!data || !data[key]) {
         data = {
             page: 1,

@@ -145,8 +145,8 @@ loadExportList()
  * 下载导出报表
  */
 const downloadEvent = (data: any) => {
-    var url = img(data.file_path);
-    var suffix = url.substring(url.lastIndexOf("."), url.length);
+    const url = img(data.file_path);
+    const suffix = url.substring(url.lastIndexOf("."), url.length);
     const a = document.createElement('a')
     a.setAttribute('download', url)
     a.setAttribute('target', '_blank')

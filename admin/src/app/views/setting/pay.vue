@@ -13,7 +13,7 @@
             <h3 class="panel-title !text-sm">{{ payItems.name }}</h3>
 
             <div>
-                <div class="flex items-center justify-between p-[10px] table-item-border bg">
+                <div class="flex items-center justify-between px-[10px] table-item-border bg h-[50px]">
                     <span class="text-base w-[230px]">{{ t('payType') }}</span>
                     <span class="text-base w-[110px] text-center">{{ t('onState') }}</span>
                     <span class="text-base w-[80px] text-center" v-if="isEdit">{{ t('templateName') }}</span>
@@ -52,7 +52,6 @@
                 <el-button type="primary" :loading="loading" @click="saveFn(formRef)">{{ t('save') }}</el-button>
             </div>
         </div>
-
         <template v-for="(item, index) in payTypeList">
             <component :is="item.setting_component" :ref="(el) => setPayTypeRefs(el, item.key)" v-if="item.setting_component" @complete="setConfigInfo"/>
         </template>
@@ -210,6 +209,6 @@ const cancelFn = () => {
 
 <style lang="scss" scoped>
     .table-item-border {
-        @apply border-b border-[var(--el-border-color)];
+        @apply border-b border-[var(--el-border-color-lighter)];
     }
 </style>

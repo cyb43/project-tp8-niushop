@@ -87,9 +87,9 @@ diyStore.editComponent.ignore = ['componentBgUrl'] // 忽略公共属性
 // 单选
 const btnPositionChangeFn = (e) => {
     if (e == 'hover_screen_bottom') {
-        diyStore.editComponent.margin.bottom = 0;
-        diyStore.editComponent.margin.both = 0;
-        diyStore.editComponent.margin.top = 0;
+        diyStore.editComponent.margin.bottom = 0
+        diyStore.editComponent.margin.both = 0
+        diyStore.editComponent.margin.top = 0
     }
 }
 
@@ -97,14 +97,14 @@ const btnPositionChangeFn = (e) => {
 diyStore.editComponent.verify = (index: number) => {
     const res = { code: true, message: '' }
     if (diyStore.value[index].submitBtn.text == '') {
-        res.code = false;
-        res.message = t('submitBtnNamePlaceholder');
-        return res;
+        res.code = false
+        res.message = t('submitBtnNamePlaceholder')
+        return res
     }
     if (diyStore.value[index].resetBtn.text == '') {
-        res.code = false;
-        res.message = t('resetBtnNamePlaceholder');
-        return res;
+        res.code = false
+        res.message = t('resetBtnNamePlaceholder')
+        return res
     }
 
     return res

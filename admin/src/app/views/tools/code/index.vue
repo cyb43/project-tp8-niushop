@@ -76,7 +76,7 @@
                 <el-tab-pane :label="t('codeList')" name="codeList">
                     <el-card class="box-card !border-none my-[10px] table-search-wrap" shadow="never">
                         <el-form :inline="true" :model="codeTableData.searchParam" ref="searchFormRef">
-                             <el-form-item :label="t('addonName')" prop="addon_name">
+                            <el-form-item :label="t('addonName')" prop="addon_name">
                                 <el-select v-model="codeTableData.searchParam.addon_name" placeholder="全部" filterable remote clearable :remote-method="getAddonDevelopFn">
                                     <el-option label="全部" value="" />
                                     <el-option label="系统" value="2" />
@@ -129,8 +129,8 @@
                         </el-table>
                         <div class="mt-[16px] flex justify-end">
                             <el-pagination v-model:current-page="codeTableData.page" v-model:page-size="codeTableData.limit"
-                                layout="total, sizes, prev, pager, next, jumper" :total="codeTableData.total"
-                                @size-change="loadGenerateTableList()" @current-change="loadGenerateTableList" />
+                                           layout="total, sizes, prev, pager, next, jumper" :total="codeTableData.total"
+                                           @size-change="loadGenerateTableList()" @current-change="loadGenerateTableList" />
                         </div>
                     </div>
                 </el-tab-pane>
@@ -142,8 +142,8 @@
                 <div class="flex h-[50vh]" v-loading="codeLoading">
                     <el-scrollbar class="h-[100%] w-[270px]">
                         <el-tree v-if="treeData.length && treeKey != ''" :data="treeData" :props="{ label: 'name', value: 'key' }"
-                            node-key="key" :current-node-key="treeKey" :expand-on-click-node="false" highlight-current
-                            default-expand-all ref="treeRef" @node-click="nodeClick">
+                                 node-key="key" :current-node-key="treeKey" :expand-on-click-node="false" highlight-current
+                                 default-expand-all ref="treeRef" @node-click="nodeClick">
                             <template #default="{ node, data }">
                                 <div class="flex items-center">
                                     <el-icon v-if="data.children">
@@ -285,12 +285,12 @@ const generatorCheckFileFn = ((id: any) => {
     generatorCheckFile({ id }).then((res: any) => {
         codeTableData.loading = false
         ElMessageBox.confirm(
-                res.msg != '2' ? t('saveAndSyncText') : t('saveAndSyncText1'),
-                t('warning'),
-                {
-                    confirmButtonText: t('confirm'),
-                    cancelButtonText: t('cancel')
-                }
+            res.msg != '2' ? t('saveAndSyncText') : t('saveAndSyncText1'),
+            t('warning'),
+            {
+                confirmButtonText: t('confirm'),
+                cancelButtonText: t('cancel')
+            }
         ).then(() => {
             generateCreateFn(id, 3)
         }).catch(() => {

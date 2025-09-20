@@ -67,7 +67,7 @@ const usePosterStore = defineStore('poster', {
                     height: 60,
                     minWidth: 120,
                     minHeight: 44,
-                    fontFamily: 'static/font/SourceHanSansCN-Regular.ttf',
+                    fontFamily: 'static/font/PingFang-Medium.ttf',
                     fontSize: 40,
                     weight: false,
                     lineHeight: 10,
@@ -241,7 +241,7 @@ const usePosterStore = defineStore('poster', {
                 return;
             }
 
-            var index = this.currentIndex + 1;
+            const index = this.currentIndex + 1;
             this.value.splice(index, 0, component);
 
             this.changeCurrentIndex(index, component);
@@ -252,10 +252,10 @@ const usePosterStore = defineStore('poster', {
             //为0时不处理
             if (component.uses === 0) return true;
 
-            var count = 0;
+            let count = 0;
 
             //遍历已添加的自定义组件，检测是否超出数量
-            for (var i in this.value) if (this.value[i].componentName === component.componentName) count++;
+            for (let i in this.value) if (this.value[i].componentName === component.componentName) count++;
 
             if (count >= component.uses) return false;
             else return true;
@@ -310,10 +310,10 @@ const usePosterStore = defineStore('poster', {
                 return false;
             }
 
-            for (var i = 0; i < this.value.length; i++) {
+            for (let i = 0; i < this.value.length; i++) {
                 try {
                     if (this.value[i].verify) {
-                        var res = this.value[i].verify(i);
+                        const res = this.value[i].verify(i);
                         if (!res.code) {
                             this.changeCurrentIndex(i, this.value[i]);
                             ElMessage({

@@ -99,7 +99,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import useDiyStore from '@/stores/modules/diy'
 import Sortable from 'sortablejs'
 import { range } from 'lodash-es'
-import { ElMessage } from "element-plus";
+import { ElMessage } from 'element-plus'
 
 const diyStore = useDiyStore()
 diyStore.editComponent.ignore = ['componentBgUrl'] // 忽略公共属性
@@ -107,22 +107,22 @@ diyStore.editComponent.ignore = ['componentBgUrl'] // 忽略公共属性
 // 组件验证
 diyStore.editComponent.verify = (index: number) => {
     const res = { code: true, message: '' }
-    let pass = true;
+    let pass = true
     for (let i = 0; i < diyStore.value[index].options.length; i++) {
         if (!diyStore.value[index].options[i].text) {
-            res.code = false;
-            res.message = t('optionPlaceholder');
-            pass = false;
-            break;
+            res.code = false
+            res.message = t('optionPlaceholder')
+            pass = false
+            break
         }
     }
 
-    if (!pass) return res;
+    if (!pass) return res
 
-    let uniqueOptions = uniqueByKey(diyStore.value[index].options, 'text')
+    const uniqueOptions = uniqueByKey(diyStore.value[index].options, 'text')
 
     if (uniqueOptions.length != diyStore.value[index].options.length) {
-        res.code = false;
+        res.code = false
         res.message = t('errorTipsOne')
     }
     return res
@@ -138,11 +138,11 @@ const addOption = () => {
     diyStore.editComponent.options.push({
         id: diyStore.generateRandom(),
         text: '选项' + (diyStore.editComponent.options.length + 1)
-    });
-};
+    })
+}
 
 const removeOption = (index: any) => {
-    diyStore.editComponent.options.splice(index, 1);
+    diyStore.editComponent.options.splice(index, 1)
 }
 
 const batchAddOptions = () => {
@@ -151,39 +151,39 @@ const batchAddOptions = () => {
             return {
                 id: diyStore.generateRandom(),
                 text: option.trim()
-            };
-        }).filter((option: any) => option.text !== '');
+            }
+        }).filter((option: any) => option.text !== '')
 
         // 去除重复的选项
-        const uniqueNewOptions = uniqueByKey(newOptions, 'text');
+        const uniqueNewOptions = uniqueByKey(newOptions, 'text')
 
         // 过滤掉已存在的选项
         const filteredNewOptions = uniqueNewOptions.filter(newOption =>
             !diyStore.editComponent.options.some(existingOption => existingOption.text === newOption.text)
-        );
+        )
 
         // 如果有新的选项，添加到选项列表中
         if (filteredNewOptions.length > 0) {
-            diyStore.editComponent.options.push(...filteredNewOptions);
+            diyStore.editComponent.options.push(...filteredNewOptions)
         } else {
             ElMessage({
                 message: t('errorTipsTwo'),
-                type: "warning",
-            });
+                type: 'warning'
+            })
         }
 
-        optionsValue.value = '';
-        visible.value = false;
+        optionsValue.value = ''
+        visible.value = false
     }
-};
+}
 
 // 数组去重
 const uniqueByKey = (arr: any, key: any) => {
-    const seen = new Set();
+    const seen = new Set()
     return arr.filter((item: any) => {
-        const serializedKey = JSON.stringify(item[key]);
-        return seen.has(serializedKey) ? false : seen.add(serializedKey);
-    });
+        const serializedKey = JSON.stringify(item[key])
+        return seen.has(serializedKey) ? false : seen.add(serializedKey)
+    })
 }
 
 const formRadioRef = ref()

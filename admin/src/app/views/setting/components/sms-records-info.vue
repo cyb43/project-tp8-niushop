@@ -25,7 +25,11 @@
             <el-form-item :label="t('createTime')">
                 <div class="input-width"> {{ formData.create_time }} </div>
             </el-form-item>
-
+            <el-form-item :label="t('发送结果')">
+                <div class="input-width" v-if="formData.status == 'sending'"> 发送失败 </div>
+                <div class="input-width" v-if="formData.status == 'success'"> 发送成功 </div>
+                <div class="input-width" v-if="formData.status == 'fail'"> {{ formData.result }} </div>
+            </el-form-item>
         </el-form>
 
         <template #footer>
@@ -55,7 +59,9 @@ const initialFormData = {
     name: '',
     nickname: '',
     mobile: '',
-    sms_type_name: ''
+    sms_type_name: '',
+    status:'',
+    result:''
 }
 const formData: Record<string, any> = reactive({ ...initialFormData })
 

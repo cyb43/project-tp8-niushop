@@ -53,8 +53,8 @@ const initialFormData = {
     access_key: '',
     secret_key: '',
     is_use: '',
-    app_id:'',
-    secret_id:'',
+    app_id: '',
+    secret_id: ''
 }
 const formData: Record<string, any> = reactive({ ...initialFormData })
 
